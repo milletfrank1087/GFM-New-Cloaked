@@ -1,0 +1,434 @@
+/* Custom Animations & Styles */
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f8f8f8;
+}
+::-webkit-scrollbar-thumb {
+  background: #00b964;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #02a95c;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+.floating-element {
+  animation: float 6s ease-in-out infinite;
+}
+.floating-element-delayed {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* Bounce Subtle Animation */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.animate-bounce-subtle {
+  animation: bounce-subtle 3s ease-in-out infinite;
+}
+
+/* Pulse Subtle Animation */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Underline Draw Animation */
+@keyframes draw {
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; }
+}
+.underline-draw {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: draw 1.5s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+/* Progress Bar Animation */
+@keyframes progress {
+  from { width: 0%; }
+}
+.progress-bar {
+  animation: progress 2s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+/* Navbar Scroll Effect */
+.navbar-scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Button Styles */
+.donation-type-btn {
+  color: #767676;
+}
+.donation-type-btn.active {
+  background-color: #00b964;
+  color: white;
+}
+
+.amount-btn.active {
+  border-color: #00b964;
+  background-color: #e8f8f0;
+  color: #00b964;
+}
+
+/* FAQ Accordion */
+.faq-item.active .faq-icon {
+  transform: rotate(180deg);
+}
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+.faq-item.active .faq-content {
+  max-height: 500px;
+}
+
+/* Input Focus States */
+input:focus, textarea:focus {
+  border-color: #00b964 !important;
+  box-shadow: 0 0 0 3px rgba(0, 185, 100, 0.1);
+}
+
+/* Selection Color */
+::selection {
+  background-color: #00b964;
+  color: white;
+}
+
+/* Mobile Donate Bar Animation */
+.mobile-donate-visible {
+  transform: translateY(0) !important;
+}
+
+/* Card Hover Effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #00b964, #02a95c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .floating-element,
+  .floating-element-delayed {
+    display: none;
+  }
+}
+
+/* Focus Visible for Accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #00b964;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Print Styles */
+@media print {
+  nav, footer, #mobile-donate-bar, .floating-element {
+    display: none !important;
+  }
+}
+
+/* Mobile Layout Fixes */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Prevent horizontal overflow */
+.max-w-7xl {
+  max-width: 100%;
+}
+
+@media (min-width: 1280px) {
+  .max-w-7xl {
+    max-width: 80rem;
+  }
+}
+
+/* Fix mobile images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile text truncation */
+@media (max-width: 640px) {
+  .truncate-mobile {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Swiper Customization */
+.swiper-button-next,
+.swiper-button-prev {
+  width: 44px !important;
+  height: 44px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease !important;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #fff !important;
+  transform: scale(1.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}
+.gallery-thumbs .swiper-slide-thumb-active {
+  opacity: 1 !important;
+  border-color: #00b964 !important;
+}
+
+/* Hide scrollbar for tabs */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Modal Animation */
+.modal-content {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Tab Pane Animation */
+.tab-pane {
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* PayPal Card Fields - iframe styled via JS, container is transparent */
+#card-name-field,
+#card-number-field,
+#card-expiry-field,
+#card-cvv-field {
+  height: 50px;
+}
+
+/* Modal Phase Transitions */
+#modal-phase-1,
+#modal-phase-2,
+#modal-phase-success {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#modal-phase-1.hidden,
+#modal-phase-2.hidden,
+#modal-phase-success.hidden {
+  display: none;
+}
+
+/* Success Checkmark Animation */
+.success-checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: success-circle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.success-checkmark-check {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: success-check 0.35s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+}
+
+@keyframes success-circle {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes success-check {
+  to { stroke-dashoffset: 0; }
+}
+
+.success-checkmark-container {
+  animation: success-scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+@keyframes success-scale {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Success Confetti */
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confetti-fall 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(300px) rotate(720deg) scale(0.3);
+  }
+}
+
+@media (max-width: 640px) {
+  .confetti-piece {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* Success Amount Pop */
+#success-amount-display {
+  animation: amount-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s both;
+}
+
+@keyframes amount-pop {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Success Share Buttons Stagger */
+#modal-phase-success .grid button {
+  opacity: 0;
+  animation: success-fade-up 0.4s ease forwards;
+}
+#modal-phase-success .grid button:nth-child(1) { animation-delay: 0.9s; }
+#modal-phase-success .grid button:nth-child(2) { animation-delay: 1.0s; }
+#modal-phase-success .grid button:nth-child(3) { animation-delay: 1.1s; }
+#modal-phase-success .grid button:nth-child(4) { animation-delay: 1.2s; }
+
+@keyframes success-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* PayPal Button Container Styling - hide empty containers */
+#apple-pay-container:empty,
+#google-pay-container:empty,
+#paypal-button-container:empty,
+#venmo-button-container:empty {
+  display: none !important;
+}
+
+/* Remove gap for hidden elements */
+#express-checkout-buttons > *:empty {
+  display: none !important;
+}
+
+/* PayPal button rounded corners */
+#paypal-button-container iframe {
+  border-radius: 12px !important;
+}
+
+/* Apple Pay Button - Native styling */
+#apple-pay-btn {
+  -webkit-appearance: -apple-pay-button;
+  -apple-pay-button-type: donate;
+  -apple-pay-button-style: black;
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Google Pay Button Enhancement */
+#google-pay-btn {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Loading Spinner for Card Submit */
+#card-submit-btn svg.animate-spin {
+  margin-right: 8px;
+}
+
+/* Express Checkout Section */
+.express-checkout-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.express-checkout-divider::before,
+.express-checkout-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}

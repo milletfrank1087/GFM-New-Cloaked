@@ -1,0 +1,45 @@
+{
+  "section": {
+    "label": "SUPPORT",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about donating and supporting this campaign."
+  },
+  "questions": [
+    {
+      "q": "How will my donation be used?",
+      "a": "100% of your donation goes directly towards the stated cause. The organizer provides regular updates on how funds are being used, ensuring complete transparency. You can track the campaign's progress and see exactly how your contribution is making a difference."
+    },
+    {
+      "q": "Is my payment information secure?",
+      "a": "Absolutely. We use PayPal's secure payment processing with 256-bit SSL encryption. Your financial information is never stored on our servers and all transactions are protected by PayPal's buyer protection program."
+    },
+    {
+      "q": "Can I donate anonymously?",
+      "a": "Yes! Simply check the \"Don't display my name publicly\" box when donating. Your name will not appear on the public donor list, though the organizer will still be able to send you a thank you message and receipt."
+    },
+    {
+      "q": "Will I receive a receipt for my donation?",
+      "a": "Yes, you'll receive an email confirmation and receipt immediately after your donation is processed. This receipt includes all transaction details and can be used for your personal records."
+    },
+    {
+      "q": "What payment methods are accepted?",
+      "a": "We accept all major credit and debit cards (Visa, Mastercard, American Express, Discover) through PayPal. You can also pay directly from your PayPal balance or linked bank account. All transactions are processed securely."
+    },
+    {
+      "q": "Can I set up a recurring monthly donation?",
+      "a": "Yes! When making your donation, select the \"Monthly\" option to set up a recurring contribution. You can cancel or modify your monthly donation at any time through your PayPal account or by contacting us directly."
+    },
+    {
+      "q": "Is there a minimum donation amount?",
+      "a": "The minimum donation is {{currency}}1. Every contribution, no matter how small, makes a difference and is deeply appreciated. There is no maximum limit on donations."
+    },
+    {
+      "q": "Can I get a refund on my donation?",
+      "a": "Donations are generally non-refundable as they are transferred to campaign organizers. However, refunds may be issued in cases of fraud, duplicate charges, or unauthorized transactions. Contact our support team within 30 days if you believe you're eligible for a refund."
+    },
+    {
+      "q": "How do I know this campaign is legitimate?",
+      "a": "This campaign has been verified by our team. Look for the \"Verified\" badge on the organizer's profile. We also encourage you to read the campaign story, check updates from the organizer, and review comments from other donors before contributing."
+    }
+  ]
+}

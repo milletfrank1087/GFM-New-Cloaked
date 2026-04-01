@@ -1,0 +1,126 @@
+const Cart = {
+  KEY: 'store_cart',
+
+  get() {
+    try { return JSON.parse(localStorage.getItem(this.KEY)) || []; }
+    catch { return []; }
+  },
+
+  save(items) {
+    localStorage.setItem(this.KEY, JSON.stringify(items));
+    this.updateBadge();
+  },
+
+  add(name, slug, price) {
+    const items = this.get();
+    const existing = items.find(i => i.slug === slug);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      items.push({ name, slug, price: parseFloat(price), quantity: 1 });
+    }
+    this.save(items);
+    this.showNotification(name + ' added to cart');
+  },
+
+  remove(slug) {
+    const items = this.get().filter(i => i.slug !== slug);
+    this.save(items);
+  },
+
+  updateQuantity(slug, qty) {
+    const items = this.get();
+    const item = items.find(i => i.slug === slug);
+    if (item) {
+      item.quantity = Math.max(1, parseInt(qty) || 1);
+      this.save(items);
+    }
+  },
+
+  clear() {
+    localStorage.removeItem(this.KEY);
+    this.updateBadge();
+  },
+
+  count() {
+    return this.get().reduce((sum, i) => sum + i.quantity, 0);
+  },
+
+  total() {
+    return this.get().reduce((sum, i) => sum + i.price * i.quantity, 0);
+  },
+
+  updateBadge() {
+    const badges = document.querySelectorAll('[data-cart-count]');
+    const c = this.count();
+    badges.forEach(b => {
+      b.textContent = c;
+      b.style.display = c > 0 ? 'flex' : 'none';
+    });
+  },
+
+  showNotification(msg) {
+    const existing = document.getElementById('cart-notification');
+    if (existing) existing.remove();
+
+    const el = document.createElement('div');
+    el.id = 'cart-notification';
+    el.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:500;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.15);animation:slideIn 0.3s ease';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => { if (el.parentNode) el.remove(); }, 2500);
+  },
+
+  renderCartPage() {
+    const container = document.getElementById('cart-items');
+    const emptyEl = document.getElementById('cart-empty');
+    const filledEl = document.getElementById('cart-filled');
+    const totalEl = document.getElementById('cart-total');
+    const countEl = document.getElementById('cart-item-count');
+
+    if (!container) return;
+
+    const items = this.get();
+
+    if (items.length === 0) {
+      if (emptyEl) emptyEl.style.display = 'block';
+      if (filledEl) filledEl.style.display = 'none';
+      return;
+    }
+
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (filledEl) filledEl.style.display = 'block';
+    if (countEl) countEl.textContent = this.count() + ' item' + (this.count() !== 1 ? 's' : '');
+    if (totalEl) totalEl.textContent = '\u20ac' + this.total().toFixed(2);
+
+    container.innerHTML = items.map(item => `
+      <div class="flex items-center justify-between py-4 border-b border-gray-100 last:border-0">
+        <div class="flex items-center gap-4 flex-1">
+          <div class="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 text-sm">${item.name}</h3>
+            <p class="text-sm text-gray-500">\u20ac${item.price.toFixed(2)} each</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <select onchange="Cart.updateQuantity('${item.slug}', this.value); Cart.renderCartPage();"
+            class="border border-gray-200 rounded-lg px-2 py-1 text-sm bg-white">
+            ${[1,2,3,4,5].map(n => `<option value="${n}" ${item.quantity === n ? 'selected' : ''}>${n}</option>`).join('')}
+          </select>
+          <span class="font-semibold text-gray-900 w-16 text-right">\u20ac${(item.price * item.quantity).toFixed(2)}</span>
+          <button onclick="Cart.remove('${item.slug}'); Cart.renderCartPage();"
+            class="text-gray-400 hover:text-red-500 transition p-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  Cart.updateBadge();
+  Cart.renderCartPage();
+});

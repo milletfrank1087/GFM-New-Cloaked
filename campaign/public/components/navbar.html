@@ -1,0 +1,29 @@
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-gfm-green rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <span class="text-xl font-bold text-gfm-dark" data-i18n="common.brand.name">HopeRise</span>
+      </a>
+      
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#story" class="text-gfm-gray hover:text-gfm-green transition-colors" data-i18n="common.nav.story">Story</a>
+        <a href="#updates" class="text-gfm-gray hover:text-gfm-green transition-colors" data-i18n="common.nav.updates">Updates</a>
+        <a href="#donors" class="text-gfm-gray hover:text-gfm-green transition-colors" data-i18n="common.nav.donors">Donors</a>
+        <a href="#faq" class="text-gfm-gray hover:text-gfm-green transition-colors" data-i18n="common.nav.faq">FAQ</a>
+      </div>
+      
+      <!-- Desktop: anchor link, Mobile: opens modal -->
+      <a href="#donate-inline" class="lg:hidden bg-gfm-green hover:bg-gfm-green-dark text-white px-6 py-2.5 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-gfm-green/30 hover:-translate-y-0.5" data-i18n="common.nav.donateNow">
+        Donate Now
+      </a>
+      <button class="hidden lg:block open-donate-modal bg-gfm-green hover:bg-gfm-green-dark text-white px-6 py-2.5 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-gfm-green/30 hover:-translate-y-0.5" data-i18n="common.nav.donateNow">
+        Donate Now
+      </button>
+    </div>
+  </div>
+</nav>

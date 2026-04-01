@@ -1,0 +1,77 @@
+{
+  "modal": {
+    "title": "Fai una Donazione",
+    "subtitle": "Scegli un importo per sostenere questa raccolta fondi",
+    "oneTime": "Una tantum",
+    "monthly": "Mensile",
+    "otherAmount": "Altro importo",
+    "tip": {
+      "title": "Mancia per HopeRise",
+      "description": "HopeRise è gratuito per gli organizzatori. Considera di lasciare una mancia per supportare la nostra piattaforma.",
+      "noTip": "Nessuna mancia"
+    },
+    "emailLabel": "Email (opzionale)",
+    "emailPlaceholder": "tu@esempio.com",
+    "emailHelp": "Per la ricevuta di pagamento",
+    "anonymous": "Non mostrare pubblicamente il mio nome nella raccolta fondi",
+    "continueToPayment": "Continua al Pagamento",
+    "redirectNotice": "Verrai reindirizzato a una pagina di pagamento sicura",
+    "protectedByPaypal": "Pagamento Sicuro"
+  },
+  "redirect": {
+    "title": "Preparazione del pagamento...",
+    "subtitle": "Reindirizzamento alla pagina di pagamento sicura"
+  },
+  "payment": {
+    "completeYourDonation": "Completa la Tua Donazione",
+    "total": "Totale:",
+    "emailOptional": "Email (Opzionale)",
+    "emailPlaceholder": "tua@email.it",
+    "emailHelp": "Fornire la tua email migliora il tracciamento delle donazioni e ci permette di inviarti una ricevuta",
+    "paymentMethod": "Metodo di Pagamento",
+    "expressCheckout": "Pagamento Rapido",
+    "orPayWithCard": "Oppure Paga con Carta",
+    "cardholderName": "Nome Titolare Carta",
+    "cardNumber": "Numero Carta",
+    "expiryDate": "Data di Scadenza",
+    "cvv": "CVV",
+    "completeDonation": "Completa Donazione",
+    "securityNote": "Crittografia SSL 256-bit • Pagamento Sicuro"
+  },
+  "mobile": {
+    "supportTitle": "Sostieni questa raccolta fondi",
+    "donate": "Dona"
+  },
+  "messages": {
+    "thankYou": "Grazie per la tua donazione di ${amount}! 🎉",
+    "paymentFailed": "Pagamento fallito. Riprova per favore.",
+    "cardDeclined": "La tua carta è stata rifiutata. Prova un altro metodo di pagamento.",
+    "verificationRequired": "Verifica aggiuntiva richiesta. Riprova per favore.",
+    "paymentCancelled": "Pagamento annullato.",
+    "applePayCancelled": "Apple Pay annullato.",
+    "applePayFailed": "Configurazione Apple Pay fallita. Prova un altro metodo di pagamento.",
+    "applePayVerificationFailed": "Verifica Apple Pay fallita. Prova un altro metodo di pagamento.",
+    "googlePayCancelled": "Google Pay annullato.",
+    "cardNotInitialized": "Pagamento con carta non inizializzato. Ricarica e riprova.",
+    "processing": "Elaborazione...",
+    "paymentVerificationFailed": "Verifica pagamento fallita. Prova un altro metodo di pagamento.",
+    "3dsVerificationFailed": "Verifica 3D Secure fallita"
+  },
+  "success": {
+    "title": "Grazie!",
+    "subtitle": "La tua generosità fa davvero la differenza",
+    "impactMessage": "La tua donazione è stata elaborata con successo e aiuterà direttamente questa raccolta fondi a raggiungere il suo obiettivo.",
+    "referralMessage": "Condividi il tuo link personale qui sotto — per ogni amico che dona tramite esso, aggiungeremo un contributo bonus come segno di apprezzamento!",
+    "yourLink": "Il tuo link di referral personale",
+    "shareTitle": "Condividi per moltiplicare il tuo impatto",
+    "shareText": "Ho appena fatto una donazione a questa raccolta fondi! Per favore aiuta anche tu:",
+    "copy": "Copia",
+    "copied": "Copiato!",
+    "close": "Chiudi"
+  },
+  "types": {
+    "oneTime": "Una tantum",
+    "monthly": "Mensile",
+    "donation": "Donazione"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "login": {
+    "title": "Accesso Admin",
+    "subtitle": "Pannello di amministrazione HopeRise",
+    "password": "Password",
+    "passwordPlaceholder": "Inserisci la password admin",
+    "loginButton": "Accedi",
+    "loggingIn": "Accesso in corso...",
+    "error": "Password non valida"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Benvenuto",
+    "campaign": "Campagna",
+    "stats": {
+      "raised": "Raccolto",
+      "tips": "Mance",
+      "gross": "Lordo",
+      "fees": "Commissioni",
+      "net": "Netto",
+      "donors": "Donatori",
+      "avgDonation": "Donazione Media",
+      "transactions": "Transazioni"
+    },
+    "recentDonations": "Donazioni Recenti",
+    "viewAll": "Vedi Tutte"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transazioni",
+    "customers": "Clienti",
+    "failures": "Errori",
+    "logout": "Esci"
+  },
+  "transactions": {
+    "title": "Tutte le Transazioni",
+    "search": "Cerca transazioni...",
+    "filters": {
+      "all": "Tutte",
+      "oneTime": "Una tantum",
+      "monthly": "Mensile",
+      "recurring": "Ricorrente"
+    },
+    "table": {
+      "donor": "Donatore",
+      "amount": "Importo",
+      "type": "Tipo",
+      "method": "Metodo",
+      "date": "Data",
+      "status": "Stato",
+      "actions": "Azioni"
+    },
+    "status": {
+      "completed": "Completato",
+      "pending": "In sospeso",
+      "failed": "Fallito"
+    },
+    "details": "Dettagli Transazione",
+    "noTransactions": "Nessuna transazione trovata"
+  },
+  "customers": {
+    "title": "Gestione Clienti",
+    "search": "Cerca clienti...",
+    "filters": {
+      "all": "Tutti",
+      "active": "Attivi",
+      "paused": "In pausa"
+    },
+    "table": {
+      "customer": "Cliente",
+      "email": "Email",
+      "totalDonated": "Totale Donato",
+      "donations": "Donazioni",
+      "firstDonation": "Prima Donazione",
+      "status": "Stato",
+      "actions": "Azioni"
+    },
+    "details": "Dettagli Cliente",
+    "actions": {
+      "rebill": "Rebill",
+      "pause": "Pausa",
+      "resume": "Riprendi",
+      "delete": "Elimina",
+      "saveNotes": "Salva Note"
+    },
+    "rebillModal": {
+      "title": "Rebill Cliente",
+      "amount": "Importo",
+      "confirm": "Conferma Rebill",
+      "cancel": "Annulla"
+    },
+    "deleteModal": {
+      "title": "Elimina Cliente",
+      "confirm": "Sei sicuro di voler eliminare questo cliente? Questa azione non può essere annullata.",
+      "confirmButton": "Sì, Elimina",
+      "cancel": "Annulla"
+    },
+    "noCustomers": "Nessun cliente trovato"
+  },
+  "failures": {
+    "title": "Errori di Pagamento",
+    "table": {
+      "date": "Data",
+      "errorType": "Tipo Errore",
+      "errorCode": "Codice",
+      "message": "Messaggio",
+      "amount": "Importo",
+      "ip": "IP"
+    },
+    "noFailures": "Nessun errore registrato"
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "view": "Visualizza",
+    "close": "Chiudi",
+    "confirm": "Conferma",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "export": "Esporta",
+    "refresh": "Aggiorna"
+  }
+}

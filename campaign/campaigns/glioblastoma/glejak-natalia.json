@@ -1,0 +1,153 @@
+{
+  "id": "glejak-natalia",
+  "title": "Pomóż Natalii Walczyć z Guzem Mózgu",
+  "description": "Natalia, lat 21, została zdiagnozowana z glejakiem wielopostaciowym (GBM) IV stopnia — najagresywniejszym nowotworem mózgu. Pilnie potrzebuje immunoterapii komórkami dendrytycznymi w Niemczech — leczenia, którego nie pokrywa żaden publiczny system opieki zdrowotnej w Europie.",
+  "organizer": {
+    "name": "Agnieszka Kowalska",
+    "initials": "AK",
+    "location": "Kraków, Polska",
+    "verified": true,
+    "createdDate": "5 Lut 2026"
+  },
+  "goal": 380000,
+  "raised": 117800,
+  "donorCount": 763,
+  "daysLeft": 32,
+  "images": [
+    {
+      "url": "/images/campaigns/glejak-natalia/1.jpg",
+      "thumb": "/images/campaigns/glejak-natalia/1.jpg",
+      "alt": "Natalia w szpitalu"
+    },
+    {
+      "url": "/images/campaigns/glejak-natalia/2.jpg",
+      "thumb": "/images/campaigns/glejak-natalia/2.jpg",
+      "alt": "Opieka medyczna"
+    },
+    {
+      "url": "/images/campaigns/glejak-natalia/3.jpg",
+      "thumb": "/images/campaigns/glejak-natalia/3.jpg",
+      "alt": "Leczenie"
+    },
+    {
+      "url": "/images/campaigns/glejak-natalia/4.jpg",
+      "thumb": "/images/campaigns/glejak-natalia/4.jpg",
+      "alt": "Wsparcie rodziny"
+    }
+  ],
+  "story": {
+    "intro": "Natalia jest 21-letnią studentką medycyny z Krakowa, u której zdiagnozowano Glejaka Wielopostaciowego (GBM) IV stopnia wg WHO — najagresywniejszy nowotwór złośliwy mózgu. Standardowe leczenie (operacja, radioterapia, temozolomid) daje medianę przeżycia 14-16 miesięcy. Jedyne leczenie, które może istotnie wydłużyć jej życie — immunoterapia komórkami dendrytycznymi — jest dostępne wyłącznie w specjalistycznych ośrodkach w Niemczech i nie jest refundowane przez żaden publiczny system opieki zdrowotnej w Europie.",
+    "sections": [
+      {
+        "title": "Diagnoza",
+        "icon": "diagnosis",
+        "content": "Wszystko zaczęło się w październiku 2025, gdy Natalia zaczęła odczuwać uporczywe bóle głowy, szczególnie poranne, którym towarzyszyły nudności i zamazane widzenie w lewym oku. 20 października, po napadzie drgawek podczas wykładu na Wydziale Lekarskim Uniwersytetu Jagiellońskiego, została pilnie przetransportowana do Kliniki Neurochirurgii Szpitala Uniwersyteckiego w Krakowie.\n\nRezonans magnetyczny (MRI) ujawnił masę o średnicy 4,2 cm w prawym płacie czołowym z charakterystycznym pierścieniowatym wzmocnieniem kontrastowym i obrzękiem okołoogniskowym. Biopsja stereotaktyczna i analiza molekularna potwierdziły diagnozę: Glejak Wielopostaciowy, IDH-wildtype, IV stopień wg WHO, z niemetylowanym promotorem MGMT — najniekorzystniejszy podtyp molekularny, oznaczający ograniczoną odpowiedź na chemioterapię."
+      },
+      {
+        "title": "Leczenie Standardowe i Jego Ograniczenia",
+        "icon": "treatment",
+        "content": "Natalia przeszła częściową resekcję chirurgiczną guza (subtotalna resekcja) 5 listopada 2025 w Szpitalu Uniwersyteckim w Krakowie — całkowita resekcja nie była możliwa ze względu na bliskość guza do funkcjonalnych obszarów mowy. Następnie zastosowano protokół Stuppa: jednoczesna radioterapia (30 sesji w 6 tygodni) z codziennym temozolomidem, a następnie cykle podtrzymujące temozolomidem.\n\nLekarze byli szczerzy: przy niemetylowanym MGMT odpowiedź na temozolomid jest spodziewana jako ograniczona. Mediana przeżycia przy standardowym leczeniu wynosi 12-15 miesięcy. Kontrolny MRI ze stycznia 2026 wykazał stabilny guz resztkowy, ale lekarze ostrzegli, że nawrót jest niemal pewny."
+      },
+      {
+        "title": "Nadzieja: Immunoterapia Komórkami Dendrytycznymi",
+        "icon": "hope",
+        "content": "Po intensywnych poszukiwaniach rodzina Natalii zidentyfikowała specjalistyczny program immunoterapii komórkami dendrytycznymi w certyfikowanym centrum onkologicznym w Niemczech. Niedawne badanie kliniczne (Nature Communications, sierpień 2024) wykazało wzrost o 68% mediany całkowitego przeżycia u pacjentów z nawrotowym glejakiem wielopostaciowym, którzy otrzymali szczepionki z komórek dendrytycznych.\n\nLeczenie działa następująco: z krwi Natalii pobierane są komórki, przekształcane w komórki dendrytyczne w laboratorium, «trenowane» antygenami z jej własnego guza, a następnie podawane z powrotem w celu aktywacji jej układu immunologicznego przeciwko rakowi. Wymagane są 4-6 cykli w ciągu 12 miesięcy.\n\nTo leczenie NIE jest pokrywane przez ŻADEN publiczny system opieki zdrowotnej w Europie — ani NFZ, ani żadna inna europejska kasa chorych. Jest klasyfikowane jako «terapia innowacyjna» i dostępne wyłącznie prywatnie."
+      },
+      {
+        "title": "Dlaczego Potrzebujemy Waszej Pomocy",
+        "icon": "help",
+        "content": "Chcemy być w pełni transparentni. Standardowe leczenie Natalii jest pokrywane przez NFZ. To, o co prosimy, dotyczy wyłącznie terapii, które nie są refundowane przez żaden publiczny system opieki zdrowotnej w Europie — ale mogą dać Natalii realną szansę na życie powyżej 14 miesięcy standardowej prognozy. W Polsce istnieje Centrum Cyklotronowe Bronowice (CCB) w Krakowie oferujące protonoterapię, jednak glejak wielopostaciowy nie jest standardowym wskazaniem do tego leczenia w CCB, a kolejki oczekiwania są bardzo długie. Urządzenie Optune (Tumor Treating Fields) nie jest refundowane przez NFZ.",
+        "coveredLabel": "Pokrywane przez NFZ",
+        "coveredItems": [
+          "Diagnostyka wstępna — MRI mózgu, biopsja stereotaktyczna (Szpital Uniwersytecki w Krakowie)",
+          "Resekcja chirurgiczna guza (Szpital Uniwersytecki w Krakowie)",
+          "Radioterapia — 30 sesji, protokół Stuppa (NFZ)",
+          "Chemioterapia temozolomidem (NFZ)"
+        ],
+        "notCoveredLabel": "Nieobjęte żadnym systemem opieki zdrowotnej w Europie",
+        "notCoveredItems": [
+          "Immunoterapia komórkami dendrytycznymi — 4-6 cykli w Niemczech",
+          "Tumor Treating Fields / Optune — nierefundowane przez NFZ",
+          "Protonoterapia (proton therapy) — glejak nie jest standardowym wskazaniem w CCB Kraków, długie kolejki",
+          "Profilowanie molekularne nowej generacji (NGS) do terapii spersonalizowanej",
+          "Przeprowadzka, zakwaterowanie i opieka w Niemczech przez 12+ miesięcy"
+        ]
+      },
+      {
+        "title": "Szczegółowy Kosztorys",
+        "icon": "cost",
+        "totalLabel": "Łącznie",
+        "items": [
+          { "text": "Immunoterapia komórkami dendrytycznymi (4-6 cykli, Niemcy)", "amount": 148000 },
+          { "text": "Protonoterapia (proton therapy, Niemcy)", "amount": 105000 },
+          { "text": "Profilowanie molekularne NGS i spersonalizowany plan leczenia", "amount": 34000 },
+          { "text": "Przeprowadzka, zakwaterowanie i koszty opieki w Niemczech (12+ miesięcy)", "amount": 63000 },
+          { "text": "Nieprzewidziane wydatki medyczne i fundusz rezerwowy", "amount": 30000 }
+        ]
+      }
+    ],
+    "quote": {
+      "text": "Chciałam zostać lekarką, żeby pomagać ludziom. Teraz uczę się, co to znaczy być pacjentem — i jak nieznośne jest wiedzieć, że istnieje leczenie, które może cię uratować, ale nie mieć do niego dostępu. Każda wasza darowizna to nie tylko pieniądze — to czas życia. Jeśli mi się uda, obiecuję poświęcić życie neuroonkologii, żeby nikt inny nie musiał przechodzić przez to, co ja.",
+      "author": "Natalia W."
+    }
+  },
+  "updates": [
+    {
+      "date": "10 Mar 2026",
+      "title": "Wyniki kontrolnego MRI 📋",
+      "content": "Kontrolny MRI po zakończeniu radioterapii wykazuje stabilny guz resztkowy bez nowych ognisk. Lekarze w Szpitalu Uniwersyteckim mówią, że to najlepszy możliwy wynik przy standardowym leczeniu, ale nawrót pozostaje bardzo prawdopodobny. Klinika w Niemczech potwierdziła, że mogą rozpocząć immunoterapię komórkami dendrytycznymi w kwietniu, jeśli uda się zebrać fundusze.",
+      "isNew": true
+    },
+    {
+      "date": "5 Mar 2026",
+      "title": "Przekroczyliśmy 600 darczyńców! 🙏",
+      "content": "Wasze wsparcie nas głęboko porusza. Natalia ukończyła cykle podtrzymujące temozolomidem i czuje się silna. Czyta każdą waszą wiadomość i mówi, że dajecie jej siłę do walki. Każda złotówka przybliża nas do Niemiec.",
+      "isNew": false
+    },
+    {
+      "date": "20 Lut 2026",
+      "title": "Wiadomości ze szpitala",
+      "content": "Natalia ukończyła jednoczesną radiochemioterapię w Szpitalu Uniwersyteckim. Odczuwała zmęczenie i nudności, ale jej siła psychiczna jest niesamowita. Jej onkolog wyjaśniła nam, że przy niemetylowanym MGMT sam temozolomid nie wystarczy — dlatego immunoterapia jest kluczowa.",
+      "isNew": false
+    },
+    {
+      "date": "5 Lut 2026",
+      "title": "Kampania wystartowała",
+      "content": "Z ciężkim sercem, ale z determinacją, rozpoczynamy ten apel. Po trzech miesiącach intensywnego leczenia w publicznym systemie zdrowia lekarze powiedzieli nam jasno: standardowe leczenie daje czas, ale immunoterapia może dać życie. Niestety, nie jest refundowana w żadnym kraju Europy. Wierzymy w solidarność.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    { "amount": 76000, "label": "Zakończenie standardowego leczenia i profilowanie molekularne", "reached": true },
+    { "amount": 190000, "label": "50% — Rozpoczęcie immunoterapii komórkami dendrytycznymi", "reached": false },
+    { "amount": 304000, "label": "80% — Protonoterapia", "reached": false },
+    { "amount": 380000, "label": "Cel — Pełne pokrycie leczenia w Niemczech 🎉", "reached": false }
+  ],
+  "topDonors": [
+    { "name": "Koło Naukowe Medyków UJ", "amount": 3800, "initials": "KN", "color": "from-amber-400 to-amber-500", "rank": 1 },
+    { "name": "Rodzina Nowaków", "amount": 2200, "initials": "RN", "color": "from-gray-400 to-gray-500", "rank": 2 },
+    { "name": "Anonim", "amount": 1900, "initials": "?", "color": "from-orange-400 to-orange-500", "rank": 3 }
+  ],
+  "recentDonors": [
+    { "name": "Kasia K.", "amount": 80, "time": "8 minut temu", "initials": "KK", "color": "from-rose-400 to-rose-500", "message": "Trzymaj się, kochana!" },
+    { "name": "Anonim", "amount": 100, "time": "22 minuty temu", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "" },
+    { "name": "Tomek P.", "amount": 60, "time": "38 minut temu", "initials": "TP", "color": "from-blue-400 to-blue-500", "message": "Od kolegi ze studiów" },
+    { "name": "Magda V.", "amount": 170, "time": "1 godzinę temu", "initials": "MV", "color": "from-violet-400 to-violet-500", "message": "Dużo zdrowia" },
+    { "name": "Bartek G.", "amount": 120, "time": "1 godzinę temu", "initials": "BG", "color": "from-emerald-400 to-emerald-500", "message": "" },
+    { "name": "Anonim", "amount": 210, "time": "2 godziny temu", "initials": "?", "color": "from-amber-400 to-amber-500", "message": "Wyzdrowiej szybko" },
+    { "name": "Ola D.", "amount": 40, "time": "2 godziny temu", "initials": "OD", "color": "from-pink-400 to-pink-500", "message": "" },
+    { "name": "Michał L.", "amount": 150, "time": "3 godziny temu", "initials": "ML", "color": "from-cyan-400 to-cyan-500", "message": "Dasz radę, Natalio!" },
+    { "name": "Zosia M.", "amount": 60, "time": "3 godziny temu", "initials": "ZM", "color": "from-indigo-400 to-indigo-500", "message": "Z Wrocławia z miłością" },
+    { "name": "Anonim", "amount": 80, "time": "4 godziny temu", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "" },
+    { "name": "Paweł T.", "amount": 190, "time": "4 godziny temu", "initials": "PT", "color": "from-teal-400 to-teal-500", "message": "" },
+    { "name": "Ewa S.", "amount": 40, "time": "5 godzin temu", "initials": "ES", "color": "from-orange-400 to-orange-500", "message": "Siły dla całej rodziny" },
+    { "name": "Kamil H.", "amount": 100, "time": "5 godzin temu", "initials": "KH", "color": "from-purple-400 to-purple-500", "message": "" },
+    { "name": "Anonim", "amount": 60, "time": "6 godzin temu", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "Jesteśmy z Tobą" },
+    { "name": "Wojtek N.", "amount": 80, "time": "6 godzin temu", "initials": "WN", "color": "from-lime-400 to-lime-500", "message": "" },
+    { "name": "Ania P.", "amount": 40, "time": "7 godzin temu", "initials": "AP", "color": "from-fuchsia-400 to-fuchsia-500", "message": "Z Gdańska" },
+    { "name": "Marek G.", "amount": 120, "time": "8 godzin temu", "initials": "MG", "color": "from-sky-400 to-sky-500", "message": "" },
+    { "name": "Anonim", "amount": 20, "time": "8 godzin temu", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "Co mogę" },
+    { "name": "Karolina A.", "amount": 80, "time": "9 godzin temu", "initials": "KA", "color": "from-red-400 to-red-500", "message": "Modlimy się za Ciebie" },
+    { "name": "Jakub Z.", "amount": 60, "time": "10 godzin temu", "initials": "JZ", "color": "from-yellow-400 to-yellow-500", "message": "" }
+  ]
+}

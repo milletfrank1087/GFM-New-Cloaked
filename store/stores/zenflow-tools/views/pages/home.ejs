@@ -1,0 +1,255 @@
+<% const pageTitle = 'Home'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+
+<section class="py-12 md:py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 bg-primary-50 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-5">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        Trusted by 12,000+ professionals
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-[1.15] mb-4">
+        Professional tools to grow your business
+      </h1>
+      <p class="text-base sm:text-lg text-gray-500 leading-relaxed mb-7 max-w-lg">
+        Templates, planning frameworks, and productivity toolkits crafted by industry experts. Download instantly and start working smarter today.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="#products" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm transition hover:shadow-lg hover:shadow-primary/20">
+          Browse Products
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+        </a>
+        <a href="#about" class="inline-flex items-center justify-center gap-2 text-gray-600 bg-white border border-gray-200 px-6 py-3 rounded-xl font-semibold text-sm transition hover:border-gray-300">
+          Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-gray-100 bg-gray-50/50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">12K+</p>
+        <p class="text-xs text-gray-400 mt-0.5">Customers</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">24</p>
+        <p class="text-xs text-gray-400 mt-0.5">Products</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">40+</p>
+        <p class="text-xs text-gray-400 mt-0.5">Countries</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">4.9</p>
+        <p class="text-xs text-gray-400 mt-0.5">Avg. rating</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="products" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900">All Products</h2>
+      <p class="text-sm text-gray-400 mt-1">${(products || []).length} products available</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      ${(products || []).map((p, i) => {
+        const icons = [
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"/></svg>'
+        ];
+        const bgColors = ['bg-blue-50', 'bg-emerald-50', 'bg-violet-50', 'bg-amber-50', 'bg-rose-50', 'bg-cyan-50'];
+        const textColors = ['text-blue-600', 'text-emerald-600', 'text-violet-600', 'text-amber-600', 'text-rose-600', 'text-cyan-600'];
+        return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition-all">' +
+          '<div class="w-10 h-10 rounded-lg ' + bgColors[i % 6] + ' flex items-center justify-center ' + textColors[i % 6] + ' shrink-0">' + icons[i % 5] + '</div>' +
+          '<div class="flex-1 min-w-0">' +
+            '<h3 class="font-semibold text-gray-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+            '<p class="text-xs text-gray-400 mt-0.5">' + (p.category || 'Digital') + '</p>' +
+          '</div>' +
+          '<span class="text-sm font-bold text-gray-900 shrink-0">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+        '</a>';
+      }).join('')}
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-50 py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-3">Why professionals choose us</h2>
+    <p class="text-sm text-gray-400 text-center mb-10 max-w-lg mx-auto">Every product is tested with real businesses before it reaches our store.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Instant Delivery</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">Download immediately after checkout. No waiting, no shipping.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Secure Payments</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">256-bit SSL encryption. Processed through Stripe.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Lifetime Updates</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">Buy once, use forever. Free updates included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-3xl mx-auto">
+      <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">Our Story</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">About ${store.name}</h2>
+      <p class="text-sm text-gray-500 leading-relaxed mb-8">${store.about_text || 'We create high-quality digital products that help professionals and businesses achieve their goals faster. Our team of experts carefully crafts each product to ensure it delivers real, measurable value. Every template and toolkit goes through rigorous testing with real businesses before it reaches our store.'}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-gray-200 p-5">
+          <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+            <svg class="w-4.5 h-4.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Our Mission</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">To make professional-grade digital tools affordable and accessible to everyone — from solo entrepreneurs to growing teams.</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-5">
+          <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+            <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Our Vision</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">A world where every professional has access to the same quality tools that top firms charge thousands for.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-50 py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-8">What our customers say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      ${[
+        { name: 'Sarah K.', role: 'Marketing Manager', text: 'The business plan template saved me at least 30 hours of work. Clean, professional, and exactly what I needed for our investor pitch.' },
+        { name: 'James R.', role: 'Freelance Designer', text: 'I have purchased four products so far and each one has been excellent quality. The financial dashboard alone paid for itself within the first week.' },
+        { name: 'Maria L.', role: 'Startup Founder', text: 'Finally a store that sells business tools that actually work. No fluff, just practical frameworks we use daily.' }
+      ].map(t => '<div class="bg-white border border-gray-200 rounded-xl p-5">' +
+        '<div class="flex items-center gap-0.5 mb-3">' + Array(5).fill('<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>').join('') + '</div>' +
+        '<p class="text-gray-600 text-xs leading-relaxed mb-4">"' + t.text + '"</p>' +
+        '<div class="flex items-center gap-2.5">' +
+          '<div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold text-gray-500">' + t.name.split(' ').map(w => w[0]).join('') + '</div>' +
+          '<div><p class="text-xs font-semibold text-gray-900">' + t.name + '</p><p class="text-[10px] text-gray-400">' + t.role + '</p></div>' +
+        '</div>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h2>
+    <p class="text-sm text-gray-400 mb-8">Everything you need to know about our products and services.</p>
+    <div class="space-y-2">
+      ${[
+        { q: 'What payment methods do you accept?', a: 'We accept all major credit and debit cards including Visa, Mastercard, and American Express through our secure Stripe payment gateway. Apple Pay and Google Pay are also supported.' },
+        { q: 'How do I receive my products?', a: 'All products are delivered digitally. After payment, you will receive immediate access to download your purchased items. A confirmation email with download links is sent within minutes.' },
+        { q: 'Can I get a refund?', a: 'Due to the digital nature of our products, all sales are final. If you experience technical issues or the product does not match its description, please contact our support team within 48 hours.' },
+        { q: 'Is my payment secure?', a: 'All payment processing is handled by Stripe, PCI-DSS Level 1 certified. Your card details are encrypted with 256-bit SSL and never stored on our servers.' },
+        { q: 'Can I use products commercially?', a: 'Yes. All products include a commercial license for personal and business use. The only restriction is redistribution or resale of the original files.' },
+        { q: 'Do you offer bulk discounts?', a: 'Yes, we offer special pricing for teams and organizations. Contact us for a custom quote.' },
+        { q: 'Do products include updates?', a: 'Yes, all purchases include lifetime access to future updates at no additional cost.' },
+        { q: 'What file formats are included?', a: 'Products typically include PDF, XLSX, DOCX, and/or PPTX formats. Specific formats are listed on each product page.' }
+      ].map(item => '<details class="group bg-white border border-gray-200 rounded-xl overflow-hidden">' +
+        '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-gray-900 text-sm hover:text-primary transition">' +
+          '<span class="pr-4">' + item.q + '</span>' +
+          '<svg class="w-4 h-4 text-gray-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+        '</summary>' +
+        '<div class="px-4 pb-3.5 text-gray-500 text-xs leading-relaxed border-t border-gray-100 pt-3">' + item.a + '</div>' +
+      '</details>').join('')}
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="bg-gray-50 py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Get in Touch</h2>
+    <p class="text-sm text-gray-400 mb-8">Have a question or need help? We typically respond within 24 hours.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs font-semibold text-gray-900">Email</p>
+          <p class="text-[11px] text-gray-400 truncate">${store.contact_email || 'support@' + store.domain}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-900">Response</p>
+          <p class="text-[11px] text-gray-400">Within 24 hours</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-900">Global</p>
+          <p class="text-[11px] text-gray-400">40+ countries served</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <form class="space-y-4" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Message Sent!'; this.querySelector('button').disabled=true;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">First Name</label>
+            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="John" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Last Name</label>
+            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Doe" required>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">Email</label>
+          <input type="email" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="john@company.com" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">Message</label>
+          <textarea rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm resize-none" placeholder="Tell us how we can help..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary w-full text-white py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-950 py-12">
+  <div class="max-w-xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-lg sm:text-xl font-bold text-white mb-2">Stay updated</h2>
+    <p class="text-xs text-gray-500 mb-6">New products and exclusive early-bird discounts.</p>
+    <form class="flex gap-2 max-w-sm mx-auto" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Done!'; this.querySelector('button').disabled=true; this.querySelector('input').disabled=true;">
+      <input type="email" placeholder="you@company.com" required class="flex-1 bg-white/10 border border-white/10 text-white placeholder-gray-600 px-3.5 py-2.5 rounded-lg text-sm focus:outline-none focus:border-white/25">
+      <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg font-semibold text-sm shrink-0 transition">Subscribe</button>
+    </form>
+    <p class="text-[10px] text-gray-700 mt-2">No spam. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+`, store, products }) %>

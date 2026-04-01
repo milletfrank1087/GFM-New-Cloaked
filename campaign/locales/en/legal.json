@@ -1,0 +1,135 @@
+{
+  "lastUpdated": "Last updated: January 1, 2026",
+  "terms": {
+    "title": "Terms of Service",
+    "sections": [
+      {
+        "heading": "1. Acceptance of Terms",
+        "content": "By accessing or using HopeRise, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services."
+      },
+      {
+        "heading": "2. Description of Service",
+        "content": "HopeRise provides a platform for individuals and organizations to create fundraising campaigns and receive donations. We act as an intermediary between campaign organizers and donors."
+      },
+      {
+        "heading": "3. User Responsibilities",
+        "content": "Users are responsible for providing accurate information, using the platform lawfully, and not engaging in fraudulent activities. Campaign organizers must use funds as described in their campaigns."
+      },
+      {
+        "heading": "4. Donations",
+        "content": "All donations are voluntary. HopeRise does not guarantee that campaigns will reach their goals or that funds will be used as intended. Donors should exercise due diligence before contributing."
+      },
+      {
+        "heading": "5. Fees",
+        "content": "HopeRise is free for organizers. Payment processing fees may apply. Optional tips to support our platform are appreciated but not required."
+      },
+      {
+        "heading": "6. Prohibited Activities",
+        "content": "Users may not use HopeRise for illegal activities, fraud, harassment, or any purpose that violates these terms or applicable laws."
+      },
+      {
+        "heading": "7. Limitation of Liability",
+        "content": "HopeRise is not liable for any damages arising from the use of our platform, including but not limited to direct, indirect, incidental, or consequential damages."
+      },
+      {
+        "heading": "8. Changes to Terms",
+        "content": "We reserve the right to modify these terms at any time. Continued use of the platform constitutes acceptance of modified terms."
+      },
+      {
+        "heading": "9. Contact",
+        "content": "For questions about these Terms of Service, please contact us at legal@hoperise.com"
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "sections": [
+      {
+        "heading": "1. Information We Collect",
+        "content": "We collect information you provide directly (name, email, payment information) and automatically (IP address, browser type, device information, usage data)."
+      },
+      {
+        "heading": "2. How We Use Your Information",
+        "content": "We use your information to provide and improve our services, process donations, communicate with you, and ensure platform security."
+      },
+      {
+        "heading": "3. Information Sharing",
+        "content": "We share information with campaign organizers (donor name unless anonymous), payment processors, and service providers. We do not sell your personal information."
+      },
+      {
+        "heading": "4. Data Security",
+        "content": "We implement industry-standard security measures including encryption, secure servers, and regular security audits to protect your data."
+      },
+      {
+        "heading": "5. Your Rights",
+        "content": "You have the right to access, correct, delete, or export your personal data. Contact us to exercise these rights."
+      },
+      {
+        "heading": "6. Cookies",
+        "content": "We use cookies to improve your experience. See our Cookie Policy for more details."
+      },
+      {
+        "heading": "7. Children's Privacy",
+        "content": "Our services are not intended for children under 13. We do not knowingly collect information from children."
+      },
+      {
+        "heading": "8. Contact",
+        "content": "For privacy-related inquiries, contact us at privacy@hoperise.com"
+      }
+    ]
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "sections": [
+      {
+        "heading": "What Are Cookies?",
+        "content": "Cookies are small text files stored on your device when you visit our website. They help us provide a better user experience."
+      },
+      {
+        "heading": "Types of Cookies We Use",
+        "content": "Essential Cookies: Required for basic site functionality. Analytics Cookies: Help us understand how visitors use our site. Preference Cookies: Remember your settings and preferences. Marketing Cookies: Used to deliver relevant advertisements."
+      },
+      {
+        "heading": "Managing Cookies",
+        "content": "You can control cookies through your browser settings. Note that disabling certain cookies may affect site functionality."
+      },
+      {
+        "heading": "Third-Party Cookies",
+        "content": "Some cookies are placed by third-party services like payment processors and analytics providers."
+      },
+      {
+        "heading": "Contact",
+        "content": "For questions about our cookie practices, contact us at privacy@hoperise.com"
+      }
+    ]
+  },
+  "refund": {
+    "title": "Refund Policy",
+    "sections": [
+      {
+        "heading": "Donation Refunds",
+        "content": "Donations are generally non-refundable as they are transferred to campaign organizers. However, we may issue refunds in certain circumstances."
+      },
+      {
+        "heading": "Eligible Refund Situations",
+        "content": "Fraudulent campaign (verified by our team), duplicate charge due to technical error, unauthorized transaction, or campaign cancelled before funds disbursed."
+      },
+      {
+        "heading": "Refund Process",
+        "content": "To request a refund, contact our support team within 30 days of your donation. Provide your transaction details and reason for the request."
+      },
+      {
+        "heading": "Processing Time",
+        "content": "Approved refunds are typically processed within 5-10 business days. The time to appear in your account depends on your payment provider."
+      },
+      {
+        "heading": "Platform Tips",
+        "content": "Tips to HopeRise are non-refundable but may be credited toward future donations upon request."
+      },
+      {
+        "heading": "Contact",
+        "content": "For refund requests, contact support@hoperise.com"
+      }
+    ]
+  }
+}

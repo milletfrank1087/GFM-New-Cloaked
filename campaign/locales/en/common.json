@@ -1,0 +1,80 @@
+{
+  "brand": {
+    "name": "HopeRise"
+  },
+  "nav": {
+    "story": "Story",
+    "updates": "Updates",
+    "donors": "Donors",
+    "faq": "FAQ",
+    "donateNow": "Donate Now"
+  },
+  "sidebar": {
+    "raised": "raised",
+    "of": "of",
+    "goal": "goal",
+    "donors": "donors",
+    "daysLeft": "days left",
+    "milestones": "Milestones",
+    "share": "Share",
+    "recentDonation": "Recent Donation",
+    "donated": "donated"
+  },
+  "organizer": {
+    "title": "Organizer",
+    "verified": "Verified",
+    "identityVerified": "Identity Verified",
+    "created": "Created",
+    "fundraiser": "fundraiser",
+    "fundraiserCount": "1 fundraiser"
+  },
+  "updates": {
+    "title": "Updates"
+  },
+  "trust": {
+    "secure": "Secure",
+    "protected": "Protected",
+    "transparent": "Transparent",
+    "sslEncrypted": "SSL Encrypted",
+    "verifiedPlatform": "Verified Platform",
+    "paypalProtected": "PayPal Protected"
+  },
+  "share": {
+    "title": "Share this fundraiser",
+    "spreadTheWord": "Help spread the word",
+    "sharingHelps": "Sharing is the easiest way to help. Every share brings us closer to our goal.",
+    "facebook": "Share",
+    "twitter": "Tweet",
+    "whatsapp": "WhatsApp",
+    "copyLink": "Copy Link"
+  },
+  "donors": {
+    "title": "Donors",
+    "topDonors": "Top Donors",
+    "allDonors": "All Donors",
+    "showMore": "Show More Donors",
+    "anonymous": "Anonymous",
+    "andMore": "...and ${count} more donors"
+  },
+  "time": {
+    "justNow": "Just now",
+    "minAgo": "min ago",
+    "hoursAgo": "hours ago",
+    "daysAgo": "days ago"
+  },
+  "footer": {
+    "tagline": "Empowering people to help others through secure, transparent fundraising. Every donation makes a difference.",
+    "raised": "Raised",
+    "campaigns": "Campaigns",
+    "allRightsReserved": "All rights reserved.",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "cookiePolicy": "Cookie Policy",
+    "refundPolicy": "Refund Policy",
+    "iUnderstand": "I Understand"
+  },
+  "misc": {
+    "loading": "Loading...",
+    "backToSite": "← Back to site"
+  }
+}

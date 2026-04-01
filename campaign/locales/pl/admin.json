@@ -1,0 +1,128 @@
+{
+  "login": {
+    "title": "Logowanie Admin",
+    "subtitle": "Panel administracyjny HopeRise",
+    "password": "Hasło",
+    "passwordPlaceholder": "Wprowadź hasło administratora",
+    "loginButton": "Zaloguj",
+    "loggingIn": "Logowanie...",
+    "error": "Nieprawidłowe hasło"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "welcome": "Witaj",
+    "campaign": "Kampania",
+    "stats": {
+      "raised": "Zebrano",
+      "tips": "Napiwki",
+      "gross": "Brutto",
+      "fees": "Prowizje",
+      "net": "Netto",
+      "donors": "Darczyńcy",
+      "avgDonation": "Średnia Darowizna",
+      "transactions": "Transakcje"
+    },
+    "recentDonations": "Ostatnie Darowizny",
+    "viewAll": "Zobacz Wszystkie"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "transactions": "Transakcje",
+    "customers": "Klienci",
+    "failures": "Błędy",
+    "logout": "Wyloguj"
+  },
+  "transactions": {
+    "title": "Wszystkie Transakcje",
+    "search": "Szukaj transakcji...",
+    "filters": {
+      "all": "Wszystkie",
+      "oneTime": "Jednorazowe",
+      "monthly": "Miesięczne",
+      "recurring": "Cykliczne"
+    },
+    "table": {
+      "donor": "Darczyńca",
+      "amount": "Kwota",
+      "type": "Typ",
+      "method": "Metoda",
+      "date": "Data",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "status": {
+      "completed": "Zrealizowana",
+      "pending": "Oczekująca",
+      "failed": "Nieudana"
+    },
+    "details": "Szczegóły Transakcji",
+    "noTransactions": "Nie znaleziono transakcji"
+  },
+  "customers": {
+    "title": "Zarządzanie Klientami",
+    "search": "Szukaj klientów...",
+    "filters": {
+      "all": "Wszyscy",
+      "active": "Aktywni",
+      "paused": "Wstrzymani"
+    },
+    "table": {
+      "customer": "Klient",
+      "email": "Email",
+      "totalDonated": "Łączna Kwota",
+      "donations": "Darowizny",
+      "firstDonation": "Pierwsza Darowizna",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "details": "Szczegóły Klienta",
+    "actions": {
+      "rebill": "Rebill",
+      "pause": "Wstrzymaj",
+      "resume": "Wznów",
+      "delete": "Usuń",
+      "saveNotes": "Zapisz Notatki"
+    },
+    "rebillModal": {
+      "title": "Rebill Klienta",
+      "amount": "Kwota",
+      "confirm": "Potwierdź Rebill",
+      "cancel": "Anuluj"
+    },
+    "deleteModal": {
+      "title": "Usuń Klienta",
+      "confirm": "Czy na pewno chcesz usunąć tego klienta? Ta operacja jest nieodwracalna.",
+      "confirmButton": "Tak, Usuń",
+      "cancel": "Anuluj"
+    },
+    "noCustomers": "Nie znaleziono klientów"
+  },
+  "failures": {
+    "title": "Błędy Płatności",
+    "table": {
+      "date": "Data",
+      "errorType": "Typ Błędu",
+      "errorCode": "Kod",
+      "message": "Wiadomość",
+      "amount": "Kwota",
+      "ip": "IP"
+    },
+    "noFailures": "Brak zarejestrowanych błędów"
+  },
+  "common": {
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "success": "Sukces",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "view": "Zobacz",
+    "close": "Zamknij",
+    "confirm": "Potwierdź",
+    "search": "Szukaj",
+    "filter": "Filtruj",
+    "export": "Eksportuj",
+    "refresh": "Odśwież"
+  }
+}

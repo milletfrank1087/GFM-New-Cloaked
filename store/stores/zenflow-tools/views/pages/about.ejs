@@ -1,0 +1,52 @@
+<% const pageTitle = 'About'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="mb-10">
+    <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">Our Story</span>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">About ${store.name}</h1>
+    <p class="text-sm text-gray-500 leading-relaxed">Helping professionals and teams do their best work with battle-tested digital tools.</p>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+    <p class="text-sm text-gray-600 leading-relaxed">${store.about_text || 'We create high-quality digital products that help professionals and businesses achieve their goals faster. Our team of experts carefully crafts each product to ensure it delivers real, measurable value. Every template and toolkit goes through rigorous testing with real businesses before it reaches our store.'}</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+    <div class="bg-white rounded-xl border border-gray-200 p-5">
+      <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+        <svg class="w-4.5 h-4.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      </div>
+      <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Our Mission</h3>
+      <p class="text-xs text-gray-500 leading-relaxed">To make professional-grade digital tools affordable and accessible to everyone — from solo entrepreneurs to growing teams.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5">
+      <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+        <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </div>
+      <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Our Vision</h3>
+      <p class="text-xs text-gray-500 leading-relaxed">A world where every professional has access to the same quality tools that top firms charge thousands for.</p>
+    </div>
+  </div>
+
+  <h2 class="text-lg font-bold text-gray-900 mb-4">What sets us apart</h2>
+  <div class="space-y-2 mb-10">
+    ${[
+      { title: 'Expert-crafted products', desc: 'Designed by professionals with 10+ years of experience.' },
+      { title: 'Instant delivery', desc: 'Download and start using within seconds of purchase.' },
+      { title: 'Dedicated support', desc: 'Real humans answering your questions within 24 hours.' },
+      { title: 'Regular updates', desc: 'Continuously improved based on customer feedback.' },
+      { title: 'Commercial license', desc: 'Use for personal or business projects without restrictions.' },
+      { title: 'Fair pricing', desc: 'Professional quality at accessible prices. No subscriptions.' }
+    ].map(item => '<div class="flex items-start gap-2.5 p-3 bg-gray-50 rounded-lg">' +
+      '<svg class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' +
+      '<div><p class="font-semibold text-gray-900 text-xs">' + item.title + '</p><p class="text-[11px] text-gray-400">' + item.desc + '</p></div>' +
+    '</div>').join('')}
+  </div>
+
+  <div class="bg-gray-50 rounded-xl p-6 text-center">
+    <h3 class="text-base font-bold text-gray-900 mb-2">Have questions?</h3>
+    <p class="text-xs text-gray-400 mb-4">We would love to hear from you.</p>
+    <a href="/contact" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Contact Us</a>
+  </div>
+</div>
+`, store }) %>

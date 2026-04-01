@@ -1,0 +1,45 @@
+{
+  "section": {
+    "label": "APOIO",
+    "title": "Perguntas Frequentes",
+    "subtitle": "Tudo o que precisa de saber sobre doar e apoiar esta campanha."
+  },
+  "questions": [
+    {
+      "q": "Como será utilizado o meu donativo?",
+      "a": "100% do seu donativo vai diretamente para a causa declarada. O organizador fornece atualizações regulares sobre como os fundos estão a ser utilizados, garantindo total transparência. Pode acompanhar o progresso da campanha e ver exatamente como o seu contributo está a fazer a diferença."
+    },
+    {
+      "q": "As minhas informações de pagamento estão seguras?",
+      "a": "Absolutamente. Utilizamos o processamento seguro de pagamentos do PayPal com encriptação SSL de 256 bits. As suas informações financeiras nunca são armazenadas nos nossos servidores e todas as transações estão protegidas pelo programa de proteção ao comprador do PayPal."
+    },
+    {
+      "q": "Posso doar de forma anónima?",
+      "a": "Sim! Basta selecionar a opção \"Não mostrar publicamente o meu nome\" ao fazer o donativo. O seu nome não aparecerá na lista pública de doadores, embora o organizador possa enviar-lhe uma mensagem de agradecimento e um recibo."
+    },
+    {
+      "q": "Vou receber um recibo do meu donativo?",
+      "a": "Sim, receberá uma confirmação por email e um recibo imediatamente após o processamento do seu donativo. Este recibo inclui todos os detalhes da transação e pode ser utilizado para os seus registos pessoais."
+    },
+    {
+      "q": "Que métodos de pagamento são aceites?",
+      "a": "Aceitamos todos os principais cartões de crédito e débito (Visa, Mastercard, American Express, Discover) através do PayPal. Também pode pagar diretamente do seu saldo PayPal ou da conta bancária associada. Todas as transações são processadas de forma segura."
+    },
+    {
+      "q": "Posso configurar um donativo mensal recorrente?",
+      "a": "Sim! Ao fazer o donativo, selecione a opção \"Mensal\" para configurar um contributo recorrente. Pode cancelar ou alterar o seu donativo mensal a qualquer momento através da sua conta PayPal ou contactando-nos diretamente."
+    },
+    {
+      "q": "Existe um valor mínimo de donativo?",
+      "a": "O donativo mínimo é de {{currency}}1. Cada contributo, por mais pequeno que seja, faz a diferença e é profundamente apreciado. Não existe limite máximo para os donativos."
+    },
+    {
+      "q": "Posso obter um reembolso do meu donativo?",
+      "a": "Os donativos geralmente não são reembolsáveis, uma vez que são transferidos para os organizadores da campanha. No entanto, os reembolsos podem ser emitidos em casos de fraude, cobranças duplicadas ou transações não autorizadas. Contacte a nossa equipa de suporte no prazo de 30 dias se considerar que tem direito a um reembolso."
+    },
+    {
+      "q": "Como posso saber se esta campanha é legítima?",
+      "a": "Esta campanha foi verificada pela nossa equipa. Procure o distintivo \"Verificado\" no perfil do organizador. Encorajamos também a ler a história da campanha, consultar as atualizações do organizador e rever os comentários de outros doadores antes de contribuir."
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | HopeRise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { gfm: { green: '#00b964', 'green-dark': '#02a95c', dark: '#333333', gray: '#767676' } },
+          fontFamily: { outfit: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-outfit bg-gray-50 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 bg-gfm-green rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold text-gfm-dark">HopeRise Admin</h1>
+      <p class="text-gfm-gray mt-1">Sign in to access dashboard</p>
+    </div>
+    
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <form id="login-form" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gfm-dark mb-2">Password</label>
+          <input type="password" id="password" placeholder="Enter admin password" 
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:outline-none transition-colors" required>
+        </div>
+        <div id="error-msg" class="text-red-500 text-sm hidden">Invalid password</div>
+        <button type="submit" class="w-full bg-gfm-green hover:bg-gfm-green-dark text-white py-3 rounded-xl font-semibold transition-colors">
+          Sign In
+        </button>
+      </form>
+    </div>
+    
+    <p class="text-center text-gfm-gray text-sm mt-6">
+      <a href="/" class="hover:text-gfm-green">← Back to site</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('error-msg');
+      
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        
+        if (res.ok) {
+          window.location.href = '/admin';
+        } else {
+          errorMsg.classList.remove('hidden');
+        }
+      } catch (err) {
+        errorMsg.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

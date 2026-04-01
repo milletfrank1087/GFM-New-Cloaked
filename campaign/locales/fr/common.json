@@ -1,0 +1,80 @@
+{
+    "brand": {
+        "name": "HopeRise"
+    },
+    "nav": {
+        "story": "Histoire",
+        "updates": "Mises à jour",
+        "donors": "Donateurs",
+        "faq": "Questions Fréquentes",
+        "donateNow": "Donner Maintenant"
+    },
+    "sidebar": {
+        "raised": "récoltés",
+        "of": "de",
+        "goal": "objectif",
+        "donors": "donateurs",
+        "daysLeft": "jours restants",
+        "milestones": "Étapes",
+        "share": "Partager",
+        "recentDonation": "Don Récent",
+        "donated": "a donné"
+    },
+    "organizer": {
+        "title": "Organisateur",
+        "verified": "Vérifié",
+        "identityVerified": "Identité Vérifiée",
+        "created": "Créé",
+        "fundraiser": "collecte de fonds",
+        "fundraiserCount": "1 collecte de fonds"
+    },
+    "updates": {
+        "title": "Mises à jour"
+    },
+    "trust": {
+        "secure": "Sécurisé",
+        "protected": "Protégé",
+        "transparent": "Transparent",
+        "sslEncrypted": "Chiffrement SSL",
+        "verifiedPlatform": "Plateforme Vérifiée",
+        "paypalProtected": "Protégé par PayPal"
+    },
+    "share": {
+        "title": "Partagez cette collecte de fonds",
+        "spreadTheWord": "Aidez à faire passer le mot",
+        "sharingHelps": "Partager est le moyen le plus simple d'aider. Chaque partage nous rapproche de notre objectif.",
+        "facebook": "Partager",
+        "twitter": "Tweet",
+        "whatsapp": "WhatsApp",
+        "copyLink": "Copier le Lien"
+    },
+    "donors": {
+        "title": "Donateurs",
+        "topDonors": "Principaux Donateurs",
+        "allDonors": "Tous les Donateurs",
+        "showMore": "Afficher Plus de Donateurs",
+        "anonymous": "Anonyme",
+        "andMore": "...et ${count} donateurs de plus"
+    },
+    "time": {
+        "justNow": "À l'instant",
+        "minAgo": "min",
+        "hoursAgo": "heures",
+        "daysAgo": "jours"
+    },
+    "footer": {
+        "tagline": "Nous donnons aux gens les moyens d'aider les autres grâce à des collectes de fonds sécurisées et transparentes. Chaque don fait la différence.",
+        "raised": "Récoltés",
+        "campaigns": "Campagnes",
+        "allRightsReserved": "Tous droits réservés.",
+        "termsOfService": "Conditions d'Utilisation",
+        "privacyPolicy": "Politique de Confidentialité",
+        "cookiePolicy": "Politique de Cookies",
+        "refundPolicy": "Politique de Remboursement",
+        "iUnderstand": "J'ai compris"
+    },
+    "misc": {
+        "loading": "Chargement...",
+        "backToSite": "← Retour au site"
+    }
+}

@@ -1,0 +1,77 @@
+{
+  "modal": {
+    "title": "Make a Donation",
+    "subtitle": "Choose an amount to support this fundraiser",
+    "oneTime": "One-time",
+    "monthly": "Monthly",
+    "otherAmount": "Other amount",
+    "tip": {
+      "title": "HopeRise Tip",
+      "description": "HopeRise is free for organizers. Consider leaving a tip to support our platform.",
+      "noTip": "No tip"
+    },
+    "emailLabel": "Email (optional)",
+    "emailPlaceholder": "you@example.com",
+    "emailHelp": "For your payment receipt",
+    "anonymous": "Don't display my name publicly on the fundraiser",
+    "continueToPayment": "Continue to Payment",
+    "redirectNotice": "You'll be redirected to a secure payment page",
+    "protectedByPaypal": "Secure Payment"
+  },
+  "redirect": {
+    "title": "Preparing your payment...",
+    "subtitle": "Redirecting to secure payment page"
+  },
+  "payment": {
+    "completeYourDonation": "Complete Your Donation",
+    "total": "Total:",
+    "emailOptional": "Email (Optional)",
+    "emailPlaceholder": "your@email.com",
+    "emailHelp": "Providing your email improves donation tracking and allows us to send you a receipt",
+    "paymentMethod": "Payment Method",
+    "expressCheckout": "Express Checkout",
+    "orPayWithCard": "Or Pay with Card",
+    "cardholderName": "Cardholder Name",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvv": "CVV",
+    "completeDonation": "Complete Donation",
+    "securityNote": "256-bit SSL Encryption • Secure Payment"
+  },
+  "mobile": {
+    "supportTitle": "Support this fundraiser",
+    "donate": "Donate"
+  },
+  "messages": {
+    "thankYou": "Thank you for your ${amount} donation! 🎉",
+    "paymentFailed": "Payment failed. Please try again.",
+    "cardDeclined": "Your card was declined. Please try another payment method.",
+    "verificationRequired": "Additional verification required. Please try again.",
+    "paymentCancelled": "Payment cancelled.",
+    "applePayCancelled": "Apple Pay cancelled.",
+    "applePayFailed": "Apple Pay setup failed. Please try another payment method.",
+    "applePayVerificationFailed": "Apple Pay verification failed. Please try another payment method.",
+    "googlePayCancelled": "Google Pay cancelled.",
+    "cardNotInitialized": "Card payment not initialized. Please refresh and try again.",
+    "processing": "Processing...",
+    "paymentVerificationFailed": "Payment verification failed. Please try another payment method.",
+    "3dsVerificationFailed": "3D Secure verification failed"
+  },
+  "success": {
+    "title": "Thank You!",
+    "subtitle": "Your generosity makes a real difference",
+    "impactMessage": "Your donation has been processed successfully and will directly help this campaign reach its goal.",
+    "referralMessage": "Share your personal link below — for every friend who donates through it, we'll add a bonus contribution to show our appreciation!",
+    "yourLink": "Your personal referral link",
+    "shareTitle": "Share to multiply your impact",
+    "shareText": "I just donated to this fundraiser! Please help too:",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "close": "Done"
+  },
+  "types": {
+    "oneTime": "One-time",
+    "monthly": "Monthly",
+    "donation": "Donation"
+  }
+}

@@ -1,0 +1,342 @@
+{
+  "id": "glioblastoma-mariana",
+  "title": "Ajuda a Mariana a Lutar Contra o Tumor Cerebral",
+  "description": "A Mariana, de 21 anos, foi diagnosticada com um glioblastoma (GBM) de grau IV — o tumor cerebral mais agressivo. Precisa urgentemente de imunoterapia com células dendríticas na Alemanha — um tratamento que não é coberto por nenhum sistema de saúde pública na Europa.",
+  "organizer": {
+    "name": "Catarina Ferreira",
+    "initials": "CF",
+    "location": "Porto, Portugal",
+    "verified": true,
+    "createdDate": "5 Fev 2026"
+  },
+  "goal": 90000,
+  "raised": 26780,
+  "donorCount": 692,
+  "daysLeft": 31,
+  "images": [
+    {
+      "url": "/images/campaigns/glioblastoma-mariana/1.jpg",
+      "thumb": "/images/campaigns/glioblastoma-mariana/1.jpg",
+      "alt": "Mariana no hospital"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-mariana/2.jpg",
+      "thumb": "/images/campaigns/glioblastoma-mariana/2.jpg",
+      "alt": "Cuidados médicos"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-mariana/3.jpg",
+      "thumb": "/images/campaigns/glioblastoma-mariana/3.jpg",
+      "alt": "Tratamento"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-mariana/4.jpg",
+      "thumb": "/images/campaigns/glioblastoma-mariana/4.jpg",
+      "alt": "Apoio familiar"
+    }
+  ],
+  "story": {
+    "intro": "A Mariana é uma estudante de Medicina de 21 anos do Porto, diagnosticada com Glioblastoma Multiforme (GBM) de grau IV — o tumor cerebral maligno mais agressivo. O tratamento padrão (cirurgia, radioterapia, temozolomida) oferece uma sobrevivência mediana de 14-16 meses. O único tratamento que pode aumentar significativamente a sua sobrevivência — a imunoterapia com células dendríticas — só está disponível em centros especializados na Alemanha e não é coberto por nenhum sistema de saúde pública na Europa. Em Portugal, a situação é agravada pela ausência de centros de protonterapia e pela não comparticipação do dispositivo Optune (Tumor Treating Fields).",
+    "sections": [
+      {
+        "title": "O Diagnóstico",
+        "icon": "diagnosis",
+        "content": "Tudo começou em outubro de 2025, quando a Mariana começou a ter cefaleias persistentes, sobretudo matinais, acompanhadas de náuseas e visão turva no olho esquerdo. No dia 20 de outubro, após um episódio de convulsões durante uma aula na Faculdade de Medicina da Universidade do Porto, foi transferida de urgência para o Serviço de Neurocirurgia do Hospital de São João.\\n\\nA ressonância magnética (RM) revelou uma massa de 4,2 cm no lobo frontal direito com captação em anel característica e edema perilesional. A biópsia estereotáctica e a análise molecular confirmaram o diagnóstico: Glioblastoma Multiforme, IDH-wildtype, grau IV segundo a OMS, com promotor MGMT não metilado — o subtipo molecular mais desfavorável, que significa uma resposta reduzida à quimioterapia."
+      },
+      {
+        "title": "O Tratamento Padrão e os Seus Limites",
+        "icon": "treatment",
+        "content": "A Mariana foi submetida a uma resseção cirúrgica parcial do tumor (exérese subtotal) no dia 5 de novembro de 2025 no Hospital de São João — uma resseção completa não foi possível devido à proximidade do tumor com as áreas funcionais da linguagem. Seguiu o protocolo Stupp: radioterapia concomitante (30 sessões em 6 semanas) com temozolomida diária no IPO do Porto, seguida de ciclos de manutenção com temozolomida.\\n\\nOs médicos foram honestos: com o MGMT não metilado, a resposta à temozolomida é esperada como limitada. A sobrevivência mediana com o tratamento padrão é de 12-15 meses. A RM de controlo de janeiro de 2026 mostrou tumor residual estável em tamanho, mas os médicos alertaram que a recorrência é quase certa."
+      },
+      {
+        "title": "A Esperança: Imunoterapia com Células Dendríticas",
+        "icon": "hope",
+        "content": "Após uma investigação exaustiva, a família da Mariana identificou um programa especializado de imunoterapia com células dendríticas num centro oncológico certificado na Alemanha. Um estudo clínico recente (Nature Communications, agosto 2024) demonstrou um aumento de 68% na sobrevivência global mediana em doentes com glioblastoma recorrente que receberam vacinas de células dendríticas.\\n\\nO tratamento funciona assim: são retiradas células do sangue da Mariana, transformadas em células dendríticas no laboratório, «educadas» com antigénios do próprio tumor da Mariana, e reinjetadas para ativar o sistema imunitário contra o cancro. São necessários 4-6 ciclos ao longo de 12 meses.\\n\\nEste tratamento NÃO é coberto por NENHUM sistema de saúde pública na Europa — nem o SNS português, nem o Infarmed, nem nenhuma outra caixa europeia. É classificado como «terapia inovadora» e só está disponível de forma privada."
+      },
+      {
+        "title": "Porque Precisamos da Vossa Ajuda",
+        "icon": "help",
+        "content": "Queremos ser totalmente transparentes. O tratamento padrão da Mariana é coberto pelo SNS. O que pedimos é exclusivamente para terapias que não são cobertas por nenhum sistema de saúde pública na Europa — mas que podem dar à Mariana uma oportunidade real de vida além dos 14 meses do prognóstico padrão. Nota importante: ao contrário de outros países europeus, em Portugal o dispositivo Optune (Tumor Treating Fields) não é comparticipado e não existem centros de protonterapia — o primeiro centro só deverá abrir em 2028.",
+        "coveredLabel": "Coberto pelo SNS",
+        "coveredItems": [
+          "Diagnóstico inicial — RM cerebral, biópsia estereotáctica (Hospital de São João)",
+          "Resseção cirúrgica do tumor (Hospital de São João)",
+          "Radioterapia — 30 sessões, protocolo Stupp (IPO do Porto)",
+          "Quimioterapia com temozolomida (SNS)"
+        ],
+        "notCoveredLabel": "Não coberto por nenhum sistema de saúde na Europa",
+        "notCoveredItems": [
+          "Imunoterapia com células dendríticas — 4-6 ciclos na Alemanha",
+          "Tumor Treating Fields / Optune — não comparticipado pelo Infarmed (ao contrário de França e Espanha)",
+          "Protonterapia (proton therapy) — não existem centros em Portugal; primeiro centro previsto para 2028",
+          "Perfilagem molecular de nova geração (NGS) para terapia personalizada",
+          "Mudança, alojamento e acompanhamento na Alemanha durante 12+ meses"
+        ]
+      },
+      {
+        "title": "Detalhes dos Custos",
+        "icon": "cost",
+        "totalLabel": "Total",
+        "items": [
+          {
+            "text": "Imunoterapia com células dendríticas (4-6 ciclos, Alemanha)",
+            "amount": 35000
+          },
+          {
+            "text": "Protonterapia (proton therapy, Alemanha)",
+            "amount": 25000
+          },
+          {
+            "text": "Perfilagem molecular NGS e plano terapêutico personalizado",
+            "amount": 8000
+          },
+          {
+            "text": "Mudança, alojamento e despesas de acompanhamento na Alemanha (12+ meses)",
+            "amount": 15000
+          },
+          {
+            "text": "Despesas médicas imprevistas e fundo de reserva",
+            "amount": 7000
+          }
+        ]
+      }
+    ],
+    "quote": {
+      "text": "Queria ser médica para ajudar as pessoas. Agora aprendo o que significa ser doente — e como é insuportável saber que existe um tratamento que pode salvar-te, mas não conseguires aceder a ele. Cada doação vossa não é simplesmente dinheiro — é tempo de vida. Se conseguir, prometo dedicar a minha vida à neuro-oncologia, para que mais ninguém passe pelo que estou a passar.",
+      "author": "Mariana S."
+    }
+  },
+  "updates": [
+    {
+      "date": "10 Mar 2026",
+      "title": "Resultados da RM de controlo 📋",
+      "content": "A RM de controlo após o fim da radioterapia mostra um tumor residual estável sem novas lesões. Os médicos no São João dizem que é o melhor resultado possível com o tratamento padrão, mas a recorrência continua muito provável. A clínica na Alemanha confirmou-nos que podem iniciar a imunoterapia com células dendríticas em abril, se conseguirmos o financiamento.",
+      "isNew": true
+    },
+    {
+      "date": "5 Mar 2026",
+      "title": "Ultrapassámos os 600 doadores! 🙏",
+      "content": "O vosso apoio emociona-nos profundamente. A Mariana terminou os ciclos de manutenção com temozolomida e sente-se forte. Lê cada uma das vossas mensagens e diz que lhe dão força para continuar. Cada euro aproxima-nos da Alemanha.",
+      "isNew": false
+    },
+    {
+      "date": "20 Fev 2026",
+      "title": "Notícias do hospital",
+      "content": "A Mariana terminou a radioquimioterapia concomitante no IPO do Porto. Teve cansaço e náuseas, mas a sua força mental é incrível. A oncologista explicou-nos que com o MGMT não metilado, a temozolomida sozinha não chega — por isso a imunoterapia é crucial.",
+      "isNew": false
+    },
+    {
+      "date": "5 Fev 2026",
+      "title": "A campanha começou",
+      "content": "Com o coração apertado mas com determinação, lançamos este apelo. Após três meses de tratamento intensivo no sistema público, os médicos disseram-nos claramente: o tratamento padrão dá tempo, mas a imunoterapia pode dar vida. Infelizmente, não é coberta em nenhum país da Europa. Acreditamos na solidariedade.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    {
+      "amount": 18000,
+      "label": "Fim do tratamento padrão e perfilagem molecular",
+      "reached": true
+    },
+    {
+      "amount": 45000,
+      "label": "50% — Início da imunoterapia com células dendríticas",
+      "reached": false
+    },
+    {
+      "amount": 72000,
+      "label": "80% — Protonterapia",
+      "reached": false
+    },
+    {
+      "amount": 90000,
+      "label": "Objetivo — Cobertura completa do tratamento na Alemanha 🎉",
+      "reached": false
+    }
+  ],
+  "topDonors": [
+    {
+      "name": "Associação Estudantes Medicina UP",
+      "amount": 870,
+      "initials": "AE",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "Família Santos",
+      "amount": 510,
+      "initials": "FS",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anónimo",
+      "amount": 420,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
+  ],
+  "recentDonors": [
+    {
+      "name": "Ana C.",
+      "amount": 20,
+      "time": "há 8 minutos",
+      "initials": "AC",
+      "color": "from-rose-400 to-rose-500",
+      "message": "Força, querida!"
+    },
+    {
+      "name": "Anónimo",
+      "amount": 25,
+      "time": "há 22 minutos",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Pedro R.",
+      "amount": 15,
+      "time": "há 38 minutos",
+      "initials": "PR",
+      "color": "from-blue-400 to-blue-500",
+      "message": "De um colega de curso"
+    },
+    {
+      "name": "Inês V.",
+      "amount": 40,
+      "time": "há 1 hora",
+      "initials": "IV",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Muito ânimo"
+    },
+    {
+      "name": "João G.",
+      "amount": 30,
+      "time": "há 1 hora",
+      "initials": "JG",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anónimo",
+      "amount": 50,
+      "time": "há 2 horas",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "Melhoras rápidas"
+    },
+    {
+      "name": "Teresa D.",
+      "amount": 10,
+      "time": "há 2 horas",
+      "initials": "TD",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Miguel L.",
+      "amount": 35,
+      "time": "há 3 horas",
+      "initials": "ML",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "Tu consegues, Mariana!"
+    },
+    {
+      "name": "Sofia M.",
+      "amount": 15,
+      "time": "há 3 horas",
+      "initials": "SM",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "De Coimbra com carinho"
+    },
+    {
+      "name": "Anónimo",
+      "amount": 20,
+      "time": "há 4 horas",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Rui T.",
+      "amount": 45,
+      "time": "há 4 horas",
+      "initials": "RT",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Marta S.",
+      "amount": 10,
+      "time": "há 5 horas",
+      "initials": "MS",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Força para toda a família"
+    },
+    {
+      "name": "Carlos H.",
+      "amount": 25,
+      "time": "há 5 horas",
+      "initials": "CH",
+      "color": "from-purple-400 to-purple-500",
+      "message": ""
+    },
+    {
+      "name": "Anónimo",
+      "amount": 15,
+      "time": "há 6 horas",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "Estamos contigo"
+    },
+    {
+      "name": "Gonçalo N.",
+      "amount": 20,
+      "time": "há 6 horas",
+      "initials": "GN",
+      "color": "from-lime-400 to-lime-500",
+      "message": ""
+    },
+    {
+      "name": "Beatriz P.",
+      "amount": 10,
+      "time": "há 7 horas",
+      "initials": "BP",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "De Lisboa"
+    },
+    {
+      "name": "André G.",
+      "amount": 30,
+      "time": "há 8 horas",
+      "initials": "AG",
+      "color": "from-sky-400 to-sky-500",
+      "message": ""
+    },
+    {
+      "name": "Anónimo",
+      "amount": 5,
+      "time": "há 8 horas",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "O que posso"
+    },
+    {
+      "name": "Catarina A.",
+      "amount": 20,
+      "time": "há 9 horas",
+      "initials": "CA",
+      "color": "from-red-400 to-red-500",
+      "message": "Rezamos por ti"
+    },
+    {
+      "name": "Tiago Z.",
+      "amount": 15,
+      "time": "há 10 horas",
+      "initials": "TZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
+  ]
+}

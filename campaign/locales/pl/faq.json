@@ -1,0 +1,45 @@
+{
+  "section": {
+    "label": "POMOC",
+    "title": "Najczęściej Zadawane Pytania",
+    "subtitle": "Wszystko, co musisz wiedzieć o wpłacaniu darowizn i wspieraniu tej kampanii."
+  },
+  "questions": [
+    {
+      "q": "Jak zostanie wykorzystana moja darowizna?",
+      "a": "100% Twojej darowizny trafia bezpośrednio na deklarowany cel. Organizator regularnie informuje o sposobie wykorzystania środków, zapewniając pełną przejrzystość. Możesz śledzić postępy kampanii i zobaczyć, jak dokładnie Twój wkład robi różnicę."
+    },
+    {
+      "q": "Czy moje dane płatnicze są bezpieczne?",
+      "a": "Absolutnie. Korzystamy z bezpiecznego przetwarzania płatności PayPal z 256-bitowym szyfrowaniem SSL. Twoje dane finansowe nigdy nie są przechowywane na naszych serwerach, a wszystkie transakcje są chronione programem ochrony kupujących PayPal."
+    },
+    {
+      "q": "Czy mogę wpłacić anonimowo?",
+      "a": "Tak! Wystarczy zaznaczyć opcję \"Nie pokazuj publicznie mojego imienia\" podczas wpłacania. Twoje imię nie pojawi się na publicznej liście darczyńców, choć organizator nadal będzie mógł wysłać Ci podziękowanie i potwierdzenie."
+    },
+    {
+      "q": "Czy otrzymam potwierdzenie darowizny?",
+      "a": "Tak, otrzymasz potwierdzenie emailem i pokwitowanie natychmiast po przetworzeniu darowizny. To pokwitowanie zawiera wszystkie szczegóły transakcji i może służyć do Twoich celów ewidencyjnych."
+    },
+    {
+      "q": "Jakie metody płatności są akceptowane?",
+      "a": "Akceptujemy wszystkie główne karty kredytowe i debetowe (Visa, Mastercard, American Express, Discover) przez PayPal. Możesz również zapłacić bezpośrednio z salda PayPal lub połączonego konta bankowego. Wszystkie transakcje są przetwarzane bezpiecznie."
+    },
+    {
+      "q": "Czy mogę ustawić comiesięczną darowiznę?",
+      "a": "Tak! Podczas wpłacania wybierz opcję \"Miesięcznie\", aby ustawić cykliczną wpłatę. Możesz anulować lub zmienić miesięczną darowiznę w dowolnym momencie przez konto PayPal lub kontaktując się z nami bezpośrednio."
+    },
+    {
+      "q": "Jaka jest minimalna kwota darowizny?",
+      "a": "Minimalna darowizna to {{currency}}1. Każdy wkład, nawet najmniejszy, robi różnicę i jest głęboko doceniany. Nie ma górnego limitu darowizn."
+    },
+    {
+      "q": "Czy mogę uzyskać zwrot darowizny?",
+      "a": "Darowizny zasadniczo nie podlegają zwrotowi, ponieważ są przekazywane organizatorom kampanii. Jednakże zwroty mogą zostać dokonane w przypadkach oszustwa, podwójnych obciążeń lub nieautoryzowanych transakcji. Skontaktuj się z naszym zespołem wsparcia w ciągu 30 dni, jeśli uważasz, że przysługuje Ci zwrot."
+    },
+    {
+      "q": "Skąd mam wiedzieć, że ta kampania jest wiarygodna?",
+      "a": "Ta kampania została zweryfikowana przez nasz zespół. Szukaj odznaki \"Zweryfikowany\" na profilu organizatora. Zachęcamy również do przeczytania historii kampanii, sprawdzenia aktualizacji od organizatora i przejrzenia komentarzy innych darczyńców przed wpłatą."
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+<% const pageTitle = 'Privacy Policy'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Privacy Policy</h1>
+  <p class="text-xs text-gray-400 mb-8">Last updated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6 text-gray-500 text-xs leading-relaxed">
+    <p>${store.name} is committed to protecting your privacy. This policy describes how we collect, use, and protect your information.</p>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">Information We Collect</h2>
+      <ul class="list-disc pl-4 space-y-1">
+        <li><strong class="text-gray-700">Purchase Info:</strong> Name, email, billing details provided at checkout</li>
+        <li><strong class="text-gray-700">Payment Data:</strong> Processed by Stripe. We never store full card numbers</li>
+        <li><strong class="text-gray-700">Usage Data:</strong> Pages visited, time on site for analytics</li>
+        <li><strong class="text-gray-700">Communications:</strong> Info provided when contacting support</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">How We Use Your Information</h2>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>Process and deliver your purchases</li>
+        <li>Send order confirmations and download links</li>
+        <li>Provide customer support</li>
+        <li>Improve our products and services</li>
+        <li>Comply with legal obligations</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">Data Security</h2>
+      <p>We use industry-standard security measures. All payments are encrypted with 256-bit SSL through Stripe's PCI-DSS Level 1 compliant infrastructure.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">Third-Party Services</h2>
+      <ul class="list-disc pl-4 space-y-1">
+        <li><strong class="text-gray-700">Stripe:</strong> Payment processing (<a href="https://stripe.com/privacy" class="text-primary hover:underline" target="_blank" rel="noopener">Stripe Privacy Policy</a>)</li>
+        <li><strong class="text-gray-700">Analytics:</strong> Privacy-friendly analytics for website improvement</li>
+      </ul>
+      <p class="mt-2">We do not sell or rent your personal information.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">Cookies</h2>
+      <p>We use essential cookies for checkout and session management only. No advertising or third-party tracking cookies.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">Your Rights</h2>
+      <p class="mb-1.5">You may have the right to access, correct, delete, restrict, or port your data. Contact us to exercise these rights.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">Contact</h2>
+      <p>For privacy inquiries: <a href="mailto:${store.contact_email || 'support@' + store.domain}" class="text-primary hover:underline">${store.contact_email || 'support@' + store.domain}</a></p>
+    </div>
+  </div>
+</div>
+`, store }) %>

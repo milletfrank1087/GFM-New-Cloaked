@@ -1,0 +1,80 @@
+{
+  "brand": {
+    "name": "HopeRise"
+  },
+  "nav": {
+    "story": "Historia",
+    "updates": "Aktualizacje",
+    "donors": "Darczyńcy",
+    "faq": "Najczęściej Zadawane Pytania",
+    "donateNow": "Wpłać Teraz"
+  },
+  "sidebar": {
+    "raised": "zebrano",
+    "of": "z",
+    "goal": "celu",
+    "donors": "darczyńców",
+    "daysLeft": "dni pozostało",
+    "milestones": "Kamienie Milowe",
+    "share": "Udostępnij",
+    "recentDonation": "Ostatnia Darowizna",
+    "donated": "wpłacił/a"
+  },
+  "organizer": {
+    "title": "Organizator",
+    "verified": "Zweryfikowany",
+    "identityVerified": "Tożsamość Zweryfikowana",
+    "created": "Utworzono",
+    "fundraiser": "zbiórka",
+    "fundraiserCount": "1 zbiórka"
+  },
+  "updates": {
+    "title": "Aktualizacje"
+  },
+  "trust": {
+    "secure": "Bezpieczne",
+    "protected": "Chronione",
+    "transparent": "Przejrzyste",
+    "sslEncrypted": "Szyfrowanie SSL",
+    "verifiedPlatform": "Zweryfikowana Platforma",
+    "paypalProtected": "Ochrona PayPal"
+  },
+  "share": {
+    "title": "Udostępnij tę zbiórkę",
+    "spreadTheWord": "Pomóż rozpowszechnić informację",
+    "sharingHelps": "Udostępnianie to najprostszy sposób, żeby pomóc. Każde udostępnienie przybliża nas do celu.",
+    "facebook": "Udostępnij",
+    "twitter": "Tweet",
+    "whatsapp": "WhatsApp",
+    "copyLink": "Kopiuj Link"
+  },
+  "donors": {
+    "title": "Darczyńcy",
+    "topDonors": "Najwięksi Darczyńcy",
+    "allDonors": "Wszyscy Darczyńcy",
+    "showMore": "Pokaż Więcej Darczyńców",
+    "anonymous": "Anonim",
+    "andMore": "...i jeszcze ${count} darczyńców"
+  },
+  "time": {
+    "justNow": "Właśnie teraz",
+    "minAgo": "minut temu",
+    "hoursAgo": "godz. temu",
+    "daysAgo": "dni temu"
+  },
+  "footer": {
+    "tagline": "Dajemy ludziom możliwość pomagania innym poprzez bezpieczne, przejrzyste zbiórki. Każda darowizna robi różnicę.",
+    "raised": "Zebrano",
+    "campaigns": "Kampanie",
+    "allRightsReserved": "Wszelkie prawa zastrzeżone.",
+    "termsOfService": "Regulamin",
+    "privacyPolicy": "Polityka Prywatności",
+    "cookiePolicy": "Polityka Cookies",
+    "refundPolicy": "Polityka Zwrotów",
+    "iUnderstand": "Rozumiem"
+  },
+  "misc": {
+    "loading": "Ładowanie...",
+    "backToSite": "← Powrót do strony"
+  }
+}

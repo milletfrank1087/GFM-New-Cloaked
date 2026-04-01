@@ -1,0 +1,77 @@
+{
+  "modal": {
+    "title": "Wpłać Darowiznę",
+    "subtitle": "Wybierz kwotę, aby wesprzeć tę zbiórkę",
+    "oneTime": "Jednorazowo",
+    "monthly": "Miesięcznie",
+    "otherAmount": "Inna kwota",
+    "tip": {
+      "title": "Napiwek dla HopeRise",
+      "description": "HopeRise jest darmowe dla organizatorów. Rozważ pozostawienie napiwku, aby wesprzeć naszą platformę.",
+      "noTip": "Bez napiwku"
+    },
+    "emailLabel": "Email (opcjonalnie)",
+    "emailPlaceholder": "ty@przyklad.pl",
+    "emailHelp": "Na potwierdzenie płatności",
+    "anonymous": "Nie pokazuj publicznie mojego imienia w zbiórce",
+    "continueToPayment": "Przejdź do Płatności",
+    "redirectNotice": "Zostaniesz przekierowany na bezpieczną stronę płatności",
+    "protectedByPaypal": "Bezpieczna Płatność"
+  },
+  "redirect": {
+    "title": "Przygotowywanie płatności...",
+    "subtitle": "Przekierowanie na bezpieczną stronę płatności"
+  },
+  "payment": {
+    "completeYourDonation": "Dokończ Swoją Darowiznę",
+    "total": "Suma:",
+    "emailOptional": "Email (Opcjonalnie)",
+    "emailPlaceholder": "twoj@email.pl",
+    "emailHelp": "Podanie emaila usprawnia śledzenie darowizn i pozwala nam wysłać potwierdzenie",
+    "paymentMethod": "Metoda Płatności",
+    "expressCheckout": "Szybka Płatność",
+    "orPayWithCard": "Lub Zapłać Kartą",
+    "cardholderName": "Imię i Nazwisko Posiadacza Karty",
+    "cardNumber": "Numer Karty",
+    "expiryDate": "Data Ważności",
+    "cvv": "CVV",
+    "completeDonation": "Potwierdź Darowiznę",
+    "securityNote": "Szyfrowanie SSL 256-bit • Bezpieczna Płatność"
+  },
+  "mobile": {
+    "supportTitle": "Wesprzyj tę zbiórkę",
+    "donate": "Wpłać"
+  },
+  "messages": {
+    "thankYou": "Dziękujemy za Twoją darowiznę w wysokości ${amount}! 🎉",
+    "paymentFailed": "Płatność nie powiodła się. Spróbuj ponownie.",
+    "cardDeclined": "Twoja karta została odrzucona. Spróbuj innej metody płatności.",
+    "verificationRequired": "Wymagana dodatkowa weryfikacja. Spróbuj ponownie.",
+    "paymentCancelled": "Płatność anulowana.",
+    "applePayCancelled": "Apple Pay anulowano.",
+    "applePayFailed": "Konfiguracja Apple Pay nie powiodła się. Spróbuj innej metody płatności.",
+    "applePayVerificationFailed": "Weryfikacja Apple Pay nie powiodła się. Spróbuj innej metody płatności.",
+    "googlePayCancelled": "Google Pay anulowano.",
+    "cardNotInitialized": "Płatność kartą nie zainicjalizowana. Odśwież i spróbuj ponownie.",
+    "processing": "Przetwarzanie...",
+    "paymentVerificationFailed": "Weryfikacja płatności nie powiodła się. Spróbuj innej metody płatności.",
+    "3dsVerificationFailed": "Weryfikacja 3D Secure nie powiodła się"
+  },
+  "success": {
+    "title": "Dziękujemy!",
+    "subtitle": "Twoja hojność naprawdę robi różnicę",
+    "impactMessage": "Twoja darowizna została pomyślnie przetworzona i bezpośrednio pomoże tej zbiórce osiągnąć swój cel.",
+    "referralMessage": "Udostępnij swój osobisty link poniżej — za każdego znajomego, który wpłaci darowiznę przez niego, dodamy dodatkowy wkład jako wyraz uznania!",
+    "yourLink": "Twój osobisty link polecający",
+    "shareTitle": "Udostępnij, aby zwielokrotnić swój wpływ",
+    "shareText": "Właśnie wpłaciłem darowiznę na tę zbiórkę! Proszę, pomóż też:",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano!",
+    "close": "Gotowe"
+  },
+  "types": {
+    "oneTime": "Jednorazowo",
+    "monthly": "Miesięcznie",
+    "donation": "Darowizna"
+  }
+}

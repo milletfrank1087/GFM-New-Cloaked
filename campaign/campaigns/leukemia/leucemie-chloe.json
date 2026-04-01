@@ -1,0 +1,339 @@
+{
+  "id": "leucemie-chloe",
+  "title": "Aidez Chloé à Vaincre la Leucémie",
+  "description": "Chloé, 21 ans, lutte contre une leucémie lymphoblastique aiguë (LLA). Elle a besoin d'urgence d'une greffe allogénique de cellules souches hématopoïétiques pour survivre.",
+  "organizer": {
+    "name": "Isabelle Morel",
+    "initials": "IM",
+    "location": "Lyon, France",
+    "verified": true,
+    "createdDate": "5 Fév 2026"
+  },
+  "goal": 85000,
+  "raised": 31280,
+  "donorCount": 847,
+  "daysLeft": 28,
+  "images": [
+    {
+      "url": "/images/campaigns/leucemie-chloe/1.jpg",
+      "thumb": "/images/campaigns/leucemie-chloe/1.jpg",
+      "alt": "Chloé à l'hôpital"
+    },
+    {
+      "url": "/images/campaigns/leucemie-chloe/2.jpg",
+      "thumb": "/images/campaigns/leucemie-chloe/2.jpg",
+      "alt": "Soins médicaux"
+    },
+    {
+      "url": "/images/campaigns/leucemie-chloe/3.jpg",
+      "thumb": "/images/campaigns/leucemie-chloe/3.jpg",
+      "alt": "Traitement"
+    },
+    {
+      "url": "/images/campaigns/leucemie-chloe/4.jpg",
+      "thumb": "/images/campaigns/leucemie-chloe/4.jpg",
+      "alt": "Soutien familial"
+    }
+  ],
+  "story": {
+    "intro": "Chloé est une étudiante en Médecine de 21 ans originaire de Lyon, à qui l'on a diagnostiqué une Leucémie Lymphoblastique Aiguë (LLA) à haut risque, avec présence du chromosome Philadelphie (Ph+). Elle a besoin d'urgence d'une greffe allogénique de cellules souches hématopoïétiques pour avoir une chance de survie.",
+    "sections": [
+      {
+        "title": "Le Diagnostic",
+        "content": "Tout a commencé en novembre 2025, lorsque Chloé a commencé à ressentir une fatigue intense, à présenter des pétéchies sur les jambes et à avoir des épisodes fébriles fréquents. Le 15 novembre, après un hémogramme révélant une pancytopénie et des cellules blastiques suspectes, elle a été transférée en urgence au Service d'Hématologie des Hospices Civils de Lyon (HCL).\n\nLa biopsie de moelle osseuse et l'analyse moléculaire ont confirmé le diagnostic : Leucémie Lymphoblastique Aiguë à cellules B (LLA-B), avec présence du gène de fusion BCR-ABL1 (chromosome Philadelphie positif). Il s'agit d'une forme agressive de leucémie qui nécessite un traitement intensif et une greffe pour une survie à long terme.",
+        "icon": "diagnosis"
+      },
+      {
+        "title": "Le Protocole Thérapeutique",
+        "content": "Chloé a immédiatement commencé une thérapie d'induction avec le protocole HyperCVAD en combinaison avec un inhibiteur de tyrosine kinase (ITK - Dasatinib) en raison de son statut Ph+. Après deux cycles de chimiothérapie, elle a atteint une rémission hématologique complète et la maladie résiduelle minimale (MRD) est désormais mesurée à des niveaux < 0,01 %.\n\nLes médecins recommandent une greffe allogénique de cellules souches hématopoïétiques d'un donneur compatible pour consolider la rémission. Sa sœur cadette, Manon, s'est révélée parfaitement compatible HLA (correspondance 10/10) et a déjà accepté d'être donneuse.",
+        "icon": "treatment"
+      },
+      {
+        "title": "Pourquoi Nous Avons Besoin de Votre Aide",
+        "content": "Nous tenons à être totalement transparents. Le traitement standard de Chloé est pris en charge par la Sécurité Sociale au titre de l'ALD 30 (cancer). Ce que nous demandons concerne exclusivement les soins non remboursés ou partiellement couverts — mais qui peuvent faire la différence entre la vie et la mort en cas de rechute ou de complications.",
+        "icon": "help",
+        "coveredLabel": "Pris en charge par la Sécurité Sociale (ALD 30)",
+        "coveredItems": [
+          "Chimiothérapie d'induction et consolidation (HyperCVAD) — HCL Lyon",
+          "Inhibiteur de tyrosine kinase (Dasatinib) pour statut Ph+",
+          "Greffe allogénique de cellules souches + bilan du donneur (Manon)",
+          "Hospitalisation en chambre à environnement protégé (pression positive)",
+          "Immunosuppresseurs standards (ciclosporine, tacrolimus, mycophénolate)",
+          "Suivi moléculaire RT-PCR pour BCR-ABL"
+        ],
+        "notCoveredLabel": "Non pris en charge ou partiellement remboursé",
+        "notCoveredItems": [
+          "Suivi MRD par séquençage NGS — non inscrit à la NABM, laboratoires privés uniquement",
+          "ITK de nouvelle génération (ponatinib) en cas de résistance — délai moyen de remboursement de 222 jours",
+          "Thérapies biologiques en cas de rechute (blinatumomab, inotuzumab) — non approuvées pour LLA Ph+",
+          "Déménagement et hébergement familial à Lyon pendant 6+ mois post-greffe",
+          "Dépassements d'honoraires (secteur 2) et frais de confort hospitalier"
+        ]
+      },
+      {
+        "title": "Détail des Coûts",
+        "items": [
+          {
+            "text": "Suivi MRD par NGS et examens moléculaires avancés (laboratoires privés)",
+            "amount": 12000
+          },
+          {
+            "text": "Accès aux ITK de nouvelle génération et thérapies biologiques (si rechute/résistance)",
+            "amount": 28000
+          },
+          {
+            "text": "Complications post-greffe et soins non remboursés (dépassements, confort)",
+            "amount": 25000
+          },
+          {
+            "text": "Déménagement, hébergement et frais familiaux à Lyon (6+ mois)",
+            "amount": 15000
+          },
+          {
+            "text": "Fonds de réserve pour imprévus médicaux",
+            "amount": 5000
+          }
+        ],
+        "icon": "cost",
+        "totalLabel": "Total"
+      }
+    ],
+    "quote": {
+      "text": "Je voulais devenir médecin pour aider les gens. Aujourd'hui, c'est moi qui suis à la place du patient et je comprends à quel point la solidarité humaine est importante. Chacun de vos dons n'est pas seulement de l'argent — c'est une chance de continuer à rêver. Je vous promets que lorsque je serai guérie, je consacrerai ma vie à aider ceux qui traversent ce que je vis en ce moment.",
+      "author": "Chloé D."
+    }
+  },
+  "updates": [
+    {
+      "date": "8 Mar 2026",
+      "title": "Nouvelles positives du contrôle moléculaire ! 💪",
+      "content": "Les résultats du dernier RT-PCR sont encourageants — les niveaux de BCR-ABL sont en dessous de 0,01 % ! Les médecins sont très satisfaits de la réponse au traitement. La greffe est programmée pour fin avril. Sa sœur Manon effectue déjà les examens préliminaires en tant que donneuse.",
+      "isNew": true
+    },
+    {
+      "date": "1 Mar 2026",
+      "title": "Nous avons dépassé les 700 donateurs ! 🙏",
+      "content": "Nous n'avons pas de mots pour exprimer notre gratitude. Chloé a terminé le deuxième cycle de chimiothérapie et les médecins ont confirmé une rémission hématologique complète. Chaque euro nous rapproche de la greffe.",
+      "isNew": false
+    },
+    {
+      "date": "20 Fév 2026",
+      "title": "Nouvelles de l'hôpital",
+      "content": "Chloé a terminé le premier cycle de chimiothérapie aux HCL de Lyon. Elle a eu une neutropénie après le traitement, mais elle souriait en lisant vos messages. Les infirmières lui ont organisé une petite fête dans sa chambre. Votre soutien nous touche profondément.",
+      "isNew": false
+    },
+    {
+      "date": "5 Fév 2026",
+      "title": "La campagne est lancée",
+      "content": "Le cœur lourd mais rempli d'espoir, nous lançons cet appel à l'aide. Après deux mois de thérapie intensive, les médecins ont confirmé que la greffe est la seule option pour une guérison à long terme. Nous croyons en la solidarité.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    {
+      "amount": 20000,
+      "label": "Fin de la chimiothérapie d'induction",
+      "reached": true
+    },
+    {
+      "amount": 42500,
+      "label": "50 % - Début de la préparation de la greffe",
+      "reached": false
+    },
+    {
+      "amount": 68000,
+      "label": "80 % - Greffe allogénique",
+      "reached": false
+    },
+    {
+      "amount": 85000,
+      "label": "Objectif - Couverture complète du traitement 🎉",
+      "reached": false
+    }
+  ],
+  "topDonors": [
+    {
+      "name": "Association Étudiants Médecine Lyon 1",
+      "amount": 850,
+      "initials": "AE",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "Famille Dupont",
+      "amount": 500,
+      "initials": "FD",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anonyme",
+      "amount": 400,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
+  ],
+  "recentDonors": [
+    {
+      "name": "Camille T.",
+      "amount": 15,
+      "time": "il y a 12 minutes",
+      "initials": "CT",
+      "color": "from-rose-400 to-rose-500",
+      "message": "Courage ma belle !"
+    },
+    {
+      "name": "Anonyme",
+      "amount": 20,
+      "time": "il y a 28 minutes",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Antoine R.",
+      "amount": 10,
+      "time": "il y a 45 minutes",
+      "initials": "AR",
+      "color": "from-blue-400 to-blue-500",
+      "message": "D'un étudiant pour une camarade"
+    },
+    {
+      "name": "Léa V.",
+      "amount": 35,
+      "time": "il y a 1 heure",
+      "initials": "LV",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Bon rétablissement"
+    },
+    {
+      "name": "Mathieu C.",
+      "amount": 25,
+      "time": "il y a 1 heure",
+      "initials": "MC",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anonyme",
+      "amount": 50,
+      "time": "il y a 2 heures",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "Guéris vite"
+    },
+    {
+      "name": "Élodie D.",
+      "amount": 10,
+      "time": "il y a 2 heures",
+      "initials": "ÉD",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Julien L.",
+      "amount": 30,
+      "time": "il y a 3 heures",
+      "initials": "JL",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "Tu vas y arriver Chloé !"
+    },
+    {
+      "name": "Marine M.",
+      "amount": 15,
+      "time": "il y a 3 heures",
+      "initials": "MM",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "De Marseille avec amour"
+    },
+    {
+      "name": "Anonyme",
+      "amount": 20,
+      "time": "il y a 4 heures",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Nicolas F.",
+      "amount": 40,
+      "time": "il y a 4 heures",
+      "initials": "NF",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Sophie S.",
+      "amount": 10,
+      "time": "il y a 5 heures",
+      "initials": "SS",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Force à toute la famille"
+    },
+    {
+      "name": "Thomas C.",
+      "amount": 25,
+      "time": "il y a 5 heures",
+      "initials": "TC",
+      "color": "from-purple-400 to-purple-500",
+      "message": ""
+    },
+    {
+      "name": "Anonyme",
+      "amount": 15,
+      "time": "il y a 6 heures",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "On est avec toi"
+    },
+    {
+      "name": "Pierre N.",
+      "amount": 20,
+      "time": "il y a 6 heures",
+      "initials": "PN",
+      "color": "from-lime-400 to-lime-500",
+      "message": ""
+    },
+    {
+      "name": "Clara P.",
+      "amount": 10,
+      "time": "il y a 7 heures",
+      "initials": "CP",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "De Bordeaux"
+    },
+    {
+      "name": "Alexandre G.",
+      "amount": 30,
+      "time": "il y a 8 heures",
+      "initials": "AG",
+      "color": "from-sky-400 to-sky-500",
+      "message": ""
+    },
+    {
+      "name": "Anonyme",
+      "amount": 5,
+      "time": "il y a 8 heures",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "Ce que je peux"
+    },
+    {
+      "name": "Charlotte A.",
+      "amount": 20,
+      "time": "il y a 9 heures",
+      "initials": "CA",
+      "color": "from-red-400 to-red-500",
+      "message": "On prie pour toi"
+    },
+    {
+      "name": "Hugo Z.",
+      "amount": 15,
+      "time": "il y a 10 heures",
+      "initials": "HZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
+  ]
+}

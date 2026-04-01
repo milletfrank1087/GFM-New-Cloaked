@@ -1,0 +1,36 @@
+<% const pageTitle = typeof searchQuery !== 'undefined' ? 'Search: ' + searchQuery : 'Products'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-12">
+  <div class="mb-8">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">${typeof searchQuery !== 'undefined' && searchQuery ? 'Results for "' + searchQuery + '"' : 'All Products'}</h1>
+    <p class="text-sm text-gray-400">${(products || []).length} products available</p>
+  </div>
+
+  <div class="sm:hidden mb-6">
+    <form action="/search" method="GET">
+      <input type="text" name="q" placeholder="Search products..." value="${typeof searchQuery !== 'undefined' ? searchQuery : ''}" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50">
+    </form>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    ${(products || []).map((p, i) => {
+      const icons = [
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>',
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>',
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>',
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/></svg>'
+      ];
+      const bgColors = ['bg-teal-50', 'bg-rose-50', 'bg-amber-50', 'bg-orange-50', 'bg-purple-50', 'bg-sky-50'];
+      const textColors = ['text-teal-600', 'text-rose-600', 'text-amber-600', 'text-orange-600', 'text-purple-600', 'text-sky-600'];
+      return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition-all">' +
+        '<div class="w-10 h-10 rounded-lg ' + bgColors[i % 6] + ' flex items-center justify-center ' + textColors[i % 6] + ' shrink-0">' + icons[i % 4] + '</div>' +
+        '<div class="flex-1 min-w-0">' +
+          '<h3 class="font-semibold text-gray-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+          '<p class="text-xs text-gray-400 mt-0.5 truncate">' + (p.description || p.category || 'Wellness product') + '</p>' +
+        '</div>' +
+        '<span class="font-bold text-gray-900 text-sm shrink-0">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+      '</a>';
+    }).join('')}
+  </div>
+</div>
+`, store, products, searchQuery: typeof searchQuery !== 'undefined' ? searchQuery : '' }) %>

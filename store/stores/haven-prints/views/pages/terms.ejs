@@ -1,0 +1,63 @@
+<% const pageTitle = 'Terms of Service'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Terms of Service</h1>
+  <p class="text-xs text-gray-400 mb-8">Last updated: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6 text-gray-500 text-xs leading-relaxed">
+    <p>Welcome to ${store.name}. By accessing or using our website and purchasing our products you agree to be bound by these Terms of Service.</p>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">1. Products and Services</h2>
+      <p>${store.name} sells downloadable digital products including printable wall art, interior design kits, room planners, colour palette tools and curated art bundles. All products are delivered electronically via instant download. Upon successful payment you receive immediate access to your files.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">2. Payment Terms</h2>
+      <p class="mb-2">All payments are processed through Stripe, a PCI-DSS Level 1 certified payment processor. Prices are displayed in GBP and may be subject to applicable taxes.</p>
+      <p>We reserve the right to modify product prices at any time. Price changes will not affect completed purchases. Charges appear on your statement under "${store.statement_descriptor || store.name}".</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">3. Digital Delivery</h2>
+      <p>Products are delivered immediately upon successful payment. Due to the instant-access nature of digital downloads, delivery is considered complete at the point of download availability. Contact support within 48 hours if you experience access issues.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">4. Refund Policy</h2>
+      <p>Due to the digital nature of our products, all sales are final once download access is provided. For technical issues preventing access contact ${store.contact_email || 'hello@' + store.domain}.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">5. Licence</h2>
+      <p class="mb-2">Upon purchase you are granted a non-exclusive, non-transferable licence for personal and commercial use. You may:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>Print and display in homes, offices and commercial properties</li>
+        <li>Use in interior design, staging and client projects</li>
+        <li>Modify colour profiles for different printing methods</li>
+      </ul>
+      <p class="mt-2">You may not redistribute, resell, sublicense or share the original digital files.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">6. Intellectual Property</h2>
+      <p>All artwork, designs, templates and materials are the intellectual property of ${store.name} and protected by applicable copyright and trademark laws.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">7. Limitation of Liability</h2>
+      <p>${store.name} provides products "as is" without warranties of any kind. We shall not be liable for indirect, incidental or consequential damages. Colour accuracy may vary depending on your printer, paper stock and screen calibration.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">8. Changes</h2>
+      <p>We reserve the right to update these Terms at any time. Continued use constitutes acceptance.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">9. Contact</h2>
+      <p>Questions about these terms? Email <a href="mailto:${store.contact_email || 'hello@' + store.domain}" class="text-primary hover:underline">${store.contact_email || 'hello@' + store.domain}</a>.</p>
+    </div>
+  </div>
+</div>
+`, store }) %>

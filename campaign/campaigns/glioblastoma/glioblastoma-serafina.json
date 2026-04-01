@@ -1,0 +1,343 @@
+{
+  "id": "glioblastoma-serafina",
+  "title": "Aiuta Serafina a Combattere il Tumore al Cervello",
+  "description": "Serafina, 21 anni, è stata diagnosticata con un glioblastoma (GBM) di grado IV — il tumore cerebrale più aggressivo. Ha urgente bisogno di immunoterapia con cellule dendritiche in Germania — un trattamento non coperto da nessun sistema sanitario pubblico in Europa.",
+  "organizer": {
+    "name": "Eleonora Castagna",
+    "initials": "EC",
+    "location": "Milano, Italia",
+    "verified": true,
+    "createdDate": "5 Feb 2026"
+  },
+  "goal": 90000,
+  "raised": 27540,
+  "donorCount": 741,
+  "daysLeft": 29,
+  "images": [
+    {
+      "url": "/images/campaigns/glioblastoma-serafina/1.jpg",
+      "thumb": "/images/campaigns/glioblastoma-serafina/1.jpg",
+      "alt": "Serafina in ospedale"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-serafina/2.jpg",
+      "thumb": "/images/campaigns/glioblastoma-serafina/2.jpg",
+      "alt": "Cure mediche"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-serafina/3.jpg",
+      "thumb": "/images/campaigns/glioblastoma-serafina/3.jpg",
+      "alt": "Trattamento"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-serafina/4.jpg",
+      "thumb": "/images/campaigns/glioblastoma-serafina/4.jpg",
+      "alt": "Sostegno familiare"
+    }
+  ],
+  "story": {
+    "intro": "Serafina è una studentessa di Medicina di 21 anni di Milano, a cui è stato diagnosticato un Glioblastoma Multiforme (GBM) di grado IV — il tumore cerebrale maligno più aggressivo. Il trattamento standard (chirurgia, radioterapia, temozolomide) offre una sopravvivenza mediana di 14-16 mesi. L’unico trattamento che può aumentare significativamente la sua sopravvivenza — l’immunoterapia con cellule dendritiche — è disponibile solo in centri specializzati in Germania e non è coperto da nessun sistema sanitario pubblico in Europa.",
+    "sections": [
+      {
+        "title": "La Diagnosi",
+        "icon": "diagnosis",
+        "content": "Tutto è iniziato nell’ottobre 2025, quando Serafina ha cominciato a soffrire di cefalee persistenti, soprattutto mattutine, accompagnate da nausea e visione offuscata all’occhio sinistro. Il 20 ottobre, dopo un episodio di convulsioni durante una lezione alla Facoltà di Medicina dell’Università Statale di Milano, è stata trasferita d’urgenza al Dipartimento di Neurochirurgia della Fondazione IRCCS Istituto Neurologico Carlo Besta.\\n\\nLa risonanza magnetica (RM) ha rivelato una massa di 4,2 cm nel lobo frontale destro con captazione ad anello caratteristica e edema perilesionale. La biopsia stereotassica e l’analisi molecolare hanno confermato la diagnosi: Glioblastoma Multiforme, IDH-wildtype, grado IV secondo l’OMS, con promotore MGMT non metilato — il sottotipo molecolare più sfavorevole, che implica una risposta ridotta alla chemioterapia."
+      },
+      {
+        "title": "Il Trattamento Standard e i Suoi Limiti",
+        "icon": "treatment",
+        "content": "Serafina è stata sottoposta a resezione chirurgica parziale del tumore (exeresi subtotale) il 5 novembre 2025 all’Istituto Besta — una resezione completa non era possibile a causa della prossimità del tumore alle aree funzionali del linguaggio. Ha poi seguito il protocollo Stupp: radioterapia concomitante (30 sedute in 6 settimane) con temozolomide giornaliera, seguita da cicli di mantenimento con temozolomide.\\n\\nI medici sono stati onesti: con il MGMT non metilato, la risposta alla temozolomide è attesa come limitata. La sopravvivenza mediana con il trattamento standard è di 12-15 mesi. La RM di controllo di gennaio 2026 ha mostrato un tumore residuo stabile in dimensioni, ma i medici hanno avvertito che la recidiva è quasi certa."
+      },
+      {
+        "title": "La Speranza: Immunoterapia con Cellule Dendritiche",
+        "icon": "hope",
+        "content": "Dopo una ricerca approfondita, la famiglia di Serafina ha individuato un programma specializzato di immunoterapia con cellule dendritiche in un centro oncologico certificato in Germania. Uno studio clinico recente (Nature Communications, agosto 2024) ha dimostrato un aumento del 68% nella sopravvivenza globale mediana nei pazienti con glioblastoma ricorrente che hanno ricevuto vaccini a cellule dendritiche.\\n\\nIl trattamento funziona così: vengono prelevate cellule dal sangue di Serafina, trasformate in cellule dendritiche in laboratorio, «addestrate» con antigeni del suo stesso tumore, e reiniettate per attivare il sistema immunitario contro il cancro. Sono necessari 4-6 cicli nell’arco di 12 mesi.\\n\\nQuesto trattamento NON è coperto da NESSUN sistema sanitario pubblico in Europa — né il SSN italiano, né l’AIFA, né alcuna altra cassa europea. È classificato come «terapia innovativa» ed è disponibile esclusivamente in forma privata."
+      },
+      {
+        "title": "Perché Abbiamo Bisogno del Vostro Aiuto",
+        "icon": "help",
+        "content": "Vogliamo essere completamente trasparenti. Il trattamento standard di Serafina è coperto dal SSN. Ciò che chiediamo riguarda esclusivamente terapie che non sono coperte da nessun sistema sanitario pubblico in Europa — ma che possono dare a Serafina una reale possibilità di vita oltre i 14 mesi della prognosi standard. In Italia, il dispositivo Optune (Tumor Treating Fields) non è rimborsato in modo automatico dal SSN — è possibile solo su autorizzazione caso per caso della ASL, con lunghi tempi di attesa e esito incerto.",
+        "coveredLabel": "Coperto dal SSN / ASL",
+        "coveredItems": [
+          "Diagnosi iniziale — RM cerebrale, biopsia stereotassica (Istituto Besta, Milano)",
+          "Resezione chirurgica del tumore (Istituto Besta, Milano)",
+          "Radioterapia — 30 sedute, protocollo Stupp (SSN)",
+          "Chemioterapia con temozolomide (SSN)",
+          "Test molecolari standard IDH e metilazione MGMT"
+        ],
+        "notCoveredLabel": "Non coperto da nessun sistema sanitario in Europa",
+        "notCoveredItems": [
+          "Immunoterapia con cellule dendritiche — 4-6 cicli in Germania",
+          "Tumor Treating Fields / Optune — non rimborsato dal SSN (solo autorizzazione caso per caso ASL, ~€21.000/mese)",
+          "Protonterapia (proton therapy) — il CNAO di Pavia non tratta il GBM come indicazione standard",
+          "Profilazione molecolare di nuova generazione (NGS) per terapia personalizzata",
+          "Trasferimento, alloggio e accompagnamento in Germania per 12+ mesi"
+        ]
+      },
+      {
+        "title": "Dettaglio dei Costi",
+        "icon": "cost",
+        "totalLabel": "Totale",
+        "items": [
+          {
+            "text": "Immunoterapia con cellule dendritiche (4-6 cicli, Germania)",
+            "amount": 35000
+          },
+          {
+            "text": "Protonterapia (proton therapy, Germania)",
+            "amount": 25000
+          },
+          {
+            "text": "Profilazione molecolare NGS e piano terapeutico personalizzato",
+            "amount": 8000
+          },
+          {
+            "text": "Trasferimento, alloggio e spese di accompagnamento in Germania (12+ mesi)",
+            "amount": 15000
+          },
+          {
+            "text": "Spese mediche impreviste e fondo di riserva",
+            "amount": 7000
+          }
+        ]
+      }
+    ],
+    "quote": {
+      "text": "Volevo diventare medico per aiutare le persone. Ora imparo cosa significa essere paziente — e quanto sia insopportabile sapere che esiste un trattamento che potrebbe salvarti, ma non potervi accedere. Ogni vostra donazione non è semplicemente denaro — è tempo di vita. Se ce la faccio, vi prometto di dedicare la mia vita alla neuro-oncologia, perché nessun altro debba vivere quello che sto vivendo io.",
+      "author": "Serafina L."
+    }
+  },
+  "updates": [
+    {
+      "date": "10 Mar 2026",
+      "title": "Risultati della RM di controllo 📋",
+      "content": "La RM di controllo dopo la fine della radioterapia mostra un tumore residuo stabile senza nuove lesioni. I medici al Besta dicono che è il miglior risultato possibile con il trattamento standard, ma la recidiva resta molto probabile. La clinica in Germania ci ha confermato che possono iniziare l’immunoterapia con cellule dendritiche ad aprile, se otteniamo il finanziamento.",
+      "isNew": true
+    },
+    {
+      "date": "5 Mar 2026",
+      "title": "Abbiamo superato i 600 donatori! 🙏",
+      "content": "Il vostro sostegno ci commuove profondamente. Serafina ha terminato i cicli di mantenimento con temozolomide e si sente forte. Legge ogni vostro messaggio e dice che le date la forza di andare avanti. Ogni euro ci avvicina alla Germania.",
+      "isNew": false
+    },
+    {
+      "date": "20 Feb 2026",
+      "title": "Aggiornamento dall’ospedale",
+      "content": "Serafina ha terminato la radiochemioterapia concomitante al Besta. Ha avuto stanchezza e nausea, ma la sua forza mentale è incredibile. La sua oncologa ci ha spiegato che con il MGMT non metilato, la temozolomide da sola non basta — ecco perché l’immunoterapia è cruciale.",
+      "isNew": false
+    },
+    {
+      "date": "5 Feb 2026",
+      "title": "La campagna è partita",
+      "content": "Con il cuore pesante ma con determinazione, lanciamo questo appello. Dopo tre mesi di trattamento intensivo nel sistema pubblico, i medici ci hanno detto chiaramente: il trattamento standard dà tempo, ma l’immunoterapia può dare vita. Purtroppo, non è coperta in nessun paese d’Europa. Crediamo nella solidarietà.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    {
+      "amount": 18000,
+      "label": "Fine del trattamento standard e profilazione molecolare",
+      "reached": true
+    },
+    {
+      "amount": 45000,
+      "label": "50% — Inizio dell’immunoterapia con cellule dendritiche",
+      "reached": false
+    },
+    {
+      "amount": 72000,
+      "label": "80% — Protonterapia",
+      "reached": false
+    },
+    {
+      "amount": 90000,
+      "label": "Obiettivo — Copertura completa del trattamento in Germania 🎉",
+      "reached": false
+    }
+  ],
+  "topDonors": [
+    {
+      "name": "Associazione Studenti Medicina Statale",
+      "amount": 910,
+      "initials": "AS",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "Famiglia Lombardi",
+      "amount": 540,
+      "initials": "FL",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anonimo",
+      "amount": 440,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
+  ],
+  "recentDonors": [
+    {
+      "name": "Giulia C.",
+      "amount": 20,
+      "time": "8 minuti fa",
+      "initials": "GC",
+      "color": "from-rose-400 to-rose-500",
+      "message": "Forza, piccola!"
+    },
+    {
+      "name": "Anonimo",
+      "amount": 25,
+      "time": "22 minuti fa",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Marco R.",
+      "amount": 15,
+      "time": "38 minuti fa",
+      "initials": "MR",
+      "color": "from-blue-400 to-blue-500",
+      "message": "Da un collega di corso"
+    },
+    {
+      "name": "Valentina V.",
+      "amount": 40,
+      "time": "1 ora fa",
+      "initials": "VV",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Buona guarigione"
+    },
+    {
+      "name": "Luca G.",
+      "amount": 30,
+      "time": "1 ora fa",
+      "initials": "LG",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anonimo",
+      "amount": 50,
+      "time": "2 ore fa",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "Guarisci presto"
+    },
+    {
+      "name": "Chiara D.",
+      "amount": 10,
+      "time": "2 ore fa",
+      "initials": "CD",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Alessandro L.",
+      "amount": 35,
+      "time": "3 ore fa",
+      "initials": "AL",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "Ce la farai, Serafina!"
+    },
+    {
+      "name": "Francesca M.",
+      "amount": 15,
+      "time": "3 ore fa",
+      "initials": "FM",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "Da Napoli con affetto"
+    },
+    {
+      "name": "Anonimo",
+      "amount": 20,
+      "time": "4 ore fa",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Davide T.",
+      "amount": 45,
+      "time": "4 ore fa",
+      "initials": "DT",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Elena S.",
+      "amount": 10,
+      "time": "5 ore fa",
+      "initials": "ES",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Forza a tutta la famiglia"
+    },
+    {
+      "name": "Roberto H.",
+      "amount": 25,
+      "time": "5 ore fa",
+      "initials": "RH",
+      "color": "from-purple-400 to-purple-500",
+      "message": ""
+    },
+    {
+      "name": "Anonimo",
+      "amount": 15,
+      "time": "6 ore fa",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "Siamo con te"
+    },
+    {
+      "name": "Andrea N.",
+      "amount": 20,
+      "time": "6 ore fa",
+      "initials": "AN",
+      "color": "from-lime-400 to-lime-500",
+      "message": ""
+    },
+    {
+      "name": "Sara P.",
+      "amount": 10,
+      "time": "7 ore fa",
+      "initials": "SP",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "Da Roma"
+    },
+    {
+      "name": "Matteo G.",
+      "amount": 30,
+      "time": "8 ore fa",
+      "initials": "MG",
+      "color": "from-sky-400 to-sky-500",
+      "message": ""
+    },
+    {
+      "name": "Anonimo",
+      "amount": 5,
+      "time": "8 ore fa",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "Quel che posso"
+    },
+    {
+      "name": "Federica A.",
+      "amount": 20,
+      "time": "9 ore fa",
+      "initials": "FA",
+      "color": "from-red-400 to-red-500",
+      "message": "Preghiamo per te"
+    },
+    {
+      "name": "Simone Z.",
+      "amount": 15,
+      "time": "10 ore fa",
+      "initials": "SZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
+  ]
+}

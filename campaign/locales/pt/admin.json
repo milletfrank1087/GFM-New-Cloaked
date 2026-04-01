@@ -1,0 +1,128 @@
+{
+  "login": {
+    "title": "Acesso Admin",
+    "subtitle": "Painel de administração HopeRise",
+    "password": "Palavra-passe",
+    "passwordPlaceholder": "Introduza a palavra-passe de admin",
+    "loginButton": "Entrar",
+    "loggingIn": "A entrar...",
+    "error": "Palavra-passe inválida"
+  },
+  "dashboard": {
+    "title": "Painel",
+    "welcome": "Bem-vindo",
+    "campaign": "Campanha",
+    "stats": {
+      "raised": "Angariado",
+      "tips": "Gorjetas",
+      "gross": "Bruto",
+      "fees": "Taxas",
+      "net": "Líquido",
+      "donors": "Doadores",
+      "avgDonation": "Donativo Médio",
+      "transactions": "Transações"
+    },
+    "recentDonations": "Donativos Recentes",
+    "viewAll": "Ver Todos"
+  },
+  "nav": {
+    "dashboard": "Painel",
+    "transactions": "Transações",
+    "customers": "Clientes",
+    "failures": "Erros",
+    "logout": "Sair"
+  },
+  "transactions": {
+    "title": "Todas as Transações",
+    "search": "Pesquisar transações...",
+    "filters": {
+      "all": "Todas",
+      "oneTime": "Único",
+      "monthly": "Mensal",
+      "recurring": "Recorrente"
+    },
+    "table": {
+      "donor": "Doador",
+      "amount": "Valor",
+      "type": "Tipo",
+      "method": "Método",
+      "date": "Data",
+      "status": "Estado",
+      "actions": "Ações"
+    },
+    "status": {
+      "completed": "Concluído",
+      "pending": "Pendente",
+      "failed": "Falhado"
+    },
+    "details": "Detalhes da Transação",
+    "noTransactions": "Nenhuma transação encontrada"
+  },
+  "customers": {
+    "title": "Gestão de Clientes",
+    "search": "Pesquisar clientes...",
+    "filters": {
+      "all": "Todos",
+      "active": "Ativos",
+      "paused": "Pausados"
+    },
+    "table": {
+      "customer": "Cliente",
+      "email": "Email",
+      "totalDonated": "Total Doado",
+      "donations": "Donativos",
+      "firstDonation": "Primeiro Donativo",
+      "status": "Estado",
+      "actions": "Ações"
+    },
+    "details": "Detalhes do Cliente",
+    "actions": {
+      "rebill": "Rebill",
+      "pause": "Pausar",
+      "resume": "Retomar",
+      "delete": "Eliminar",
+      "saveNotes": "Guardar Notas"
+    },
+    "rebillModal": {
+      "title": "Rebill Cliente",
+      "amount": "Valor",
+      "confirm": "Confirmar Rebill",
+      "cancel": "Cancelar"
+    },
+    "deleteModal": {
+      "title": "Eliminar Cliente",
+      "confirm": "Tem a certeza de que pretende eliminar este cliente? Esta ação não pode ser revertida.",
+      "confirmButton": "Sim, Eliminar",
+      "cancel": "Cancelar"
+    },
+    "noCustomers": "Nenhum cliente encontrado"
+  },
+  "failures": {
+    "title": "Erros de Pagamento",
+    "table": {
+      "date": "Data",
+      "errorType": "Tipo de Erro",
+      "errorCode": "Código",
+      "message": "Mensagem",
+      "amount": "Valor",
+      "ip": "IP"
+    },
+    "noFailures": "Nenhum erro registado"
+  },
+  "common": {
+    "loading": "A carregar...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "refresh": "Atualizar"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "brand": {
+    "name": "HopeRise"
+  },
+  "nav": {
+    "story": "História",
+    "updates": "Atualizações",
+    "donors": "Doadores",
+    "faq": "Perguntas Frequentes",
+    "donateNow": "Doar Agora"
+  },
+  "sidebar": {
+    "raised": "angariados",
+    "of": "de",
+    "goal": "objetivo",
+    "donors": "doadores",
+    "daysLeft": "dias restantes",
+    "milestones": "Metas",
+    "share": "Partilhar",
+    "recentDonation": "Donativo Recente",
+    "donated": "doou"
+  },
+  "organizer": {
+    "title": "Organizador",
+    "verified": "Verificado",
+    "identityVerified": "Identidade Verificada",
+    "created": "Criado",
+    "fundraiser": "angariação de fundos",
+    "fundraiserCount": "1 angariação de fundos"
+  },
+  "updates": {
+    "title": "Atualizações"
+  },
+  "trust": {
+    "secure": "Seguro",
+    "protected": "Protegido",
+    "transparent": "Transparente",
+    "sslEncrypted": "Encriptação SSL",
+    "verifiedPlatform": "Plataforma Verificada",
+    "paypalProtected": "Protegido pelo PayPal"
+  },
+  "share": {
+    "title": "Partilhe esta angariação de fundos",
+    "spreadTheWord": "Ajude a espalhar a palavra",
+    "sharingHelps": "Partilhar é a forma mais fácil de ajudar. Cada partilha aproxima-nos do nosso objetivo.",
+    "facebook": "Partilhar",
+    "twitter": "Tweet",
+    "whatsapp": "WhatsApp",
+    "copyLink": "Copiar Link"
+  },
+  "donors": {
+    "title": "Doadores",
+    "topDonors": "Maiores Doadores",
+    "allDonors": "Todos os Doadores",
+    "showMore": "Mostrar Mais Doadores",
+    "anonymous": "Anónimo",
+    "andMore": "...e mais ${count} doadores"
+  },
+  "time": {
+    "justNow": "Agora mesmo",
+    "minAgo": "minutos atrás",
+    "hoursAgo": "horas atrás",
+    "daysAgo": "dias atrás"
+  },
+  "footer": {
+    "tagline": "Damos poder às pessoas para ajudar outros através de angariações de fundos seguras e transparentes. Cada donativo faz a diferença.",
+    "raised": "Angariados",
+    "campaigns": "Campanhas",
+    "allRightsReserved": "Todos os direitos reservados.",
+    "termsOfService": "Termos de Serviço",
+    "privacyPolicy": "Política de Privacidade",
+    "cookiePolicy": "Política de Cookies",
+    "refundPolicy": "Política de Reembolso",
+    "iUnderstand": "Compreendo"
+  },
+  "misc": {
+    "loading": "A carregar...",
+    "backToSite": "← Voltar ao site"
+  }
+}

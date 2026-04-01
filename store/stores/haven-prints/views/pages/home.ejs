@@ -1,0 +1,255 @@
+<% const pageTitle = 'Home'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+
+<section class="py-12 md:py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 bg-primary-50 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-5">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        Loved by 8,500+ homeowners
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-[1.15] mb-4">
+        Beautiful wall art you can print at home
+      </h1>
+      <p class="text-base sm:text-lg text-gray-500 leading-relaxed mb-7 max-w-lg">
+        Curated printable art, room planners and interior design kits crafted by professional stylists. Download instantly and transform any room today.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="#products" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm transition hover:shadow-lg hover:shadow-primary/20">
+          Browse Collections
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+        </a>
+        <a href="#about" class="inline-flex items-center justify-center gap-2 text-gray-600 bg-white border border-gray-200 px-6 py-3 rounded-xl font-semibold text-sm transition hover:border-gray-300">
+          Our Story
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-gray-100 bg-gray-50/50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">8.5K+</p>
+        <p class="text-xs text-gray-400 mt-0.5">Happy Homes</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">24</p>
+        <p class="text-xs text-gray-400 mt-0.5">Collections</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">35+</p>
+        <p class="text-xs text-gray-400 mt-0.5">Countries</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">4.8</p>
+        <p class="text-xs text-gray-400 mt-0.5">Avg. rating</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="products" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900">All Collections</h2>
+      <p class="text-sm text-gray-400 mt-1">${(products || []).length} products available</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      ${(products || []).map((p, i) => {
+        const icons = [
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 001.5-1.5V5.25a1.5 1.5 0 00-1.5-1.5H3.75a1.5 1.5 0 00-1.5 1.5V19.5a1.5 1.5 0 001.5 1.5z"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L12 12.75 6.429 9.75m11.142 0l4.179 2.25L12 17.25 2.25 12l4.179-2.25"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>'
+        ];
+        const bgColors = ['bg-blue-50', 'bg-emerald-50', 'bg-violet-50', 'bg-amber-50', 'bg-rose-50', 'bg-cyan-50'];
+        const textColors = ['text-blue-600', 'text-emerald-600', 'text-violet-600', 'text-amber-600', 'text-rose-600', 'text-cyan-600'];
+        return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition-all">' +
+          '<div class="w-10 h-10 rounded-lg ' + bgColors[i % 6] + ' flex items-center justify-center ' + textColors[i % 6] + ' shrink-0">' + icons[i % 5] + '</div>' +
+          '<div class="flex-1 min-w-0">' +
+            '<h3 class="font-semibold text-gray-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+            '<p class="text-xs text-gray-400 mt-0.5">' + (p.category || 'Printable') + '</p>' +
+          '</div>' +
+          '<span class="text-sm font-bold text-gray-900 shrink-0">\u00a3' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+        '</a>';
+      }).join('')}
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-50 py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-3">Why customers love our prints</h2>
+    <p class="text-sm text-gray-400 text-center mb-10 max-w-lg mx-auto">Every design is created by professional interior stylists and tested in real homes.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Instant Download</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">Print-ready files delivered to your inbox in seconds. No waiting, no shipping costs.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Secure Payments</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">256-bit SSL encryption. Processed safely through Stripe.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Print Any Size</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">High-resolution files that scale from A5 cards to large A1 statement pieces.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-3xl mx-auto">
+      <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">Our Story</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">About ${store.name}</h2>
+      <p class="text-sm text-gray-500 leading-relaxed mb-8">${store.about_text || 'We started Haven Prints Co because we believe every home deserves gallery-quality art without the gallery price tag. Our small team of interior designers and illustrators creates original artwork that you can download, print and frame in minutes. Each collection is designed to complement real interiors, not just look good on a screen.'}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-gray-200 p-5">
+          <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+            <svg class="w-4.5 h-4.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Our Mission</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">To make thoughtful, design-led home decor accessible to everyone — whether you live in a studio flat or a country house.</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-5">
+          <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+            <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Our Vision</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">A world where styling your home is as easy as choosing a playlist — personal, affordable and endlessly refreshable.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-50 py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-8">What our customers say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      ${[
+        { name: 'Rachel T.', role: 'First-time buyer', text: 'I printed the botanical set on textured card stock and framed them in IKEA frames. My hallway looks like it was styled by a professional — for under a tenner.' },
+        { name: 'Marcus D.', role: 'Property stylist', text: 'I use the staging toolkit for every listing. The gallery wall guide alone has saved me hours of measuring. My clients always ask where the art came from.' },
+        { name: 'Claire W.', role: 'Interior design student', text: 'The colour palette generator changed how I approach mood boards. It pulls harmonious palettes from any photo in seconds. Absolute bargain.' }
+      ].map(t => '<div class="bg-white border border-gray-200 rounded-xl p-5">' +
+        '<div class="flex items-center gap-0.5 mb-3">' + Array(5).fill('<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>').join('') + '</div>' +
+        '<p class="text-gray-600 text-xs leading-relaxed mb-4">"' + t.text + '"</p>' +
+        '<div class="flex items-center gap-2.5">' +
+          '<div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold text-gray-500">' + t.name.split(' ').map(w => w[0]).join('') + '</div>' +
+          '<div><p class="text-xs font-semibold text-gray-900">' + t.name + '</p><p class="text-[10px] text-gray-400">' + t.role + '</p></div>' +
+        '</div>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h2>
+    <p class="text-sm text-gray-400 mb-8">Everything you need to know about our printable art and design resources.</p>
+    <div class="space-y-2">
+      ${[
+        { q: 'What payment methods do you accept?', a: 'We accept all major credit and debit cards including Visa, Mastercard and American Express through our secure Stripe payment gateway. Apple Pay and Google Pay are also supported.' },
+        { q: 'How do I receive my prints?', a: 'All products are delivered as high-resolution digital files. After payment you receive instant access to download your files. A confirmation email with download links arrives within minutes.' },
+        { q: 'What sizes can I print?', a: 'Our files are 300 DPI and designed to print beautifully from A5 up to A1. Each product listing notes the recommended size range. Most wall art collections include multiple aspect ratios.' },
+        { q: 'Is my payment secure?', a: 'All payment processing is handled by Stripe, PCI-DSS Level 1 certified. Your card details are encrypted with 256-bit SSL and never stored on our servers.' },
+        { q: 'What paper should I use?', a: 'For best results we recommend 200gsm+ matte or satin card stock. Standard home printers handle up to A4 brilliantly — for larger sizes, upload to a local print shop.' },
+        { q: 'Can I use the designs commercially?', a: 'Yes. All products include a personal and commercial licence. You may use them in client projects, Airbnb properties or staging. Redistribution or resale of the original files is not permitted.' },
+        { q: 'Do you offer refunds?', a: 'Due to the digital nature of our products, all sales are final once download access is provided. If you experience any issues, please contact our support team within 48 hours.' },
+        { q: 'What file formats are included?', a: 'Most art prints come as high-resolution PDF and JPEG. Design kits and planners include PDF, XLSX and PNG formats. Specific formats are listed on each product page.' }
+      ].map(item => '<details class="group bg-white border border-gray-200 rounded-xl overflow-hidden">' +
+        '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-gray-900 text-sm hover:text-primary transition">' +
+          '<span class="pr-4">' + item.q + '</span>' +
+          '<svg class="w-4 h-4 text-gray-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+        '</summary>' +
+        '<div class="px-4 pb-3.5 text-gray-500 text-xs leading-relaxed border-t border-gray-100 pt-3">' + item.a + '</div>' +
+      '</details>').join('')}
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="bg-gray-50 py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Get in Touch</h2>
+    <p class="text-sm text-gray-400 mb-8">Question about a print or need styling advice? We typically respond within 24 hours.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs font-semibold text-gray-900">Email</p>
+          <p class="text-[11px] text-gray-400 truncate">${store.contact_email || 'hello@' + store.domain}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-900">Response</p>
+          <p class="text-[11px] text-gray-400">Within 24 hours</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-900">Worldwide</p>
+          <p class="text-[11px] text-gray-400">35+ countries served</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <form class="space-y-4" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Message Sent!'; this.querySelector('button').disabled=true;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">First Name</label>
+            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Emma" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Last Name</label>
+            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Taylor" required>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">Email</label>
+          <input type="email" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="emma@example.com" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">Message</label>
+          <textarea rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm resize-none" placeholder="Tell us how we can help..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary w-full text-white py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-950 py-12">
+  <div class="max-w-xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-lg sm:text-xl font-bold text-white mb-2">Stay inspired</h2>
+    <p class="text-xs text-gray-500 mb-6">New collections and exclusive early-bird pricing.</p>
+    <form class="flex gap-2 max-w-sm mx-auto" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Done!'; this.querySelector('button').disabled=true; this.querySelector('input').disabled=true;">
+      <input type="email" placeholder="you@example.com" required class="flex-1 bg-white/10 border border-white/10 text-white placeholder-gray-600 px-3.5 py-2.5 rounded-lg text-sm focus:outline-none focus:border-white/25">
+      <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg font-semibold text-sm shrink-0 transition">Subscribe</button>
+    </form>
+    <p class="text-[10px] text-gray-700 mt-2">No spam. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+`, store, products }) %>

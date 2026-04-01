@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customers | HopeRise Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { gfm: { green: '#00b964', 'green-dark': '#02a95c', 'green-light': '#e8f8f0', dark: '#333333', gray: '#767676' } },
+          fontFamily: { outfit: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-outfit bg-gray-50 min-h-screen">
+  <!-- Mobile Header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 px-4 py-3 flex items-center justify-between">
+    <button id="mobile-menu-btn" class="p-2 hover:bg-gray-100 rounded-lg">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <span class="font-bold text-gfm-dark">Customers</span>
+    <button onclick="logout()" class="p-2 hover:bg-gray-100 rounded-lg text-gfm-gray">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+    </button>
+  </header>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 transform -translate-x-full lg:translate-x-0 transition-transform">
+    <div class="p-6 border-b border-gray-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gfm-green rounded-full flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <span class="font-bold text-gfm-dark">HopeRise</span>
+      </div>
+    </div>
+    <nav class="p-4 space-y-1">
+      <a href="/admin" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gfm-gray hover:bg-gray-100 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="/admin/customers.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gfm-green-light text-gfm-green font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Customers
+      </a>
+      <a href="/admin/transactions.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gfm-gray hover:bg-gray-100 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        Transactions
+      </a>
+    </nav>
+    <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100">
+      <button onclick="logout()" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gfm-gray hover:bg-gray-100 transition-colors w-full">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+  <!-- Main Content -->
+  <main class="lg:ml-64 pt-16 lg:pt-0 min-h-screen">
+    <div class="p-4 lg:p-8">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h1 class="text-2xl font-bold text-gfm-dark">Customers</h1>
+        <div class="flex gap-2">
+          <input type="text" id="search" placeholder="Search..." class="px-4 py-2 border border-gray-200 rounded-xl focus:border-gfm-green focus:outline-none">
+          <button onclick="exportCSV()" class="px-4 py-2 bg-gfm-green text-white rounded-xl font-medium hover:bg-gfm-green-dark transition-colors">Export</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-xl p-4 shadow-sm text-center">
+          <p class="text-2xl font-bold text-gfm-dark" id="stat-customers">0</p>
+          <p class="text-sm text-gfm-gray">Total Customers</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm text-center">
+          <p class="text-2xl font-bold text-gfm-green" id="stat-total">-</p>
+          <p class="text-sm text-gfm-gray">Total Donated</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm text-center">
+          <p class="text-2xl font-bold text-gfm-dark" id="stat-avg">-</p>
+          <p class="text-sm text-gfm-gray">Avg per Customer</p>
+        </div>
+      </div>
+      
+      <!-- Desktop Table -->
+      <div class="hidden md:block bg-white rounded-2xl shadow-sm overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-6 py-4 text-sm font-semibold text-gfm-dark">Customer</th>
+              <th class="text-left px-6 py-4 text-sm font-semibold text-gfm-dark">Email</th>
+              <th class="text-left px-6 py-4 text-sm font-semibold text-gfm-dark">Total</th>
+              <th class="text-left px-6 py-4 text-sm font-semibold text-gfm-dark">Payment</th>
+              <th class="text-left px-6 py-4 text-sm font-semibold text-gfm-dark">Status</th>
+              <th class="text-right px-6 py-4 text-sm font-semibold text-gfm-dark">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="customers-table"></tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="md:hidden space-y-3" id="customers-cards"></div>
+    </div>
+  </main>
+
+  <!-- Customer Detail Modal -->
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeDetailModal()"></div>
+    <div class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-2xl bg-white rounded-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="text-xl font-bold text-gfm-dark">Customer Details</h3>
+        <button onclick="closeDetailModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto flex-1" id="detail-content">
+        <p class="text-gfm-gray">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rebill Modal -->
+  <div id="rebill-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeRebillModal()"></div>
+    <div class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-md bg-white rounded-2xl p-6">
+      <h3 class="text-xl font-bold text-gfm-dark mb-4">Rebill Customer</h3>
+      <div id="rebill-customer-info" class="mb-4 p-4 bg-gray-50 rounded-xl"></div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gfm-dark mb-2" id="rebill-amount-label">Amount</label>
+        <input type="number" id="rebill-amount" placeholder="50" min="0.50" step="0.01" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:outline-none">
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeRebillModal()" class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl font-medium hover:bg-gray-50">Cancel</button>
+        <button onclick="processRebill()" id="rebill-btn" class="flex-1 px-4 py-3 bg-gfm-green text-white rounded-xl font-medium hover:bg-gfm-green-dark">Charge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeDeleteModal()"></div>
+    <div class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-md bg-white rounded-2xl p-6">
+      <h3 class="text-xl font-bold text-red-600 mb-2">⚠️ Delete Customer</h3>
+      <p class="text-gfm-gray mb-4">This will permanently delete the customer and ALL their transaction history. This action cannot be undone.</p>
+      <div id="delete-customer-info" class="mb-4 p-4 bg-red-50 rounded-xl border border-red-200"></div>
+      <div class="flex gap-3">
+        <button onclick="closeDeleteModal()" class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl font-medium hover:bg-gray-50">Cancel</button>
+        <button onclick="confirmDelete()" id="delete-btn" class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700">Delete Forever</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-4 right-4 z-[100] space-y-2"></div>
+
+  <script>
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        info: 'bg-blue-500',
+        warning: 'bg-yellow-500'
+      };
+      
+      const icons = {
+        success: '✅',
+        error: '❌',
+        info: 'ℹ️',
+        warning: '⚠️'
+      };
+      
+      toast.className = `${colors[type]} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform translate-x-full transition-transform duration-300 max-w-sm`;
+      toast.innerHTML = `
+        <span class="text-lg">${icons[type]}</span>
+        <span class="flex-1 text-sm font-medium">${message}</span>
+        <button onclick="this.parentElement.remove()" class="text-white/80 hover:text-white">✕</button>
+      `;
+      
+      container.appendChild(toast);
+      
+      setTimeout(() => toast.classList.remove('translate-x-full'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => toast.remove(), 300);
+      }, 5000);
+    }
+
+    fetch('/api/admin/check').then(r => { if (!r.ok) window.location.href = '/admin/login.html'; });
+    
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    });
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.add('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+    function logout() {
+      fetch('/api/admin/logout', { method: 'POST' }).then(() => window.location.href = '/admin/login.html');
+    }
+
+    let customers = [];
+    let selectedCustomer = null;
+    let currencyConfig = { symbol: '€', locale: 'en-US', position: 'before' };
+    
+    async function loadCurrencyConfig() {
+      try {
+        const res = await fetch('/api/currency/config');
+        if (res.ok) currencyConfig = await res.json();
+      } catch (e) { console.warn('Currency config fetch failed'); }
+    }
+    
+    function formatCurrency(amount) {
+      const formatted = parseFloat(amount || 0).toLocaleString(currencyConfig.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return currencyConfig.position === 'after' ? formatted + currencyConfig.symbol : currencyConfig.symbol + formatted;
+    }
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    async function loadCustomers() {
+      const res = await fetch('/api/admin/customers');
+      if (!res.ok) return;
+      customers = await res.json();
+      renderCustomers(customers);
+      updateStats(customers);
+    }
+    
+    function updateStats(data) {
+      const total = data.reduce((s, c) => s + c.totalAmount, 0);
+      document.getElementById('stat-customers').textContent = data.length;
+      document.getElementById('stat-total').textContent = formatCurrency(total);
+      document.getElementById('stat-avg').textContent = formatCurrency(data.length ? total / data.length : 0);
+    }
+
+    function getStatusBadge(status) {
+      if (status === 'paused') {
+        return '<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">⏸ Paused</span>';
+      }
+      return '<span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Active</span>';
+    }
+    
+    function getPaymentTypeBadge(source, cardBrand, hasVault) {
+      const icons = {
+        'apple_pay': '🍎',
+        'google_pay': '🔵',
+        'paypal': '🅿️',
+        'venmo': '💜',
+        'card': '💳'
+      };
+      const labels = {
+        'apple_pay': 'Apple Pay',
+        'google_pay': 'Google Pay',
+        'paypal': 'PayPal',
+        'venmo': 'Venmo',
+        'card': cardBrand || 'Card'
+      };
+      const icon = icons[source] || '💳';
+      const label = labels[source] || source || 'Unknown';
+      const vaultIcon = hasVault ? ' 🔄' : '';
+      return `<span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">${icon} ${label}${vaultIcon}</span>`;
+    }
+
+    function renderCustomers(data) {
+      const tbody = document.getElementById('customers-table');
+      const cards = document.getElementById('customers-cards');
+      
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gfm-gray">No customers yet</td></tr>';
+        cards.innerHTML = '<p class="text-gfm-gray text-center py-8">No customers yet</p>';
+        return;
+      }
+      
+      tbody.innerHTML = data.map(c => `
+        <tr class="border-b border-gray-100 hover:bg-gray-50">
+          <td class="px-6 py-4 cursor-pointer" onclick="showCustomerDetail('${c.id}')">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br ${c.color} flex items-center justify-center text-white font-bold text-sm">${c.initials}</div>
+              <div>
+                <p class="font-medium text-gfm-dark">${c.name}</p>
+                <p class="text-xs text-gfm-gray">${c.donationCount} donations • ${formatCurrency(c.totalAmount)}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 text-gfm-gray text-sm">${c.email || c.payerEmail || '-'}</td>
+          <td class="px-6 py-4 font-bold text-gfm-green">${formatCurrency(c.totalAmount)}</td>
+          <td class="px-6 py-4">${getPaymentTypeBadge(c.paymentSource, c.cardBrand, c.hasVault)}</td>
+          <td class="px-6 py-4">${getStatusBadge(c.status)}</td>
+          <td class="px-6 py-4">
+            <div class="flex justify-end gap-2">
+              <button onclick="openRebillModal('${c.id}')" class="p-2 text-purple-600 hover:bg-purple-50 rounded-lg" title="Rebill">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              </button>
+              <button onclick="togglePause('${c.id}', '${c.status || 'active'}')" class="p-2 ${c.status === 'paused' ? 'text-green-600 hover:bg-green-50' : 'text-yellow-600 hover:bg-yellow-50'} rounded-lg" title="${c.status === 'paused' ? 'Resume' : 'Pause'}">
+                ${c.status === 'paused' 
+                  ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                  : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                }
+              </button>
+              <button onclick="openDeleteModal('${c.id}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Delete">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      cards.innerHTML = data.map(c => `
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+          <div class="flex items-center gap-3 mb-3 cursor-pointer" onclick="showCustomerDetail('${c.id}')">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br ${c.color} flex items-center justify-center text-white font-bold">${c.initials}</div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-gfm-dark truncate">${c.name}</p>
+              <p class="text-sm text-gfm-gray truncate">${c.email || c.payerEmail || 'No email'}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xl font-bold text-gfm-green">${formatCurrency(c.totalAmount)}</span>
+              <div class="mt-1">${getStatusBadge(c.status)}</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gfm-gray">${c.donationCount} donation${c.donationCount !== 1 ? 's' : ''}</span>
+              ${getPaymentTypeBadge(c.paymentSource, c.cardBrand, c.hasVault)}
+            </div>
+            <div class="flex gap-2">
+              <button onclick="openRebillModal('${c.id}')" class="p-2 text-purple-600 bg-purple-50 rounded-lg text-xs font-medium">Rebill</button>
+              <button onclick="togglePause('${c.id}', '${c.status || 'active'}')" class="p-2 ${c.status === 'paused' ? 'text-green-600 bg-green-50' : 'text-yellow-600 bg-yellow-50'} rounded-lg text-xs font-medium">${c.status === 'paused' ? 'Resume' : 'Pause'}</button>
+              <button onclick="openDeleteModal('${c.id}')" class="p-2 text-red-600 bg-red-50 rounded-lg text-xs font-medium">Delete</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = customers.filter(c => 
+        c.name.toLowerCase().includes(q) || 
+        (c.email || '').toLowerCase().includes(q) ||
+        (c.payerEmail || '').toLowerCase().includes(q) ||
+        (c.cardHolderName || '').toLowerCase().includes(q)
+      );
+      renderCustomers(filtered);
+      updateStats(filtered);
+    });
+
+    async function showCustomerDetail(id) {
+      document.getElementById('detail-modal').classList.remove('hidden');
+      document.getElementById('detail-content').innerHTML = '<p class="text-gfm-gray">Loading...</p>';
+      
+      const res = await fetch(`/api/admin/customers/${id}`);
+      if (!res.ok) {
+        document.getElementById('detail-content').innerHTML = '<p class="text-red-500">Failed to load details</p>';
+        return;
+      }
+      
+      const c = await res.json();
+      
+      document.getElementById('detail-content').innerHTML = `
+        <div class="space-y-6">
+          <!-- Customer Info + Actions -->
+          <div class="flex items-start justify-between pb-4 border-b border-gray-100">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gfm-green to-emerald-500 flex items-center justify-center text-white text-2xl font-bold">${c.initials || '?'}</div>
+              <div>
+                <h3 class="text-xl font-bold text-gfm-dark">${c.name || 'Anonymous'}</h3>
+                ${c.cardHolderName && c.cardHolderName !== c.name ? `<p class="text-sm text-gfm-gray">Card name: ${c.cardHolderName}</p>` : ''}
+                <p class="text-gfm-gray">${c.email || c.payerEmail || 'No email'}</p>
+                <div class="mt-2">${getStatusBadge(c.status)}</div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-2">
+              ${c.vaultId ? `<button onclick="closeDetailModal(); openRebillModal('${c.id}')" class="px-3 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-200">🔄 Rebill</button>` : ''}
+              <button onclick="closeDetailModal(); togglePause('${c.id}', '${c.status || 'active'}')" class="px-3 py-2 ${c.status === 'paused' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'} rounded-lg text-sm font-medium">${c.status === 'paused' ? '▶️ Resume' : '⏸️ Pause'}</button>
+              <button onclick="closeDetailModal(); openDeleteModal('${c.id}')" class="px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200">🗑️ Delete</button>
+            </div>
+          </div>
+          
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-4">
+            <div class="bg-gfm-green-light rounded-xl p-4 text-center">
+              <p class="text-2xl font-bold text-gfm-green">${formatCurrency(c.stats?.totalDonated)}</p>
+              <p class="text-sm text-gfm-gray">Total Donated</p>
+            </div>
+            <div class="bg-gray-100 rounded-xl p-4 text-center">
+              <p class="text-2xl font-bold text-gfm-dark">${c.stats?.donationCount || 0}</p>
+              <p class="text-sm text-gfm-gray">Donations</p>
+            </div>
+            <div class="bg-gray-100 rounded-xl p-4 text-center">
+              <p class="text-2xl font-bold text-gfm-dark">${formatCurrency((c.stats?.totalDonated || 0) / (c.stats?.donationCount || 1))}</p>
+              <p class="text-sm text-gfm-gray">Average</p>
+            </div>
+          </div>
+          
+          <!-- Vault Token -->
+          ${c.vaultId ? `
+          <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
+            <p class="text-sm font-medium text-purple-700 mb-1">🔄 Payment Token Available</p>
+            <p class="text-xs font-mono text-purple-600">${c.vaultId}</p>
+            <p class="text-xs text-purple-500 mt-1">This customer can be rebilled without re-entering payment details</p>
+          </div>
+          ` : `
+          <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <p class="text-sm font-medium text-gfm-gray">No Payment Token</p>
+            <p class="text-xs text-gfm-gray mt-1">Customer needs to make a new donation before rebilling is available</p>
+          </div>
+          `}
+          
+          <!-- Details -->
+          <div>
+            <h4 class="font-semibold text-gfm-dark mb-3">Account Details</h4>
+            <div class="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
+              ${c.payerId ? `<div><span class="text-gfm-gray">Payer ID:</span> <span class="font-mono text-xs">${c.payerId}</span></div>` : ''}
+              ${c.payerEmail ? `<div><span class="text-gfm-gray">Payer Email:</span> <span class="font-medium">${c.payerEmail}</span></div>` : ''}
+              ${c.country ? `<div><span class="text-gfm-gray">Country:</span> <span class="font-medium">${c.country}</span></div>` : ''}
+              <div><span class="text-gfm-gray">First Donation:</span> <span class="font-medium">${formatDate(c.stats?.firstDonation)}</span></div>
+              <div><span class="text-gfm-gray">Last Donation:</span> <span class="font-medium">${formatDate(c.stats?.lastDonation)}</span></div>
+              ${c.pausedAt ? `<div><span class="text-gfm-gray">Paused At:</span> <span class="font-medium text-yellow-600">${formatDate(c.pausedAt)}</span></div>` : ''}
+            </div>
+          </div>
+          
+          <!-- Payment History -->
+          <div>
+            <h4 class="font-semibold text-gfm-dark mb-3">Payment History</h4>
+            <div class="space-y-2">
+              ${(c.payments || []).length === 0 ? '<p class="text-gfm-gray text-sm">No payments found</p>' : ''}
+              ${(c.payments || []).map(p => `
+                <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-between">
+                  <div>
+                    <p class="font-medium text-gfm-dark">${formatCurrency(p.amount)} ${p.tip ? `<span class="text-xs text-blue-600">+${formatCurrency(p.tip)} tip</span>` : ''}</p>
+                    <p class="text-xs text-gfm-gray">${p.cardBrand ? p.cardBrand + (p.cardLastDigits ? ' ****' + p.cardLastDigits : '') : 'PayPal'} • ${formatDate(p.createdAt)}</p>
+                  </div>
+                  <div class="text-right">
+                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">${p.status}</span>
+                    ${p.vaultId ? '<span class="ml-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">🔄</span>' : ''}
+                    ${p.paypalFee ? `<p class="text-xs text-red-500 mt-1">-${formatCurrency(p.paypalFee)} fee</p>` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
+    function openRebillModal(id) {
+      selectedCustomer = customers.find(c => c.id === id);
+      if (!selectedCustomer) return;
+      
+      document.getElementById('rebill-customer-info').innerHTML = `
+        <p class="font-bold text-gfm-dark">${selectedCustomer.name}</p>
+        <p class="text-sm text-gfm-gray">${selectedCustomer.email || selectedCustomer.payerEmail || 'No email'}</p>
+        <p class="text-sm text-gfm-gray">Total donated: ${formatCurrency(selectedCustomer.totalAmount)}</p>
+      `;
+      document.getElementById('rebill-amount').value = '';
+      document.getElementById('rebill-modal').classList.remove('hidden');
+    }
+
+    function closeRebillModal() {
+      document.getElementById('rebill-modal').classList.add('hidden');
+      selectedCustomer = null;
+    }
+
+    async function processRebill() {
+      const amount = parseFloat(document.getElementById('rebill-amount').value);
+      if (!amount || amount < 0.50 || !selectedCustomer) {
+        showToast(`Please enter a valid amount (minimum ${formatCurrency(0.50)})`, 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('rebill-btn');
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+
+      try {
+        const res = await fetch(`/api/admin/customers/${selectedCustomer.id}/rebill`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount })
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          showToast(`Successfully charged ${formatCurrency(amount)} to ${selectedCustomer.name}`, 'success');
+          closeRebillModal();
+          loadCustomers();
+        } else {
+          showToast(`Rebill failed: ${result.error}`, 'error');
+        }
+      } catch (err) {
+        showToast(`Error: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Charge';
+      }
+    }
+
+    function openDeleteModal(id) {
+      selectedCustomer = customers.find(c => c.id === id);
+      if (!selectedCustomer) return;
+      
+      document.getElementById('delete-customer-info').innerHTML = `
+        <p class="font-bold text-red-700">${selectedCustomer.name}</p>
+        <p class="text-sm text-red-600">${selectedCustomer.email || selectedCustomer.payerEmail || 'No email'}</p>
+        <p class="text-sm text-red-600 mt-2">${selectedCustomer.donationCount} transaction(s) totaling ${formatCurrency(selectedCustomer.totalAmount)} will be deleted</p>
+      `;
+      document.getElementById('delete-modal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.add('hidden');
+      selectedCustomer = null;
+    }
+
+    async function confirmDelete() {
+      if (!selectedCustomer) return;
+
+      const btn = document.getElementById('delete-btn');
+      btn.disabled = true;
+      btn.textContent = 'Deleting...';
+
+      try {
+        const res = await fetch(`/api/admin/customers/${selectedCustomer.id}`, {
+          method: 'DELETE'
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          showToast(`Customer "${result.deletedCustomer.name}" and ${result.deletedPayments} payment(s) deleted`, 'success');
+          closeDeleteModal();
+          loadCustomers();
+        } else {
+          showToast(`Delete failed: ${result.error}`, 'error');
+        }
+      } catch (err) {
+        showToast(`Error: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Delete Forever';
+      }
+    }
+
+    async function togglePause(id, currentStatus) {
+      const action = currentStatus === 'paused' ? 'resume' : 'pause';
+      const customer = customers.find(c => c.id === id);
+      
+      try {
+        const res = await fetch(`/api/admin/customers/${id}/${action}`, {
+          method: 'POST'
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          showToast(`${customer?.name || 'Customer'} ${action === 'pause' ? 'paused' : 'resumed'}`, 'success');
+          loadCustomers();
+        } else {
+          showToast(`Failed to ${action} customer: ${result.error}`, 'error');
+        }
+      } catch (err) {
+        showToast(`Error: ${err.message}`, 'error');
+      }
+    }
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDetailModal();
+        closeRebillModal();
+        closeDeleteModal();
+      }
+    });
+
+    function exportCSV() {
+      const headers = ['Name', 'Email', 'Payer Email', 'Card Holder', 'Total Donated', 'Donation Count', 'Status', 'Country', 'First Donation', 'Last Donation'];
+      const rows = customers.map(c => [
+        c.name,
+        c.email || '',
+        c.payerEmail || '',
+        c.cardHolderName || '',
+        c.totalAmount,
+        c.donationCount,
+        c.status || 'active',
+        c.country || '',
+        c.firstDonation || '',
+        c.lastDonation || ''
+      ]);
+      const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a'); 
+      a.href = URL.createObjectURL(blob); 
+      a.download = `customers-${new Date().toISOString().split('T')[0]}.csv`; 
+      a.click();
+    }
+
+    loadCurrencyConfig().then(() => {
+      const label = document.getElementById('rebill-amount-label');
+      if (label) label.textContent = `Amount (${currencyConfig.symbol})`;
+      loadCustomers();
+    });
+  </script>
+</body>
+</html>

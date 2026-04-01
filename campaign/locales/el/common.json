@@ -1,0 +1,80 @@
+{
+  "brand": {
+    "name": "HopeRise"
+  },
+  "nav": {
+    "story": "Ιστορία",
+    "updates": "Ενημερώσεις",
+    "donors": "Δωρητές",
+    "faq": "Συχνές Ερωτήσεις",
+    "donateNow": "Κάντε Δωρεά"
+  },
+  "sidebar": {
+    "raised": "συγκεντρώθηκαν",
+    "of": "από",
+    "goal": "στόχο",
+    "donors": "δωρητές",
+    "daysLeft": "μέρες απομένουν",
+    "milestones": "Ορόσημα",
+    "share": "Κοινοποίηση",
+    "recentDonation": "Πρόσφατη Δωρεά",
+    "donated": "δώρισε"
+  },
+  "organizer": {
+    "title": "Διοργανωτής",
+    "verified": "Επαληθευμένο",
+    "identityVerified": "Ταυτότητα Επαληθευμένη",
+    "created": "Δημιουργήθηκε",
+    "fundraiser": "συλλογή χρημάτων",
+    "fundraiserCount": "1 συλλογή χρημάτων"
+  },
+  "updates": {
+    "title": "Ενημερώσεις"
+  },
+  "trust": {
+    "secure": "Ασφαλές",
+    "protected": "Προστατευμένο",
+    "transparent": "Διαφανές",
+    "sslEncrypted": "Κρυπτογράφηση SSL",
+    "verifiedPlatform": "Επαληθευμένη Πλατφόρμα",
+    "paypalProtected": "Προστασία PayPal"
+  },
+  "share": {
+    "title": "Μοιραστείτε αυτή τη συλλογή χρημάτων",
+    "spreadTheWord": "Βοηθήστε να διαδοθεί",
+    "sharingHelps": "Η κοινοποίηση είναι ο ευκολότερος τρόπος να βοηθήσετε. Κάθε κοινοποίηση μας φέρνει πιο κοντά στον στόχο μας.",
+    "facebook": "Κοινοποίηση",
+    "twitter": "Tweet",
+    "whatsapp": "WhatsApp",
+    "copyLink": "Αντιγραφή Συνδέσμου"
+  },
+  "donors": {
+    "title": "Δωρητές",
+    "topDonors": "Κορυφαίοι Δωρητές",
+    "allDonors": "Όλοι οι Δωρητές",
+    "showMore": "Εμφάνιση Περισσότερων Δωρητών",
+    "anonymous": "Ανώνυμος",
+    "andMore": "...και ${count} ακόμη δωρητές"
+  },
+  "time": {
+    "justNow": "Μόλις τώρα",
+    "minAgo": "λεπτά πριν",
+    "hoursAgo": "ώρες πριν",
+    "daysAgo": "μέρες πριν"
+  },
+  "footer": {
+    "tagline": "Δίνουμε τη δύναμη στους ανθρώπους να βοηθούν άλλους μέσω ασφαλούς, διαφανούς συλλογής χρημάτων. Κάθε δωρεά κάνει τη διαφορά.",
+    "raised": "Συγκεντρώθηκαν",
+    "campaigns": "Καμπάνιες",
+    "allRightsReserved": "Με επιφύλαξη παντός δικαιώματος.",
+    "termsOfService": "Όροι Χρήσης",
+    "privacyPolicy": "Πολιτική Απορρήτου",
+    "cookiePolicy": "Πολιτική Cookies",
+    "refundPolicy": "Πολιτική Επιστροφών",
+    "iUnderstand": "Κατανοώ"
+  },
+  "misc": {
+    "loading": "Φόρτωση...",
+    "backToSite": "← Επιστροφή στον ιστότοπο"
+  }
+}

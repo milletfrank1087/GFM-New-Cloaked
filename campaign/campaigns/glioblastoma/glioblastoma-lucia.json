@@ -1,0 +1,342 @@
+{
+  "id": "glioblastoma-lucia",
+  "title": "Ayuda a Lucía a Luchar Contra su Tumor Cerebral",
+  "description": "Lucía, de 21 años, ha sido diagnosticada con un glioblastoma (GBM) de grado IV — el tumor cerebral más agresivo. Necesita urgentemente inmunoterapia con células dendríticas en Alemania — un tratamiento que no está cubierto por ningún sistema de salud pública en Europa.",
+  "organizer": {
+    "name": "Carmen Delgado",
+    "initials": "CD",
+    "location": "Sevilla, España",
+    "verified": true,
+    "createdDate": "5 Feb 2026"
+  },
+  "goal": 90000,
+  "raised": 27120,
+  "donorCount": 718,
+  "daysLeft": 30,
+  "images": [
+    {
+      "url": "/images/campaigns/glioblastoma-lucia/1.jpg",
+      "thumb": "/images/campaigns/glioblastoma-lucia/1.jpg",
+      "alt": "Lucía en el hospital"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-lucia/2.jpg",
+      "thumb": "/images/campaigns/glioblastoma-lucia/2.jpg",
+      "alt": "Atención médica"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-lucia/3.jpg",
+      "thumb": "/images/campaigns/glioblastoma-lucia/3.jpg",
+      "alt": "Tratamiento"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-lucia/4.jpg",
+      "thumb": "/images/campaigns/glioblastoma-lucia/4.jpg",
+      "alt": "Apoyo familiar"
+    }
+  ],
+  "story": {
+    "intro": "Lucía es una estudiante de Medicina de 21 años de Sevilla, diagnosticada con Glioblastoma Multiforme (GBM) de grado IV — el tumor cerebral maligno más agresivo. El tratamiento estándar (cirugía, radioterapia, temozolomida) ofrece una supervivencia mediana de 14-16 meses. El único tratamiento que puede aumentar significativamente su supervivencia — la inmunoterapia con células dendríticas — solo está disponible en centros especializados en Alemania y no está cubierto por ningún sistema de salud pública en Europa.",
+    "sections": [
+      {
+        "title": "El Diagnóstico",
+        "icon": "diagnosis",
+        "content": "Todo comenzó en octubre de 2025, cuando Lucía empezó a sufrir cefaleas persistentes, especialmente matutinas, acompañadas de náuseas y visión borrosa en el ojo izquierdo. El 20 de octubre, tras un episodio de convulsiones durante una clase en la Facultad de Medicina de la Universidad de Sevilla, fue trasladada de urgencia al Servicio de Neurocirugía del Hospital Universitario Virgen del Rocío.\\n\\nLa resonancia magnética (RM) reveló una masa de 4,2 cm en el lóbulo frontal derecho con captación en anillo característica de contraste y edema perilesional. La biopsia estereotáctica y el análisis molecular confirmaron el diagnóstico: Glioblastoma Multiforme, IDH-wildtype, grado IV según la OMS, con promotor MGMT no metilado — el subtipo molecular más desfavorable, que implica una respuesta reducida a la quimioterapia."
+      },
+      {
+        "title": "El Tratamiento Estándar y sus Límites",
+        "icon": "treatment",
+        "content": "Lucía se sometió a una resección quirúrgica parcial del tumor (exéresis subtotal) el 5 de noviembre de 2025 en el Hospital Virgen del Rocío — una resección completa no fue posible debido a la proximidad del tumor a las áreas funcionales del lenguaje. Siguió el protocolo Stupp: radioterapia concomitante (30 sesiones en 6 semanas) con temozolomida diaria, seguida de ciclos de mantenimiento con temozolomida.\\n\\nLos médicos fueron honestos: con el MGMT no metilado, la respuesta a la temozolomida se espera limitada. La supervivencia mediana con el tratamiento estándar es de 12-15 meses. La RM de control de enero de 2026 mostró un tumor residual estable en tamaño, pero los médicos advirtieron que la recurrencia es casi segura."
+      },
+      {
+        "title": "La Esperanza: Inmunoterapia con Células Dendríticas",
+        "icon": "hope",
+        "content": "Tras una investigación exhaustiva, la familia de Lucía identificó un programa especializado de inmunoterapia con células dendríticas en un centro oncológico certificado en Alemania. Un estudio clínico reciente (Nature Communications, agosto 2024) demostró un aumento del 68% en la supervivencia global mediana en pacientes con glioblastoma recurrente que recibieron vacunas de células dendríticas.\\n\\nEl tratamiento funciona así: se extraen células de la sangre de Lucía, se transforman en células dendríticas en el laboratorio, se «educan» con antígenos del propio tumor de Lucía, y se reinyectan para activar su sistema inmunitario contra el cáncer. Se requieren 4-6 ciclos durante 12 meses.\\n\\nEste tratamiento NO está cubierto por NINGÚN sistema de salud pública en Europa — ni el SNS español, ni la Seguridad Social, ni ninguna otra caja europea. Está clasificado como «terapia innovadora» y solo está disponible de forma privada."
+      },
+      {
+        "title": "Por Qué Necesitamos Vuestra Ayuda",
+        "icon": "help",
+        "content": "Queremos ser completamente transparentes. El tratamiento estándar de Lucía está íntegramente cubierto por el Sistema Nacional de Salud. Lo que pedimos es exclusivamente para terapias que no están cubiertas por ningún sistema sanitario público en Europa — pero que pueden darle a Lucía una oportunidad real de vida más allá de los 14 meses del pronóstico estándar.",
+        "coveredLabel": "Cubierto por el SNS / Seguridad Social",
+        "coveredItems": [
+          "Diagnóstico inicial — RM cerebral, biopsia estereotáctica (Hospital Virgen del Rocío)",
+          "Resección quirúrgica del tumor (Hospital Virgen del Rocío)",
+          "Radioterapia — 30 sesiones, protocolo Stupp (Hospital Virgen del Rocío)",
+          "Quimioterapia con temozolomida (SNS)",
+          "Tumor Treating Fields / Optune — cubierto desde agosto 2025 (Cartera Común de Servicios)"
+        ],
+        "notCoveredLabel": "No cubierto por ningún sistema sanitario en Europa",
+        "notCoveredItems": [
+          "Inmunoterapia con células dendríticas — 4-6 ciclos en Alemania",
+          "Profilado molecular de nueva generación (NGS) para terapia personalizada",
+          "Terapia de protones (proton therapy) — centros públicos españoles aún no operativos",
+          "Traslado, alojamiento y acompañamiento en Alemania durante 12+ meses"
+        ]
+      },
+      {
+        "title": "Desglose de Costes",
+        "icon": "cost",
+        "totalLabel": "Total",
+        "items": [
+          {
+            "text": "Inmunoterapia con células dendríticas (4-6 ciclos, Alemania)",
+            "amount": 35000
+          },
+          {
+            "text": "Terapia de protones (proton therapy, Alemania)",
+            "amount": 25000
+          },
+          {
+            "text": "Profilado molecular NGS y plan terapéutico personalizado",
+            "amount": 8000
+          },
+          {
+            "text": "Traslado, alojamiento y gastos de acompañamiento en Alemania (12+ meses)",
+            "amount": 15000
+          },
+          {
+            "text": "Gastos médicos imprevistos y fondo de reserva",
+            "amount": 7000
+          }
+        ]
+      }
+    ],
+    "quote": {
+      "text": "Quería ser médica para ayudar a la gente. Ahora aprendo lo que significa ser paciente — y lo insoportable que es saber que existe un tratamiento que podría salvarte, pero no poder acceder a él. Cada donación vuestra no es simplemente dinero — es tiempo de vida. Si lo consigo, os prometo dedicar mi vida a la neuro-oncología, para que nadie más pase por lo que estoy pasando yo.",
+      "author": "Lucía R."
+    }
+  },
+  "updates": [
+    {
+      "date": "10 Mar 2026",
+      "title": "Resultados de la RM de control 📋",
+      "content": "La RM de control tras finalizar la radioterapia muestra un tumor residual estable sin nuevas lesiones. Los médicos del Virgen del Rocío dicen que es el mejor resultado posible con el tratamiento estándar, pero la recurrencia sigue siendo muy probable. La clínica en Alemania nos ha confirmado que pueden comenzar la inmunoterapia con células dendríticas en abril, si conseguimos la financiación.",
+      "isNew": true
+    },
+    {
+      "date": "5 Mar 2026",
+      "title": "¡Hemos superado los 600 donantes! 🙏",
+      "content": "Vuestro apoyo nos emociona profundamente. Lucía ha terminado los ciclos de mantenimiento con temozolomida y se siente fuerte. Lee cada uno de vuestros mensajes y dice que le dais fuerza para seguir adelante. Cada euro nos acerca a Alemania.",
+      "isNew": false
+    },
+    {
+      "date": "20 Feb 2026",
+      "title": "Noticias del hospital",
+      "content": "Lucía ha terminado la radioquimioterapia concomitante en el Virgen del Rocío. Ha tenido cansancio y náuseas, pero su fortaleza mental es increíble. Su oncóloga nos ha explicado que con el MGMT no metilado, la temozolomida sola no es suficiente — por eso la inmunoterapia es crucial.",
+      "isNew": false
+    },
+    {
+      "date": "5 Feb 2026",
+      "title": "La campaña ha comenzado",
+      "content": "Con el corazón encogido pero con determinación, lanzamos esta llamada. Tras tres meses de tratamiento intensivo en el sistema público, los médicos nos dijeron con claridad: el tratamiento estándar da tiempo, pero la inmunoterapia puede dar vida. Desgraciadamente, no está cubierta en ningún país de Europa. Creemos en la solidaridad.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    {
+      "amount": 18000,
+      "label": "Fin del tratamiento estándar y profilado molecular",
+      "reached": true
+    },
+    {
+      "amount": 45000,
+      "label": "50% — Inicio de la inmunoterapia con células dendríticas",
+      "reached": false
+    },
+    {
+      "amount": 72000,
+      "label": "80% — Terapia de protones",
+      "reached": false
+    },
+    {
+      "amount": 90000,
+      "label": "Objetivo — Cobertura completa del tratamiento en Alemania 🎉",
+      "reached": false
+    }
+  ],
+  "topDonors": [
+    {
+      "name": "Asociación Estudiantes Medicina US",
+      "amount": 890,
+      "initials": "AE",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "Familia Rodríguez",
+      "amount": 520,
+      "initials": "FR",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anónimo",
+      "amount": 430,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
+  ],
+  "recentDonors": [
+    {
+      "name": "María C.",
+      "amount": 20,
+      "time": "hace 8 minutos",
+      "initials": "MC",
+      "color": "from-rose-400 to-rose-500",
+      "message": "¡Fuerza, bonita!"
+    },
+    {
+      "name": "Anónimo",
+      "amount": 25,
+      "time": "hace 22 minutos",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Pablo R.",
+      "amount": 15,
+      "time": "hace 38 minutos",
+      "initials": "PR",
+      "color": "from-blue-400 to-blue-500",
+      "message": "De un compañero de promo"
+    },
+    {
+      "name": "Elena V.",
+      "amount": 40,
+      "time": "hace 1 hora",
+      "initials": "EV",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Mucho ánimo"
+    },
+    {
+      "name": "Javier G.",
+      "amount": 30,
+      "time": "hace 1 hora",
+      "initials": "JG",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anónimo",
+      "amount": 50,
+      "time": "hace 2 horas",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "Que te cures pronto"
+    },
+    {
+      "name": "Carmen D.",
+      "amount": 10,
+      "time": "hace 2 horas",
+      "initials": "CD",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Miguel L.",
+      "amount": 35,
+      "time": "hace 3 horas",
+      "initials": "ML",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "¡Tú puedes, Lucía!"
+    },
+    {
+      "name": "Ana M.",
+      "amount": 15,
+      "time": "hace 3 horas",
+      "initials": "AM",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "Desde Málaga con cariño"
+    },
+    {
+      "name": "Anónimo",
+      "amount": 20,
+      "time": "hace 4 horas",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Fernando T.",
+      "amount": 45,
+      "time": "hace 4 horas",
+      "initials": "FT",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Isabel S.",
+      "amount": 10,
+      "time": "hace 5 horas",
+      "initials": "IS",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Fuerza para toda la familia"
+    },
+    {
+      "name": "Carlos H.",
+      "amount": 25,
+      "time": "hace 5 horas",
+      "initials": "CH",
+      "color": "from-purple-400 to-purple-500",
+      "message": ""
+    },
+    {
+      "name": "Anónimo",
+      "amount": 15,
+      "time": "hace 6 horas",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "Estamos contigo"
+    },
+    {
+      "name": "Pedro N.",
+      "amount": 20,
+      "time": "hace 6 horas",
+      "initials": "PN",
+      "color": "from-lime-400 to-lime-500",
+      "message": ""
+    },
+    {
+      "name": "Laura P.",
+      "amount": 10,
+      "time": "hace 7 horas",
+      "initials": "LP",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "Desde Barcelona"
+    },
+    {
+      "name": "Alejandro G.",
+      "amount": 30,
+      "time": "hace 8 horas",
+      "initials": "AG",
+      "color": "from-sky-400 to-sky-500",
+      "message": ""
+    },
+    {
+      "name": "Anónimo",
+      "amount": 5,
+      "time": "hace 8 horas",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "Lo que puedo"
+    },
+    {
+      "name": "Sofía A.",
+      "amount": 20,
+      "time": "hace 9 horas",
+      "initials": "SA",
+      "color": "from-red-400 to-red-500",
+      "message": "Rezamos por ti"
+    },
+    {
+      "name": "Diego Z.",
+      "amount": 15,
+      "time": "hace 10 horas",
+      "initials": "DZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
+  ]
+}

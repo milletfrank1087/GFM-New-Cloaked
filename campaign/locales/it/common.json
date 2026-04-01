@@ -1,0 +1,80 @@
+{
+  "brand": {
+    "name": "HopeRise"
+  },
+  "nav": {
+    "story": "Storia",
+    "updates": "Aggiornamenti",
+    "donors": "Donatori",
+    "faq": "Domande Frequenti",
+    "donateNow": "Dona Ora"
+  },
+  "sidebar": {
+    "raised": "raccolti",
+    "of": "di",
+    "goal": "obiettivo",
+    "donors": "donatori",
+    "daysLeft": "giorni rimasti",
+    "milestones": "Traguardi",
+    "share": "Condividi",
+    "recentDonation": "Donazione Recente",
+    "donated": "ha donato"
+  },
+  "organizer": {
+    "title": "Organizzatore",
+    "verified": "Verificato",
+    "identityVerified": "Identità Verificata",
+    "created": "Creato",
+    "fundraiser": "raccolta fondi",
+    "fundraiserCount": "1 raccolta fondi"
+  },
+  "updates": {
+    "title": "Aggiornamenti"
+  },
+  "trust": {
+    "secure": "Sicuro",
+    "protected": "Protetto",
+    "transparent": "Trasparente",
+    "sslEncrypted": "Crittografia SSL",
+    "verifiedPlatform": "Piattaforma Verificata",
+    "paypalProtected": "Protetto da PayPal"
+  },
+  "share": {
+    "title": "Condividi questa raccolta fondi",
+    "spreadTheWord": "Aiuta a diffondere la voce",
+    "sharingHelps": "Condividere è il modo più semplice per aiutare. Ogni condivisione ci avvicina al nostro obiettivo.",
+    "facebook": "Condividi",
+    "twitter": "Tweet",
+    "whatsapp": "WhatsApp",
+    "copyLink": "Copia Link"
+  },
+  "donors": {
+    "title": "Donatori",
+    "topDonors": "Donatori Top",
+    "allDonors": "Tutti i Donatori",
+    "showMore": "Mostra Altri Donatori",
+    "anonymous": "Anonimo",
+    "andMore": "...e altri ${count} donatori"
+  },
+  "time": {
+    "justNow": "Proprio ora",
+    "minAgo": "minuti fa",
+    "hoursAgo": "ore fa",
+    "daysAgo": "giorni fa"
+  },
+  "footer": {
+    "tagline": "Diamo potere alle persone di aiutare gli altri attraverso raccolte fondi sicure e trasparenti. Ogni donazione fa la differenza.",
+    "raised": "Raccolti",
+    "campaigns": "Campagne",
+    "allRightsReserved": "Tutti i diritti riservati.",
+    "termsOfService": "Termini di Servizio",
+    "privacyPolicy": "Informativa sulla Privacy",
+    "cookiePolicy": "Politica sui Cookie",
+    "refundPolicy": "Politica di Rimborso",
+    "iUnderstand": "Ho Capito"
+  },
+  "misc": {
+    "loading": "Caricamento...",
+    "backToSite": "← Torna al sito"
+  }
+}

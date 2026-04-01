@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Help Make a Difference | Fundraiser Campaign</title>
+  <meta name="description" content="Join us in making a real difference. Every donation counts towards creating positive change.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gfm: {
+              green: '#00b964',
+              'green-dark': '#02a95c',
+              'green-light': '#e8f8f0',
+              dark: '#333333',
+              gray: '#767676',
+              'gray-light': '#f8f8f8',
+            }
+          },
+          fontFamily: {
+            outfit: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  
+  <!-- Swiper for Gallery -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <!-- TRACKING_PIXELS_PLACEHOLDER -->
+  <!-- CAMPAIGN_DATA_PLACEHOLDER -->
+</head>
+<body class="font-outfit bg-white text-gfm-dark antialiased overflow-x-hidden">
+  
+  <style>
+    .skel{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .skel-hide{transition:opacity .2s;opacity:1}
+    .loaded .skel-hide{opacity:0;pointer-events:none;position:absolute}
+  </style>
+
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <!-- Campaign Hero -->
+  <section class="pt-24 md:pt-28 pb-8 bg-gradient-to-b from-gfm-green-light/50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-5 gap-8 lg:gap-12">
+        
+        <!-- Left Column - Gallery & Content -->
+        <div class="lg:col-span-3 min-w-0">
+          <!-- Gallery -->
+          <div id="gallery-container">
+            <div class="skel-hide"><div class="skel w-full h-[300px] md:h-[400px] rounded-2xl mb-3"></div><div class="flex gap-2"><div class="skel w-20 h-14 rounded-lg"></div><div class="skel w-20 h-14 rounded-lg"></div><div class="skel w-20 h-14 rounded-lg"></div></div></div>
+          </div>
+          
+          <!-- Main Content -->
+          <div id="tabs-container">
+            <div class="skel-hide mt-6"><div class="skel h-8 w-2/3 mb-4"></div><div class="skel h-4 w-full mb-2"></div><div class="skel h-4 w-5/6 mb-2"></div><div class="skel h-4 w-4/6 mb-2"></div><div class="skel h-4 w-full mb-2"></div><div class="skel h-4 w-3/4"></div></div>
+          </div>
+        </div>
+        
+        <!-- Right Column - Sticky Donation Card (Desktop Only) -->
+        <div class="lg:col-span-2 min-w-0 hidden lg:block">
+          <div id="sidebar-container">
+            <div class="skel-hide bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-6"><div class="skel h-6 w-3/4 mb-6"></div><div class="skel h-3 w-full mb-4 rounded-full"></div><div class="flex gap-4 mb-6"><div class="skel h-4 w-20"></div><div class="skel h-4 w-20"></div></div><div class="skel h-14 w-full rounded-xl mb-3"></div><div class="skel h-12 w-full rounded-xl"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <div id="faq-container"></div>
+  
+  <!-- MOBILE ONLY: Share Section (just above footer) -->
+  <div id="mobile-share-container" class="lg:hidden"></div>
+
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <!-- Modal & Mobile Bar -->
+  <div id="modal-container"></div>
+
+  <!-- Component Loader -->
+  <script>
+    async function loadComponent(containerId, componentPath) {
+      try {
+        const response = await fetch(componentPath);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const html = await response.text();
+        const container = document.getElementById(containerId);
+        if (container) container.innerHTML = html;
+      } catch (error) {
+        console.error(`Failed to load ${componentPath}:`, error);
+      }
+    }
+
+    async function loadAllComponents() {
+      const campaignPromise = window.__CAMPAIGN_DATA
+        ? Promise.resolve(window.__CAMPAIGN_DATA)
+        : fetch('/api/campaign').then(r => r.ok ? r.json() : null).catch(() => null);
+
+      let langConfig = { defaultLanguage: 'en' };
+      try {
+        const langRes = await fetch('/api/language/config');
+        if (langRes.ok) langConfig = await langRes.json();
+      } catch (e) {}
+      
+      document.documentElement.lang = langConfig.defaultLanguage;
+      
+      await Promise.all([
+        loadComponent('navbar-container', '/components/navbar.html'),
+        loadComponent('gallery-container', '/components/gallery.html'),
+        loadComponent('tabs-container', '/components/tabs-content.html'),
+        loadComponent('sidebar-container', '/components/sidebar.html'),
+        loadComponent('faq-container', '/components/faq.html'),
+        loadComponent('mobile-share-container', '/components/mobile-share.html'),
+        loadComponent('footer-container', '/components/footer.html'),
+        loadComponent('modal-container', '/components/modal.html'),
+      ]);
+      
+      if (typeof currency !== 'undefined') {
+        await currency.init();
+      }
+      if (typeof i18n !== 'undefined') {
+        await i18n.init();
+      }
+      
+      if (typeof currency !== 'undefined') {
+        document.querySelectorAll('[data-currency-symbol]').forEach(el => {
+          el.textContent = currency.getSymbol();
+        });
+      }
+      
+      if (typeof Tracking !== 'undefined') {
+        Tracking.init();
+        Tracking.trackPageView();
+      }
+      
+      document.body.classList.add('loaded');
+
+      window._prefetchedCampaign = await campaignPromise;
+      
+      if (typeof initApp === 'function') {
+        initApp();
+        if (typeof Tracking !== 'undefined') {
+          Tracking.trackViewContent({ contentType: 'campaign' });
+        }
+      }
+    }
+
+    loadAllComponents();
+  </script>
+
+  <!-- GOOGLE_PAY_SDK_PLACEHOLDER -->
+
+  <!-- JavaScript Modules -->
+  <script src="/js/tracking.js"></script>
+  <script src="/js/currency.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/notifications.js"></script>
+  <script src="/js/campaign.js"></script>
+  <script src="/js/gallery.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/donors.js"></script>
+  <script src="/js/donation.js"></script>
+  <script src="/js/faq.js"></script>
+  <script src="/js/counters.js"></script>
+  <script src="/js/modal.js"></script>
+  <script src="/js/legal-modals.js"></script>
+  <script src="/js/misc.js"></script>
+  <!-- PAYMENT_SCRIPT_PLACEHOLDER -->
+  <script src="/js/main.js"></script>
+</body>
+</html>

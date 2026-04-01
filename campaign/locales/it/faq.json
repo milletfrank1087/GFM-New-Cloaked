@@ -1,0 +1,45 @@
+{
+  "section": {
+    "label": "SUPPORTO",
+    "title": "Domande Frequenti",
+    "subtitle": "Tutto quello che devi sapere sul donare e sostenere questa campagna."
+  },
+  "questions": [
+    {
+      "q": "Come verrà utilizzata la mia donazione?",
+      "a": "Il 100% della tua donazione va direttamente alla causa dichiarata. L'organizzatore fornisce aggiornamenti regolari su come vengono utilizzati i fondi, garantendo completa trasparenza. Puoi seguire i progressi della campagna e vedere esattamente come il tuo contributo sta facendo la differenza."
+    },
+    {
+      "q": "Le mie informazioni di pagamento sono sicure?",
+      "a": "Assolutamente. Utilizziamo l'elaborazione pagamenti sicura di PayPal con crittografia SSL a 256 bit. Le tue informazioni finanziarie non vengono mai archiviate sui nostri server e tutte le transazioni sono protette dal programma di protezione acquirenti PayPal."
+    },
+    {
+      "q": "Posso donare in forma anonima?",
+      "a": "Sì! Basta selezionare la casella \"Non mostrare pubblicamente il mio nome\" quando doni. Il tuo nome non apparirà nell'elenco pubblico dei donatori, anche se l'organizzatore potrà comunque inviarti un messaggio di ringraziamento e una ricevuta."
+    },
+    {
+      "q": "Riceverò una ricevuta per la mia donazione?",
+      "a": "Sì, riceverai una conferma via email e una ricevuta immediatamente dopo l'elaborazione della tua donazione. Questa ricevuta include tutti i dettagli della transazione e può essere utilizzata per i tuoi archivi personali."
+    },
+    {
+      "q": "Quali metodi di pagamento sono accettati?",
+      "a": "Accettiamo tutte le principali carte di credito e debito (Visa, Mastercard, American Express, Discover) tramite PayPal. Puoi anche pagare direttamente dal tuo saldo PayPal o dal conto bancario collegato. Tutte le transazioni vengono elaborate in modo sicuro."
+    },
+    {
+      "q": "Posso impostare una donazione mensile ricorrente?",
+      "a": "Sì! Quando effettui la donazione, seleziona l'opzione \"Mensile\" per impostare un contributo ricorrente. Puoi annullare o modificare la tua donazione mensile in qualsiasi momento tramite il tuo account PayPal o contattandoci direttamente."
+    },
+    {
+      "q": "C'è un importo minimo di donazione?",
+      "a": "La donazione minima è {{currency}}1. Ogni contributo, non importa quanto piccolo, fa la differenza ed è profondamente apprezzato. Non c'è limite massimo alle donazioni."
+    },
+    {
+      "q": "Posso ottenere un rimborso sulla mia donazione?",
+      "a": "Le donazioni generalmente non sono rimborsabili in quanto vengono trasferite agli organizzatori della campagna. Tuttavia, i rimborsi possono essere emessi in casi di frode, addebiti duplicati o transazioni non autorizzate. Contatta il nostro team di supporto entro 30 giorni se ritieni di avere diritto a un rimborso."
+    },
+    {
+      "q": "Come faccio a sapere che questa campagna è legittima?",
+      "a": "Questa campagna è stata verificata dal nostro team. Cerca il badge \"Verificato\" sul profilo dell'organizzatore. Ti incoraggiamo anche a leggere la storia della campagna, controllare gli aggiornamenti dall'organizzatore e rivedere i commenti di altri donatori prima di contribuire."
+    }
+  ]
+}

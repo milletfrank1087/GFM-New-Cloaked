@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' + store.name : store.name %></title>
+  <meta name="description" content="<%= store.tagline || store.name + ' - Digital wellness tools' %>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --color-primary: <%= store.colors?.primary || '#00b964' %>;
+      --color-accent: <%= store.colors?.accent || '#02a95c' %>;
+      --color-bg: <%= store.colors?.bg || '#ffffff' %>;
+    }
+    .btn-primary { background-color: var(--color-primary); }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .text-primary { color: var(--color-primary); }
+    .bg-primary { background-color: var(--color-primary); }
+    .border-primary { border-color: var(--color-primary); }
+    .ring-primary { --tw-ring-color: var(--color-primary); }
+    .bg-primary-50 { background-color: color-mix(in srgb, var(--color-primary) 8%, white); }
+    .bg-primary-100 { background-color: color-mix(in srgb, var(--color-primary) 15%, white); }
+    .text-accent { color: var(--color-accent); }
+    .bg-accent { background-color: var(--color-accent); }
+    body { background-color: var(--color-bg); }
+    ::selection { background-color: var(--color-primary); color: white; }
+    input:focus, textarea:focus, select:focus { border-color: var(--color-primary) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent); outline: none; }
+    .nav-drawer { transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+    .nav-drawer.open { transform: translateX(0); }
+    .nav-overlay { opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+    .nav-overlay.open { opacity: 1; pointer-events: auto; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+  <% if (typeof extraHead !== 'undefined') { %><%- extraHead %><% } %>
+</head>
+<body class="font-inter min-h-screen flex flex-col text-gray-800 antialiased">
+  <%- include('../partials/header', { store }) %>
+  <main class="flex-1">
+    <%- body %>
+  </main>
+  <%- include('../partials/footer', { store }) %>
+  <script src="/js/cart.js"></script>
+</body>
+</html>
