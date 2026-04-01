@@ -1,6 +1,6 @@
 module.exports = {
-  name: 'Steenfair',
-  statementDescriptor: 'STEENFAIR.CO.UK',
+  name: 'Haven Prints',
+  statementDescriptor: 'HAVENPRINTS.SHOP',
   metadataKeys: {
     storeId: 'outlet_ref',
     storeDomain: 'source_url',
