@@ -56,7 +56,11 @@ async function initCheckout() {
     });
 
     paymentElement = elements.create('payment', {
-      layout: 'tabs'
+      layout: 'tabs',
+      wallets: {
+        applePay: 'auto',
+        googlePay: 'auto'
+      }
     });
 
     paymentElement.mount('#payment-element');

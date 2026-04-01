@@ -354,10 +354,7 @@ app.post('/api/create-payment', async (req, res) => {
     const intentParams = {
       amount: amountInCents,
       currency: donor.currency.toLowerCase(),
-      automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
-      payment_method_options: {
-        link: { display_preference: { preference: 'off' } }
-      },
+      payment_method_types: ['card'],
       metadata,
       description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
       statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
@@ -667,10 +664,7 @@ app.post('/api/store-checkout', async (req, res) => {
     const intentParams = {
       amount: amountInCents,
       currency: 'gbp',
-      automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
-      payment_method_options: {
-        link: { display_preference: { preference: 'off' } }
-      },
+      payment_method_types: ['card'],
       metadata: {
         [mk.storeId || 'storeId']: storeDbId || '',
         [mk.storeDomain || 'storeDomain']: STORE_DOMAIN,
