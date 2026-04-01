@@ -272,7 +272,7 @@ app.get('/s/:token', async (req, res) => {
       path: '/'
     });
 
-    res.send(`<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/checkout"><meta name="referrer" content="no-referrer"></head><body></body></html>`);
+    res.send(`<!DOCTYPE html><html><head><meta name="referrer" content="no-referrer"></head><body><script>location.replace('/checkout')</script></body></html>`);
   } catch (err) {
     console.error('Token claim error:', err);
     res.redirect('/');
@@ -355,6 +355,9 @@ app.post('/api/create-payment', async (req, res) => {
       amount: amountInCents,
       currency: donor.currency.toLowerCase(),
       automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
+      payment_method_options: {
+        link: { display_preference: { preference: 'off' } }
+      },
       metadata,
       description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
       statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
@@ -564,12 +567,13 @@ app.post('/api/confirm-payment', async (req, res) => {
         }
       });
 
+    const fmk = storeConfig.metadataKeys || {};
     await stripe.paymentIntents.update(paymentIntent.id, {
       metadata: {
         ...paymentIntent.metadata,
-        fulfillment_status: 'delivered',
-        fulfilled_at: new Date().toISOString(),
-        delivery_method: 'digital_download'
+        [fmk.fulfillmentStatus || 'fulfillment_status']: 'delivered',
+        [fmk.fulfilledAt || 'fulfilled_at']: new Date().toISOString(),
+        [fmk.deliveryMethod || 'delivery_method']: 'digital_download'
       }
     });
 
@@ -629,6 +633,75 @@ app.post('/api/confirm-payment', async (req, res) => {
     }
 
     res.status(500).json({ error: 'Failed to confirm payment' });
+  }
+});
+
+app.post('/api/store-checkout', async (req, res) => {
+  try {
+    const { items } = req.body;
+    if (!items || !items.length) {
+      return res.status(400).json({ error: 'Cart is empty' });
+    }
+
+    const products = storeConfig.products || [];
+    let total = 0;
+    const validItems = [];
+
+    for (const item of items) {
+      const product = products.find(p => p.slug === item.slug);
+      if (product) {
+        const qty = Math.max(1, Math.min(10, parseInt(item.quantity) || 1));
+        total += product.price * qty;
+        validItems.push({ name: product.name, slug: product.slug, price: product.price, quantity: qty });
+      }
+    }
+
+    if (total < 1) {
+      return res.status(400).json({ error: 'Invalid cart total' });
+    }
+
+    const amountInCents = Math.round(total * 100);
+    const mk = storeConfig.metadataKeys || {};
+    const refCode = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    const intentParams = {
+      amount: amountInCents,
+      currency: 'gbp',
+      automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
+      payment_method_options: {
+        link: { display_preference: { preference: 'off' } }
+      },
+      metadata: {
+        [mk.storeId || 'storeId']: storeDbId || '',
+        [mk.storeDomain || 'storeDomain']: STORE_DOMAIN,
+        [mk.referenceCode || 'referenceCode']: refCode,
+        [mk.orderSummary || 'orderSummary']: validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')
+      },
+      description: validItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
+      statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
+      payment_details: { order_reference: refCode },
+      amount_details: {
+        line_items: validItems.map(item => ({
+          product_name: item.name.substring(0, 26),
+          product_code: (item.slug || 'item').substring(0, 12).toUpperCase().replace(/-/g, ''),
+          quantity: item.quantity,
+          unit_cost: Math.round(item.price * 100),
+          unit_of_measure: 'ACT',
+          tax: { total_tax_amount: 0 }
+        }))
+      }
+    };
+
+    const paymentIntent = await stripe.paymentIntents.create(intentParams);
+
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      amount: total.toFixed(2)
+    });
+  } catch (error) {
+    console.error('Store checkout error:', error.message);
+    res.status(500).json({ error: 'Payment setup failed' });
   }
 });
 

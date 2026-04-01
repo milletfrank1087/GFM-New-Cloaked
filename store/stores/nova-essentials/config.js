@@ -10,6 +10,9 @@ module.exports = {
     serviceFee: 'platform_fee',
     guestCheckout: 'quick_pay',
     orderSummary: 'line_items',
+    fulfillmentStatus: 'delivery_state',
+    fulfilledAt: 'dispatched_at',
+    deliveryMethod: 'access_type',
   },
   products: [
     { name: 'Morning Routine Planner', slug: 'morning-routine-planner', price: 4.99, category: 'Planners', description: 'Build a powerful morning routine with this guided daily planner.' },

@@ -454,3 +454,31 @@ The donation model is vastly superior because donors authorize their own payment
 - Mastercard MATCH list documentation (2025-2026)
 - Shopify store count data (2025)
 - SamCart / ThriveCart template analysis (2025-2026)
+
+---
+
+## Discovered Risks and Mitigations
+
+### Risk: Identical Metadata Key Names Across Stores
+
+Stripe's similarity clustering (XGBoost) compares feature vectors across accounts. Metadata key schemas are a feature in that vector. If two stores under different Stripe accounts both send `fulfillment_status`, `fulfilled_at`, `delivery_method` as post-payment metadata keys, this creates a detectable similarity pattern.
+
+**Mitigation**: All metadata keys — including fulfillment keys updated post-payment — must be aliased per store via `config.js` `metadataKeys`. Each store chooses key names that match its MCC and product context. The server reads these aliases with fallbacks so existing stores without aliases continue to work.
+
+| Store | MCC | fulfillment_status alias | fulfilled_at alias | delivery_method alias |
+|-------|-----|--------------------------|--------------------|-----------------------|
+| haven-prints | Home goods & furniture | `file_status` | `access_granted` | `file_delivery` |
+| zenflow-tools | Digital goods | `order_state` | `completed_at` | `send_method` |
+| nova-essentials | Digital goods | `delivery_state` | `dispatched_at` | `access_type` |
+
+### Risk: Build Artifact Contamination
+
+`package-lock.json` retains the `name` field from whatever `package.json` contained when `npm install` was first run. If the project was ever named "gfm-cloaked-store", that string persists in the lockfile even after renaming `package.json`. While Express does not serve this file, it exists on the deployed server filesystem.
+
+**Mitigation**: Regenerate lockfiles after any `package.json` name change. Add a lockfile name check to the sterility testing checklist. Grep the entire deployed directory for prohibited terms ("gfm", "cloaked", "donation", "campaign", "fundrais") before going live.
+
+### Risk: CAPI Purchase Event Deduplication Failure
+
+In the two-domain architecture, the Purchase event must fire both as a browser pixel (on the campaign page when the donor returns) and as a server-side CAPI event (on the campaign server when the store callback arrives). Without a shared `event_id`, Meta either double-counts or misses the conversion.
+
+**Mitigation**: Generate the Purchase `event_id` on the campaign client before redirecting to the store. Store it in `sessionStorage`. Pass it through the checkout flow via the tracking object (campaign -> Supabase -> store cookie -> store callback -> campaign CAPI). On donor return, retrieve the same `event_id` from `sessionStorage` and fire the browser pixel. Meta deduplicates using the matching ID.

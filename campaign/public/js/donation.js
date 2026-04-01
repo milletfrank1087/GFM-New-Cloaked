@@ -18,6 +18,28 @@ function handleDonatedReturn() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('status') === 'complete') {
     window.history.replaceState({}, '', window.location.pathname);
+
+    if (typeof Tracking !== 'undefined') {
+      try {
+        const storedEventId = sessionStorage.getItem('_purchase_event_id');
+        const storedAmount = parseFloat(sessionStorage.getItem('_purchase_amount') || '0');
+        const storedCurrency = sessionStorage.getItem('_purchase_currency') || 'EUR';
+
+        if (storedEventId && storedAmount > 0) {
+          Tracking.trackPurchase({
+            value: storedAmount,
+            currency: storedCurrency,
+            contentName: 'One-time Donation',
+            contentType: 'product'
+          }, storedEventId);
+        }
+
+        sessionStorage.removeItem('_purchase_event_id');
+        sessionStorage.removeItem('_purchase_amount');
+        sessionStorage.removeItem('_purchase_currency');
+      } catch (e) {}
+    }
+
     setTimeout(() => {
       showThankYouOverlay();
     }, 300);
@@ -235,6 +257,14 @@ async function initDonationRedirect() {
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].forEach(p => {
       if (urlParams.get(p)) tracking[p] = urlParams.get(p);
     });
+
+    const purchaseEventId = Tracking.generateEventId('Purchase');
+    tracking.eventId = purchaseEventId;
+    try {
+      sessionStorage.setItem('_purchase_event_id', purchaseEventId);
+      sessionStorage.setItem('_purchase_amount', String(selectedAmount));
+      sessionStorage.setItem('_purchase_currency', (typeof currency !== 'undefined' && currency.config) ? currency.config.code : 'EUR');
+    } catch (e) {}
   }
 
   try {
@@ -253,7 +283,7 @@ async function initDonationRedirect() {
     const data = await response.json();
 
     if (data.redirectUrl) {
-      window.location.href = data.redirectUrl;
+      window.location.replace(data.redirectUrl);
     } else {
       throw new Error(data.error || 'Failed to initialize donation');
     }

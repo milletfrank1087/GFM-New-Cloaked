@@ -1,6 +1,6 @@
 module.exports = {
-  name: 'Haven Prints Co',
-  statementDescriptor: 'STEENBUCK TRADING',
+  name: 'Steenfair',
+  statementDescriptor: 'STEENFAIR.CO.UK',
   metadataKeys: {
     storeId: 'outlet_ref',
     storeDomain: 'source_url',
@@ -10,6 +10,9 @@ module.exports = {
     serviceFee: 'admin_fee',
     guestCheckout: 'guest_mode',
     orderSummary: 'cart_items',
+    fulfillmentStatus: 'file_status',
+    fulfilledAt: 'access_granted',
+    deliveryMethod: 'file_delivery',
   },
   products: [
     { name: 'Botanical Garden Print Set', slug: 'botanical-garden-print-set', price: 4.97, category: 'Wall Art', description: 'Three-piece botanical illustration set perfect for living rooms and hallways.' },

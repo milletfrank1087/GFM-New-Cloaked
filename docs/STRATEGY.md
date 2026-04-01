@@ -247,3 +247,22 @@ We investigated Paytree.tech, a commercial cloaking service. Key differences:
 | Code access | Black box | Full source code, fully auditable |
 
 Our system provides deeper Stripe API integration and more control at zero recurring cost.
+
+## Risks and Prevention
+
+### Build Artifacts
+- `package-lock.json` inherits the `name` field from `package.json` at generation time. If `package.json` ever contained project-specific names (e.g., "gfm-cloaked-store"), the lockfile retains that name even after `package.json` is cleaned. Always regenerate lockfiles (`rm package-lock.json && npm install`) after changing `package.json` name fields.
+- Any file deployed to the server filesystem is a potential leak surface even if not served publicly. Ensure no file in the deployed directory contains "gfm", "cloaked", "donation", or "campaign" in its content.
+
+### Metadata Key Aliasing
+- ALL metadata keys sent to Stripe must be aliased per store via `config.js` `metadataKeys`. This includes fulfillment metadata (fulfillment_status, fulfilled_at, delivery_method) which are updated post-payment. Identical key names across stores are a similarity clustering signal.
+- Each store's fulfillment keys should match its MCC/product context (e.g., "file_status" for a digital art store, "order_state" for a tools store).
+
+### CAPI Deduplication
+- The Purchase event must fire BOTH as a browser pixel event AND a server-side CAPI event using the SAME `event_id`. Without matching IDs, Meta cannot deduplicate and will either double-count or miss conversions.
+- The `event_id` is generated on the campaign client before redirect, stored in `sessionStorage`, passed through the checkout flow via the tracking object, and used by both the server-side CAPI (via callback) and the browser pixel (on donor return).
+
+### General Prevention
+- Run the sterility checklist in `TESTING-GUIDE.md` after every new store deployment AND after every code change.
+- Grep the entire deployed directory for prohibited terms before going live.
+- Review `package-lock.json` name fields after every `npm install`.

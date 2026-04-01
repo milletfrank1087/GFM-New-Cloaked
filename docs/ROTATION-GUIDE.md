@@ -447,11 +447,14 @@ NEW ACCOUNT ROTATION QUICK REF
 □ New email (different provider preferred)
 □ New store name + statement descriptor
 □ New product names + descriptions + about text
-□ New metadata key names in config.js
+□ New metadata key names in config.js (ALL keys including fulfillment)
+□ New fulfillment key aliases (fulfillmentStatus, fulfilledAt, deliveryMethod)
 □ New Railway service
 □ New .env with all new keys
 □ Supabase: INSERT stores + SET status = 'warming'
 □ Stripe Dashboard: Apple Pay domain + webhook + descriptor
+□ Delete + regenerate package-lock.json (verify clean names)
+□ Grep entire deploy dir for prohibited terms
 □ Warm up 2-3 weeks
 □ Run sterility check (TESTING-GUIDE.md)
 □ Set status = 'active'
@@ -464,5 +467,30 @@ NEVER REUSE from burned account:
 ✗ NodeMaven IP
 ✗ Domain name
 ✗ Store name / product names
-✗ Metadata key names
+✗ Metadata key names (including fulfillment keys)
 ```
+
+## Lockfile and Build Artifact Rotation
+
+When rotating to a new store or renaming an existing one:
+
+1. Ensure `package.json` `name` field is clean and generic (e.g., "store-server")
+2. Delete `package-lock.json` completely
+3. Run `npm install` to regenerate with the clean name
+4. Verify: open the new `package-lock.json` and confirm line 2 and line 8 both show the clean name
+5. Grep the entire project for prohibited terms: `rg -i "gfm|cloaked|donation|campaign|fundrais" --type json`
+
+## Fulfillment Key Rotation
+
+When creating a new store, choose unique fulfillment metadata key names that match the store's MCC and product context. These go in `config.js` `metadataKeys`:
+
+| Internal Key | What It Maps To | Example Aliases |
+|-------------|----------------|-----------------|
+| `fulfillmentStatus` | Post-payment status update | `file_status`, `order_state`, `delivery_state` |
+| `fulfilledAt` | Timestamp of fulfillment | `access_granted`, `completed_at`, `dispatched_at` |
+| `deliveryMethod` | How the product was delivered | `file_delivery`, `send_method`, `access_type` |
+
+Rules:
+- Each store MUST have unique aliases — no two stores share any fulfillment key name
+- Key names should feel natural for the store's product type
+- Avoid generic names like "status" or "date" — Stripe's clustering looks for metadata key patterns

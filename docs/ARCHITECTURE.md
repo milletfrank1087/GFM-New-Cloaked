@@ -141,9 +141,89 @@ The cookie is `httpOnly` (JavaScript cannot read it), `Lax` SameSite, 10-minute 
 | `payment_method_options.link` | `display_preference.preference: 'off'` | Prevents confusing "save info" auto-expansion |
 | Customer creation | Post-payment in `/api/confirm-payment` | Email only available after Stripe collects billing details |
 | `receipt_email` | Post-payment update | Same reason as above |
-| Fulfillment metadata | Post-payment update | `delivered`, `digital_download`, ISO timestamp |
+| Fulfillment metadata | Post-payment update | Aliased per store via `config.js` `metadataKeys` |
+
+## CAPI Tracking Flow
+
+The system uses a dual-fire architecture for Meta Conversions API (CAPI) and TikTok Events API: every conversion event fires both as a browser pixel event and a server-side CAPI event. Meta deduplicates using a shared `event_id`.
+
+### Event Lifecycle on the Campaign Page
+
+```
+Page Load → PageView (browser pixel + server CAPI)
+Scroll/Interact → ViewContent (browser pixel + server CAPI)
+Open Modal → AddToCart (browser pixel + server CAPI)
+Confirm Amount → InitiateCheckout (browser pixel + server CAPI)
+                  ↓
+           Generate Purchase event_id → store in sessionStorage
+           Include event_id in tracking object
+                  ↓
+           Redirect to store (window.location.replace)
+```
+
+### Purchase Event Deduplication Flow
+
+```
+CAMPAIGN CLIENT (donation.js):
+  1. Generate event_id: Tracking.generateEventId('Purchase')
+  2. Store in sessionStorage: _purchase_event_id, _purchase_amount, _purchase_currency
+  3. Include in tracking object → POST /api/init-donation
+                ↓
+CAMPAIGN SERVER (server.js /api/init-donation):
+  4. Save tracking (incl. eventId) in Supabase checkout_session
+                ↓
+STORE SERVER (server.js /s/:token):
+  5. Read checkout_session → set __session cookie with donor.utm
+  6. Payment completes → callback to campaign with tracking.eventId
+                ↓
+CAMPAIGN SERVER (server.js /api/payment-callback):
+  7. Fire server-side CAPI Purchase with tracking.eventId
+                ↓
+CAMPAIGN CLIENT (donation.js handleDonatedReturn):
+  8. Donor returns with ?status=complete
+  9. Read event_id from sessionStorage
+  10. Fire browser pixel Tracking.trackPurchase() with same event_id
+  11. Clear sessionStorage
+                ↓
+META DEDUPLICATION:
+  12. Server event (step 7) + browser event (step 10) share event_id
+  13. Meta counts as ONE conversion
+```
+
+### Tracking Modules
+
+| Module | Location | Purpose |
+|--------|----------|---------|
+| Browser tracking | `campaign/public/js/tracking.js` | Pixel events, click ID capture (fbp/fbc/ttp/ttclid), event dispatch to server |
+| Server tracking | `campaign/lib/tracking.js` | Meta CAPI and TikTok Events API, PII hashing (SHA256), server-to-server dispatch |
+| Config endpoint | `GET /api/tracking/config` | Returns pixel IDs and tracking-enabled flag to browser |
+| Track endpoint | `POST /api/track` | Receives browser events, fires server-side CAPI for deduplication |
+| Payment track | `POST /api/track/payment-event` | Dedicated endpoint for purchase/callback tracking events |
+
+### Environment Variables for Tracking
+
+| Variable | Purpose |
+|----------|---------|
+| `TRACKING_ENABLED` | Master switch for all tracking (true/false) |
+| `FB_PIXEL_ID` | Meta Pixel ID for browser events |
+| `FB_ACCESS_TOKEN` | Meta CAPI access token for server events |
+| `TIKTOK_PIXEL_ID` | TikTok Pixel ID for browser events |
+| `TIKTOK_ACCESS_TOKEN` | TikTok Events API access token for server events |
+
+See `TRACKING.md` for the full tracking architecture reference.
 
 ## Related Documentation
+
+| Document | Content |
+|----------|---------|
+| `STRATEGY.md` | Master handoff: problem, solution, what works, what failed, future goals |
+| `RESEARCH.md` | Stripe detection stack, vulnerability assessment, MATCH list, template analysis |
+| `ROTATION-PLAYBOOK.md` | Step-by-step: adding, warming, monitoring, burning stores |
+| `ACCOUNT-ISOLATION.md` | Per-account infrastructure isolation, burn rotation checklist |
+| `STORE-CONFIG.md` | Store configuration schema, metadata keys, product guidelines |
+| `TESTING-GUIDE.md` | Sterility verification and deployment testing procedures |
+| `ROTATION-GUIDE.md` | Extreme in-depth guide on what/how to rotate everything |
+| `TRACKING.md` | Full CAPI tracking architecture, deduplication, and debugging |
 
 | Document | Content |
 |----------|---------|

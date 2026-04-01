@@ -10,6 +10,9 @@ module.exports = {
     serviceFee: 'processing_fee',
     guestCheckout: 'express_checkout',
     orderSummary: 'items',
+    fulfillmentStatus: 'order_state',
+    fulfilledAt: 'completed_at',
+    deliveryMethod: 'send_method',
   },
   products: [
     { name: 'Quick Start Business Plan', slug: 'quick-start-business-plan', price: 4.97, category: 'Templates', description: 'A streamlined business plan template to launch your venture fast.' },

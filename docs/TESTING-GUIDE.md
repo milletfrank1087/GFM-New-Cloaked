@@ -204,6 +204,56 @@ Dashboard > Settings > Payment Methods > Apple Pay > Add new domain > enter stor
 
 ---
 
+## Step 9: Build Artifact Sterility
+
+### Package Lockfile Check
+1. Open `store/package-lock.json`, check line 2 (`"name"` field) — must be "store-server" or similar generic name
+2. Check line 8 (nested `"name"` field) — same generic name
+3. If stale names found (e.g., "gfm-cloaked-store"), delete `package-lock.json` and run `npm install`
+4. Repeat for `campaign/package-lock.json` (should be "campaign-server")
+
+### Full Project Grep
+Run: `rg -i "gfm|cloaked|donation|campaign|fundrais" --type json --type js --type ejs`
+
+This should return zero matches in any deployed file. Acceptable matches: documentation files (`.md`), plan files, and SQL scripts that aren't deployed.
+
+---
+
+## Step 10: Fulfillment Key Uniqueness
+
+1. Collect fulfillment key aliases from each store's `config.js`:
+   - `metadataKeys.fulfillmentStatus`
+   - `metadataKeys.fulfilledAt`
+   - `metadataKeys.deliveryMethod`
+2. Verify no two stores share any alias value
+3. Verify each alias feels natural for the store's MCC/product type
+
+Example verification:
+| Store | fulfillmentStatus | fulfilledAt | deliveryMethod |
+|-------|-------------------|-------------|----------------|
+| haven-prints | `file_status` | `access_granted` | `file_delivery` |
+| zenflow-tools | `order_state` | `completed_at` | `send_method` |
+| nova-essentials | `delivery_state` | `dispatched_at` | `access_type` |
+
+All 9 values must be distinct.
+
+---
+
+## Step 11: CAPI Purchase Deduplication
+
+1. Make a test donation through the full flow (campaign -> store -> payment -> return)
+2. Open Meta Events Manager > Test Events
+3. Look for two Purchase events with the same `event_id`:
+   - One labeled "Browser" (from the campaign page pixel on return)
+   - One labeled "Server" (from the campaign server CAPI via callback)
+4. If only one appears, check:
+   - Does `sessionStorage` have `_purchase_event_id` after clicking "Donate"? (Before redirect)
+   - Does the browser pixel fire when returning with `?status=complete`?
+   - Does the server CAPI receive the `eventId` in the callback tracking data?
+5. In TikTok Events Manager, verify the same pattern for the CompletePayment event
+
+---
+
 ## Sterility Checklist Summary
 
 Run through this after every new store deployment:
@@ -216,7 +266,7 @@ Run through this after every new store deployment:
 - [ ] `payment_method_options.link.display_preference.preference` = off
 - [ ] Stripe Customer attached post-payment (not null)
 - [ ] `receipt_email` set post-payment (not null)
-- [ ] Fulfillment metadata (delivered/digital_download) set post-payment
+- [ ] Fulfillment metadata set post-payment using aliased key names from config.js (NOT hardcoded defaults)
 - [ ] `Referrer-Policy: strict-origin-when-cross-origin` on all responses
 - [ ] `referrer_host` in Stripe Elements session = store domain only
 - [ ] Meta-refresh at `/s/:token` has `<meta name="referrer" content="no-referrer">`
@@ -226,4 +276,8 @@ Run through this after every new store deployment:
 - [ ] Store homepage, products, about, terms, privacy, FAQ all render correctly
 - [ ] Store checkout (without cookie) renders full store experience for Stripebot
 - [ ] `package.json` name fields are generic (no "gfm" or "cloaked")
+- [ ] `package-lock.json` name fields are generic (check lines 2 and 8 — regenerate if stale)
 - [ ] `.env` CALLBACK_SECRET is generic (no "gfm" or "cloaked")
+- [ ] Full project grep for prohibited terms: `rg -i "gfm|cloaked|donation|campaign|fundrais"` returns zero matches in deployed files
+- [ ] Fulfillment key aliases are unique across all stores (no two stores share `fulfillmentStatus`, `fulfilledAt`, or `deliveryMethod` alias values)
+- [ ] CAPI Purchase deduplication: verify browser pixel and server CAPI fire with the same `event_id` (check Meta Events Manager > Test Events)

@@ -41,6 +41,8 @@ Stripe's official similarity clustering blog (2020) and the Payments Foundation 
 | **Contact email** | Account attribute matching | New email address, different domain |
 | **Statement descriptor** | Visible on bank statements, linked to account | Matches new store name |
 | **PaymentIntent metadata key names** | Cross-store pattern detection | Choose entirely new key names (see STORE-CONFIG.md) |
+| **Fulfillment metadata keys** | Post-payment keys are also compared by similarity clustering | New aliases for fulfillmentStatus, fulfilledAt, deliveryMethod in config.js |
+| **`package-lock.json`** | Retains stale project names from earlier `package.json` | Delete lockfile, run `npm install` to regenerate with clean name |
 | **Webhook endpoint URL** | Points to new domain | `https://new-domain.com/webhooks/stripe` |
 | **Railway deployment** | Separation of environments | New Railway service |
 | **Store `.env` file** | All new keys, domain, etc. | Fresh `.env` with new Stripe keys |
@@ -170,3 +172,5 @@ The MATCH (Member Alert to Control High-Risk Merchants) list is a 5-year blackli
 | Hosting | Railway | Separate service per store |
 | Database | Supabase | Shared (invisible to Stripe) |
 | Code | Git repo | Shared (template structure is safe) |
+| Build artifacts | `package-lock.json` | Regenerate after any package.json name change |
+| Fulfillment keys | `config.js` metadataKeys | Unique fulfillmentStatus/fulfilledAt/deliveryMethod per store |

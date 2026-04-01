@@ -47,6 +47,9 @@ module.exports = {
     serviceFee: 'processing_fee',
     guestCheckout: 'express_checkout',
     orderSummary: 'items',
+    fulfillmentStatus: 'order_state',    // Post-payment: marks delivery complete
+    fulfilledAt: 'completed_at',         // Post-payment: fulfillment timestamp
+    deliveryMethod: 'send_method',       // Post-payment: delivery type
   },
   products: [
     {
@@ -72,18 +75,33 @@ module.exports = {
 
 Each store MUST use different metadata key names to prevent cross-store pattern detection:
 
-| Field | ZenFlow Keys | Nova Keys |
-|-------|-------------|-----------|
-| Store ID | `shop_id` | `vendor_id` |
-| Domain | `shop_url` | `origin` |
-| Reference | `order_ref` | `txn_ref` |
-| Session | `checkout_id` | `session_id` |
-| Subtotal | `item_total` | `base_amount` |
-| Fee | `processing_fee` | `platform_fee` |
-| Guest | `express_checkout` | `quick_pay` |
-| Summary | `items` | `line_items` |
+| Field | ZenFlow Keys | Nova Keys | Haven Prints Keys |
+|-------|-------------|-----------|-------------------|
+| Store ID | `shop_id` | `vendor_id` | `store_ref` |
+| Domain | `shop_url` | `origin` | `shop_domain` |
+| Reference | `order_ref` | `txn_ref` | `ref_code` |
+| Session | `checkout_id` | `session_id` | `session_ref` |
+| Subtotal | `item_total` | `base_amount` | `order_total` |
+| Fee | `processing_fee` | `platform_fee` | `handling_fee` |
+| Guest | `express_checkout` | `quick_pay` | `guest_mode` |
+| Summary | `items` | `line_items` | `cart_items` |
+| Fulfillment Status | `order_state` | `delivery_state` | `file_status` |
+| Fulfilled At | `completed_at` | `dispatched_at` | `access_granted` |
+| Delivery Method | `send_method` | `access_type` | `file_delivery` |
 
-When adding a new store, choose entirely new key names. Examples for a third store:
+### Fulfillment Keys (Post-Payment)
+
+Three additional metadata keys are updated AFTER a successful payment to record fulfillment evidence. These keys are critical for Stripe account health — they prove the merchant delivered goods/services.
+
+| Internal Key | Purpose | When Updated |
+|-------------|---------|--------------|
+| `fulfillmentStatus` | Records delivery completion (value: "delivered") | Post-payment webhook/callback |
+| `fulfilledAt` | ISO timestamp of delivery | Post-payment webhook/callback |
+| `deliveryMethod` | How delivered (value: "digital_download") | Post-payment webhook/callback |
+
+These MUST be aliased per store, just like all other metadata keys. The server reads them from `storeConfig.metadataKeys` with fallbacks to the default names. Choose alias names that match the store's MCC and product context.
+
+When adding a new store, choose entirely new key names. Examples for a new store:
 
 | Field | Possible Keys |
 |-------|--------------|
@@ -95,6 +113,9 @@ When adding a new store, choose entirely new key names. Examples for a third sto
 | Fee | `handling_fee`, `service_charge`, `admin_fee` |
 | Guest | `fast_checkout`, `guest_mode`, `express_pay` |
 | Summary | `products`, `cart_items`, `purchase_items` |
+| Fulfillment Status | `provision_state`, `release_status`, `item_state` |
+| Fulfilled At | `provisioned_at`, `released_at`, `delivered_on` |
+| Delivery Method | `provision_method`, `release_type`, `access_mode` |
 
 ## Color Scheme
 

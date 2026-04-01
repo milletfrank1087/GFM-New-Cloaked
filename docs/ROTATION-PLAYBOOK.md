@@ -21,9 +21,14 @@
 ### 3. Store Files
 1. Create `store/stores/{new-store-id}/` directory
 2. Copy from existing store (template/code sharing is safe), then customize:
-   - `config.js`: unique name, statement descriptor, **unique metadata keys**, products with irregular prices
+   - `config.js`: unique name, statement descriptor, **unique metadata keys** (including fulfillment keys), products with irregular prices
    - All EJS page content: unique product descriptions, about text, reviews, FAQ answers
 3. `cart.js` and `checkout.js` can remain identical (standard Stripe integration code)
+4. Fulfillment keys in `config.js` `metadataKeys`:
+   - `fulfillmentStatus` — aliased name for delivery status (e.g., "file_status", "order_state")
+   - `fulfilledAt` — aliased name for fulfillment timestamp (e.g., "access_granted", "completed_at")
+   - `deliveryMethod` — aliased name for delivery type (e.g., "file_delivery", "send_method")
+   - Each alias MUST be unique across all stores
 
 ### 4. Supabase Entry
 ```sql
@@ -31,13 +36,20 @@ INSERT INTO stores (domain, slug, name, status, max_monthly_volume)
 VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'warming', 5000);
 ```
 
-### 5. Railway Deployment
+### 5. Build Artifact Cleanup
+1. Verify `store/package.json` `name` is clean and generic (e.g., "store-server")
+2. Delete `store/package-lock.json`
+3. Run `npm install` in the store directory to regenerate
+4. Open the new lockfile and confirm lines 2 and 8 show the clean name
+5. Run `rg -i "gfm|cloaked|donation|campaign|fundrais" --type json` and verify zero matches
+
+### 6. Railway Deployment
 - Create a NEW Railway service for this store
 - Set environment variables (STORE_ID, STRIPE keys, CALLBACK_SECRET, etc.)
 - CRITICAL: Use a generic CALLBACK_SECRET (no "gfm", "cloaked", or "donation" in the value)
 - Deploy from the `store/` directory
 
-### 6. What MUST Differ Per Store (Content)
+### 7. What MUST Differ Per Store (Content)
 - Domain name
 - Store name and tagline
 - Stripe account (completely new)
@@ -45,10 +57,11 @@ VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'warming', 5000);
 - About text and contact email
 - Statement descriptor
 - **PaymentIntent metadata key names** (see STORE-CONFIG.md)
+- **Fulfillment metadata key aliases** (fulfillmentStatus, fulfilledAt, deliveryMethod)
 - Customer reviews content
 - FAQ answers (can cover same topics, but different wording)
 
-### 7. What CAN Be Shared (Template/Code)
+### 8. What CAN Be Shared (Template/Code)
 Stripe's clustering compares semantic content, not HTML/CSS structure. Millions of merchants use identical Shopify themes and SamCart templates — template sharing is safe.
 - HTML/CSS template structure and EJS layout
 - Page structure and template code layout
@@ -153,6 +166,10 @@ Before setting any store to `active`, run the full checklist in **docs/TESTING-G
 5. Verify L2/L3 line items appear in the payment details
 6. Ensure Stripe Customer is attached post-payment
 7. Ensure `receipt_email` is set post-payment
-8. Ensure fulfillment metadata is set post-payment
+8. Ensure fulfillment metadata is set post-payment (using aliased key names from config.js)
 9. Verify Link is disabled in the PaymentElement
 10. Verify `package.json` and `.env` contain no identifying strings
+11. Delete and regenerate `package-lock.json`, verify clean name on lines 2 and 8
+12. Grep entire project for prohibited terms: `rg -i "gfm|cloaked|donation|campaign|fundrais"`
+13. Verify fulfillment key aliases are unique (not shared with any other store)
+14. Verify CAPI Purchase deduplication: browser pixel and server CAPI use the same event_id
