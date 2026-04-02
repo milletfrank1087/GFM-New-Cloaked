@@ -24,6 +24,7 @@ async function initCheckout() {
       mode: 'payment',
       amount: paymentAmount,
       currency: paymentCurrency,
+      paymentMethodTypes: ['card'],
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',
@@ -123,6 +124,7 @@ async function initCheckout() {
           elements,
           clientSecret: data.clientSecret,
           confirmParams: {
+            return_url: window.location.origin + '/checkout',
             payment_method_data: {
               billing_details: {
                 name: name || undefined,

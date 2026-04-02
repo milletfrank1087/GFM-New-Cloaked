@@ -43,6 +43,7 @@ async function initCheckout() {
       mode: 'payment',
       amount: paymentAmount,
       currency: paymentCurrency,
+      paymentMethodTypes: ['card'],
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',
