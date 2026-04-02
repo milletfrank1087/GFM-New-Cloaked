@@ -562,6 +562,8 @@ app.post('/api/confirm-payment', async (req, res) => {
       stripeFee = bt.exchange_rate ? feeInSettlement / bt.exchange_rate : feeInSettlement;
     }
 
+    const totalAmount = paymentIntent.amount / 100;
+
     let cardHolderName = pm?.billing_details?.name || '';
     let cardLastDigits = pm?.card?.last4 || null;
     let cardBrand = pm?.card?.brand || null;
@@ -585,8 +587,6 @@ app.post('/api/confirm-payment', async (req, res) => {
     }
 
     const lineItems = decomposeAmount(parseFloat(donor.amount) + parseFloat(donor.fee || 0), storeConfig.products);
-
-    const totalAmount = paymentIntent.amount / 100;
 
     let customerId = null;
     const email = donor.email || charge?.billing_details?.email || null;
