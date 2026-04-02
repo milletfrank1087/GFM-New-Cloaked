@@ -9,6 +9,25 @@ const paymentCurrency = (document.getElementById('payment-currency')?.value || '
 const localizedEmailError = document.getElementById('locale-email-error')?.value || 'Please enter a valid email address.';
 
 let elements, paymentElement;
+let addPaymentInfoFired = false;
+
+function generateEventId(prefix) {
+  return prefix + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+}
+
+function fireAddPaymentInfo() {
+  if (addPaymentInfoFired) return;
+  addPaymentInfoFired = true;
+  var eventId = generateEventId('AddPaymentInfo');
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'AddPaymentInfo', {}, { eventID: eventId });
+  }
+  fetch('/api/track-interaction', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event: 'AddPaymentInfo', eventId: eventId })
+  }).catch(function() {});
+}
 
 async function initCheckout() {
   const submitBtn = document.getElementById('submit-payment');
@@ -68,6 +87,10 @@ async function initCheckout() {
     paymentElement.on('ready', () => {
       if (loadingEl) loadingEl.classList.add('hidden');
       if (submitBtn) submitBtn.disabled = false;
+    });
+
+    paymentElement.on('change', () => {
+      fireAddPaymentInfo();
     });
 
   } catch (err) {

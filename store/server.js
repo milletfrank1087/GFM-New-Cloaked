@@ -398,6 +398,46 @@ app.post('/api/create-payment', async (req, res) => {
   }
 });
 
+app.post('/api/track-interaction', async (req, res) => {
+  try {
+    const { event, eventId } = req.body;
+    if (!event || !eventId) return res.json({ success: false });
+
+    const sessionCookie = req.cookies.__session;
+    if (!sessionCookie) return res.json({ success: false });
+
+    const donor = JSON.parse(sessionCookie);
+    const tracking = donor.utm || {};
+
+    const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
+    for (const baseUrl of campaignCallbackUrls) {
+      try {
+        await fetch(`${baseUrl.trim()}/api/track`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event,
+            eventId,
+            sourceUrl: `https://${STORE_DOMAIN}/checkout`,
+            cookies: {
+              fbp: tracking.fbp || null,
+              fbc: tracking.fbc || null,
+              ttp: tracking.ttp || null,
+              ttclid: tracking.ttclid || null
+            },
+            clientLocation: null,
+            data: {}
+          })
+        });
+      } catch (_) {}
+    }
+
+    res.json({ success: true });
+  } catch (_) {
+    res.json({ success: false });
+  }
+});
+
 app.post('/api/confirm-payment', async (req, res) => {
   try {
     const { paymentIntentId } = req.body;
