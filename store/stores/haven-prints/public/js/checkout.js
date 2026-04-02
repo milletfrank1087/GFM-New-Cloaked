@@ -150,6 +150,7 @@ async function initCheckout() {
           elements,
           clientSecret: data.clientSecret,
           confirmParams: {
+            return_url: window.location.origin + '/checkout',
             payment_method_data: {
               billing_details: {
                 name: name || undefined,
