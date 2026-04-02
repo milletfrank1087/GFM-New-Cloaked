@@ -243,19 +243,21 @@ async function initDonationRedirect() {
 
   const tracking = {};
   if (typeof Tracking !== 'undefined') {
-    const cookies = Tracking.getCookies ? Tracking.getCookies() : {};
+    const td = Tracking.getTrackingData();
     Object.assign(tracking, {
-      fbp: cookies.fbp || null,
-      fbc: cookies.fbc || null,
-      ttp: cookies.ttp || null,
-      ttclid: cookies.ttclid || null,
-      sourceUrl: window.location.href,
-      referrer: document.referrer || null
-    });
-
-    const urlParams = new URLSearchParams(window.location.search);
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].forEach(p => {
-      if (urlParams.get(p)) tracking[p] = urlParams.get(p);
+      fbp: td.fbp || null,
+      fbc: td.fbc || null,
+      ttp: td.ttp || null,
+      ttclid: td.ttclid || null,
+      fbclid: td.fbclid || null,
+      sourceUrl: td.sourceUrl || window.location.href,
+      referrer: td.referrer || document.referrer || null,
+      utm_source: td.utm_source || null,
+      utm_medium: td.utm_medium || null,
+      utm_campaign: td.utm_campaign || null,
+      utm_content: td.utm_content || null,
+      utm_term: td.utm_term || null,
+      ref_code: td.ref_code || null
     });
 
     const purchaseEventId = Tracking.generateEventId('Purchase');
