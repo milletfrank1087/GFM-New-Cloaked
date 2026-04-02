@@ -29,7 +29,7 @@ async function resolveStoreId() {
       .single();
     if (data) storeDbId = data.id;
   } catch (err) {
-    console.error('Could not resolve store ID from Supabase:', err.message);
+    StoreLog.system('⚠️', `Could not resolve store ID: ${err.message}`);
   }
 }
 
@@ -154,19 +154,21 @@ app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (r
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
+    StoreLog.error('webhook_error', '---', `Signature verification failed: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
+
+  const ref = event.data.object?.metadata?.basket_ref || event.data.object?.id?.substring(0, 12) || '---';
 
   switch (event.type) {
     case 'payment_intent.succeeded': {
       const pi = event.data.object;
-      console.log(`Payment succeeded: ${pi.id} - ${pi.amount / 100} ${pi.currency}`);
+      StoreLog.event('webhook_ok', ref, `Payment succeeded ${pi.id} - ${pi.amount / 100} ${pi.currency.toUpperCase()}`);
       break;
     }
     case 'payment_intent.payment_failed': {
       const pi = event.data.object;
-      console.error(`Payment failed: ${pi.id} - ${pi.last_payment_error?.message || 'unknown'}`);
+      StoreLog.error('webhook_fail', ref, `Payment failed ${pi.id} - ${pi.last_payment_error?.message || 'unknown'}`);
       if (supabase) {
         await supabase.from('payment_failures').insert({
           store_id: storeDbId,
@@ -182,12 +184,12 @@ app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (r
     }
     case 'charge.dispute.created': {
       const dispute = event.data.object;
-      console.error(`DISPUTE CREATED: ${dispute.id} - ${dispute.amount / 100} ${dispute.currency} - Reason: ${dispute.reason}`);
+      StoreLog.error('webhook_dispute', ref, `DISPUTE ${dispute.id} - ${dispute.amount / 100} ${dispute.currency} - ${dispute.reason}`);
       break;
     }
     case 'charge.refunded': {
       const charge = event.data.object;
-      console.log(`Charge refunded: ${charge.id} - ${charge.amount_refunded / 100} ${charge.currency}`);
+      StoreLog.event('webhook_refund', ref, `Refund ${charge.id} - ${charge.amount_refunded / 100} ${charge.currency}`);
       break;
     }
   }
@@ -205,16 +207,94 @@ app.use((req, res, next) => {
 });
 
 function getTimestamp() {
-  return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  return new Date().toLocaleTimeString('en-GB', { hour12: false, timeZone: 'Europe/Athens' });
 }
+
+function fmtAmount(amount, currency) {
+  const sym = CURRENCY_SYMBOLS[currency] || currency || '';
+  const val = parseFloat(amount || 0).toFixed(2);
+  return `${sym}${val}`;
+}
+
+function extractOriginHost(url) {
+  if (!url) return '';
+  try { return new URL(url).hostname; } catch (_) { return url; }
+}
+
+const STORE_EVENTS = {
+  token_claimed:    { emoji: '🎟️ ', type: 'TOKEN_CLAIMED' },
+  token_expired:    { emoji: '⏰', type: 'TOKEN_EXPIRED' },
+  token_invalid:    { emoji: '🚫', type: 'TOKEN_INVALID' },
+  token_error:      { emoji: '💥', type: 'TOKEN_ERROR' },
+  checkout_view:    { emoji: '👁️ ', type: 'CHECKOUT_VIEW' },
+  store_view:       { emoji: '🏪', type: 'STORE_VIEW' },
+  payment_created:  { emoji: '💳', type: 'PAYMENT_CREATED' },
+  payment_failed:   { emoji: '❌', type: 'PAYMENT_FAIL' },
+  payment_ok:       { emoji: '✅', type: 'PAYMENT_OK' },
+  confirm_failed:   { emoji: '❌', type: 'CONFIRM_FAIL' },
+  customer_new:     { emoji: '👤', type: 'CUSTOMER_NEW' },
+  customer_exists:  { emoji: '👤', type: 'CUSTOMER_HIT' },
+  callback_sent:    { emoji: '📤', type: 'CALLBACK_SENT' },
+  callback_failed:  { emoji: '⚠️ ', type: 'CALLBACK_FAIL' },
+  redirect:         { emoji: '🔄', type: 'REDIRECT' },
+  track_proxied:    { emoji: '📝', type: 'TRACK_PROXIED' },
+  store_checkout:   { emoji: '🛒', type: 'STORE_ORDER' },
+  webhook_ok:       { emoji: '🔔', type: 'WEBHOOK_OK' },
+  webhook_fail:     { emoji: '🔔', type: 'WEBHOOK_FAIL' },
+  webhook_dispute:  { emoji: '⚠️ ', type: 'WEBHOOK_DISPUT' },
+  webhook_refund:   { emoji: '↩️ ', type: 'WEBHOOK_REFUND' },
+  webhook_error:    { emoji: '💥', type: 'WEBHOOK_ERR' }
+};
+
+const StoreLog = {
+  event(eventKey, sessionRef, message) {
+    const cfg = STORE_EVENTS[eventKey] || { emoji: 'ℹ️', type: eventKey.toUpperCase() };
+    const ref = (sessionRef || '---').padEnd(8);
+    console.log(`[${getTimestamp()}] ${cfg.emoji} ${cfg.type.padEnd(15)} │ ${ref} │ ${message}`);
+  },
+
+  system(emoji, message) {
+    console.log(`[${getTimestamp()}] ${emoji} ${message}`);
+  },
+
+  error(eventKey, sessionRef, message) {
+    const cfg = STORE_EVENTS[eventKey] || { emoji: '❌', type: eventKey.toUpperCase() };
+    const ref = (sessionRef || '---').padEnd(8);
+    console.error(`[${getTimestamp()}] ${cfg.emoji} ${cfg.type.padEnd(15)} │ ${ref} │ ${message}`);
+  },
+
+  startup(port, storeName, domain, dbId, stripeOk) {
+    const w = 77;
+    const C = '\x1b[33m';
+    const R = '\x1b[0m';
+    const B = '\x1b[1m';
+    const D = '\x1b[2m';
+    const pad = (s, n = 52) => String(s).padEnd(n);
+    console.log('');
+    console.log(`${C}╔${'═'.repeat(w)}╗${R}`);
+    console.log(`${C}║${R}           🏪 ${B}GFM CLOAKED${R} - Store Server                                     ${C}║${R}`);
+    console.log(`${C}╠${'═'.repeat(w)}╣${R}`);
+    console.log(`${C}║${R}  🌐 Server:   http://localhost:${pad(port, 45)}${C}║${R}`);
+    console.log(`${C}║${R}  🏷️  Store:    ${pad(storeName)}${C}║${R}`);
+    console.log(`${C}║${R}  🌍 Domain:   ${pad(domain)}${C}║${R}`);
+    console.log(`${C}║${R}  🆔 DB ID:    ${pad(dbId || 'not resolved')}${C}║${R}`);
+    console.log(`${C}║${R}  💳 Stripe:   ${pad(stripeOk ? 'Connected' : 'Missing key')}${C}║${R}`);
+    console.log(`${C}╠${'═'.repeat(w)}╣${R}`);
+    console.log(`${C}║${R}  ${D}Log: [TIME] EMOJI EVENT │ SESSION  │ MESSAGE${R}                                ${C}║${R}`);
+    console.log(`${C}╚${'═'.repeat(w)}╝${R}`);
+    console.log('');
+  }
+};
 
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
-    const ms = Date.now() - start;
     const status = res.statusCode;
-    const color = status >= 500 ? '\x1b[31m' : status >= 400 ? '\x1b[33m' : '\x1b[32m';
-    console.log(`[${getTimestamp()}] ${color}${status}\x1b[0m ${req.method} ${req.originalUrl} ${ms}ms`);
+    if (status >= 400) {
+      const ms = Date.now() - start;
+      const color = status >= 500 ? '\x1b[31m' : '\x1b[33m';
+      console.log(`[${getTimestamp()}] ${color}${status}\x1b[0m ${req.method} ${req.originalUrl} ${ms}ms`);
+    }
   });
   next();
 });
@@ -237,10 +317,13 @@ app.get('/s/:token', async (req, res) => {
       .single();
 
     if (error || !tokenData) {
+      StoreLog.event('token_invalid', '---', `Token not found or already claimed`);
       return res.redirect('/');
     }
 
     if (new Date(tokenData.expires_at) < new Date()) {
+      const ref = tokenData.source_ref || '---';
+      StoreLog.event('token_expired', ref, `${fmtAmount(tokenData.amount, tokenData.currency)} expired at ${tokenData.expires_at}`);
       return res.redirect('/');
     }
 
@@ -264,6 +347,10 @@ app.get('/s/:token', async (req, res) => {
       storeId: storeDbId || tokenData.store_id
     };
 
+    const ref = tokenData.source_ref || '---';
+    const origin = extractOriginHost(tokenData.tracking?.sourceUrl);
+    StoreLog.event('token_claimed', ref, `${fmtAmount(tokenData.amount, tokenData.currency)} + ${fmtAmount(tokenData.service_fee, tokenData.currency)} fee from ${origin || 'direct'}`);
+
     res.cookie('__session', JSON.stringify(cookieData), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -274,7 +361,7 @@ app.get('/s/:token', async (req, res) => {
 
     res.send(`<!DOCTYPE html><html><head><meta name="referrer" content="no-referrer"></head><body><script>location.replace('/checkout')</script></body></html>`);
   } catch (err) {
-    console.error('Token claim error:', err);
+    StoreLog.error('token_error', '---', err.message);
     res.redirect('/');
   }
 });
@@ -292,6 +379,8 @@ app.get('/checkout', (req, res) => {
 
       const orderItems = decomposeAmount(totalAmount, storeConfig.products);
 
+      StoreLog.event('checkout_view', donor.ref || '---', `Viewing checkout - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
+
       return res.render('pages/checkout-donor', {
         store: req.store,
         donor,
@@ -302,9 +391,11 @@ app.get('/checkout', (req, res) => {
         stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY
       });
     } catch (e) {
-      console.error('Donor cookie parse error:', e);
+      StoreLog.error('checkout_view', '---', `Session parse error: ${e.message}`);
     }
   }
+
+  StoreLog.event('store_view', '---', 'Regular store visitor');
 
   const products = storeConfig.products || [];
   res.render('pages/checkout-store', {
@@ -368,6 +459,8 @@ app.post('/api/create-payment', async (req, res) => {
 
     const paymentIntent = await stripe.paymentIntents.create(intentParams);
 
+    StoreLog.event('payment_created', donor.ref || '---', `${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
+
     res.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
@@ -375,7 +468,8 @@ app.post('/api/create-payment', async (req, res) => {
       lineItems
     });
   } catch (error) {
-    console.error('Create payment error:', error.message);
+    const ref = (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
+    StoreLog.error('payment_failed', ref, `${error.code || 'STRIPE_ERROR'}: ${error.message}`);
 
     try {
       const sessionCookie = req.cookies.__session;
@@ -390,9 +484,7 @@ app.post('/api/create-payment', async (req, res) => {
         request_amount: donor.amount,
         ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
       });
-    } catch (logErr) {
-      console.error('Failure logging error:', logErr.message);
-    }
+    } catch (logErr) {}
 
     res.status(500).json({ error: 'Failed to create payment' });
   }
@@ -408,6 +500,7 @@ app.post('/api/track-interaction', async (req, res) => {
 
     const donor = JSON.parse(sessionCookie);
     const tracking = donor.utm || {};
+    const origin = extractOriginHost(tracking.sourceUrl);
 
     const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
     for (const baseUrl of campaignCallbackUrls) {
@@ -432,6 +525,8 @@ app.post('/api/track-interaction', async (req, res) => {
       } catch (_) {}
     }
 
+    StoreLog.event('track_proxied', donor.ref || '---', `${event} → ${origin || 'campaigns'}`);
+
     res.json({ success: true });
   } catch (_) {
     res.json({ success: false });
@@ -453,6 +548,7 @@ app.post('/api/confirm-payment', async (req, res) => {
     });
 
     if (paymentIntent.status !== 'succeeded') {
+      StoreLog.error('confirm_failed', donor.ref || '---', `Payment status: ${paymentIntent.status}`);
       return res.status(400).json({ error: `Payment ${paymentIntent.status}` });
     }
 
@@ -475,6 +571,9 @@ app.post('/api/confirm-payment', async (req, res) => {
     if (pm?.card?.wallet?.type === 'apple_pay') paymentSource = 'apple_pay';
     if (pm?.card?.wallet?.type === 'google_pay') paymentSource = 'google_pay';
     if (pm?.type === 'link') paymentSource = 'link';
+
+    const brandDisplay = cardBrand ? cardBrand.charAt(0).toUpperCase() + cardBrand.slice(1) : 'Card';
+    StoreLog.event('payment_ok', donor.ref || '---', `${fmtAmount(totalAmount, donor.currency)} ${donor.currency} via ${brandDisplay} ****${cardLastDigits || '????'} (${cardHolderName || 'anonymous'})`);
 
     let donorName = cardHolderName || 'Anonymous';
     if (donor.guest) donorName = 'Anonymous';
@@ -511,7 +610,7 @@ app.post('/api/confirm-payment', async (req, res) => {
           receipt_email: email
         });
       } catch (custErr) {
-        console.error('Stripe customer attach error (non-critical):', custErr.message);
+        StoreLog.error('confirm_failed', donor.ref || '---', `Stripe customer attach (non-critical): ${custErr.message}`);
       }
     }
 
@@ -524,6 +623,7 @@ app.post('/api/confirm-payment', async (req, res) => {
 
       if (existingCustomer) {
         customerId = existingCustomer.id;
+        StoreLog.event('customer_exists', donor.ref || '---', `${email} (returning)`);
       } else {
         const initials = donorNameReal !== 'Unknown'
           ? donorNameReal.trim().split(/\s+/).map(p => p[0]).join('').substring(0, 2).toUpperCase()
@@ -548,6 +648,7 @@ app.post('/api/confirm-payment', async (req, res) => {
           .single();
 
         customerId = newCustomer?.id || null;
+        StoreLog.event('customer_new', donor.ref || '---', `${email} (${stripeCustomerId || 'no-stripe'})`);
       }
     }
 
@@ -638,8 +739,9 @@ app.post('/api/confirm-payment', async (req, res) => {
             }
           })
         });
+        StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}/api/payment-callback`);
       } catch (callbackErr) {
-        console.error(`Callback to ${baseUrl} failed:`, callbackErr.message);
+        StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}: ${callbackErr.message}`);
       }
     }
 
@@ -658,9 +760,12 @@ app.post('/api/confirm-payment', async (req, res) => {
     }
     const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete` : '/';
 
+    StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
+
     res.json({ success: true, redirectUrl });
   } catch (error) {
-    console.error('Confirm payment error:', error.message);
+    const ref = (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
+    StoreLog.error('confirm_failed', ref, `${error.code || 'ERROR'}: ${error.message}`);
 
     try {
       const sessionCookie = req.cookies.__session;
@@ -675,9 +780,7 @@ app.post('/api/confirm-payment', async (req, res) => {
         error_message: error.message,
         ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
       });
-    } catch (logErr) {
-      console.error('Failure logging error:', logErr.message);
-    }
+    } catch (logErr) {}
 
     res.status(500).json({ error: 'Failed to confirm payment' });
   }
@@ -738,13 +841,15 @@ app.post('/api/store-checkout', async (req, res) => {
 
     const paymentIntent = await stripe.paymentIntents.create(intentParams);
 
+    StoreLog.event('store_checkout', refCode, `${paymentIntent.id.substring(0, 18)}... - £${total.toFixed(2)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
+
     res.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
       amount: total.toFixed(2)
     });
   } catch (error) {
-    console.error('Store checkout error:', error.message);
+    StoreLog.error('store_checkout', '---', `${error.code || 'ERROR'}: ${error.message}`);
     res.status(500).json({ error: 'Payment setup failed' });
   }
 });
@@ -802,16 +907,6 @@ app.get('/cart', (req, res) => {
 
 resolveStoreId().then(() => {
   app.listen(PORT, () => {
-    console.log('');
-    console.log('\x1b[33m╔═══════════════════════════════════════════════════════╗\x1b[0m');
-    console.log('\x1b[33m║\x1b[0m  🏪 \x1b[1mStore Server\x1b[0m                                       \x1b[33m║\x1b[0m');
-    console.log('\x1b[33m╠═══════════════════════════════════════════════════════╣\x1b[0m');
-    console.log(`\x1b[33m║\x1b[0m  🌐 Port:   ${String(PORT).padEnd(41)}\x1b[33m║\x1b[0m`);
-    console.log(`\x1b[33m║\x1b[0m  🏷️  Store:  ${storeConfig.name.padEnd(41)}\x1b[33m║\x1b[0m`);
-    console.log(`\x1b[33m║\x1b[0m  🌍 Domain: ${STORE_DOMAIN.padEnd(41)}\x1b[33m║\x1b[0m`);
-    console.log(`\x1b[33m║\x1b[0m  🆔 DB ID:  ${(storeDbId || 'not resolved').padEnd(41)}\x1b[33m║\x1b[0m`);
-    console.log(`\x1b[33m║\x1b[0m  🔒 Referrer-Policy: strict-origin-when-cross-origin   \x1b[33m║\x1b[0m`);
-    console.log('\x1b[33m╚═══════════════════════════════════════════════════════╝\x1b[0m');
-    console.log('');
+    StoreLog.startup(PORT, storeConfig.name, STORE_DOMAIN, storeDbId, !!process.env.STRIPE_SECRET_KEY);
   });
 });
