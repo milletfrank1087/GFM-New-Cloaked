@@ -291,6 +291,16 @@ app.post('/api/track', async (req, res) => {
   const clientInfo = getClientInfo(req);
   const { event, eventId, sourceUrl, cookies, clientLocation, data } = req.body;
 
+  const myHost = req.get('host') || '';
+  if (sourceUrl && myHost) {
+    try {
+      const srcHost = new URL(sourceUrl).host;
+      if (srcHost !== myHost) {
+        return res.json({ success: true });
+      }
+    } catch (_) {}
+  }
+
   const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, clientLocation);
 
   const userData = {
@@ -303,7 +313,7 @@ app.post('/api/track', async (req, res) => {
 
   const eventData = {
     eventId,
-    sourceUrl: sourceUrl || `https://${req.get('host') || 'hoperise.online'}/`,
+    sourceUrl: sourceUrl || `https://${myHost || 'hoperise.online'}/`,
     value: data?.value,
     currency: data?.currency || ACTIVE_CURRENCY.code,
     contentName: data?.contentName,
@@ -405,35 +415,48 @@ app.post('/api/payment-callback', async (req, res) => {
 
   try {
     if (isTrackingEnabled() && paymentData) {
-      const clientInfo = {
-        ipAddress: paymentData.ipAddress || 'unknown',
-        userAgent: paymentData.userAgent || 'unknown',
-        clientLocation: null
-      };
-
       const tracking = paymentData.tracking || {};
-      const trackingData = {
-        eventId: tracking.eventId || paymentData.stripeChargeId,
-        sourceUrl: tracking.sourceUrl || `https://${req.get('host') || 'hoperise.online'}/`,
-        fbp: tracking.fbp || null,
-        fbc: tracking.fbc || null,
-        ttp: tracking.ttp || null,
-        ttclid: tracking.ttclid || null
-      };
+      const sourceUrl = tracking.sourceUrl || '';
+      const myHost = req.get('host') || '';
+      let isMyDonation = true;
 
-      try {
-        await trackPurchase({
-          amount: paymentData.amount,
-          currency: paymentData.currency,
-          donationType: 'one-time',
-          captureId: paymentData.stripeChargeId,
-          cardHolderName: paymentData.cardHolderName,
-          donorNameReal: paymentData.donorNameReal,
-          donorEmail: paymentData.donorEmail,
-          customerId: paymentData.customerId
-        }, trackingData, clientInfo);
-      } catch (err) {
-        console.error('CAPI tracking error (non-critical):', err.message);
+      if (sourceUrl && myHost) {
+        try {
+          const srcHost = new URL(sourceUrl).host;
+          isMyDonation = srcHost === myHost;
+        } catch (_) {}
+      }
+
+      if (isMyDonation) {
+        const clientInfo = {
+          ipAddress: paymentData.ipAddress || 'unknown',
+          userAgent: paymentData.userAgent || 'unknown',
+          clientLocation: null
+        };
+
+        const trackingData = {
+          eventId: tracking.eventId || paymentData.stripeChargeId,
+          sourceUrl: sourceUrl || `https://${myHost}/`,
+          fbp: tracking.fbp || null,
+          fbc: tracking.fbc || null,
+          ttp: tracking.ttp || null,
+          ttclid: tracking.ttclid || null
+        };
+
+        try {
+          await trackPurchase({
+            amount: paymentData.amount,
+            currency: paymentData.currency,
+            donationType: 'one-time',
+            captureId: paymentData.stripeChargeId,
+            cardHolderName: paymentData.cardHolderName,
+            donorNameReal: paymentData.donorNameReal,
+            donorEmail: paymentData.donorEmail,
+            customerId: paymentData.customerId
+          }, trackingData, clientInfo);
+        } catch (err) {
+          console.error('CAPI tracking error (non-critical):', err.message);
+        }
       }
     }
 

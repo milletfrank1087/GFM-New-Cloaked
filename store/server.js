@@ -418,7 +418,7 @@ app.post('/api/track-interaction', async (req, res) => {
           body: JSON.stringify({
             event,
             eventId,
-            sourceUrl: `https://${STORE_DOMAIN}/checkout`,
+            sourceUrl: tracking.sourceUrl || `https://${STORE_DOMAIN}/checkout`,
             cookies: {
               fbp: tracking.fbp || null,
               fbc: tracking.fbc || null,
