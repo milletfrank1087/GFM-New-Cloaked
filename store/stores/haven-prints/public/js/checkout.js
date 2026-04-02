@@ -199,8 +199,35 @@ async function initCheckout() {
   }
 }
 
-function boot() {
-  setTimeout(() => initCheckout(), 1200);
+async function handle3DSReturn() {
+  var params = new URLSearchParams(window.location.search);
+  var piId = params.get('payment_intent');
+  var status = params.get('redirect_status');
+  if (!piId || !status) return false;
+
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  if (status === 'succeeded') {
+    try {
+      var resp = await fetch('/api/confirm-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentIntentId: piId })
+      });
+      var data = await resp.json();
+      if (data.success && data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      }
+    } catch (_) {}
+  }
+  return true;
+}
+
+async function boot() {
+  var handled = await handle3DSReturn();
+  if (!handled) {
+    setTimeout(() => initCheckout(), 1200);
+  }
 }
 
 if (document.readyState === 'loading') {
