@@ -645,7 +645,17 @@ app.post('/api/confirm-payment', async (req, res) => {
 
     res.clearCookie('__session', { path: '/' });
 
-    const campaignOrigin = campaignCallbackUrls[0]?.trim() || '';
+    let campaignOrigin = '';
+    try {
+      const srcUrl = (donor.utm && donor.utm.sourceUrl) ? donor.utm.sourceUrl : '';
+      if (srcUrl) {
+        const parsed = new URL(srcUrl);
+        campaignOrigin = parsed.origin;
+      }
+    } catch (_) {}
+    if (!campaignOrigin) {
+      campaignOrigin = campaignCallbackUrls[0]?.trim() || '';
+    }
     const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete` : '/';
 
     res.json({ success: true, redirectUrl });
