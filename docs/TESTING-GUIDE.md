@@ -281,3 +281,72 @@ Run through this after every new store deployment:
 - [ ] Full project grep for prohibited terms: `rg -i "gfm|cloaked|donation|campaign|fundrais"` returns zero matches in deployed files
 - [ ] Fulfillment key aliases are unique across all stores (no two stores share `fulfillmentStatus`, `fulfilledAt`, or `deliveryMethod` alias values)
 - [ ] CAPI Purchase deduplication: verify browser pixel and server CAPI fire with the same `event_id` (check Meta Events Manager > Test Events)
+
+---
+
+## PayPal-Specific Testing
+
+Use this when `paymentProcessor` is `paypal` on the store under test. Sandbox and live use different Client IDs and secrets; keep `PAYPAL_MODE` aligned with the keys on the server.
+
+### Sandbox Setup
+
+1. Create **Sandbox** Business and Personal test accounts in the PayPal Developer Dashboard (if using buyer login flows).
+2. Create a **REST app**; copy **Sandbox Client ID** and **Secret** into `PAYPAL_SANDBOX_CLIENT_ID` / `PAYPAL_SANDBOX_SECRET` (or `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` with `PAYPAL_MODE=sandbox`).
+3. Deploy or run the store with `STORE_ID` pointing at a PayPal-configured `config.js`.
+4. Complete one **full campaign → `/s/TOKEN` → checkout** path and confirm capture in **Sandbox** activity.
+
+### Card Fields (Hosted Fields) — Test Cards
+
+PayPal provides **sandbox card numbers** for Advanced Checkout / card field testing (see current PayPal docs: *Sandbox test cards*). Typical patterns:
+
+| Scenario | What to do |
+|----------|------------|
+| Successful capture | Use the **success** Visa/Mastercard sandbox PANs from PayPal’s documentation with any valid future expiry and test CVC. |
+| Processor decline | Use documented **decline** / **insufficient funds** test PANs. |
+| AVS / CVV checks | Use PANs documented for specific **AVS** or **CVV** outcomes. |
+
+Always verify against **PayPal’s official current list** — numbers change with documentation updates.
+
+### PayPal Button Flow
+
+1. From donor checkout (with `__session`), trigger the **PayPal** wallet button (if enabled).
+2. Log in with a **Sandbox Personal** account when prompted.
+3. Approve the order; confirm redirect/callback returns to campaign with `?status=complete`.
+4. In PayPal **Sandbox** activity, confirm **capture** amount matches decomposed **purchase_units** total.
+
+### Venmo Eligibility
+
+Venmo (where offered) is often **eligibility-gated** (device, region, buyer profile). Testing checklist:
+
+- Use a supported **US mobile** profile when Venmo is in scope.
+- Confirm the Venmo button appears only when PayPal’s SDK reports eligibility.
+- Run at least one **approval + capture** path or document **graceful hide** when ineligible (no broken checkout).
+
+### Apple Pay / Google Pay via PayPal
+
+1. **Apple Pay**: Ensure **domain verification** completed in PayPal (and Apple) for the **store domain**. Test on Safari / compatible devices; confirm payment completes and capture records in Supabase.
+2. **Google Pay**: Test on supported Chrome/Android flows per PayPal’s integration; confirm tokenized wallet charge reflects as PayPal capture with correct amount.
+
+### PayPal Sterility Checks
+
+After a test capture, verify **orders and captures** show **no donation language**:
+
+| Check | Expected | Red flag |
+|-------|----------|----------|
+| Item names / descriptions | Product catalog strings only | “Donation”, “tip”, campaign names |
+| Custom id / invoice id fields | Neutral refs (e.g. session-derived codes) | Campaign slugs, fundraiser tokens |
+| Soft descriptor (if visible) | Matches store / business branding | Unrelated or campaign strings |
+| `purchase_units` breakdown | Matches **decomposed** products; totals match capture | Single lump “generic” line inconsistent with storefront |
+| Metadata written to Supabase | Uses **aliased** `metadataKeys` from `config.js` | Default keys duplicated across stores |
+
+Confirm **product decomposition** arithmetic: **sum(line items) + shipping/tax (if any) = order total** expected by PayPal’s API.
+
+### PayPal Checklist Summary
+
+- [ ] Sandbox vs live mode matches credentials (`PAYPAL_MODE` + correct Client ID/Secret pair)
+- [ ] Card Fields: success + at least one decline path tested with official sandbox PANs
+- [ ] PayPal button: approve + capture + campaign return
+- [ ] Venmo: eligibility respected; no broken UI when hidden
+- [ ] Apple Pay / Google Pay: tested where enabled; domain verification on store domain
+- [ ] No donation terminology in order payload, descriptors, or buyer-visible strings
+- [ ] Line items and metadata match e-commerce decomposition and per-store key aliases

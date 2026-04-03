@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <% if (paymentProcessor === 'stripe') { %>
   <script src="https://js.stripe.com/v3/"></script>
+  <% } %>
   <script>
     tailwind.config = { theme: { extend: { fontFamily: { inter: ['Inter', 'system-ui', 'sans-serif'] } } } }
   </script>
@@ -81,7 +83,24 @@
               <p class="text-[11px] text-gray-400">Loading secure payment...</p>
             </div>
           </div>
+          <% if (paymentProcessor === 'stripe') { %>
           <div id="payment-element"></div>
+          <% } else { %>
+          <div id="paypal-button-container" class="mb-3"></div>
+          <div class="flex items-center gap-2 my-3">
+            <div class="flex-1 h-px bg-gray-100"></div>
+            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">or pay with card</span>
+            <div class="flex-1 h-px bg-gray-100"></div>
+          </div>
+          <div class="space-y-2.5">
+            <div id="card-name-field" class="w-full min-h-[42px] rounded-lg"></div>
+            <div id="card-number-field" class="w-full min-h-[42px] rounded-lg"></div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div id="card-expiry-field" class="w-full min-h-[42px] rounded-lg"></div>
+              <div id="card-cvv-field" class="w-full min-h-[42px] rounded-lg"></div>
+            </div>
+          </div>
+          <% } %>
 
           <div id="payment-error" class="hidden text-red-600 text-xs mb-3 p-2.5 bg-red-50 rounded-lg border border-red-100 mt-3"></div>
 
@@ -105,7 +124,7 @@
             <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
             PCI Compliant
           </div>
-          <div class="flex items-center gap-1">Powered by Stripe</div>
+          <div class="flex items-center gap-1">Powered by <%= paymentProcessor === 'paypal' ? 'PayPal' : 'Stripe' %></div>
         </div>
       </div>
 
@@ -145,161 +164,15 @@
     </div>
   </main>
 
+  <meta name="store-name" content="<%= store.name %>">
+  <meta name="payment-processor" content="<%= paymentProcessor %>">
+
+  <script src="/js/checkout-store-cart.js"></script>
+  <% if (paymentProcessor === 'stripe') { %>
   <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
-
-  <script>
-  (function() {
-    var CART_KEY = 'store_cart';
-    var items = [];
-    try { items = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e) {}
-
-    var emptyEl = document.getElementById('empty-cart');
-    var contentEl = document.getElementById('checkout-content');
-
-    if (!items.length) {
-      emptyEl.classList.remove('hidden');
-      contentEl.style.display = 'none';
-      return;
-    }
-
-    var orderItemsEl = document.getElementById('order-items');
-    var orderTotalEl = document.getElementById('order-total');
-    var total = 0;
-
-    items.forEach(function(item) {
-      total += item.price * item.quantity;
-      orderItemsEl.innerHTML += '<div class="flex items-center gap-3">' +
-        '<div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">' +
-          '<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 001.5-1.5V5.25a1.5 1.5 0 00-1.5-1.5H3.75a1.5 1.5 0 00-1.5 1.5V19.5a1.5 1.5 0 001.5 1.5z"/></svg>' +
-        '</div>' +
-        '<div class="flex-1 min-w-0">' +
-          '<p class="text-xs font-medium text-gray-900 truncate">' + item.name + '</p>' +
-          '<p class="text-[10px] text-gray-400">Qty: ' + item.quantity + '</p>' +
-        '</div>' +
-        '<span class="text-xs font-semibold text-gray-900">&pound;' + (item.price * item.quantity).toFixed(2) + '</span>' +
-      '</div>';
-    });
-
-    orderTotalEl.textContent = '\u00a3' + total.toFixed(2);
-
-    var stripeKey = document.getElementById('stripe-key').value;
-    var stripe = Stripe(stripeKey);
-    var elements, paymentElement;
-
-    var submitBtn = document.getElementById('submit-payment');
-    var errorEl = document.getElementById('payment-error');
-    var spinnerEl = document.getElementById('payment-spinner');
-    var btnText = document.getElementById('btn-text');
-    var loadingEl = document.getElementById('payment-loading');
-
-    btnText.textContent = 'Pay \u00a3' + total.toFixed(2);
-    submitBtn.setAttribute('data-paytext', 'Pay \u00a3' + total.toFixed(2));
-
-    setTimeout(function() {
-      elements = stripe.elements({
-        mode: 'payment',
-        amount: Math.round(total * 100),
-        currency: 'gbp',
-        appearance: {
-          theme: 'stripe',
-          variables: {
-            colorPrimary: '#00b964',
-            borderRadius: '8px',
-            fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-            spacingUnit: '4px'
-          },
-          rules: {
-            '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', padding: '10px 12px' },
-            '.Input:focus': { border: '1px solid #00b964', boxShadow: '0 0 0 3px rgba(0,185,100,0.08)' },
-            '.Tab': { border: '1px solid #e5e7eb', boxShadow: 'none' },
-            '.Tab--selected': { border: '1px solid #00b964', boxShadow: '0 0 0 1px #00b964' }
-          }
-        }
-      });
-
-      paymentElement = elements.create('payment', { layout: 'tabs' });
-      paymentElement.mount('#payment-element');
-      paymentElement.on('ready', function() {
-        if (loadingEl) loadingEl.classList.add('hidden');
-        submitBtn.disabled = false;
-      });
-    }, 1200);
-
-    submitBtn.addEventListener('click', async function(e) {
-      e.preventDefault();
-      if (submitBtn.disabled) return;
-
-      var email = document.getElementById('store-email').value.trim();
-      var name = document.getElementById('store-name').value.trim();
-
-      if (!email || !email.includes('@')) {
-        errorEl.textContent = 'Please enter a valid email address.';
-        errorEl.classList.remove('hidden');
-        return;
-      }
-
-      submitBtn.disabled = true;
-      spinnerEl.classList.remove('hidden');
-      btnText.textContent = 'Processing...';
-      errorEl.classList.add('hidden');
-
-      var submitResult = await elements.submit();
-      if (submitResult.error) {
-        errorEl.textContent = submitResult.error.message;
-        errorEl.classList.remove('hidden');
-        submitBtn.disabled = false;
-        spinnerEl.classList.add('hidden');
-        btnText.textContent = submitBtn.dataset.paytext;
-        return;
-      }
-
-      try {
-        var res = await fetch('/api/store-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: items })
-        });
-        var data = await res.json();
-        if (!data.clientSecret) throw new Error(data.error || 'Payment setup failed');
-
-        var confirmResult = await stripe.confirmPayment({
-          elements: elements,
-          clientSecret: data.clientSecret,
-          confirmParams: {
-            payment_method_data: {
-              billing_details: { name: name || undefined, email: email || undefined }
-            }
-          },
-          redirect: 'if_required'
-        });
-
-        if (confirmResult.error) {
-          errorEl.textContent = confirmResult.error.message;
-          errorEl.classList.remove('hidden');
-          submitBtn.disabled = false;
-          spinnerEl.classList.add('hidden');
-          btnText.textContent = submitBtn.dataset.paytext;
-          return;
-        }
-
-        localStorage.removeItem(CART_KEY);
-        document.querySelector('main').innerHTML = '<div class="text-center py-20">' +
-          '<div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">' +
-            '<svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>' +
-          '</div>' +
-          '<h2 class="text-xl font-bold text-gray-900 mb-2">Order Complete</h2>' +
-          '<p class="text-sm text-gray-400 mb-6">Thank you for your purchase. A confirmation email with download links will arrive shortly.</p>' +
-          '<a href="/" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm">Back to Shop</a>' +
-        '</div>';
-      } catch(err) {
-        errorEl.textContent = err.message;
-        errorEl.classList.remove('hidden');
-        submitBtn.disabled = false;
-        spinnerEl.classList.add('hidden');
-        btnText.textContent = submitBtn.dataset.paytext;
-      }
-    });
-  })();
-  </script>
+  <script src="/js/checkout-store-stripe.js"></script>
+  <% } else { %>
+  <script src="/js/checkout-store-paypal.js"></script>
+  <% } %>
 </body>
 </html>

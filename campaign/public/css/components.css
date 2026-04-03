@@ -1,0 +1,101 @@
+/* === Component Styles === */
+
+/* Navbar Scroll Effect */
+.navbar-scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Donation Button Styles */
+.donation-type-btn {
+  color: #767676;
+}
+.donation-type-btn.active {
+  background-color: #00b964;
+  color: white;
+}
+
+.amount-btn.active {
+  border-color: #00b964;
+  background-color: #e8f8f0;
+  color: #00b964;
+}
+
+/* FAQ Accordion */
+.faq-item.active .faq-icon {
+  transform: rotate(180deg);
+}
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+.faq-item.active .faq-content {
+  max-height: 500px;
+}
+
+/* Mobile Donate Bar Animation */
+.mobile-donate-visible {
+  transform: translateY(0) !important;
+}
+
+/* Card Hover Effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #00b964, #02a95c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Swiper Customization */
+.swiper-button-next,
+.swiper-button-prev {
+  width: 44px !important;
+  height: 44px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease !important;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #fff !important;
+  transform: scale(1.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}
+.gallery-thumbs .swiper-slide-thumb-active {
+  opacity: 1 !important;
+  border-color: #00b964 !important;
+}
+
+/* Modal Animation */
+.modal-content {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Modal Phase Transitions */
+#modal-phase-1,
+#modal-phase-2,
+#modal-phase-success {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#modal-phase-1.hidden,
+#modal-phase-2.hidden,
+#modal-phase-success.hidden {
+  display: none;
+}

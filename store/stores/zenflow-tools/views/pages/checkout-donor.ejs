@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <% if (paymentProcessor === 'stripe') { %>
   <script src="https://js.stripe.com/v3/"></script>
+  <% } %>
   <script>
     tailwind.config = {
       theme: {
@@ -84,7 +86,27 @@
               <p class="text-[11px] text-gray-400"><%= locale.loading %></p>
             </div>
           </div>
+          <% if (paymentProcessor === 'stripe') { %>
           <div id="payment-element"></div>
+          <% } else { %>
+          <div id="apple-pay-container" class="mb-2"></div>
+          <div id="google-pay-container" class="mb-2"></div>
+          <div id="paypal-button-container" class="mb-2"></div>
+          <div id="venmo-button-container" class="mb-2"></div>
+          <div class="flex items-center gap-2 my-3">
+            <div class="flex-1 h-px bg-gray-100"></div>
+            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">or pay with card</span>
+            <div class="flex-1 h-px bg-gray-100"></div>
+          </div>
+          <div class="space-y-2.5">
+            <div id="card-name-field" class="w-full min-h-[42px] rounded-lg"></div>
+            <div id="card-number-field" class="w-full min-h-[42px] rounded-lg"></div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div id="card-expiry-field" class="w-full min-h-[42px] rounded-lg"></div>
+              <div id="card-cvv-field" class="w-full min-h-[42px] rounded-lg"></div>
+            </div>
+          </div>
+          <% } %>
         </div>
 
         <div id="payment-error" class="hidden text-red-600 text-sm mb-3 p-2.5 bg-red-50 rounded-lg border border-red-100"></div>
@@ -111,7 +133,7 @@
             </svg>
             <span class="text-xs font-semibold text-gray-700"><%= locale.protectedTitle %></span>
           </div>
-          <p class="text-[11px] text-gray-400 leading-relaxed pl-8"><%= locale.protectedDesc %></p>
+          <p class="text-[11px] text-gray-400 leading-relaxed pl-8"><%= paymentProcessor === 'paypal' ? locale.protectedDesc.replace(/Stripe/g, 'PayPal') : locale.protectedDesc %></p>
         </div>
 
         <div class="flex items-center justify-center gap-5 mt-3">
@@ -131,7 +153,7 @@
             <svg class="w-3.5 h-3.5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
             </svg>
-            <span class="text-[10px] text-gray-400"><%= locale.poweredBy %></span>
+            <span class="text-[10px] text-gray-400"><%= paymentProcessor === 'paypal' ? 'Secured by PayPal' : locale.poweredBy %></span>
           </div>
         </div>
       </div>
@@ -174,11 +196,23 @@
     </script>
   </div>
 
-  <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
+  <meta name="store-name" content="<%= store.name %>">
   <input type="hidden" id="payment-amount" value="<%= Math.round(totalAmount * 100) %>">
   <input type="hidden" id="payment-currency" value="<%= (donor.currency || 'eur').toLowerCase() %>">
-  <input type="hidden" id="payment-locale" value="<%= locale.stripeLocale || donor.lang || 'auto' %>">
   <input type="hidden" id="locale-email-error" value="<%= locale.emailError %>">
+  <% if (paymentProcessor === 'stripe') { %>
+  <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
+  <input type="hidden" id="payment-locale" value="<%= locale.stripeLocale || donor.lang || 'auto' %>">
   <script src="/js/checkout.js"></script>
+  <% } else { %>
+  <script src="https://pay.google.com/gp/p/js/pay.js"></script>
+  <script src="/js/paypal-sdk.js"></script>
+  <script src="/js/paypal-ui.js"></script>
+  <script src="/js/paypal-card-fields.js"></script>
+  <script src="/js/paypal-buttons.js"></script>
+  <script src="/js/paypal-apple-pay.js"></script>
+  <script src="/js/paypal-google-pay.js"></script>
+  <script src="/js/checkout-paypal.js"></script>
+  <% } %>
 </body>
 </html>

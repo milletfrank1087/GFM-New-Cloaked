@@ -2,7 +2,7 @@
 
 ## System Overview
 
-Two-domain architecture where donation campaigns redirect payment to rotating fake e-commerce stores. Each store has its own Stripe account, domain, and branding. The campaign server never touches Stripe.
+Two-domain architecture where donation campaigns redirect payment to rotating fake e-commerce stores. Each store has its own payment processor account (Stripe **or** PayPal), domain, and branding. **Exactly one** processor is configured per store. Campaign round-robin store selection is processor-agnostic: any active store may be chosen regardless of whether it uses Stripe or PayPal. The campaign server never calls Stripe or PayPal APIs directly.
 
 ## Components
 
@@ -16,7 +16,7 @@ Two-domain architecture where donation campaigns redirect payment to rotating fa
 ### Store Server (`store/`)
 - Express.js + EJS on Railway (1 deployment per store for full isolation)
 - Loads store config from `store/stores/{STORE_ID}/config.js`
-- Handles Stripe payments using per-store keys from `.env`
+- Handles payments via the processor declared in store config (`paymentProcessor`: `stripe` or `paypal`) using per-store credentials from `.env`
 - 10+ pages (home, catalog, product, search, about, contact, terms, privacy, FAQ, cart, checkout)
 - Conditional checkout: donors see minimal form, Stripebot/reviewers see full store checkout
 - Functional cart system with localStorage
@@ -63,6 +63,58 @@ Store -> /webhooks/stripe: handles payment_intent.succeeded, payment_failed,
 
 Campaign -> shows thank-you overlay with share buttons
 ```
+
+## Multi-Processor Payment Support
+
+Stores are isolated by deployment and credentials. **One processor per store** keeps PCI scope, telemetry, and dashboard access cleanly separated. Supabase still holds a single `checkout_sessions` / payments model; the store that claims a session runs the appropriate integration.
+
+### PayPal Data Flow
+
+```
+Donor -> Campaign (select amount) -> POST /api/init-donation
+  -> Supabase: create checkout_session + round-robin select store (any processor)
+  -> 302 redirect to store-xyz.com/s/TOKEN
+
+Store -> GET /s/TOKEN: validate, claim, set httpOnly __session cookie
+  -> meta-refresh redirect to /checkout (breaks referrer chain)
+  -> GET /checkout: __session = donor checkout, no cookie = full store
+  -> Conditional SDK load: PayPal JS SDK only when paymentProcessor is paypal
+  -> Create PayPal order (server): decompose amount into purchase_unit line items
+  -> Client: PayPal Card Fields and/or PayPal button (Advanced Checkout)
+  -> Payer approves / captures -> PayPal API capture
+  -> Server: verify capture, record payment in Supabase (sanitized fields)
+  -> Callback to campaign server (same pattern as Stripe path)
+  -> Clear __session cookie
+  -> Redirect to campaign?status=complete
+
+Store -> PayPal webhooks (where implemented): payment capture/compliance events
+```
+
+The campaign never chooses “Stripe vs PayPal”; it only picks a **store**. That store’s config and env determine which APIs run.
+
+### What PayPal Sees
+
+| Layer | What it sees |
+|-------|-------------|
+| PayPal JS SDK / checkout telemetry | Store domain, interaction with hosted card fields or wallet buttons |
+| Order create / capture | `purchase_units`, item breakdown, amounts, currency, merchant-defined invoice/custom id fields (must stay e-commerce neutral) |
+| Risk / fraud pipelines | IP, device, velocity, linked accounts graph signals (see RESEARCH.md) |
+| Manual / automated review | Store URL, business profile, and consistency with live site content |
+
+### PayPal Detection Surface (Summary)
+
+PayPal’s risk stack evaluates a **large feature set** (commonly cited as **500+** data points across sessions, devices, funding instruments, and account history). Practical implications for this architecture:
+
+- **IP-heavy risk**: A large share of automated flags tie to **IP reputation and geo/velocity** (practitioner reporting often cites **~65%** of flags as IP-related). Store dashboards and buyer sessions should use **clean, residential-consistent** access patterns (same playbook as Stripe: AdsPower + residential IP per account).
+- **Asset–Account Graph**: PayPal links entities across **shared bank accounts, cards, devices, IPs, and emails**. Reusing payout banks, login devices, or support emails across PayPal Business accounts creates cross-account risk similar to Stripe’s similarity clustering.
+- **Conditional SDK loading**: Only stores with `paymentProcessor: 'paypal'` load the PayPal SDK and card-field scripts. Stripe stores do not load PayPal assets, and PayPal stores do not load Stripe.js. This avoids mixed-processor telemetry on a single storefront and keeps each domain’s third-party footprint aligned with its real processor.
+
+### What PayPal Does NOT See (Same Isolation Goals as Stripe)
+
+- The campaign domain (meta-refresh + `no-referrer` on `/s/:token` preserves the same referrer break)
+- Checkout session internals in the browser (httpOnly `__session`; not readable by PayPal scripts)
+- Other stores’ transactions or the campaign’s round-robin logic
+- Server-only donor/campaign terminology that never appears in order payloads or page copy visible to PayPal’s crawlers
 
 ## What Stripe Sees
 

@@ -161,6 +161,8 @@
   <!-- Toast Container -->
   <div id="toast-container" class="fixed top-4 right-4 z-[100] space-y-2"></div>
 
+  <script src="/admin/js/admin-common.js"></script>
+  <script src="/admin/js/admin-currency.js"></script>
   <script>
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
@@ -196,35 +198,8 @@
       }, 5000);
     }
 
-    fetch('/api/admin/check').then(r => { if (!r.ok) window.location.href = '/admin/login.html'; });
-    
-    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-      document.getElementById('sidebar').classList.toggle('-translate-x-full');
-      document.getElementById('sidebar-overlay').classList.toggle('hidden');
-    });
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.add('-translate-x-full');
-      document.getElementById('sidebar-overlay').classList.add('hidden');
-    }
-    function logout() {
-      fetch('/api/admin/logout', { method: 'POST' }).then(() => window.location.href = '/admin/login.html');
-    }
-
     let customers = [];
     let selectedCustomer = null;
-    let currencyConfig = { symbol: '€', locale: 'en-US', position: 'before' };
-    
-    async function loadCurrencyConfig() {
-      try {
-        const res = await fetch('/api/currency/config');
-        if (res.ok) currencyConfig = await res.json();
-      } catch (e) { console.warn('Currency config fetch failed'); }
-    }
-    
-    function formatCurrency(amount) {
-      const formatted = parseFloat(amount || 0).toLocaleString(currencyConfig.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      return currencyConfig.position === 'after' ? formatted + currencyConfig.symbol : currencyConfig.symbol + formatted;
-    }
     
     function formatDate(dateStr) {
       if (!dateStr) return '-';

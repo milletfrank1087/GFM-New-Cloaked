@@ -43,8 +43,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <!-- Custom Styles (order matters: base → animations → components → payment) -->
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/payment.css">
 
   <!-- TRACKING_PIXELS_PLACEHOLDER -->
   <!-- CAMPAIGN_DATA_PLACEHOLDER -->
@@ -183,6 +186,7 @@
   <script src="/js/gallery.js"></script>
   <script src="/js/navbar.js"></script>
   <script src="/js/donors.js"></script>
+  <script src="/js/thank-you-overlay.js"></script>
   <script src="/js/donation.js"></script>
   <script src="/js/faq.js"></script>
   <script src="/js/counters.js"></script>

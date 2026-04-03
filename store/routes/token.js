@@ -1,0 +1,153 @@
+const express = require('express');
+const router = express.Router();
+const { decomposeAmount } = require('../lib/decompose');
+const { CHECKOUT_LOCALE, CURRENCY_SYMBOLS } = require('../lib/locale');
+const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
+
+module.exports = function createTokenRouter(ctx) {
+  const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN } = ctx;
+
+  router.get('/s/:token', async (req, res) => {
+    try {
+      const { token } = req.params;
+
+      const { data: tokenData, error } = await supabase
+        .from('checkout_sessions')
+        .select('*')
+        .eq('token', token)
+        .eq('claimed', false)
+        .single();
+
+      if (error || !tokenData) {
+        StoreLog.event('token_invalid', '---', 'Token not found or already claimed');
+        return res.redirect('/');
+      }
+
+      if (new Date(tokenData.expires_at) < new Date()) {
+        const ref = tokenData.source_ref || '---';
+        StoreLog.event('token_expired', ref, `${fmtAmount(tokenData.amount, tokenData.currency)} expired at ${tokenData.expires_at}`);
+        return res.redirect('/');
+      }
+
+      await supabase
+        .from('checkout_sessions')
+        .update({ claimed: true, claimed_at: new Date().toISOString() })
+        .eq('id', tokenData.id);
+
+      const cookieData = {
+        sid: tokenData.id,
+        amount: tokenData.amount,
+        currency: tokenData.currency,
+        lang: tokenData.language,
+        ref: tokenData.source_ref,
+        fee: tokenData.service_fee,
+        guest: tokenData.guest_checkout,
+        email: tokenData.customer_email,
+        utm: tokenData.tracking,
+        ip: tokenData.ip_address,
+        ua: tokenData.user_agent,
+        storeId: ctx.getStoreDbId() || tokenData.store_id
+      };
+
+      const ref = tokenData.source_ref || '---';
+      const origin = extractOriginHost(tokenData.tracking?.sourceUrl);
+      StoreLog.event('token_claimed', ref, `${fmtAmount(tokenData.amount, tokenData.currency)} + ${fmtAmount(tokenData.service_fee, tokenData.currency)} fee from ${origin || 'direct'}`);
+
+      res.cookie('__session', JSON.stringify(cookieData), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+        maxAge: 10 * 60 * 1000,
+        path: '/'
+      });
+
+      res.send('<!DOCTYPE html><html><head><meta name="referrer" content="no-referrer"></head><body><script>location.replace(\'/checkout\')</script></body></html>');
+    } catch (err) {
+      StoreLog.error('token_error', '---', err.message);
+      res.redirect('/');
+    }
+  });
+
+  router.get('/checkout', (req, res) => {
+    const sessionCookie = req.cookies.__session;
+
+    if (sessionCookie) {
+      try {
+        const donor = JSON.parse(sessionCookie);
+        const lang = donor.lang || 'en';
+        const locale = CHECKOUT_LOCALE[lang] || CHECKOUT_LOCALE.en;
+        const symbol = CURRENCY_SYMBOLS[donor.currency] || donor.currency;
+        const totalAmount = parseFloat(donor.amount) + parseFloat(donor.fee || 0);
+        const orderItems = decomposeAmount(totalAmount, storeConfig.products);
+
+        StoreLog.event('checkout_view', donor.ref || '---', `Viewing checkout - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
+
+        return res.render('pages/checkout-donor', {
+          store: req.store,
+          donor,
+          locale,
+          symbol,
+          totalAmount: totalAmount.toFixed(2),
+          orderItems,
+          paymentProcessor: PAYMENT_PROCESSOR,
+          stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+        });
+      } catch (e) {
+        StoreLog.error('checkout_view', '---', `Session parse error: ${e.message}`);
+      }
+    }
+
+    StoreLog.event('store_view', '---', 'Regular store visitor');
+
+    res.render('pages/checkout-store', {
+      store: req.store,
+      products: storeConfig.products || [],
+      paymentProcessor: PAYMENT_PROCESSOR,
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+    });
+  });
+
+  router.post('/api/track-interaction', async (req, res) => {
+    try {
+      const { event, eventId } = req.body;
+      if (!event || !eventId) return res.json({ success: false });
+
+      const sessionCookie = req.cookies.__session;
+      if (!sessionCookie) return res.json({ success: false });
+
+      const donor = JSON.parse(sessionCookie);
+      const tracking = donor.utm || {};
+      const origin = extractOriginHost(tracking.sourceUrl);
+
+      const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
+      for (const baseUrl of campaignCallbackUrls) {
+        try {
+          await fetch(`${baseUrl.trim()}/api/track`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event,
+              eventId,
+              sourceUrl: tracking.sourceUrl || `https://${STORE_DOMAIN}/checkout`,
+              cookies: {
+                fbp: tracking.fbp || null,
+                fbc: tracking.fbc || null,
+                ttp: tracking.ttp || null,
+                ttclid: tracking.ttclid || null
+              },
+              clientLocation: null,
+              data: {}
+            })
+          });
+        } catch (_) {}
+      }
+
+      StoreLog.event('track_proxied', donor.ref || '---', `${event} → ${origin || 'campaigns'}`);
+      res.json({ success: true });
+    } catch (_) {
+      res.json({ success: false });
+    }
+  });
+
+  return router;
+};

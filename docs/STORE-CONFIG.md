@@ -37,8 +37,9 @@ store/stores/zenflow-tools/
 ```javascript
 module.exports = {
   name: 'Store Name',
-  statementDescriptor: 'STORE NAME',    // Max 22 chars, appears on bank statements
-  metadataKeys: {                        // Store-specific PaymentIntent metadata key names
+  paymentProcessor: 'stripe',           // Required: 'stripe' | 'paypal' — exactly ONE per store
+  statementDescriptor: 'STORE NAME',    // Max 22 chars, appears on bank statements (Stripe); align with PayPal business branding for PayPal stores
+  metadataKeys: {                        // Store-specific PaymentIntent / order metadata key names
     storeId: 'shop_id',                  // Must differ per store
     storeDomain: 'shop_url',
     referenceCode: 'order_ref',
@@ -63,6 +64,19 @@ module.exports = {
   ],
 };
 ```
+
+### `paymentProcessor` Field
+
+| Value | Meaning |
+|-------|---------|
+| `stripe` | Default. Store uses Stripe PaymentIntents, Elements, and Stripe webhooks. Requires `STRIPE_*` env vars. |
+| `paypal` | Store uses PayPal Orders v2 (Advanced Checkout pattern), Card Fields and/or PayPal button as implemented. Requires `PAYPAL_*` env vars. |
+
+Rules:
+
+- **One processor per store** — do not enable both Stripe and PayPal on the same deployment.
+- Campaign **round-robin does not filter by processor**; all `active` stores compete equally. Ensure every store in rotation is production-ready for its processor.
+- `metadataKeys` still define **per-store aliasing** for payment records sent to Supabase and any processor-visible custom fields; keep names and values free of donation terminology.
 
 ## Product Price Guidelines
 
@@ -149,7 +163,57 @@ CAMPAIGN_CALLBACK_URLS=https://el.risehope.online,https://it.risehope.online
 NODE_ENV=production
 ```
 
+### PayPal Environment Variables (per store `.env`)
+
+Use these **instead of** Stripe keys when `paymentProcessor` is `paypal`. Never commit real secrets.
+
+| Variable | Purpose |
+|----------|---------|
+| `PAYPAL_MODE` | `sandbox` or `live` — selects which credential pair the server uses. |
+| `PAYPAL_CLIENT_ID` | REST app **Client ID** for the active mode (convenience single-pair setup). |
+| `PAYPAL_SECRET` | REST app **Secret** for the active mode. |
+| `PAYPAL_LIVE_CLIENT_ID` | Live Client ID (optional explicit split; use when rotating without touching sandbox). |
+| `PAYPAL_LIVE_SECRET` | Live secret. |
+| `PAYPAL_SANDBOX_CLIENT_ID` | Sandbox Client ID. |
+| `PAYPAL_SANDBOX_SECRET` | Sandbox secret. |
+
+Typical patterns:
+
+- **Simple:** Set `PAYPAL_MODE` and `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` only.
+- **Split:** Set `PAYPAL_MODE` plus the `PAYPAL_LIVE_*` and `PAYPAL_SANDBOX_*` pairs so deployments can switch mode without rewriting credentials.
+
+Shared with Stripe stores: `SUPABASE_*`, `CALLBACK_SECRET`, `CAMPAIGN_CALLBACK_URLS`, `STORE_ID`, `STORE_DOMAIN`, `PORT`, `NODE_ENV`.
+
 CRITICAL: `CALLBACK_SECRET` must be a generic string with no project-identifying words. Never use "gfm", "cloaked", "donation", etc.
+
+### Example PayPal Store `config.js` (excerpt)
+
+```javascript
+module.exports = {
+  name: 'Acme Digital Supply',
+  paymentProcessor: 'paypal',
+  statementDescriptor: 'ACME DIGITAL', // Keep aligned with PayPal business name / descriptor rules
+  metadataKeys: {
+    storeId: 'merchant_ref',
+    storeDomain: 'site_url',
+    referenceCode: 'invoice_id',
+    sessionRef: 'cart_session',
+    subtotal: 'goods_total',
+    serviceFee: 'service_fee',
+    guestCheckout: 'express',
+    orderSummary: 'line_summary',
+    fulfillmentStatus: 'ship_status',
+    fulfilledAt: 'shipped_at',
+    deliveryMethod: 'fulfillment_type',
+  },
+  products: [
+    { name: 'Pro Template Pack', slug: 'pro-template-pack', price: 47.99, category: 'Templates', description: 'Editable business templates.' },
+    // ... remaining products with irregular prices
+  ],
+};
+```
+
+Publishable PayPal **Client ID** (not the secret) is exposed to the browser for the JS SDK; configure it per environment as required by your `checkout` implementation (e.g. layout partial or env-injected global).
 
 ## Creating a New Store
 
@@ -157,7 +221,7 @@ CRITICAL: `CALLBACK_SECRET` must be a generic string with no project-identifying
 2. Copy structure from an existing store (template/code sharing is safe)
 3. Customize `config.js` with unique name, products, metadata keys, prices
 4. Write unique text content for all pages (product descriptions, about, reviews)
-5. Create new Stripe account and get API keys
+5. Create processor credentials: **Stripe** account + API keys, **or** **PayPal Business** + REST app (sandbox + live) per STORE-CONFIG PayPal env section
 6. Add store to Supabase `stores` table
 7. Deploy as separate Railway service
 8. Warm up with test transactions (see ROTATION-PLAYBOOK.md)
@@ -166,14 +230,14 @@ CRITICAL: `CALLBACK_SECRET` must be a generic string with no project-identifying
 
 ### Donor Checkout (`checkout-donor.ejs`)
 Rendered when `__session` cookie is present (donor came from campaign):
-- Compact card with email + name fields, total amount, and Stripe PaymentElement
+- Compact card with email + name fields, total amount, and the active processor UI (**Stripe** PaymentElement or **PayPal** Card Fields / buttons, depending on `paymentProcessor`)
 - "Your payment is protected" reassurance section with SSL info
-- Stripe PaymentElement mounts after 1.2s delay
-- Link disabled (no "save my information" prompt)
+- Stripe: PaymentElement mounts after 1.2s delay; Link disabled (no "save my information" prompt)
+- PayPal: SDK and fields load only when `paymentProcessor` is `paypal` (see ARCHITECTURE.md — conditional SDK loading)
 - Legal links to terms and privacy at bottom
 
 ### Store Checkout (`checkout-store.ejs`)
-Rendered when no `__session` cookie (Stripebot, manual reviewer, direct visitor):
+Rendered when no `__session` cookie (Stripebot / PayPal crawlers, manual reviewer, direct visitor):
 - Full e-commerce checkout with cart summary, product images
 - Shipping/billing forms
 - Standard e-commerce experience

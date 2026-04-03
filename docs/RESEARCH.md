@@ -8,6 +8,58 @@ Source: BHW (multiple threads, 2025-2026), Stripe official docs, Stripe blog (MR
 
 ---
 
+## PayPal Detection & Risk Analysis (Multi-Processor Context)
+
+This project can bind **PayPal** as the sole processor for a store. PayPal’s fraud and compliance stack is distinct from Stripe’s but poses analogous failure modes: **velocity**, **identity linkage**, and **narrative mismatch** between stated business and observed behavior.
+
+### 1. Large Feature-Risk Systems (“500+ Data Points”)
+
+Industry and vendor literature commonly describes modern payment risk engines scoring transactions with **hundreds of features** (often cited as **500+** inputs across device, session, funding source, merchant history, and counterparty behavior). Treat PayPal as operating at similar scale: no single field “cloaks” the account if behavior and linkage signals disagree.
+
+### 2. IP-Based Risk
+
+PayPal heavily weights **network and geo-velocity** signals. Practitioner reporting on processor risk often attributes **on the order of ~65%** of automated flags to **IP-related** factors (reputation, proxies, datacenter, impossible travel, clustering with bad merchants). **Mitigation**: residential-consistent IPs for dashboard access and buyer-like session patterns; avoid shared VPN exit nodes across accounts.
+
+### 3. Asset–Account Graph
+
+PayPal maps relationships across **merchants, buyers, and funding instruments**:
+
+- Shared **bank accounts** for payouts
+- Shared **cards** or **emails**
+- Repeated **devices** and **IPs** across restricted accounts
+
+This **asset–account graph** creates cross-account risk even when storefront HTML differs. **Mitigation**: separate payout rails, emails, devices, and browser profiles per Business account — same discipline as Stripe isolation.
+
+### 4. FPA (Financial Payment Adaptive) and Adaptive Risk
+
+PayPal uses **adaptive, real-time risk models** (often discussed under internal names such as **FPA** / financial payment adaptive scoring) that adjust to **velocity**, **new buyer ratios**, **amount patterns**, and **dispute propensity**. Sudden spikes or uniform amounts look less like organic catalog sales and more like scripted checkouts.
+
+### 5. Business Description vs. Website Content
+
+Underwriters and crawlers compare **stated business category/description** to **live site content** (products, policies, contact). Mismatch triggers **manual review** or **limitations** — structurally similar to Stripebot + MCC alignment.
+
+### 6. Transaction Velocity Patterns
+
+**Velocity** includes count per hour/day, repeated amounts, new buyer concentration, and cross-border share. Cloaked donation flows that produce **many first-time buyers** and **similar basket totals** can resemble **fraud rings** unless warmed and diversified like normal e-commerce.
+
+### 7. Chargeback & Dispute Monitoring
+
+PayPal tracks **dispute rate**, **claims**, and **chargebacks** on funded transactions. Elevated rates trigger **holds**, **reserves**, or **termination**. The donation model’s advantage is **authorized, willing payers** — same operational requirement as Stripe: **keep disputes near zero**.
+
+### 8. Why Vaulting / Rebilling Was Rejected (Parallels Stripe Section)
+
+Off-session **vaulting + rebilling** was rejected for the same structural reasons documented for Stripe:
+
+| Factor | Why it breaks |
+|--------|----------------|
+| **SCA / 3DS decline rates** | European and many global issuers require **Strong Customer Authentication**; off-session retries without proper MIT exemptions see **high decline rates**. |
+| **TC40 / early fraud signals** | Bulk unauthorized-style retries produce **issuer fraud notifications**; processors respond with **freezes** and **reviews**. |
+| **VAMP-style network pressure** | Card networks monitor combined fraud/chargeback pressure; **VAMP**-class violations create **immediate** acquirer and processor exposure. |
+
+**Conclusion**: The approved model remains **session-based, payer-initiated capture** with **e-commerce-shaped orders** and **no bulk off-session recycling** of payment credentials.
+
+---
+
 ## Stripe's Detection Stack
 
 ### 1. Stripe.js Client-Side Telemetry

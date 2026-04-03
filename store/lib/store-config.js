@@ -12,6 +12,7 @@ function loadStoreConfig() {
     const config = require(configPath);
     config.domain = process.env.STORE_DOMAIN || 'localhost';
     config.id = null;
+    config.paymentProcessor = process.env.PAYMENT_PROCESSOR || config.paymentProcessor || 'stripe';
     return config;
   } catch (err) {
     throw new Error(`Failed to load store config from ${configPath}: ${err.message}`);

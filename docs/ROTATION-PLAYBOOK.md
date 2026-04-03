@@ -6,7 +6,7 @@
 - Purchase a new domain (use a different registrar than other stores if possible)
 - Point DNS (A or CNAME record) to the new Railway store deployment
 
-### 2. Stripe Account
+### 2a. Stripe Account
 - When renting an aged account, first check its MCC (see MCC Compatibility below)
 - Only use accounts with compatible MCCs: 5734, 5817, 5818, 5964, 5969, 5942
 - Reject accounts with MCCs for physical goods (jewelry, automotive, grocery, hotels, airlines)
@@ -17,6 +17,46 @@
 - Register webhook endpoint: `https://store-domain.com/webhooks/stripe`
 - Set `STRIPE_WEBHOOK_SECRET` in the store's `.env`
 - Note: Link is disabled via API (`payment_method_options.link.display_preference.preference: 'off'`), no Dashboard configuration needed
+
+### 2b. PayPal Business Account (PayPal Stores)
+
+Use when the store’s `paymentProcessor` is `paypal`.
+
+1. **Business account setup**
+   - Create or obtain a **PayPal Business** account tied to the store’s legal/branding identity.
+   - Access PayPal Dashboard **only** from a **dedicated AdsPower profile** with **NodeMaven (or equivalent) residential IP** — same isolation discipline as Stripe (one profile + IP family per merchant identity).
+   - Do not log into multiple PayPal Business accounts from the same browser profile.
+
+2. **Advanced Checkout**
+   - Enable **Advanced Credit and Debit Card Payments** / **Advanced Checkout** (Card Fields + PayPal buttons) per PayPal’s current dashboard flow for your region.
+   - Create REST app credentials (Client ID + Secret) for **Sandbox** and **Live**; store in Railway env (see below).
+
+3. **Apple Pay domain verification (via PayPal)**
+   - When using Apple Pay **through PayPal**, complete **domain verification** in the PayPal dashboard (and any linked Apple Pay / wallet configuration PayPal requires).
+   - Treat this like Stripe’s Apple Pay domain registration: the **store’s public domain** must be verified, not the campaign domain.
+
+4. **Webhooks**
+   - Register the store’s PayPal webhook URL (e.g. `https://store-domain.com/webhooks/paypal` when implemented) and capture verification IDs/secrets as required by the codebase.
+
+5. **Railway environment variables (PayPal)**
+
+   | Variable | Notes |
+   |----------|--------|
+   | `paymentProcessor` | Set in `config.js` to `paypal` (not an env var unless you override via deployment pattern). |
+   | `PAYPAL_MODE` | `sandbox` (warm-up / testing) or `live` (production). |
+   | `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` | Active pair for the current mode, or use split vars below. |
+   | `PAYPAL_LIVE_CLIENT_ID` / `PAYPAL_LIVE_SECRET` | Production REST credentials. |
+   | `PAYPAL_SANDBOX_CLIENT_ID` / `PAYPAL_SANDBOX_SECRET` | Sandbox REST credentials. |
+   | Plus | `STORE_ID`, `STORE_DOMAIN`, `SUPABASE_*`, `CALLBACK_SECRET`, `CAMPAIGN_CALLBACK_URLS` — same as Stripe stores. |
+
+6. **PayPal-specific burn indicators**
+   - **Fund holds or rolling reserves** — sudden increase in holds often precedes limitation.
+   - **Account limitations** — requests for invoices, supplier proof, or “explain spikes in volume.”
+   - **Buyer complaints / chargebacks** — PayPal monitors dispute and chargeback rates; keep them negligible (same operational goal as Stripe).
+   - **VAMP / network-style pressure** — card-network monitoring (e.g. Visa VAMP) still applies to card-funded wallet flows; watch for issuer TC40-style signals and **velocity** anomalies.
+   - **Business description vs. website** — mismatches trigger review (parallel to Stripebot + MCC checks).
+
+If any of the above escalate, treat the store like a **Stripe burn**: set status to `burned`, stop routing traffic, and rotate identity + infrastructure per **docs/ACCOUNT-ISOLATION.md**.
 
 ### 3. Store Files
 1. Create `store/stores/{new-store-id}/` directory
@@ -52,7 +92,7 @@ VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'warming', 5000);
 ### 7. What MUST Differ Per Store (Content)
 - Domain name
 - Store name and tagline
-- Stripe account (completely new)
+- Payment processor account — **Stripe** *or* **PayPal Business** (completely separate per store; never shared across stores)
 - Product names and descriptions (text similarity detection compares CONTENT, not code)
 - About text and contact email
 - Statement descriptor
