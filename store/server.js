@@ -35,9 +35,18 @@ async function resolveStoreId() {
     const { data } = await supabase
       .from('stores')
       .select('id')
+      .eq('domain', STORE_DOMAIN)
+      .maybeSingle();
+    if (data) {
+      storeDbId = data.id;
+      return;
+    }
+    const { data: fallback } = await supabase
+      .from('stores')
+      .select('id')
       .eq('slug', process.env.STORE_ID)
-      .single();
-    if (data) storeDbId = data.id;
+      .maybeSingle();
+    if (fallback) storeDbId = fallback.id;
   } catch (err) {
     StoreLog.system('\u26a0\ufe0f', `Could not resolve store ID: ${err.message}`);
   }
