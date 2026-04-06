@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const Stripe = require('stripe');
 const supabase = require('./lib/supabase');
@@ -85,10 +86,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/.well-known', express.static(path.join(__dirname, 'public', '.well-known'), {
-  dotfiles: 'allow',
-  setHeaders: (res) => { res.set('Content-Type', 'text/plain'); }
-}));
+app.get('/.well-known/apple-developer-merchantid-domain-association', (req, res) => {
+  const filePath = path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association');
+  if (fs.existsSync(filePath)) {
+    res.set('Content-Type', 'text/plain');
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('Not found');
+  }
+});
 
 app.use(express.static(path.join(storeDir, 'public'), { index: false }));
 app.use(express.static(path.join(__dirname, 'public'), { index: false }));
