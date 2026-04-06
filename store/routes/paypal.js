@@ -146,6 +146,36 @@ module.exports = function createPayPalRouter(ctx) {
       }
 
       const capture = captureData.purchase_units?.[0]?.payments?.captures?.[0];
+
+      if (capture?.status === 'DECLINED') {
+        const responseCode = capture.processor_response?.response_code || 'DECLINED';
+        const declineReasons = {
+          '5120': 'Insufficient funds', '5100': 'Generic decline', '5130': 'Suspected fraud',
+          '5140': 'Invalid card', '5150': 'Expired card', '5160': 'Invalid CVV',
+          '5170': 'Exceeds withdrawal limit', '5950': 'Card declined by issuer',
+          '0500': 'Generic decline - contact bank', 'PPMD': 'PayPal risk decline'
+        };
+        const reason = declineReasons[responseCode] || 'Card declined by bank';
+        StoreLog.error('capture_declined', donor.ref || '---', `${orderID}: ${reason} (${responseCode})`);
+
+        try {
+          await supabase.from('payment_failures').insert({
+            store_id: ctx.getStoreDbId(), source_ref: donor.ref,
+            endpoint: '/api/paypal/orders/capture', error_type: 'CAPTURE_DECLINED',
+            error_code: responseCode, error_message: `Capture declined: ${reason}`,
+            payment_method: 'paypal', request_amount: donor.amount,
+            ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
+          });
+        } catch (logErr) {}
+
+        return res.status(400).json({ error: reason, status: 'DECLINED' });
+      }
+
+      if (capture?.status && capture.status !== 'COMPLETED') {
+        StoreLog.error('capture_not_completed', donor.ref || '---', `${orderID}: status=${capture.status}`);
+        return res.status(400).json({ error: `Payment ${capture.status.toLowerCase()}. Please try again.`, status: capture.status });
+      }
+
       const paymentSource = captureData.payment_source;
       const payer = captureData.payer;
       const expectedTotal = parseFloat(donor.amount) + parseFloat(donor.fee || 0);
@@ -179,10 +209,12 @@ module.exports = function createPayPalRouter(ctx) {
         cardHolderName = paymentSource.venmo.user_name || '';
         sourceType = 'venmo';
       } else if (paymentSource?.apple_pay) {
+        cardHolderName = paymentSource.apple_pay.card?.name || '';
         cardLastDigits = paymentSource.apple_pay.card?.last_digits || null;
         cardBrand = paymentSource.apple_pay.card?.brand || null;
         sourceType = 'apple_pay';
       } else if (paymentSource?.google_pay) {
+        cardHolderName = paymentSource.google_pay.name || paymentSource.google_pay.card?.name || '';
         cardLastDigits = paymentSource.google_pay.card?.last_digits || null;
         cardBrand = paymentSource.google_pay.card?.brand || null;
         sourceType = 'google_pay';

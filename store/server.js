@@ -85,6 +85,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/.well-known', express.static(path.join(__dirname, 'public', '.well-known'), {
+  dotfiles: 'allow',
+  setHeaders: (res) => { res.set('Content-Type', 'text/plain'); }
+}));
+
 app.use(express.static(path.join(storeDir, 'public'), { index: false }));
 app.use(express.static(path.join(__dirname, 'public'), { index: false }));
 
