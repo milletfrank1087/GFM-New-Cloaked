@@ -87,17 +87,22 @@ app.use((req, res, next) => {
 });
 
 app.get('/.well-known/apple-developer-merchantid-domain-association', (req, res) => {
-  const applePayFile = path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association');
-  if (fs.existsSync(applePayFile)) {
-    res.set('Content-Type', 'text/plain');
-    return res.sendFile(applePayFile);
+  const filePaths = [
+    path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association'),
+    path.join(__dirname, 'apple-developer-merchantid-domain-association'),
+  ];
+  for (const p of filePaths) {
+    if (fs.existsSync(p)) {
+      res.set('Content-Type', 'text/plain');
+      return res.sendFile(p);
+    }
   }
-  const rootFile = path.join(__dirname, 'apple-developer-merchantid-domain-association');
-  if (fs.existsSync(rootFile)) {
+  const content = process.env.APPLE_PAY_DOMAIN_ASSOCIATION;
+  if (content) {
     res.set('Content-Type', 'text/plain');
-    return res.sendFile(rootFile);
+    return res.send(content);
   }
-  res.status(404).send('Not found');
+  res.status(404).send('Not found – set APPLE_PAY_DOMAIN_ASSOCIATION env var or place file in public/.well-known/');
 });
 
 app.use(express.static(path.join(storeDir, 'public'), { index: false }));
