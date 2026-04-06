@@ -87,13 +87,17 @@ app.use((req, res, next) => {
 });
 
 app.get('/.well-known/apple-developer-merchantid-domain-association', (req, res) => {
-  const filePath = path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association');
-  if (fs.existsSync(filePath)) {
+  const applePayFile = path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association');
+  if (fs.existsSync(applePayFile)) {
     res.set('Content-Type', 'text/plain');
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send('Not found');
+    return res.sendFile(applePayFile);
   }
+  const rootFile = path.join(__dirname, 'apple-developer-merchantid-domain-association');
+  if (fs.existsSync(rootFile)) {
+    res.set('Content-Type', 'text/plain');
+    return res.sendFile(rootFile);
+  }
+  res.status(404).send('Not found');
 });
 
 app.use(express.static(path.join(storeDir, 'public'), { index: false }));
