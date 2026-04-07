@@ -7,7 +7,7 @@ async function getAdminDashboardStats(campaignSlug = null, dateRange = null) {
   try {
     let query = supabase
       .from('payments')
-      .select('amount, service_fee, total_amount, stripe_fee, net_amount, customer_id, created_at, source_ref, currency')
+      .select('amount, service_fee, total_amount, stripe_fee, net_amount, customer_id, created_at, source_ref, currency, store_id, store_domain, payment_method')
       .eq('status', 'completed');
 
     if (campaignSlug && campaignSlug !== 'all') {
@@ -23,6 +23,7 @@ async function getAdminDashboardStats(campaignSlug = null, dateRange = null) {
     let totalRaised = 0, totalTips = 0, totalGross = 0, totalFees = 0, totalNet = 0;
     const currencyBreakdown = {};
     const campaignBreakdown = {};
+    const storeBreakdown = {};
 
     payments.forEach(p => {
       const cur = p.currency || 'EUR';
@@ -64,6 +65,17 @@ async function getAdminDashboardStats(campaignSlug = null, dateRange = null) {
       campaignBreakdown[campaign].fees += feeBase;
       campaignBreakdown[campaign].gross += grossBase;
       campaignBreakdown[campaign].net += netBase;
+
+      const storeKey = p.store_id || 'unknown';
+      if (!storeBreakdown[storeKey]) {
+        storeBreakdown[storeKey] = { domain: p.store_domain || 'unknown', processor: p.payment_method || 'stripe', raised: 0, count: 0, tips: 0, fees: 0, gross: 0, net: 0 };
+      }
+      storeBreakdown[storeKey].raised += amtBase;
+      storeBreakdown[storeKey].count++;
+      storeBreakdown[storeKey].tips += tipBase;
+      storeBreakdown[storeKey].fees += feeBase;
+      storeBreakdown[storeKey].gross += grossBase;
+      storeBreakdown[storeKey].net += netBase;
     });
 
     const uniqueCustomers = new Set(payments.map(p => p.customer_id).filter(Boolean)).size;
@@ -78,6 +90,7 @@ async function getAdminDashboardStats(campaignSlug = null, dateRange = null) {
       transactionCount: payments.length,
       avgDonation: payments.length > 0 ? totalRaised / payments.length : 0,
       campaignBreakdown,
+      storeBreakdown,
       currencyBreakdown,
       baseCurrency: BASE_CURRENCY
     };

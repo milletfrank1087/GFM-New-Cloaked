@@ -11,7 +11,7 @@ Two-domain architecture where donation campaigns redirect payment to rotating fa
 - Serves donation landing pages with pixel tracking (Meta + TikTok)
 - Creates checkout sessions in Supabase and redirects donors to stores
 - Receives payment callbacks from stores for CAPI tracking
-- Admin dashboard for customers, transactions, analytics, store management
+- Admin dashboard for customers, transactions, analytics, store management (add, edit, toggle status, remove)
 
 ### Store Server (`store/`)
 - Express.js + EJS on Railway (1 deployment per store for full isolation)
@@ -27,7 +27,7 @@ Two-domain architecture where donation campaigns redirect payment to rotating fa
 - Project ID: `wzialsfdguuircomaqvp`
 - Tables: `stores`, `checkout_sessions`, `payments`, `customers`, `payment_failures`
 - Triggers auto-update customer totals and store stats
-- RPC functions for round-robin store selection and cascading deletes
+- RPC functions for round-robin store selection (`get_next_store`), per-store analytics (`get_store_analytics`)
 - Column names sanitized (no donation terminology)
 
 ## Data Flow
@@ -276,13 +276,3 @@ See `TRACKING.md` for the full tracking architecture reference.
 | `TESTING-GUIDE.md` | Sterility verification and deployment testing procedures |
 | `ROTATION-GUIDE.md` | Extreme in-depth guide on what/how to rotate everything |
 | `TRACKING.md` | Full CAPI tracking architecture, deduplication, and debugging |
-
-| Document | Content |
-|----------|---------|
-| `STRATEGY.md` | Master handoff: problem, solution, what works, what failed, future goals |
-| `RESEARCH.md` | Stripe detection stack, vulnerability assessment, MATCH list, template analysis |
-| `ROTATION-PLAYBOOK.md` | Step-by-step: adding, warming, monitoring, burning stores |
-| `ACCOUNT-ISOLATION.md` | Per-account infrastructure isolation, burn rotation checklist |
-| `STORE-CONFIG.md` | Store configuration schema, metadata keys, product guidelines |
-| `TESTING-GUIDE.md` | Sterility verification and deployment testing procedures |
-| `ROTATION-GUIDE.md` | Extreme in-depth guide on what/how to rotate everything |

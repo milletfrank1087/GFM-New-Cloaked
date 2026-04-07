@@ -23,7 +23,11 @@ module.exports = function createAdminRouter(ctx) {
     getTimeBasedAnalytics,
     getDeviceBrowserAnalytics,
     getStoreStats,
-    toggleStoreStatus
+    getStoreDetail,
+    createStore,
+    updateStore,
+    toggleStoreStatus,
+    deleteStore
   } = ctx;
 
   function adminAuth(req, res, next) {
@@ -113,6 +117,7 @@ module.exports = function createAdminRouter(ctx) {
         recentDonors,
         campaigns,
         campaignBreakdown: realStats?.campaignBreakdown || {},
+        storeBreakdown: realStats?.storeBreakdown || {},
         filters: {
           campaign: campaignFilter,
           startDate: startDate || null,
@@ -171,6 +176,43 @@ module.exports = function createAdminRouter(ctx) {
     }
   });
 
+  router.get('/api/admin/stores/:id', adminAuth, async (req, res) => {
+    try {
+      const detail = await getStoreDetail(req.params.id);
+      if (!detail) return res.status(404).json({ error: 'Store not found' });
+      res.json(detail);
+    } catch (error) {
+      console.error('Error loading store detail:', error);
+      res.status(500).json({ error: 'Failed to load store detail' });
+    }
+  });
+
+  router.post('/api/admin/stores', adminAuth, async (req, res) => {
+    try {
+      const { slug, domain, name, paymentProcessor, maxMonthlyVolume, status } = req.body;
+      if (!slug || !domain || !name) {
+        return res.status(400).json({ error: 'slug, domain, and name are required' });
+      }
+      const result = await createStore({ slug, domain, name, paymentProcessor, maxMonthlyVolume, status });
+      if (!result.success) return res.status(400).json({ error: result.error });
+      res.json(result);
+    } catch (error) {
+      console.error('Error creating store:', error);
+      res.status(500).json({ error: 'Failed to create store' });
+    }
+  });
+
+  router.put('/api/admin/stores/:id', adminAuth, async (req, res) => {
+    try {
+      const result = await updateStore(req.params.id, req.body);
+      if (!result.success) return res.status(400).json({ error: result.error });
+      res.json(result);
+    } catch (error) {
+      console.error('Error updating store:', error);
+      res.status(500).json({ error: 'Failed to update store' });
+    }
+  });
+
   router.post('/api/admin/stores/:id/toggle', adminAuth, async (req, res) => {
     try {
       const { status } = req.body;
@@ -179,6 +221,17 @@ module.exports = function createAdminRouter(ctx) {
     } catch (error) {
       console.error('Error toggling store:', error);
       res.status(500).json({ error: 'Failed to toggle store' });
+    }
+  });
+
+  router.delete('/api/admin/stores/:id', adminAuth, async (req, res) => {
+    try {
+      const result = await deleteStore(req.params.id);
+      if (!result.success) return res.status(400).json({ error: result.error });
+      res.json(result);
+    } catch (error) {
+      console.error('Error deleting store:', error);
+      res.status(500).json({ error: 'Failed to delete store' });
     }
   });
 
@@ -205,7 +258,8 @@ module.exports = function createAdminRouter(ctx) {
 
   router.get('/api/admin/transactions', adminAuth, async (req, res) => {
     try {
-      const payments = await getAllPayments(ACTIVE_CAMPAIGN);
+      const campaignFilter = req.query.campaign;
+      const payments = await getAllPayments(campaignFilter && campaignFilter !== 'all' ? campaignFilter : null);
       res.json(payments);
     } catch (error) {
       console.error('Error loading transactions:', error);

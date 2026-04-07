@@ -149,7 +149,7 @@ Run $5/day in ads pointing to each store's homepage. This creates genuine browsi
 1. Scale to 5+ active stores with 3+ campaigns
 2. Add more campaign languages (German, Dutch, Romanian)
 3. Implement store config from Supabase DB instead of file-based `config.js`
-4. Build admin tooling for one-click store creation
+4. ~~Build admin tooling for one-click store creation~~ DONE: Admin dashboard supports full store CRUD (add, edit, toggle status, remove) with per-store revenue analytics and volume cap monitoring
 5. Add monitoring/alerting for chargeback spikes and payment failure rate increases
 6. Consider Cloudflare for edge caching and DDoS protection (optional, not critical)
 

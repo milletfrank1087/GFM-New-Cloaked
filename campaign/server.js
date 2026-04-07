@@ -20,7 +20,11 @@ const {
   createDonationToken,
   getNextStore,
   getStoreStats,
-  toggleStoreStatus
+  getStoreDetail,
+  createStore,
+  updateStore,
+  toggleStoreStatus,
+  deleteStore
 } = require('./lib/supabase');
 const {
   trackEvent,
@@ -171,7 +175,11 @@ const ctx = {
   createDonationToken,
   getNextStore,
   getStoreStats,
+  getStoreDetail,
+  createStore,
+  updateStore,
   toggleStoreStatus,
+  deleteStore,
   getCachedCampaignJSON: () => cachedCampaignJSON
 };
 
