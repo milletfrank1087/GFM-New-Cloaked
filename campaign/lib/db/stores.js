@@ -239,6 +239,10 @@ async function deleteStore(storeId) {
       return { success: true, method: 'soft-delete' };
     }
 
+    await supabase.from('payment_failures').delete().eq('store_id', storeId);
+    await supabase.from('payments').delete().eq('store_id', storeId);
+    await supabase.from('checkout_sessions').delete().eq('store_id', storeId);
+
     const { error } = await supabase
       .from('stores')
       .delete()

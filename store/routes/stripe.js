@@ -175,10 +175,29 @@ module.exports = function createStripeRouter(ctx) {
       const pm = paymentIntent.payment_method;
 
       let stripeFee = 0;
+      let resolvedBt = null;
       const bt = charge?.balance_transaction;
       if (bt && typeof bt === 'object') {
-        const feeInSettlement = bt.fee / 100;
-        stripeFee = bt.exchange_rate ? feeInSettlement / bt.exchange_rate : feeInSettlement;
+        resolvedBt = bt;
+      } else if (charge?.id) {
+        for (let attempt = 0; attempt < 3; attempt++) {
+          await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+          try {
+            const freshCharge = await stripe.charges.retrieve(charge.id, {
+              expand: ['balance_transaction']
+            });
+            if (freshCharge.balance_transaction && typeof freshCharge.balance_transaction === 'object') {
+              resolvedBt = freshCharge.balance_transaction;
+              break;
+            }
+          } catch (btErr) {
+            console.error(`Retry ${attempt + 1}/3 fetching balance_transaction:`, btErr.message);
+          }
+        }
+      }
+      if (resolvedBt) {
+        const feeInSettlement = resolvedBt.fee / 100;
+        stripeFee = resolvedBt.exchange_rate ? feeInSettlement / resolvedBt.exchange_rate : feeInSettlement;
       }
 
       const totalAmount = paymentIntent.amount / 100;
