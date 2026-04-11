@@ -62,10 +62,13 @@ const storeDir = path.join(__dirname, 'stores', process.env.STORE_ID || 'zenflow
 app.set('view engine', 'ejs');
 app.set('views', path.join(storeDir, 'views'));
 
-app.use(createStripeRouter(ctx));
-
-app.use(express.json());
 app.use(cookieParser());
+app.use((req, res, next) => {
+  if (req.originalUrl === '/webhooks/stripe') return next();
+  express.json()(req, res, next);
+});
+
+app.use(createStripeRouter(ctx));
 
 app.use((req, res, next) => {
   res.set('Referrer-Policy', 'strict-origin-when-cross-origin');

@@ -1,20 +1,27 @@
 const { supabase } = require('./client');
 
+const FALLBACK_STORE = {
+  id: process.env.STORE_ID || 'haven-prints',
+  domain: process.env.STORE_DOMAIN || 'havenprints.shop',
+  name: process.env.STORE_NAME || 'Haven Prints',
+  payment_processor: 'stripe',
+  status: 'active'
+};
+
 async function getNextStore() {
-  if (!supabase) return null;
+  if (!supabase) return FALLBACK_STORE;
 
   try {
     const { data, error } = await supabase.rpc('get_next_store');
 
-    if (error) {
-      console.error('Get next store error:', error);
-      return null;
+    if (error || !data?.[0]) {
+      return FALLBACK_STORE;
     }
 
-    return data?.[0] || null;
+    return data[0];
   } catch (err) {
     console.error('Get next store exception:', err);
-    return null;
+    return FALLBACK_STORE;
   }
 }
 
