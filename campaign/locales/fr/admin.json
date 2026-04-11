@@ -1,1 +1,128 @@
-{"login":{"title":"Accès Admin","subtitle":"Panneau d'administration HopeRise","password":"Mot de passe","passwordPlaceholder":"Entrez le mot de passe admin","loginButton":"Se Connecter","loggingIn":"Connexion...","error":"Mot de passe invalide"},"dashboard":{"title":"Tableau de Bord","welcome":"Bienvenue","campaign":"Campagne","stats":{"raised":"Récolté","tips":"Pourboires","gross":"Brut","fees":"Frais","net":"Net","donors":"Donateurs","avgDonation":"Don Moyen","transactions":"Transactions"},"recentDonations":"Dons Récents","viewAll":"Voir Tout"},"nav":{"dashboard":"Tableau de Bord","transactions":"Transactions","customers":"Clients","failures":"Erreurs","logout":"Déconnexion"},"transactions":{"title":"Toutes les Transactions","search":"Rechercher des transactions...","filters":{"all":"Toutes","oneTime":"Ponctuel","monthly":"Mensuel","recurring":"Récurrent"},"table":{"donor":"Donateur","amount":"Montant","type":"Type","method":"Méthode","date":"Date","status":"Statut","actions":"Actions"},"status":{"completed":"Terminé","pending":"En attente","failed":"Échoué"},"details":"Détails de la Transaction","noTransactions":"Aucune transaction trouvée"},"customers":{"title":"Gestion des Clients","search":"Rechercher des clients...","filters":{"all":"Tous","active":"Actifs","paused":"En pause"},"table":{"customer":"Client","email":"Email","totalDonated":"Total Donné","donations":"Dons","firstDonation":"Premier Don","status":"Statut","actions":"Actions"},"details":"Détails du Client","actions":{"rebill":"Refacturer","pause":"Mettre en Pause","resume":"Reprendre","delete":"Supprimer","saveNotes":"Enregistrer les Notes"},"rebillModal":{"title":"Refacturer le Client","amount":"Montant","confirm":"Confirmer la Facturation","cancel":"Annuler"},"deleteModal":{"title":"Supprimer le Client","confirm":"Êtes-vous sûr de vouloir supprimer ce client ? Cette action est irréversible.","confirmButton":"Oui, Supprimer","cancel":"Annuler"},"noCustomers":"Aucun client trouvé"},"failures":{"title":"Erreurs de Paiement","table":{"date":"Date","errorType":"Type d'Erreur","errorCode":"Code","message":"Message","amount":"Montant","ip":"IP"},"noFailures":"Aucune erreur enregistrée"},"common":{"loading":"Chargement...","error":"Erreur","success":"Succès","save":"Enregistrer","cancel":"Annuler","delete":"Supprimer","edit":"Modifier","view":"Voir","close":"Fermer","confirm":"Confirmer","search":"Rechercher","filter":"Filtrer","export":"Exporter","refresh":"Actualiser"}}
+{
+  "login": {
+    "title": "Accès Admin",
+    "subtitle": "Panneau d'administration HopeRise",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Entrez le mot de passe admin",
+    "loginButton": "Se connecter",
+    "loggingIn": "Connexion...",
+    "error": "Mot de passe invalide"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord",
+    "welcome": "Bienvenue",
+    "campaign": "Campagne",
+    "stats": {
+      "raised": "Collecté",
+      "tips": "Pourboires",
+      "gross": "Brut",
+      "fees": "Frais",
+      "net": "Net",
+      "donors": "Donateurs",
+      "avgDonation": "Don Moyen",
+      "transactions": "Transactions"
+    },
+    "recentDonations": "Dons Récents",
+    "viewAll": "Voir Tout"
+  },
+  "nav": {
+    "dashboard": "Tableau de Bord",
+    "transactions": "Transactions",
+    "customers": "Clients",
+    "failures": "Erreurs",
+    "logout": "Déconnexion"
+  },
+  "transactions": {
+    "title": "Toutes les Transactions",
+    "search": "Rechercher des transactions...",
+    "filters": {
+      "all": "Toutes",
+      "oneTime": "Unique",
+      "monthly": "Mensuel",
+      "recurring": "Récurrent"
+    },
+    "table": {
+      "donor": "Donateur",
+      "amount": "Montant",
+      "type": "Type",
+      "method": "Méthode",
+      "date": "Date",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "status": {
+      "completed": "Terminé",
+      "pending": "En attente",
+      "failed": "Échoué"
+    },
+    "details": "Détails de la Transaction",
+    "noTransactions": "Aucune transaction trouvée"
+  },
+  "customers": {
+    "title": "Gestion des Clients",
+    "search": "Rechercher des clients...",
+    "filters": {
+      "all": "Tous",
+      "active": "Actifs",
+      "paused": "En pause"
+    },
+    "table": {
+      "customer": "Client",
+      "email": "Email",
+      "totalDonated": "Total Donné",
+      "donations": "Dons",
+      "firstDonation": "Premier Don",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "details": "Détails du Client",
+    "actions": {
+      "rebill": "Rebill",
+      "pause": "Mettre en pause",
+      "resume": "Reprendre",
+      "delete": "Supprimer",
+      "saveNotes": "Enregistrer les Notes"
+    },
+    "rebillModal": {
+      "title": "Rebill Client",
+      "amount": "Montant",
+      "confirm": "Confirmer le Rebill",
+      "cancel": "Annuler"
+    },
+    "deleteModal": {
+      "title": "Supprimer le Client",
+      "confirm": "Êtes-vous sûr de vouloir supprimer ce client ? Cette action est irréversible.",
+      "confirmButton": "Oui, Supprimer",
+      "cancel": "Annuler"
+    },
+    "noCustomers": "Aucun client trouvé"
+  },
+  "failures": {
+    "title": "Erreurs de Paiement",
+    "table": {
+      "date": "Date",
+      "errorType": "Type d'Erreur",
+      "errorCode": "Code",
+      "message": "Message",
+      "amount": "Montant",
+      "ip": "IP"
+    },
+    "noFailures": "Aucune erreur enregistrée"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "refresh": "Actualiser"
+  }
+}
