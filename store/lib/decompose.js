@@ -9,7 +9,7 @@ function decomposeAmount(amount, products) {
       name: exactMatch.name,
       slug: exactMatch.slug || 'item',
       quantity: 1,
-      price: exactMatch.price
+      price: amount
     }];
   }
 

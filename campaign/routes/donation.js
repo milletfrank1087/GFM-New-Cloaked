@@ -100,8 +100,9 @@ module.exports = function createDonationRouter(ctx) {
             ttclid: tracking.ttclid || null
           };
 
+          let capiResult = { meta: '-', tiktok: '-' };
           try {
-            await trackPurchase({
+            capiResult = await trackPurchase({
               amount: paymentData.amount,
               currency: paymentData.currency,
               donationType: 'one-time',
@@ -114,19 +115,30 @@ module.exports = function createDonationRouter(ctx) {
           } catch (err) {
             console.error('CAPI tracking error (non-critical):', err.message);
           }
+
+          const { visitor } = getOrCreateVisitor(
+            paymentData?.ipAddress || 'unknown',
+            null
+          );
+          JourneyLog.purchase(
+            visitor,
+            paymentData?.amount || 0,
+            paymentData?.storeDomain || 'unknown',
+            capiResult
+          );
+        } else {
+          const { visitor } = getOrCreateVisitor(
+            paymentData?.ipAddress || 'unknown',
+            null
+          );
+          JourneyLog.purchase(
+            visitor,
+            paymentData?.amount || 0,
+            paymentData?.storeDomain || 'unknown',
+            { meta: '-', tiktok: '-' }
+          );
         }
       }
-
-      const { visitor } = getOrCreateVisitor(
-        paymentData?.ipAddress || 'unknown',
-        null
-      );
-      JourneyLog.purchase(
-        visitor,
-        paymentData?.amount || 0,
-        paymentData?.storeDomain || 'unknown',
-        { meta: '-', tiktok: '-' }
-      );
 
       res.json({ success: true });
     } catch (error) {

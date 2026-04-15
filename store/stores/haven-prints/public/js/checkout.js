@@ -43,7 +43,6 @@ async function initCheckout() {
       mode: 'payment',
       amount: paymentAmount,
       currency: paymentCurrency,
-      paymentMethodTypes: ['card'],
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',
@@ -90,7 +89,7 @@ async function initCheckout() {
       if (submitBtn) submitBtn.disabled = false;
     });
 
-    paymentElement.on('change', () => {
+    paymentElement.on('focus', () => {
       fireAddPaymentInfo();
     });
 
@@ -226,7 +225,7 @@ async function handle3DSReturn() {
 async function boot() {
   var handled = await handle3DSReturn();
   if (!handled) {
-    setTimeout(() => initCheckout(), 1200);
+    initCheckout();
   }
 }
 
