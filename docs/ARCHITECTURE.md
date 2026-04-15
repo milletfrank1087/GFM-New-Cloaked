@@ -40,11 +40,11 @@ Donor -> Campaign (select amount) -> POST /api/init-donation
 Store -> GET /s/TOKEN: validate, claim, set httpOnly __session cookie
   -> meta-refresh redirect to /checkout (breaks referrer chain)
   -> GET /checkout: __session cookie = donor checkout, no cookie = full store
-  -> Stripe PaymentElement mounts after 1.2s delay
+  -> Stripe PaymentElement mounts immediately (no artificial delay)
   -> POST /api/create-payment:
-      - Decompose amount into product line items (exact arithmetic match)
+      - Decompose amount into product line items (exact match uses donor amount, not product price)
       - Create PaymentIntent with L2/L3 line items, payment_details.order_reference
-      - automatic_payment_methods enabled (card, Apple Pay, Google Pay)
+      - automatic_payment_methods enabled (card, Apple Pay, Google Pay, etc.)
       - Link disabled via payment_method_options
       - No customer or receipt_email at this stage
   -> Stripe Elements -> payment succeeds
@@ -148,9 +148,9 @@ PayPal’s risk stack evaluates a **large feature set** (commonly cited as **500
 - `receipt_email` attached post-payment (Stripe sends branded receipt)
 - Fulfillment evidence attached post-payment (`delivered`, `digital_download`, timestamp)
 - Stripe webhook handler for dispute/refund monitoring
-- 1.2s delayed PaymentElement mounting (natural page interaction signal)
+- Immediate PaymentElement mounting (removed artificial delay for faster checkout)
 - Irregular product prices ($4.97, $6.99, $8.49...) break round-number patterns
-- Decomposition produces exact arithmetic match (Stripe drops mismatched L2/L3 data)
+- Decomposition uses donor's actual amount for exact matches (prevents rounding mismatch with product prices)
 - `payment_details.order_reference` included for L2/L3 qualification
 - `automatic_payment_methods` enabled with `allow_redirects: 'never'`
 - Stripe Link disabled via `payment_method_options.link.display_preference.preference: 'off'`
@@ -229,7 +229,7 @@ STORE SERVER (server.js /s/:token):
   6. Payment completes → callback to campaign with tracking.eventId
                 ↓
 CAMPAIGN SERVER (server.js /api/payment-callback):
-  7. Fire server-side CAPI Purchase with tracking.eventId
+  7. Fire server-side CAPI Purchase with tracking.eventId → capture result into JourneyLog
                 ↓
 CAMPAIGN CLIENT (donation.js handleDonatedReturn):
   8. Donor returns with ?status=complete
@@ -276,3 +276,4 @@ See `TRACKING.md` for the full tracking architecture reference.
 | `TESTING-GUIDE.md` | Sterility verification and deployment testing procedures |
 | `ROTATION-GUIDE.md` | Extreme in-depth guide on what/how to rotate everything |
 | `TRACKING.md` | Full CAPI tracking architecture, deduplication, and debugging |
+| `CLOAKING-RESEARCH.md` | Zero-redirect cloaking research: CF Worker reverse proxy approach, alternatives, risks |

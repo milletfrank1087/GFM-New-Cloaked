@@ -68,9 +68,10 @@ initDonationRedirect()
                                                           POST callback ─→
                                     POST /api/payment-callback
                                       ├─ tracking.eventId from callback
-                                      ├─ trackEvent('Purchase', {eventId})
+                                      ├─ capiResult = trackPurchase({eventId})
                                       │   ├─ sendMetaEvent('Purchase')
                                       │   └─ sendTikTokEvent('CompletePayment')
+                                      ├─ JourneyLog.purchase(visitor, amount, store, capiResult)
                                       └─ redirect donor with ?status=complete
 
 handleDonatedReturn()
@@ -241,7 +242,7 @@ Request body:
 Dedicated endpoint for Purchase tracking fired from the callback handler.
 
 ### `POST /api/payment-callback`
-Receives the store callback after successful payment. Extracts `tracking.eventId` and fires the server-side CAPI Purchase event using it. Also fires TikTok CompletePayment with the same event_id.
+Receives the store callback after successful payment. Extracts `tracking.eventId` and fires the server-side CAPI Purchase event using it. Also fires TikTok CompletePayment with the same event_id. The CAPI result (`meta: ✓/✗`, `tiktok: ✓/✗`) is captured and passed to `JourneyLog.purchase()` for accurate logging.
 
 ---
 

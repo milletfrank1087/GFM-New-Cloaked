@@ -100,7 +100,7 @@ module.exports = function createDonationRouter(ctx) {
             ttclid: tracking.ttclid || null
           };
 
-          let capiResult = { meta: '-', tiktok: '-' };
+          let capiResult = { meta: 'CAPI turned on', tiktok: '-' };
           try {
             capiResult = await trackPurchase({
               amount: paymentData.amount,

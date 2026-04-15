@@ -232,7 +232,8 @@ Publishable PayPal **Client ID** (not the secret) is exposed to the browser for 
 Rendered when `__session` cookie is present (donor came from campaign):
 - Compact card with email + name fields, total amount, and the active processor UI (**Stripe** PaymentElement or **PayPal** Card Fields / buttons, depending on `paymentProcessor`)
 - "Your payment is protected" reassurance section with SSL info
-- Stripe: PaymentElement mounts after 1.2s delay; Link disabled (no "save my information" prompt)
+- Stripe: PaymentElement mounts immediately; Link disabled (no "save my information" prompt)
+- AddPaymentInfo event fires on payment element focus (user interaction), not on initial render
 - PayPal: SDK and fields load only when `paymentProcessor` is `paypal` (see ARCHITECTURE.md — conditional SDK loading)
 - Legal links to terms and privacy at bottom
 
