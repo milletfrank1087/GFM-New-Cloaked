@@ -328,10 +328,12 @@ All variables are set in the **campaign** `.env` only. The store has no tracking
 | Click IDs not captured | fbclid/ttclid not in URL | Only present when users arrive from ad clicks — organic traffic won't have them |
 
 ### Server-Side Logging
-The campaign server logs CAPI results:
-- `Meta CAPI: Purchase → sent` — event accepted
-- `Meta CAPI: Purchase REJECTED` — event rejected (check response body)
-- `Meta CAPI: Purchase FAILED with exception` — network error
+The campaign server logs CAPI results in JourneyLog:
+- `Meta ✓ TikTok ✓` — both CAPI events accepted
+- `Meta ✗ TikTok ✓` — Meta rejected, TikTok accepted (check Meta access token)
+- `Meta - TikTok -` — CAPI not fired (non-campaign donation or tracking disabled)
+
+The `trackPurchase()` return value is captured and passed directly to `JourneyLog.purchase()`. Previously this was hardcoded as `{ meta: '-', tiktok: '-' }` which made CAPI status invisible in logs (fixed in commit `944765d`).
 
 ### Verifying the Full Purchase Dedup Chain
 1. Set a breakpoint in `initDonationRedirect()` — confirm `_purchase_event_id` is set in sessionStorage
