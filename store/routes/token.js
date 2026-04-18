@@ -101,12 +101,20 @@ module.exports = function createTokenRouter(ctx) {
 
         StoreLog.event('checkout_view', donor.ref || '---', `Viewing checkout - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
 
+        const campaignDisplay = donor.utm?.campaignDisplay || {};
+        const donationAmount = parseFloat(donor.amount);
+        const serviceFee = parseFloat(donor.fee || 0);
+
         return res.render('pages/checkout-donor', {
           store: req.store,
           donor,
           locale,
           symbol,
           totalAmount: totalAmount.toFixed(2),
+          donationAmount: donationAmount.toFixed(2),
+          serviceFee: serviceFee.toFixed(2),
+          showFeeBreakdown: serviceFee > 0,
+          campaignDisplay,
           orderItems,
           paymentProcessor: PAYMENT_PROCESSOR,
           stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY

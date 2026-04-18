@@ -15,7 +15,8 @@ module.exports = function createDonationRouter(ctx) {
     trackEvent,
     trackPurchase,
     getNextStore,
-    createDonationToken
+    createDonationToken,
+    loadCampaignFromFile
   } = ctx;
 
   router.post('/api/init-donation', async (req, res) => {
@@ -35,6 +36,22 @@ module.exports = function createDonationRouter(ctx) {
       const token = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
+      const campaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
+      const campaignHost = req.get('host') || '';
+      const campaignProto = req.protocol || 'https';
+      const campaignOrigin = `${campaignProto}://${campaignHost}`;
+      const rawImage = campaign?.images?.[0]?.thumb || campaign?.images?.[0]?.url || null;
+      const absoluteImage = rawImage && rawImage.startsWith('/') ? `${campaignOrigin}${rawImage}` : rawImage;
+
+      const campaignDisplay = campaign ? {
+        title: campaign.title,
+        organizer: campaign.organizer?.name,
+        image: absoluteImage,
+        beneficiary: (campaign.title || '').replace(/^(Help|Aidez|Ajude|Aiuta|Pomóż|Ayuda)\s+/i, '').split(/\s+(Fight|à|a|contro|walczyć|luchar)/i)[0].trim()
+      } : {};
+
+      const enrichedTracking = { ...(tracking || {}), campaignDisplay };
+
       await createDonationToken({
         token,
         amount: parseFloat(amount),
@@ -45,7 +62,7 @@ module.exports = function createDonationRouter(ctx) {
         tipAmount: parseFloat(tip),
         isAnonymous,
         donorEmail,
-        tracking: tracking || {},
+        tracking: enrichedTracking,
         ipAddress: clientInfo.ipAddress,
         userAgent: clientInfo.userAgent,
         expiresAt
