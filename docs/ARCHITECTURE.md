@@ -277,3 +277,9 @@ See `TRACKING.md` for the full tracking architecture reference.
 | `ROTATION-GUIDE.md` | Extreme in-depth guide on what/how to rotate everything |
 | `TRACKING.md` | Full CAPI tracking architecture, deduplication, and debugging |
 | `CLOAKING-RESEARCH.md` | Zero-redirect cloaking research: CF Worker reverse proxy approach, alternatives, risks |
+| `ISSUES-AND-FIXES.md` | All bugs found during April 2026 audit and their fixes |
+| `CPA-ANALYSIS.md` | Full CPA investigation, funnel metrics, and projections |
+| `CLOAKING-COMPANIES.md` | Top 10 cloaking companies reverse-engineered and compared |
+| `REDIRECT-OPTIMIZATION.md` | Complete redirect friction reduction playbook |
+| `DECISION-LOG.md` | All approaches evaluated with verdicts and reasoning |
+| `PAYMENT-CLOAKING-SERVICES.md` | Top 10 payment cloaking/orchestration services reverse-engineered |

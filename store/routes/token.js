@@ -9,6 +9,15 @@ module.exports = function createTokenRouter(ctx) {
 
   router.get('/s/:token', async (req, res) => {
     try {
+      try {
+        res.writeEarlyHints({
+          link: [
+            '<https://js.stripe.com>; rel=preconnect; crossorigin',
+            '<https://m.stripe.com>; rel=preconnect'
+          ]
+        });
+      } catch (_) {}
+
       const { token } = req.params;
 
       const { data: tokenData, error } = await supabase
@@ -69,6 +78,16 @@ module.exports = function createTokenRouter(ctx) {
   });
 
   router.get('/checkout', (req, res) => {
+    try {
+      res.writeEarlyHints({
+        link: [
+          '<https://js.stripe.com>; rel=preconnect; crossorigin',
+          '<https://m.stripe.com>; rel=preconnect',
+          '</css/tailwind-store.min.css>; rel=preload; as=style'
+        ]
+      });
+    } catch (_) {}
+
     const sessionCookie = req.cookies.__session;
 
     if (sessionCookie) {

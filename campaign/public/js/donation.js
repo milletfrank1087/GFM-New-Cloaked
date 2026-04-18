@@ -219,6 +219,10 @@ async function initDonationRedirect() {
     const data = await response.json();
 
     if (data.redirectUrl) {
+      if (typeof warmStoreConnection === 'function') {
+        warmStoreConnection(data.redirectUrl);
+      }
+      advanceOverlayStep(2);
       window.location.replace(data.redirectUrl);
     } else {
       throw new Error(data.error || 'Failed to initialize donation');
@@ -231,30 +235,6 @@ async function initDonationRedirect() {
     }
     showNotification(error.message || 'Something went wrong. Please try again.', 'error');
   }
-}
-
-function showRedirectOverlay() {
-  const existing = document.getElementById('redirect-overlay');
-  if (existing) existing.remove();
-
-  const t = (key, fallback) => (typeof i18n !== 'undefined' && i18n.loaded) ? i18n.t(key) : fallback;
-
-  const overlay = document.createElement('div');
-  overlay.id = 'redirect-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:99999;opacity:0;transition:opacity 0.25s ease';
-  overlay.innerHTML = `
-    <div style="text-align:center;max-width:320px;padding:24px">
-      <div style="width:56px;height:56px;border-radius:50%;background:#e8f8f0;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00b964" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-      </div>
-      <div style="width:36px;height:36px;border:3px solid #e5e7eb;border-top-color:#00b964;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
-      <p style="font-size:16px;font-weight:700;color:#333;margin:0 0 6px;font-family:Inter,system-ui,sans-serif">${t('donation.redirect.title', 'Preparing your payment...')}</p>
-      <p style="font-size:13px;color:#767676;margin:0;font-family:Inter,system-ui,sans-serif">${t('donation.redirect.subtitle', 'Redirecting to secure payment page')}</p>
-    </div>
-    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
-  `;
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => { overlay.style.opacity = '1'; });
 }
 
 function hideRedirectOverlay() {

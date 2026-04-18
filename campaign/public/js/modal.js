@@ -52,6 +52,9 @@ async function openModal() {
     modalContent.classList.add('scale-100', 'opacity-100');
   }, 10);
   
+  if (typeof warmStripeConnections === 'function') {
+    warmStripeConnections();
+  }
   if (typeof preloadPaymentPhase === 'function') {
     preloadPaymentPhase();
   }
