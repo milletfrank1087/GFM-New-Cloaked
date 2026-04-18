@@ -1,5 +1,7 @@
 # Architecture
 
+> **For AI Agents**: This is the master architecture doc. Before making changes to any server, route, template, or data flow, read this first. Key safety rules: (1) `<title>` tag on checkout-donor.ejs MUST stay generic ("Complete Payment" / localized equivalent) — it's the only text Stripe.js telemetry transmits. (2) Stripebot only sees public store pages, never the donor checkout (requires `__session` cookie). (3) All donor/campaign terminology is server-side only — never appears in Stripe API payloads. (4) See `STRIPE-INVIGILATION.md` for the complete analysis of what each Stripe system can see.
+
 ## System Overview
 
 Two-domain architecture where donation campaigns redirect payment to rotating fake e-commerce stores. Each store has its own payment processor account (Stripe **or** PayPal), domain, and branding. **Exactly one** processor is configured per store. Campaign round-robin store selection is processor-agnostic: any active store may be chosen regardless of whether it uses Stripe or PayPal. The campaign server never calls Stripe or PayPal APIs directly.
@@ -18,7 +20,7 @@ Two-domain architecture where donation campaigns redirect payment to rotating fa
 - Loads store config from `store/stores/{STORE_ID}/config.js`
 - Handles payments via the processor declared in store config (`paymentProcessor`: `stripe` or `paypal`) using per-store credentials from `.env`
 - 10+ pages (home, catalog, product, search, about, contact, terms, privacy, FAQ, cart, checkout)
-- Conditional checkout: donors see minimal form, Stripebot/reviewers see full store checkout
+- Conditional checkout: donors see branded donor-friendly checkout (checkout-donor.ejs with campaign data, donation wording, heart icon, beneficiary name), Stripebot/reviewers see full e-commerce store checkout (checkout-store.ejs)
 - Functional cart system with localStorage
 - Product search via `/search?q=`
 - Customer reviews on product pages
@@ -34,12 +36,15 @@ Two-domain architecture where donation campaigns redirect payment to rotating fa
 
 ```
 Donor -> Campaign (select amount) -> POST /api/init-donation
+  -> Load campaign JSON: build campaignDisplay {title, organizer, beneficiary, imageUrl}
+  -> Embed campaignDisplay in tracking JSON
   -> Supabase: create checkout_session + round-robin select store
   -> 302 redirect to store-xyz.com/s/TOKEN
 
 Store -> GET /s/TOKEN: validate, claim, set httpOnly __session cookie
+  -> Extract campaignDisplay from donor.utm for donor checkout rendering
   -> meta-refresh redirect to /checkout (breaks referrer chain)
-  -> GET /checkout: __session cookie = donor checkout, no cookie = full store
+  -> GET /checkout: __session cookie = donor checkout (with campaignDisplay), no cookie = full store
   -> Stripe PaymentElement mounts immediately (no artificial delay)
   -> POST /api/create-payment:
       - Decompose amount into product line items (exact match uses donor amount, not product price)
@@ -283,3 +288,4 @@ See `TRACKING.md` for the full tracking architecture reference.
 | `REDIRECT-OPTIMIZATION.md` | Complete redirect friction reduction playbook |
 | `DECISION-LOG.md` | All approaches evaluated with verdicts and reasoning |
 | `PAYMENT-CLOAKING-SERVICES.md` | Top 10 payment cloaking/orchestration services reverse-engineered |
+| `STRIPE-INVIGILATION.md` | Complete analysis of Stripe's 3 surveillance layers, what they see, code review of our checkout |

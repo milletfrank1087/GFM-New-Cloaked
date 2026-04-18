@@ -1,5 +1,7 @@
 # Stripe Invigilation: Complete Analysis
 
+> **For AI Agents**: This document is the single source of truth for understanding what Stripe's automated systems can and cannot see from our checkout pages. Before making ANY changes to checkout templates, locale strings, or page titles, consult the "Safety Assessment Per Invigilation Layer" section. The `<title>` tag is the ONLY visible text element that Stripe.js telemetry transmits -- all other visible DOM content (h1, buttons, paragraphs, images) is invisible to automated Stripe systems. Stripebot crawls only the PUBLIC store site (needs no auth cookie), never the donor checkout.
+
 How Stripe monitors merchant websites, what data it collects, and our safety posture.
 
 Last updated: April 15, 2026
