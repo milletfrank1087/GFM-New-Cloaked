@@ -20,7 +20,10 @@
   },
   "redirect": {
     "title": "Preparing your payment...",
-    "subtitle": "Redirecting to secure payment page"
+    "subtitle": "Redirecting to secure payment page",
+    "step1": "Securing your donation...",
+    "step2": "Connecting to payment...",
+    "step3": "Almost ready..."
   },
   "payment": {
     "completeYourDonation": "Complete Your Donation",

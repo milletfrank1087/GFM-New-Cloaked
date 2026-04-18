@@ -20,7 +20,10 @@
   },
   "redirect": {
     "title": "Przygotowywanie płatności...",
-    "subtitle": "Przekierowanie na bezpieczną stronę płatności"
+    "subtitle": "Przekierowanie na bezpieczną stronę płatności",
+    "step1": "Zabezpieczanie Twojej darowizny...",
+    "step2": "Łączenie z płatnością...",
+    "step3": "Prawie gotowe..."
   },
   "payment": {
     "completeYourDonation": "Dokończ Swoją Darowiznę",

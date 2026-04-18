@@ -20,7 +20,10 @@
   },
   "redirect": {
     "title": "Préparation du paiement...",
-    "subtitle": "Redirection vers la page de paiement sécurisée"
+    "subtitle": "Redirection vers la page de paiement sécurisée",
+    "step1": "Sécurisation de votre don...",
+    "step2": "Connexion au paiement...",
+    "step3": "Presque prêt..."
   },
   "payment": {
     "completeYourDonation": "Finalisez Votre Don",

@@ -63,16 +63,22 @@ if (document.readyState === 'loading') {
   initPrefetchListeners();
 }
 
+function tSafe(key, fallback) {
+  if (typeof i18n !== 'undefined' && i18n.loaded) {
+    const result = i18n.t(key);
+    return (result && result !== key) ? result : fallback;
+  }
+  return fallback;
+}
+
 function showRedirectOverlay() {
   const existing = document.getElementById('redirect-overlay');
   if (existing) existing.remove();
 
-  const t = (key, fallback) => (typeof i18n !== 'undefined' && i18n.loaded) ? i18n.t(key) : fallback;
-
   const steps = [
-    t('donation.redirect.step1', 'Securing your donation...'),
-    t('donation.redirect.step2', 'Connecting to payment...'),
-    t('donation.redirect.step3', 'Almost ready...')
+    tSafe('donation.redirect.step1', 'Securing your donation...'),
+    tSafe('donation.redirect.step2', 'Connecting to payment...'),
+    tSafe('donation.redirect.step3', 'Almost ready...')
   ];
 
   const overlay = document.createElement('div');
@@ -87,7 +93,7 @@ function showRedirectOverlay() {
         <div id="redirect-progress-bar" style="width:15%;height:100%;background:linear-gradient(90deg,#00b964,#02a95c);border-radius:3px;transition:width 0.6s ease"></div>
       </div>
       <p id="redirect-step-text" style="font-size:16px;font-weight:700;color:#333;margin:0 0 6px;font-family:Inter,system-ui,sans-serif">${steps[0]}</p>
-      <p style="font-size:13px;color:#767676;margin:0;font-family:Inter,system-ui,sans-serif">${t('donation.redirect.subtitle', 'Redirecting to secure payment page')}</p>
+      <p style="font-size:13px;color:#767676;margin:0;font-family:Inter,system-ui,sans-serif">${tSafe('donation.redirect.subtitle', 'Redirecting to secure payment page')}</p>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -101,11 +107,10 @@ function advanceOverlayStep(step) {
   const text = document.getElementById('redirect-step-text');
   if (!bar || !text) return;
 
-  const t = (key, fallback) => (typeof i18n !== 'undefined' && i18n.loaded) ? i18n.t(key) : fallback;
   const config = [
-    { width: '15%', label: t('donation.redirect.step1', 'Securing your donation...') },
-    { width: '55%', label: t('donation.redirect.step2', 'Connecting to payment...') },
-    { width: '90%', label: t('donation.redirect.step3', 'Almost ready...') }
+    { width: '15%', label: tSafe('donation.redirect.step1', 'Securing your donation...') },
+    { width: '55%', label: tSafe('donation.redirect.step2', 'Connecting to payment...') },
+    { width: '90%', label: tSafe('donation.redirect.step3', 'Almost ready...') }
   ];
 
   if (step < config.length) {

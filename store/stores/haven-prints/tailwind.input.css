@@ -1,6 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@source "./views/**/*.ejs";
+
+@theme {
+  --color-brand-primary: #00b964;
+  --color-brand-dark: #02a95c;
+  --color-brand-light: #e8f8f0;
+  --color-brand-muted: #6b7280;
+  --font-inter: "Inter", "system-ui", "-apple-system", "sans-serif";
+}
 
 @font-face {
   font-family: 'Inter';
