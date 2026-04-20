@@ -339,9 +339,12 @@ module.exports = function createStripeRouter(ctx) {
       const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
       for (const baseUrl of campaignCallbackUrls) {
         try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 5000);
           await fetch(`${baseUrl.trim()}/api/payment-callback`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
               secret: CALLBACK_SECRET,
               tokenId: donor.sid,
@@ -353,7 +356,7 @@ module.exports = function createStripeRouter(ctx) {
                 tracking: donor.utm || {}
               }
             })
-          });
+          }).finally(() => clearTimeout(timeout));
           StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}/api/payment-callback`);
         } catch (callbackErr) {
           StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}: ${callbackErr.message}`);
@@ -368,7 +371,10 @@ module.exports = function createStripeRouter(ctx) {
         if (srcUrl) campaignOrigin = new URL(srcUrl).origin;
       } catch (_) {}
       if (!campaignOrigin) campaignOrigin = campaignCallbackUrls[0]?.trim() || '';
-      const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete` : '/';
+      const eidParam = donor.utm?.eventId ? `&eid=${encodeURIComponent(donor.utm.eventId)}` : '';
+      const amtParam = donor.amount ? `&amt=${encodeURIComponent(donor.amount)}` : '';
+      const curParam = donor.currency ? `&cur=${encodeURIComponent(donor.currency)}` : '';
+      const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
 
       StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
       res.json({ success: true, redirectUrl });

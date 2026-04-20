@@ -5,7 +5,7 @@ const { CHECKOUT_LOCALE, CURRENCY_SYMBOLS } = require('../lib/locale');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 
 module.exports = function createTokenRouter(ctx) {
-  const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN } = ctx;
+  const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN, CALLBACK_SECRET } = ctx;
 
   router.get('/s/:token', async (req, res) => {
     try {
@@ -117,7 +117,9 @@ module.exports = function createTokenRouter(ctx) {
           campaignDisplay,
           orderItems,
           paymentProcessor: PAYMENT_PROCESSOR,
-          stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+          stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+          metaPixelId: donor.utm?.metaPixelId || null,
+          tiktokPixelId: donor.utm?.tiktokPixelId || null
         });
       } catch (e) {
         StoreLog.error('checkout_view', '---', `Session parse error: ${e.message}`);
@@ -130,13 +132,15 @@ module.exports = function createTokenRouter(ctx) {
       store: req.store,
       products: storeConfig.products || [],
       paymentProcessor: PAYMENT_PROCESSOR,
-      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+      metaPixelId: null,
+      tiktokPixelId: null
     });
   });
 
   router.post('/api/track-interaction', async (req, res) => {
     try {
-      const { event, eventId } = req.body;
+      const { event, eventId, data, sourceUrl: clientSourceUrl } = req.body;
       if (!event || !eventId) return res.json({ success: false });
 
       const sessionCookie = req.cookies.__session;
@@ -144,32 +148,52 @@ module.exports = function createTokenRouter(ctx) {
 
       const donor = JSON.parse(sessionCookie);
       const tracking = donor.utm || {};
-      const origin = extractOriginHost(tracking.sourceUrl);
+
+      const storeSourceUrl = clientSourceUrl
+        || `${req.protocol}://${req.get('host') || STORE_DOMAIN}/checkout`;
+
+      const donorIp = donor.ip
+        || req.headers['x-forwarded-for']?.split(',')[0]?.trim()
+        || req.ip
+        || 'unknown';
+      const donorUa = donor.ua || req.headers['user-agent'] || 'unknown';
 
       const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
       for (const baseUrl of campaignCallbackUrls) {
         try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 5000);
           await fetch(`${baseUrl.trim()}/api/track`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
               event,
               eventId,
-              sourceUrl: tracking.sourceUrl || `https://${STORE_DOMAIN}/checkout`,
+              sourceUrl: storeSourceUrl,
               cookies: {
                 fbp: tracking.fbp || null,
                 fbc: tracking.fbc || null,
                 ttp: tracking.ttp || null,
                 ttclid: tracking.ttclid || null
               },
-              clientLocation: null,
-              data: {}
+              clientLocation: tracking.clientLocation || null,
+              data: data || {},
+              storeProxy: {
+                secret: CALLBACK_SECRET,
+                ipAddress: donorIp,
+                userAgent: donorUa,
+                email: donor.email || null,
+                storeDomain: STORE_DOMAIN
+              }
             })
-          });
-        } catch (_) {}
+          }).finally(() => clearTimeout(timeout));
+        } catch (err) {
+          StoreLog.error('track_proxy_failed', donor.ref || '---', `${event} → ${extractOriginHost(baseUrl)}: ${err.message}`);
+        }
       }
 
-      StoreLog.event('track_proxied', donor.ref || '---', `${event} → ${origin || 'campaigns'}`);
+      StoreLog.event('track_proxied', donor.ref || '---', `${event} → campaign CAPI`);
       res.json({ success: true });
     } catch (_) {
       res.json({ success: false });

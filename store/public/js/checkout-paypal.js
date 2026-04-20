@@ -31,8 +31,8 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(initCheckout, 800); });
+    document.addEventListener('DOMContentLoaded', initCheckout);
   } else {
-    setTimeout(initCheckout, 800);
+    initCheckout();
   }
 })();

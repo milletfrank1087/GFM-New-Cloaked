@@ -3,9 +3,10 @@ const META_API_BASE = `https://graph.facebook.com/${META_API_VERSION}`;
 
 function buildMetaUserData(userData, clientInfo, { hashSHA256 }) {
   const result = {};
+  const emailHash = userData.emailHash || (userData.email ? hashSHA256(userData.email) : null);
 
-  if (userData.email) {
-    result.em = [hashSHA256(userData.email)];
+  if (emailHash) {
+    result.em = [emailHash];
   }
 
   if (userData.firstName) {
@@ -17,7 +18,9 @@ function buildMetaUserData(userData, clientInfo, { hashSHA256 }) {
   }
 
   if (userData.externalId) {
-    result.external_id = [hashSHA256(userData.externalId)];
+    result.external_id = [hashSHA256(String(userData.externalId))];
+  } else if (emailHash) {
+    result.external_id = [emailHash];
   }
 
   if (clientInfo.ipAddress && clientInfo.ipAddress !== 'unknown') {
@@ -34,10 +37,6 @@ function buildMetaUserData(userData, clientInfo, { hashSHA256 }) {
 
   if (userData.fbc) {
     result.fbc = userData.fbc;
-  }
-
-  if (!result.external_id && userData.email) {
-    result.external_id = [hashSHA256(userData.email)];
   }
 
   if (clientInfo.clientLocation) {
@@ -60,6 +59,15 @@ async function sendMetaEvent(eventName, eventData, userData, clientInfo, { getCo
     return null;
   }
 
+  if (!eventData.eventId) {
+    console.error(`Meta CAPI: ${eventName} skipped (missing eventId for dedup)`);
+    return null;
+  }
+  if (!eventData.sourceUrl) {
+    console.error(`Meta CAPI: ${eventName} skipped (missing sourceUrl)`);
+    return null;
+  }
+
   try {
     const eventTime = Math.floor(Date.now() / 1000);
     const metaUserData = buildMetaUserData(userData, clientInfo, { hashSHA256 });
@@ -69,7 +77,7 @@ async function sendMetaEvent(eventName, eventData, userData, clientInfo, { getCo
         event_name: eventName,
         event_time: eventTime,
         event_id: eventData.eventId,
-        event_source_url: eventData.sourceUrl || 'https://hoperise.online/',
+        event_source_url: eventData.sourceUrl,
         action_source: 'website',
         user_data: metaUserData
       }]

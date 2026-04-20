@@ -4,8 +4,10 @@ if (!stripeKey) throw new Error('Stripe key missing');
 const stripeLocale = document.getElementById('payment-locale')?.value || 'auto';
 const stripe = Stripe(stripeKey, { locale: stripeLocale });
 
-const paymentAmount = parseInt(document.getElementById('payment-amount')?.value || '0', 10);
+const paymentAmountCents = parseInt(document.getElementById('payment-amount')?.value || '0', 10);
 const paymentCurrency = (document.getElementById('payment-currency')?.value || 'eur').toLowerCase();
+const paymentValueMajor = paymentAmountCents / 100;
+const paymentPixelId = document.getElementById('payment-pixel-id')?.value || null;
 const localizedEmailError = document.getElementById('locale-email-error')?.value || 'Please enter a valid email address.';
 
 let elements, paymentElement;
@@ -18,14 +20,17 @@ function generateEventId(prefix) {
 function fireAddPaymentInfo() {
   if (addPaymentInfoFired) return;
   addPaymentInfoFired = true;
-  var eventId = generateEventId('AddPaymentInfo');
+  const eventId = generateEventId('AddPaymentInfo');
+  const payload = { value: paymentValueMajor, currency: paymentCurrency.toUpperCase() };
   if (typeof fbq !== 'undefined') {
-    fbq('track', 'AddPaymentInfo', {}, { eventID: eventId });
+    try {
+      fbq('track', 'AddPaymentInfo', payload, { eventID: eventId });
+    } catch (_) {}
   }
   fetch('/api/track-interaction', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ event: 'AddPaymentInfo', eventId: eventId })
+    body: JSON.stringify({ event: 'AddPaymentInfo', eventId, data: payload, sourceUrl: window.location.href })
   }).catch(function() {});
 }
 
@@ -41,7 +46,7 @@ async function initCheckout() {
   try {
     elements = stripe.elements({
       mode: 'payment',
-      amount: paymentAmount,
+      amount: paymentAmountCents,
       currency: paymentCurrency,
       locale: stripeLocale,
       appearance: {
@@ -53,33 +58,17 @@ async function initCheckout() {
           spacingUnit: '4px'
         },
         rules: {
-          '.Input': {
-            border: '1px solid #e5e7eb',
-            boxShadow: 'none',
-            padding: '10px 12px',
-          },
-          '.Input:focus': {
-            border: '1px solid #00b964',
-            boxShadow: '0 0 0 3px rgba(0,185,100,0.08)',
-          },
-          '.Tab': {
-            border: '1px solid #e5e7eb',
-            boxShadow: 'none',
-          },
-          '.Tab--selected': {
-            border: '1px solid #00b964',
-            boxShadow: '0 0 0 1px #00b964',
-          }
+          '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', padding: '10px 12px' },
+          '.Input:focus': { border: '1px solid #00b964', boxShadow: '0 0 0 3px rgba(0,185,100,0.08)' },
+          '.Tab': { border: '1px solid #e5e7eb', boxShadow: 'none' },
+          '.Tab--selected': { border: '1px solid #00b964', boxShadow: '0 0 0 1px #00b964' }
         }
       }
     });
 
     paymentElement = elements.create('payment', {
       layout: 'tabs',
-      wallets: {
-        applePay: 'auto',
-        googlePay: 'auto'
-      }
+      wallets: { applePay: 'auto', googlePay: 'auto' }
     });
 
     paymentElement.mount('#payment-element');
@@ -106,8 +95,8 @@ async function initCheckout() {
       e.preventDefault();
       if (submitBtn.disabled) return;
 
-      var email = emailInput?.value?.trim() || '';
-      var name = nameInput?.value?.trim() || '';
+      const email = emailInput?.value?.trim() || '';
+      const name = nameInput?.value?.trim() || '';
 
       if (!email || !email.includes('@')) {
         if (errorEl) {
@@ -122,7 +111,7 @@ async function initCheckout() {
       if (btnText) btnText.textContent = submitBtn.dataset.processing || 'Processing...';
       if (errorEl) errorEl.classList.add('hidden');
 
-      var submitResult = await elements.submit();
+      const submitResult = await elements.submit();
       if (submitResult.error) {
         if (errorEl) {
           errorEl.textContent = submitResult.error.message;
@@ -135,18 +124,18 @@ async function initCheckout() {
       }
 
       try {
-        var response = await fetch('/api/create-payment', {
+        const response = await fetch('/api/create-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({})
         });
 
-        var data = await response.json();
+        const data = await response.json();
         if (!data.clientSecret) throw new Error(data.error || 'Payment setup failed');
 
-        var paymentIntentId = data.paymentIntentId;
+        const paymentIntentId = data.paymentIntentId;
 
-        var confirmResult = await stripe.confirmPayment({
+        const confirmResult = await stripe.confirmPayment({
           elements,
           clientSecret: data.clientSecret,
           confirmParams: {
@@ -172,13 +161,13 @@ async function initCheckout() {
           return;
         }
 
-        var confirmResponse = await fetch('/api/confirm-payment', {
+        const confirmResponse = await fetch('/api/confirm-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ paymentIntentId, email, billingName: name })
         });
 
-        var confirmData = await confirmResponse.json();
+        const confirmData = await confirmResponse.json();
 
         if (confirmData.success && confirmData.redirectUrl) {
           window.location.href = confirmData.redirectUrl;
@@ -199,21 +188,21 @@ async function initCheckout() {
 }
 
 async function handle3DSReturn() {
-  var params = new URLSearchParams(window.location.search);
-  var piId = params.get('payment_intent');
-  var status = params.get('redirect_status');
+  const params = new URLSearchParams(window.location.search);
+  const piId = params.get('payment_intent');
+  const status = params.get('redirect_status');
   if (!piId || !status) return false;
 
   window.history.replaceState({}, document.title, window.location.pathname);
 
   if (status === 'succeeded') {
     try {
-      var resp = await fetch('/api/confirm-payment', {
+      const resp = await fetch('/api/confirm-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ paymentIntentId: piId })
       });
-      var data = await resp.json();
+      const data = await resp.json();
       if (data.success && data.redirectUrl) {
         window.location.href = data.redirectUrl;
       }
@@ -223,7 +212,7 @@ async function handle3DSReturn() {
 }
 
 async function boot() {
-  var handled = await handle3DSReturn();
+  const handled = await handle3DSReturn();
   if (!handled) {
     initCheckout();
   }

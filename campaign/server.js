@@ -67,7 +67,9 @@ const JourneyLog = createJourneyLog(fmtCurrency);
 
 function generateFBP() {
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 11) + Math.random().toString(36).substring(2, 11);
+  const high = Math.floor(Math.random() * 1e10);
+  const low = Math.floor(Math.random() * 1e9);
+  const random = `${high}${low.toString().padStart(9, '0')}`;
   return `fb.1.${timestamp}.${random}`;
 }
 
@@ -116,13 +118,15 @@ app.use(cookieParser());
 app.use((req, res, next) => {
   if (!req.cookies._fbp) {
     const fbp = generateFBP();
+    const isProd = process.env.NODE_ENV === 'production';
     res.cookie('_fbp', fbp, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'None',
+      secure: isProd,
+      sameSite: isProd ? 'None' : 'Lax',
       path: '/'
     });
+    req.cookies._fbp = fbp;
   }
   next();
 });

@@ -8,6 +8,7 @@
   <% if (paymentProcessor === 'stripe') { %>
   <script src="https://js.stripe.com/v3/"></script>
   <% } %>
+  <% if (metaPixelId) { %>
   <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -17,11 +18,9 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1533961664530010');
-    fbq('track', 'PageView');
+    fbq('init', '<%= metaPixelId %>');
   </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1533961664530010&ev=PageView&noscript=1"/></noscript>
+  <% } %>
   <style>
     html { height: 100%; background: #f7f8fa; }
     body { min-height: 100%; background: #f7f8fa; }
@@ -233,6 +232,9 @@
   <input type="hidden" id="payment-amount" value="<%= Math.round(totalAmount * 100) %>">
   <input type="hidden" id="payment-currency" value="<%= (donor.currency || 'eur').toLowerCase() %>">
   <input type="hidden" id="locale-email-error" value="<%= locale.emailError %>">
+  <% if (metaPixelId) { %>
+  <input type="hidden" id="payment-pixel-id" value="<%= metaPixelId %>">
+  <% } %>
   <% if (paymentProcessor === 'stripe') { %>
   <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
   <input type="hidden" id="payment-locale" value="<%= locale.stripeLocale || donor.lang || 'auto' %>">
@@ -241,6 +243,7 @@
   <script src="https://pay.google.com/gp/p/js/pay.js"></script>
   <script src="/js/paypal-sdk.js"></script>
   <script src="/js/paypal-ui.js"></script>
+  <script src="/js/paypal-tracking.js"></script>
   <script src="/js/paypal-card-fields.js"></script>
   <script src="/js/paypal-buttons.js"></script>
   <script src="/js/paypal-apple-pay.js"></script>

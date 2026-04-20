@@ -110,6 +110,13 @@ async function trackEvent(eventName, eventData, userData, clientInfo) {
 }
 
 async function trackPurchase(paymentData, trackingData, clientInfo) {
+  if (!trackingData || !trackingData.eventId) {
+    throw new Error('trackPurchase requires trackingData.eventId for dedup integrity');
+  }
+  if (!trackingData.sourceUrl) {
+    throw new Error('trackPurchase requires trackingData.sourceUrl');
+  }
+
   const { firstName, lastName } = parseName(paymentData.cardHolderName || paymentData.donorNameReal);
 
   const userData = {
@@ -124,8 +131,8 @@ async function trackPurchase(paymentData, trackingData, clientInfo) {
   };
 
   const eventData = {
-    eventId: trackingData.eventId || paymentData.captureId,
-    sourceUrl: trackingData.sourceUrl || 'https://hoperise.online/',
+    eventId: trackingData.eventId,
+    sourceUrl: trackingData.sourceUrl,
     value: paymentData.amount,
     currency: paymentData.currency || 'EUR',
     contentName: `${paymentData.donationType === 'monthly' ? 'Monthly' : 'One-time'} Donation`,

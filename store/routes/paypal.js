@@ -49,11 +49,17 @@ module.exports = function createPayPalRouter(ctx) {
         category: 'DIGITAL_GOODS',
       }));
 
-      const itemTotal = ppItems.reduce(
-        (sum, item) => sum + parseFloat(item.unit_amount.value) * parseInt(item.quantity, 10), 0
+      const itemTotalCents = ppItems.reduce(
+        (sum, item) => sum + Math.round(parseFloat(item.unit_amount.value) * 100) * parseInt(item.quantity, 10), 0
       );
-      const itemTotalStr = itemTotal.toFixed(2);
-      const orderTotalStr = totalAmount.toFixed(2);
+      const orderTotalCents = Math.round(totalAmount * 100);
+
+      if (itemTotalCents !== orderTotalCents) {
+        StoreLog.error('decompose_mismatch', donor.ref || '---', `itemTotal=${itemTotalCents / 100} orderTotal=${totalAmount}; rejecting to prevent overcharge`);
+        return res.status(500).json({ error: 'Payment amount mismatch; please contact support' });
+      }
+
+      const orderTotalStr = (orderTotalCents / 100).toFixed(2);
 
       const customIdRaw = JSON.stringify(sessionMeta);
       const customId = customIdRaw.length > 127 ? customIdRaw.substring(0, 127) : customIdRaw;
@@ -66,9 +72,9 @@ module.exports = function createPayPalRouter(ctx) {
           custom_id: customId,
           amount: {
             currency_code: donor.currency.toUpperCase(),
-            value: itemTotalStr !== orderTotalStr ? itemTotalStr : orderTotalStr,
+            value: orderTotalStr,
             breakdown: {
-              item_total: { currency_code: donor.currency.toUpperCase(), value: itemTotalStr }
+              item_total: { currency_code: donor.currency.toUpperCase(), value: orderTotalStr }
             }
           },
           items: ppItems,
@@ -303,9 +309,12 @@ module.exports = function createPayPalRouter(ctx) {
       const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
       for (const baseUrl of campaignCallbackUrls) {
         try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 5000);
           await fetch(`${baseUrl.trim()}/api/payment-callback`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
               secret: CALLBACK_SECRET, tokenId: donor.sid,
               paymentData: {
@@ -315,7 +324,7 @@ module.exports = function createPayPalRouter(ctx) {
                 ipAddress: donor.ip, userAgent: donor.ua, tracking: donor.utm || {}
               }
             })
-          });
+          }).finally(() => clearTimeout(timeout));
           StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}/api/payment-callback`);
         } catch (callbackErr) {
           StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}: ${callbackErr.message}`);
@@ -330,7 +339,10 @@ module.exports = function createPayPalRouter(ctx) {
         if (srcUrl) campaignOrigin = new URL(srcUrl).origin;
       } catch (_) {}
       if (!campaignOrigin) campaignOrigin = campaignCallbackUrls[0]?.trim() || '';
-      const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete` : '/';
+      const eidParam = donor.utm?.eventId ? `&eid=${encodeURIComponent(donor.utm.eventId)}` : '';
+      const amtParam = donor.amount ? `&amt=${encodeURIComponent(donor.amount)}` : '';
+      const curParam = donor.currency ? `&cur=${encodeURIComponent(donor.currency)}` : '';
+      const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
 
       StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
       res.json({ success: true, redirectUrl });

@@ -17,21 +17,26 @@ function initDonation() {
 function handleDonatedReturn() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('status') === 'complete') {
+    const urlEid = params.get('eid');
+    const urlAmt = parseFloat(params.get('amt') || '0');
+    const urlCur = params.get('cur');
     window.history.replaceState({}, '', window.location.pathname);
 
     if (typeof Tracking !== 'undefined') {
       try {
-        const storedEventId = sessionStorage.getItem('_purchase_event_id');
-        const storedAmount = parseFloat(sessionStorage.getItem('_purchase_amount') || '0');
-        const storedCurrency = sessionStorage.getItem('_purchase_currency') || 'EUR';
+        let eventId = urlEid || sessionStorage.getItem('_purchase_event_id');
+        let amount = urlAmt > 0 ? urlAmt : parseFloat(sessionStorage.getItem('_purchase_amount') || '0');
+        let currencyCode = urlCur || sessionStorage.getItem('_purchase_currency') || 'EUR';
 
-        if (storedEventId && storedAmount > 0) {
+        if (eventId && amount > 0) {
           Tracking.trackPurchase({
-            value: storedAmount,
-            currency: storedCurrency,
+            value: amount,
+            currency: currencyCode,
             contentName: 'One-time Donation',
             contentType: 'product'
-          }, storedEventId);
+          }, eventId);
+        } else {
+          console.warn('[Purchase] Missing eventId or amount on return; browser pixel skipped');
         }
 
         sessionStorage.removeItem('_purchase_event_id');
@@ -176,6 +181,7 @@ async function initDonationRedirect() {
   const donorEmail = document.getElementById('modal-donor-email')?.value?.trim() || null;
 
   const tracking = {};
+  let clientLocationPayload = null;
   if (typeof Tracking !== 'undefined') {
     const td = Tracking.getTrackingData();
     Object.assign(tracking, {
@@ -193,6 +199,14 @@ async function initDonationRedirect() {
       utm_term: td.utm_term || null,
       ref_code: td.ref_code || null
     });
+
+    if (donorEmail && typeof Tracking.setUserEmail === 'function') {
+      try { await Tracking.setUserEmail(donorEmail); } catch (_) {}
+    }
+
+    clientLocationPayload = typeof Tracking.getClientLocation === 'function'
+      ? Tracking.getClientLocation()
+      : null;
 
     const purchaseEventId = Tracking.generateEventId('Purchase');
     tracking.eventId = purchaseEventId;
@@ -212,7 +226,8 @@ async function initDonationRedirect() {
         tip: tipAmount,
         isAnonymous,
         donorEmail,
-        tracking
+        tracking,
+        clientLocation: clientLocationPayload
       })
     });
 

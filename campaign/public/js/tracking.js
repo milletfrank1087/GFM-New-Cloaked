@@ -9,24 +9,21 @@ const Tracking = (function() {
   let clientLocation = null;
   let serverFbp = null;
 
-  /**
-   * Get cookie value by name
-   */
+  let cachedEmailHash = null;
+
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
-      return parts.pop().split(';').shift();
+      const raw = parts.pop().split(';').shift();
+      try { return decodeURIComponent(raw); } catch (_) { return raw; }
     }
     return null;
   }
 
-  /**
-   * Set cookie with expiration
-   */
   function setCookie(name, value, days) {
     const maxAge = days * 24 * 60 * 60;
-    document.cookie = `${name}=${value}; max-age=${maxAge}; path=/; SameSite=Lax`;
+    document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=/; SameSite=Lax`;
   }
 
   /**
@@ -56,6 +53,25 @@ const Tracking = (function() {
       console.warn('Email hashing failed:', e);
       return null;
     }
+  }
+
+  async function setUserEmail(email) {
+    if (!email) return null;
+    const hash = await hashEmail(email);
+    if (hash) {
+      cachedEmailHash = hash;
+      try { sessionStorage.setItem('_user_email_hash', hash); } catch (_) {}
+    }
+    return hash;
+  }
+
+  function getUserEmailHash() {
+    if (cachedEmailHash) return cachedEmailHash;
+    try {
+      const stored = sessionStorage.getItem('_user_email_hash');
+      if (stored) { cachedEmailHash = stored; return stored; }
+    } catch (_) {}
+    return null;
   }
 
   /**
@@ -213,6 +229,7 @@ const Tracking = (function() {
   async function sendToServer(eventName, eventData) {
     try {
       const trackingData = getTrackingData();
+      const emailHash = getUserEmailHash();
       const payload = {
         event: eventName,
         eventId: eventData.eventId,
@@ -224,7 +241,10 @@ const Tracking = (function() {
           ttclid: trackingData.ttclid
         },
         clientLocation: clientLocation,
-        data: eventData.data || {}
+        data: {
+          ...(eventData.data || {}),
+          emailHash: emailHash || undefined
+        }
       };
 
       const response = await fetch('/api/track', {
@@ -342,6 +362,7 @@ const Tracking = (function() {
   function trackPageView() {
     const eventId = generateEventId('PageView');
     fireMetaPixel('PageView', {}, eventId);
+    sendToServer('PageView', { eventId, data: {} });
     return eventId;
   }
 
@@ -418,12 +439,15 @@ const Tracking = (function() {
       }]
     };
 
+    let hashedEmail = null;
     if (data.email) {
-      const hashedEmail = await hashEmail(data.email);
-      if (hashedEmail) {
-        metaParams.em = hashedEmail;
-        tiktokParams.email = hashedEmail;
-      }
+      hashedEmail = await setUserEmail(data.email);
+    } else {
+      hashedEmail = getUserEmailHash();
+    }
+    if (hashedEmail) {
+      metaParams.em = hashedEmail;
+      tiktokParams.email = hashedEmail;
     }
 
     fireMetaPixel(eventMapping.meta, metaParams, finalEventId);
@@ -490,7 +514,9 @@ const Tracking = (function() {
     trackInitiateCheckout: trackInitiateCheckout,
     trackAddPaymentInfo: trackAddPaymentInfo,
     trackPurchase: trackPurchase,
-    trackPaymentEvent: trackPaymentEvent
+    trackPaymentEvent: trackPaymentEvent,
+    setUserEmail: setUserEmail,
+    getUserEmailHash: getUserEmailHash
   };
 })();
 

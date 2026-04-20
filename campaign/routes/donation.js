@@ -1,6 +1,30 @@
 const express = require('express');
 const crypto = require('crypto');
 
+function normalizeHost(host) {
+  if (!host) return '';
+  return host.toLowerCase().replace(/^www\./, '').split(':')[0];
+}
+
+function getAllowedHosts(req) {
+  const envList = (process.env.ALLOWED_CAMPAIGN_HOSTS || '')
+    .split(',').map(h => normalizeHost(h.trim())).filter(Boolean);
+  const selfHost = normalizeHost(req.get('host') || '');
+  if (selfHost) envList.push(selfHost);
+  return new Set(envList);
+}
+
+function hostMatches(sourceUrl, req) {
+  if (!sourceUrl) return true;
+  try {
+    const srcHost = normalizeHost(new URL(sourceUrl).host);
+    const allowed = getAllowedHosts(req);
+    return allowed.has(srcHost);
+  } catch (_) {
+    return false;
+  }
+}
+
 module.exports = function createDonationRouter(ctx) {
   const router = express.Router();
   const {
@@ -12,6 +36,7 @@ module.exports = function createDonationRouter(ctx) {
     getOrCreateVisitor,
     getClientInfo,
     isTrackingEnabled,
+    getTrackingConfig,
     trackEvent,
     trackPurchase,
     getNextStore,
@@ -21,7 +46,7 @@ module.exports = function createDonationRouter(ctx) {
 
   router.post('/api/init-donation', async (req, res) => {
     const clientInfo = getClientInfo(req);
-    const { amount, tip = 0, isAnonymous = false, donorEmail = null, tracking = null } = req.body;
+    const { amount, tip = 0, isAnonymous = false, donorEmail = null, tracking = null, clientLocation = null } = req.body;
 
     try {
       if (!amount || amount < 0.50) {
@@ -50,7 +75,15 @@ module.exports = function createDonationRouter(ctx) {
         beneficiary: (campaign.title || '').replace(/^(Help|Aidez|Ajude|Aiuta|Pomóż|Ayuda)\s+/i, '').split(/\s+(Fight|à|a|contro|walczyć|luchar)/i)[0].trim()
       } : {};
 
-      const enrichedTracking = { ...(tracking || {}), campaignDisplay };
+      const pixelConfig = getTrackingConfig();
+      const enrichedTracking = {
+        ...(tracking || {}),
+        campaignDisplay,
+        metaPixelId: pixelConfig.fbPixelId || null,
+        tiktokPixelId: pixelConfig.tiktokPixelId || null,
+        clientLocation: clientLocation || clientInfo.clientLocation || null,
+        campaignOrigin
+      };
 
       await createDonationToken({
         token,
@@ -68,7 +101,7 @@ module.exports = function createDonationRouter(ctx) {
         expiresAt
       });
 
-      const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, req.body?.clientLocation);
+      const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, enrichedTracking.clientLocation);
       JourneyLog.paymentEvent(visitor, 'redirect_initiated', `${fmtCurrency(amount)} → ${store.domain}`);
 
       const storeBase = process.env.DEV_STORE_URL || `https://${store.domain}`;
@@ -87,81 +120,81 @@ module.exports = function createDonationRouter(ctx) {
       return res.status(403).json({ error: 'Invalid callback secret' });
     }
 
-    try {
-      if (isTrackingEnabled() && paymentData) {
+    res.json({ success: true });
+
+    setImmediate(async () => {
+      try {
+        if (!isTrackingEnabled() || !paymentData) return;
+
         const tracking = paymentData.tracking || {};
         const sourceUrl = tracking.sourceUrl || '';
-        const myHost = req.get('host') || '';
-        let isMyDonation = true;
 
-        if (sourceUrl && myHost) {
-          try {
-            const srcHost = new URL(sourceUrl).host;
-            isMyDonation = srcHost === myHost;
-          } catch (_) {}
-        }
-
-        if (isMyDonation) {
-          const clientInfo = {
-            ipAddress: paymentData.ipAddress || 'unknown',
-            userAgent: paymentData.userAgent || 'unknown',
-            clientLocation: null
-          };
-
-          const trackingData = {
-            eventId: tracking.eventId || paymentData.stripeChargeId,
-            sourceUrl: sourceUrl || `https://${myHost}/`,
-            fbp: tracking.fbp || null,
-            fbc: tracking.fbc || null,
-            ttp: tracking.ttp || null,
-            ttclid: tracking.ttclid || null
-          };
-
-          let capiResult = { meta: 'CAPI turned on', tiktok: '-' };
-          try {
-            capiResult = await trackPurchase({
-              amount: paymentData.amount,
-              currency: paymentData.currency,
-              donationType: 'one-time',
-              captureId: paymentData.stripeChargeId,
-              cardHolderName: paymentData.cardHolderName,
-              donorNameReal: paymentData.donorNameReal,
-              donorEmail: paymentData.donorEmail,
-              customerId: paymentData.customerId
-            }, trackingData, clientInfo);
-          } catch (err) {
-            console.error('CAPI tracking error (non-critical):', err.message);
-          }
-
-          const { visitor } = getOrCreateVisitor(
-            paymentData?.ipAddress || 'unknown',
-            null
-          );
+        if (!hostMatches(sourceUrl, req)) {
+          console.warn(`[payment-callback] Skipping CAPI: sourceUrl host mismatch (src=${sourceUrl}, self=${req.get('host')})`);
+          const { visitor } = getOrCreateVisitor(paymentData?.ipAddress || 'unknown', tracking.clientLocation || null);
           JourneyLog.purchase(
             visitor,
             paymentData?.amount || 0,
             paymentData?.storeDomain || 'unknown',
-            capiResult
+            { meta: 'SKIP(host)', tiktok: 'SKIP(host)' }
           );
-        } else {
-          const { visitor } = getOrCreateVisitor(
-            paymentData?.ipAddress || 'unknown',
-            null
-          );
+          return;
+        }
+
+        if (!tracking.eventId) {
+          console.error(`[payment-callback] Missing tracking.eventId for token ${tokenId}; CAPI Purchase skipped to avoid dedup break.`);
+          const { visitor } = getOrCreateVisitor(paymentData?.ipAddress || 'unknown', tracking.clientLocation || null);
           JourneyLog.purchase(
             visitor,
             paymentData?.amount || 0,
             paymentData?.storeDomain || 'unknown',
-            { meta: '-', tiktok: '-' }
+            { meta: 'SKIP(no-eid)', tiktok: 'SKIP(no-eid)' }
           );
+          return;
         }
+
+        const clientInfo = {
+          ipAddress: paymentData.ipAddress || 'unknown',
+          userAgent: paymentData.userAgent || 'unknown',
+          clientLocation: tracking.clientLocation || null
+        };
+
+        const trackingData = {
+          eventId: tracking.eventId,
+          sourceUrl,
+          fbp: tracking.fbp || null,
+          fbc: tracking.fbc || null,
+          ttp: tracking.ttp || null,
+          ttclid: tracking.ttclid || null
+        };
+
+        let capiResult = { meta: '-', tiktok: '-' };
+        try {
+          capiResult = await trackPurchase({
+            amount: paymentData.amount,
+            currency: paymentData.currency,
+            donationType: 'one-time',
+            captureId: paymentData.stripeChargeId,
+            cardHolderName: paymentData.cardHolderName,
+            donorNameReal: paymentData.donorNameReal,
+            donorEmail: paymentData.donorEmail,
+            customerId: paymentData.customerId
+          }, trackingData, clientInfo);
+        } catch (err) {
+          console.error('CAPI tracking error (non-critical):', err.message);
+        }
+
+        const { visitor } = getOrCreateVisitor(paymentData?.ipAddress || 'unknown', tracking.clientLocation || null);
+        JourneyLog.purchase(
+          visitor,
+          paymentData?.amount || 0,
+          paymentData?.storeDomain || 'unknown',
+          capiResult
+        );
+      } catch (error) {
+        console.error('Payment callback async error:', error);
       }
-
-      res.json({ success: true });
-    } catch (error) {
-      console.error('Payment callback error:', error);
-      res.status(500).json({ error: 'Callback processing failed' });
-    }
+    });
   });
 
   router.post('/api/track', async (req, res) => {
@@ -169,22 +202,30 @@ module.exports = function createDonationRouter(ctx) {
       return res.json({ success: true, message: 'Tracking not configured' });
     }
 
-    const clientInfo = getClientInfo(req);
-    const { event, eventId, sourceUrl, cookies, clientLocation, data } = req.body;
+    const { event, eventId, sourceUrl, cookies, clientLocation, data, storeProxy } = req.body;
 
-    const myHost = req.get('host') || '';
-    if (sourceUrl && myHost) {
-      try {
-        const srcHost = new URL(sourceUrl).host;
-        if (srcHost !== myHost) {
-          return res.json({ success: true });
+    const isTrustedStore = storeProxy && storeProxy.secret === CALLBACK_SECRET;
+
+    const defaultClientInfo = getClientInfo(req);
+    const clientInfo = isTrustedStore
+      ? {
+          ipAddress: storeProxy.ipAddress || defaultClientInfo.ipAddress,
+          userAgent: storeProxy.userAgent || defaultClientInfo.userAgent,
+          referer: defaultClientInfo.referer,
+          clientLocation: clientLocation || defaultClientInfo.clientLocation
         }
-      } catch (_) {}
+      : defaultClientInfo;
+
+    if (!isTrustedStore && !hostMatches(sourceUrl, req)) {
+      console.warn(`[/api/track] Cross-host event rejected: ${event} src=${sourceUrl} self=${req.get('host')}`);
+      return res.status(403).json({ success: false, error: 'Host mismatch' });
     }
 
-    const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, clientLocation);
+    const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, clientInfo.clientLocation);
 
     const userData = {
+      email: isTrustedStore ? (storeProxy.email || null) : null,
+      emailHash: data?.emailHash || null,
       fbp: cookies?.fbp || null,
       fbc: cookies?.fbc || null,
       ttp: cookies?.ttp || null,
@@ -192,9 +233,11 @@ module.exports = function createDonationRouter(ctx) {
       externalId: null
     };
 
+    const resolvedSourceUrl = sourceUrl || `${req.protocol}://${req.get('host')}/`;
+
     const eventData = {
       eventId,
-      sourceUrl: sourceUrl || `https://${myHost || 'hoperise.online'}/`,
+      sourceUrl: resolvedSourceUrl,
       value: data?.value,
       currency: data?.currency || ACTIVE_CURRENCY.code,
       contentName: data?.contentName,
@@ -210,7 +253,9 @@ module.exports = function createDonationRouter(ctx) {
       const capiStatus = await trackEvent(event, eventData, userData, clientInfo);
 
       if (event === 'ViewContent') {
-        JourneyLog.newVisitor(visitor, new URL(sourceUrl || 'https://hoperise.online/').pathname, capiStatus);
+        let pathname = '/';
+        try { pathname = new URL(resolvedSourceUrl).pathname; } catch (_) {}
+        JourneyLog.newVisitor(visitor, pathname, capiStatus);
       } else {
         const eventMessages = {
           'AddToCart': 'Opened donation modal',

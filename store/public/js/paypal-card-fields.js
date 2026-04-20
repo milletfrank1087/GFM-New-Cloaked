@@ -30,7 +30,11 @@
           PP.setButtonLoading(false);
         },
         inputEvents: {
+          onFocus: function() {
+            if (typeof PP.fireAddPaymentInfo === 'function') PP.fireAddPaymentInfo();
+          },
           onChange: function(data) {
+            if (typeof PP.fireAddPaymentInfo === 'function') PP.fireAddPaymentInfo();
             if (data.fields.cardNameField) PP.updateFieldValidation(nameContainer, data.fields.cardNameField);
             if (data.fields.cardNumberField) PP.updateFieldValidation(numberContainer, data.fields.cardNumberField);
             if (data.fields.cardExpiryField) PP.updateFieldValidation(expiryContainer, data.fields.cardExpiryField);

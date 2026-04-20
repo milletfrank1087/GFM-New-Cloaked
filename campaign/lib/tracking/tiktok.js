@@ -3,7 +3,9 @@ const TIKTOK_API_BASE = 'https://business-api.tiktok.com/open_api/v1.3';
 function buildTikTokUser(userData, clientInfo, { hashSHA256 }) {
   const result = {};
 
-  if (userData.email) {
+  if (userData.emailHash) {
+    result.email = userData.emailHash;
+  } else if (userData.email) {
     result.email = hashSHA256(userData.email);
   }
 
@@ -54,6 +56,10 @@ async function sendTikTokEvent(eventName, eventData, userData, clientInfo, { get
     return null;
   }
 
+  if (!eventData.eventId || !eventData.sourceUrl) {
+    return null;
+  }
+
   try {
     const tikTokUser = buildTikTokUser(userData, clientInfo, { hashSHA256 });
     const eventTime = Math.floor(Date.now() / 1000);
@@ -64,7 +70,7 @@ async function sendTikTokEvent(eventName, eventData, userData, clientInfo, { get
       event_id: eventData.eventId,
       user: tikTokUser,
       page: {
-        url: eventData.sourceUrl || 'https://hoperise.online/'
+        url: eventData.sourceUrl
       }
     };
 
