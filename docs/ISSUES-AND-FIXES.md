@@ -98,9 +98,12 @@ PAYMENT_FAIL | ref:glioblastoma-mariana | amount_details (4999) != amount (5000)
 
 ## Known Remaining Issues
 
-1. **CALLBACK_FAIL spam**: Store tries to callback to ALL `CAMPAIGN_CALLBACK_URLS` including non-existent campaign servers. Non-critical but noisy.
-2. **Cross-domain redirect friction**: The campaign→store redirect remains the primary CPA risk factor. See `REDIRECT-OPTIMIZATION.md`.
-3. **CPA still elevated**: Even with fixes, the redirect adds friction vs. the old same-domain setup. See `CPA-ANALYSIS.md`.
+1. **Cross-domain redirect friction**: The campaign→store redirect remains the primary CPA risk factor. See `REDIRECT-OPTIMIZATION.md`.
+2. **CPA still elevated**: Even with fixes, the redirect adds friction vs. the old same-domain setup. See `CPA-ANALYSIS.md`.
+
+### Fixed in April 2026
+
+- **Fan-out callback bug (P0)**: Store was broadcasting every track-interaction and payment-callback to all `CAMPAIGN_CALLBACK_URLS` entries. Because campaign `/api/track` bypasses the `hostMatches` check when the store-proxy secret matches, every unrelated language campaign would have processed the event as its own — polluting Meta/TikTok pixel attribution across languages once more than one campaign is deployed. Fixed by resolving a single target campaign URL from `donor.utm.sourceUrl` (origin-host match) via `store/lib/campaign-routing.js`. Applied to `/api/track-interaction`, Stripe `/api/payment/confirm`, and PayPal `/api/paypal/capture`.
 
 ---
 

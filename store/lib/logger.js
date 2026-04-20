@@ -32,6 +32,7 @@ const STORE_EVENTS = {
   callback_failed:  { emoji: '⚠️ ', type: 'CALLBACK_FAIL' },
   redirect:         { emoji: '🔄', type: 'REDIRECT' },
   track_proxied:    { emoji: '📝', type: 'TRACK_PROXIED' },
+  track_proxy_failed: { emoji: '❌', type: 'TRACK_PROXY_FAIL' },
   store_checkout:   { emoji: '🛒', type: 'STORE_ORDER' },
   webhook_ok:       { emoji: '🔔', type: 'WEBHOOK_OK' },
   webhook_fail:     { emoji: '🔔', type: 'WEBHOOK_FAIL' },

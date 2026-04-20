@@ -3,6 +3,7 @@ const router = express.Router();
 const { decomposeAmount } = require('../lib/decompose');
 const { CHECKOUT_LOCALE, CURRENCY_SYMBOLS } = require('../lib/locale');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
+const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 
 module.exports = function createTokenRouter(ctx) {
   const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN, CALLBACK_SECRET } = ctx;
@@ -158,42 +159,44 @@ module.exports = function createTokenRouter(ctx) {
         || 'unknown';
       const donorUa = donor.ua || req.headers['user-agent'] || 'unknown';
 
-      const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
-      for (const baseUrl of campaignCallbackUrls) {
-        try {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 5000);
-          await fetch(`${baseUrl.trim()}/api/track`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
-            body: JSON.stringify({
-              event,
-              eventId,
-              sourceUrl: storeSourceUrl,
-              cookies: {
-                fbp: tracking.fbp || null,
-                fbc: tracking.fbc || null,
-                ttp: tracking.ttp || null,
-                ttclid: tracking.ttclid || null
-              },
-              clientLocation: tracking.clientLocation || null,
-              data: data || {},
-              storeProxy: {
-                secret: CALLBACK_SECRET,
-                ipAddress: donorIp,
-                userAgent: donorUa,
-                email: donor.email || null,
-                storeDomain: STORE_DOMAIN
-              }
-            })
-          }).finally(() => clearTimeout(timeout));
-        } catch (err) {
-          StoreLog.error('track_proxy_failed', donor.ref || '---', `${event} → ${extractOriginHost(baseUrl)}: ${err.message}`);
-        }
+      const campaignUrl = resolveCampaignCallbackUrl(donor, donor.ref);
+      if (!campaignUrl) {
+        return res.json({ success: false, error: 'no campaign route' });
       }
 
-      StoreLog.event('track_proxied', donor.ref || '---', `${event} → campaign CAPI`);
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        await fetch(`${campaignUrl}/api/track`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            event,
+            eventId,
+            sourceUrl: storeSourceUrl,
+            cookies: {
+              fbp: tracking.fbp || null,
+              fbc: tracking.fbc || null,
+              ttp: tracking.ttp || null,
+              ttclid: tracking.ttclid || null
+            },
+            clientLocation: tracking.clientLocation || null,
+            data: data || {},
+            storeProxy: {
+              secret: CALLBACK_SECRET,
+              ipAddress: donorIp,
+              userAgent: donorUa,
+              email: donor.email || null,
+              storeDomain: STORE_DOMAIN
+            }
+          })
+        }).finally(() => clearTimeout(timeout));
+        StoreLog.event('track_proxied', donor.ref || '---', `${event} → ${extractOriginHost(campaignUrl)}`);
+      } catch (err) {
+        StoreLog.error('track_proxy_failed', donor.ref || '---', `${event} → ${extractOriginHost(campaignUrl)}: ${err.message}`);
+      }
+
       res.json({ success: true });
     } catch (_) {
       res.json({ success: false });

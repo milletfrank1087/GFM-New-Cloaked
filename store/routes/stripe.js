@@ -1,6 +1,7 @@
 const express = require('express');
 const { decomposeAmount } = require('../lib/decompose');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
+const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 
 module.exports = function createStripeRouter(ctx) {
   const { stripe, supabase, storeConfig, STORE_DOMAIN, CALLBACK_SECRET } = ctx;
@@ -336,12 +337,12 @@ module.exports = function createStripeRouter(ctx) {
         }
       });
 
-      const campaignCallbackUrls = (process.env.CAMPAIGN_CALLBACK_URLS || '').split(',').filter(Boolean);
-      for (const baseUrl of campaignCallbackUrls) {
+      const campaignUrl = resolveCampaignCallbackUrl(donor, donor.ref);
+      if (campaignUrl) {
         try {
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 5000);
-          await fetch(`${baseUrl.trim()}/api/payment-callback`, {
+          await fetch(`${campaignUrl}/api/payment-callback`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             signal: controller.signal,
@@ -357,10 +358,12 @@ module.exports = function createStripeRouter(ctx) {
               }
             })
           }).finally(() => clearTimeout(timeout));
-          StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}/api/payment-callback`);
+          StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}/api/payment-callback`);
         } catch (callbackErr) {
-          StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(baseUrl)}: ${callbackErr.message}`);
+          StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}: ${callbackErr.message}`);
         }
+      } else {
+        StoreLog.error('callback_failed', donor.ref || '---', 'no campaign route for payment-callback');
       }
 
       res.clearCookie('__session', { path: '/' });
@@ -370,7 +373,7 @@ module.exports = function createStripeRouter(ctx) {
         const srcUrl = (donor.utm && donor.utm.sourceUrl) ? donor.utm.sourceUrl : '';
         if (srcUrl) campaignOrigin = new URL(srcUrl).origin;
       } catch (_) {}
-      if (!campaignOrigin) campaignOrigin = campaignCallbackUrls[0]?.trim() || '';
+      if (!campaignOrigin) campaignOrigin = campaignUrl || '';
       const eidParam = donor.utm?.eventId ? `&eid=${encodeURIComponent(donor.utm.eventId)}` : '';
       const amtParam = donor.amount ? `&amt=${encodeURIComponent(donor.amount)}` : '';
       const curParam = donor.currency ? `&cur=${encodeURIComponent(donor.currency)}` : '';
