@@ -15,6 +15,7 @@
 
   PP.handlePaymentSuccess = function(data) {
     if (data.redirectUrl) {
+      try { if (typeof PP.firePurchaseBrowser === 'function') PP.firePurchaseBrowser(); } catch (_) {}
       window.location.href = data.redirectUrl;
     }
   };

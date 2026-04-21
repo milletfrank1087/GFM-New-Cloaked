@@ -21,7 +21,14 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '<%= metaPixelId %>');
+    (function(){
+      var __am = {};
+      <% if (donorExternalId) { %>__am.external_id = '<%= donorExternalId %>';<% } %>
+      <% if (donorCountryCode) { %>__am.country = '<%= donorCountryCode.toLowerCase() %>';<% } %>
+      <% if (donorEmail) { %>__am.em = '<%= donorEmail.toLowerCase().trim() %>';<% } %>
+      if (Object.keys(__am).length > 0) { fbq('init', '<%= metaPixelId %>', __am); }
+      else { fbq('init', '<%= metaPixelId %>'); }
+    })();
   </script>
   <% } %>
   <script>
@@ -215,6 +222,18 @@
   <input type="hidden" id="locale-email-error" value="<%= locale.emailError %>">
   <% if (metaPixelId) { %>
   <input type="hidden" id="payment-pixel-id" value="<%= metaPixelId %>">
+  <% } %>
+  <% if (purchaseEventId) { %>
+  <input type="hidden" id="payment-event-id" value="<%= purchaseEventId %>">
+  <% } %>
+  <% if (donorExternalId) { %>
+  <input type="hidden" id="payment-external-id" value="<%= donorExternalId %>">
+  <% } %>
+  <% if (donorCountryCode) { %>
+  <input type="hidden" id="payment-country" value="<%= donorCountryCode.toLowerCase() %>">
+  <% } %>
+  <% if (donorEmail) { %>
+  <input type="hidden" id="payment-donor-email" value="<%= donorEmail %>">
   <% } %>
   <% if (paymentProcessor === 'stripe') { %>
   <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">

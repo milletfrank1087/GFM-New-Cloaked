@@ -120,7 +120,11 @@ module.exports = function createTokenRouter(ctx) {
           paymentProcessor: PAYMENT_PROCESSOR,
           stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
           metaPixelId: donor.utm?.metaPixelId || null,
-          tiktokPixelId: donor.utm?.tiktokPixelId || null
+          tiktokPixelId: donor.utm?.tiktokPixelId || null,
+          purchaseEventId: donor.utm?.eventId || null,
+          donorCountryCode: donor.utm?.clientLocation?.countryCode || null,
+          donorExternalId: donor.sid || null,
+          donorEmail: donor.email || null
         });
       } catch (e) {
         StoreLog.error('checkout_view', '---', `Session parse error: ${e.message}`);
@@ -150,8 +154,10 @@ module.exports = function createTokenRouter(ctx) {
       const donor = JSON.parse(sessionCookie);
       const tracking = donor.utm || {};
 
-      const storeSourceUrl = clientSourceUrl
+      const campaignSourceUrl = tracking.sourceUrl || null;
+      const storeFallbackUrl = clientSourceUrl
         || `${req.protocol}://${req.get('host') || STORE_DOMAIN}/checkout`;
+      const attributionSourceUrl = campaignSourceUrl || storeFallbackUrl;
 
       const donorIp = donor.ip
         || req.headers['x-forwarded-for']?.split(',')[0]?.trim()
@@ -174,7 +180,7 @@ module.exports = function createTokenRouter(ctx) {
           body: JSON.stringify({
             event,
             eventId,
-            sourceUrl: storeSourceUrl,
+            sourceUrl: attributionSourceUrl,
             cookies: {
               fbp: tracking.fbp || null,
               fbc: tracking.fbc || null,

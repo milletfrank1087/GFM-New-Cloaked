@@ -17,9 +17,45 @@ function generateEventId(prefix) {
   return prefix + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
 }
 
+function updateAdvancedMatching() {
+  if (typeof fbq === 'undefined') return;
+  const pixelId = document.getElementById('payment-pixel-id')?.value;
+  if (!pixelId) return;
+  const emailField = document.getElementById('billing-email');
+  const typedEmail = emailField?.value?.trim() || '';
+  const donorEmail = document.getElementById('payment-donor-email')?.value || '';
+  const email = (typedEmail && typedEmail.includes('@')) ? typedEmail : donorEmail;
+  const externalId = document.getElementById('payment-external-id')?.value || '';
+  const country = (document.getElementById('payment-country')?.value || '').toLowerCase();
+  const am = {};
+  if (email) am.em = email.toLowerCase();
+  if (externalId) am.external_id = externalId;
+  if (country) am.country = country;
+  if (Object.keys(am).length === 0) return;
+  try { fbq('init', pixelId, am); } catch (_) {}
+}
+
+function firePurchaseBrowser() {
+  const purchaseEventId = document.getElementById('payment-event-id')?.value;
+  if (!purchaseEventId) return;
+  updateAdvancedMatching();
+  const payload = { value: paymentValueMajor, currency: paymentCurrency.toUpperCase() };
+  if (typeof fbq !== 'undefined') {
+    try {
+      fbq('track', 'Purchase', payload, { eventID: purchaseEventId });
+    } catch (_) {}
+  }
+  if (typeof ttq !== 'undefined') {
+    try {
+      ttq.track('CompletePayment', { ...payload, event_id: purchaseEventId });
+    } catch (_) {}
+  }
+}
+
 function fireAddPaymentInfo() {
   if (addPaymentInfoFired) return;
   addPaymentInfoFired = true;
+  updateAdvancedMatching();
   const eventId = generateEventId('AddPaymentInfo');
   const payload = { value: paymentValueMajor, currency: paymentCurrency.toUpperCase() };
   if (typeof fbq !== 'undefined') {
@@ -170,6 +206,7 @@ async function initCheckout() {
         const confirmData = await confirmResponse.json();
 
         if (confirmData.success && confirmData.redirectUrl) {
+          firePurchaseBrowser();
           window.location.href = confirmData.redirectUrl;
         } else {
           throw new Error(confirmData.error || 'Payment confirmation failed');
@@ -204,6 +241,7 @@ async function handle3DSReturn() {
       });
       const data = await resp.json();
       if (data.success && data.redirectUrl) {
+        firePurchaseBrowser();
         window.location.href = data.redirectUrl;
       }
     } catch (_) {}
