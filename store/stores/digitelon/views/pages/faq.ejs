@@ -1,0 +1,36 @@
+<% const pageTitle = 'FAQ'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="mb-8">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h1>
+    <p class="text-sm text-gray-400">Quick answers to common questions about our products and service.</p>
+  </div>
+
+  <div class="space-y-2">
+    ${[
+      { q: 'Which payment methods are accepted?', a: 'We accept Visa, Mastercard, American Express, Apple Pay, and Google Pay through Stripe. All transactions use 256-bit SSL encryption.' },
+      { q: 'How are products delivered?', a: 'Everything is digital. You get instant download access after payment, plus a confirmation email with links within a few minutes.' },
+      { q: 'What is the refund policy?', a: 'Because files are delivered instantly, all sales are final. If you hit a technical issue preventing access, email support within 48 hours and we will sort it out.' },
+      { q: 'Are payments secure?', a: 'Yes. All processing is handled by Stripe, which is PCI-DSS Level 1 certified. We never see or store your full card details.' },
+      { q: 'Can I use products in client work?', a: 'Absolutely. Every purchase comes with a full commercial licence. The only restriction is reselling or redistributing the original source files.' },
+      { q: 'Do you offer team discounts?', a: 'Yes. Email support@digitelon.shop with your team size and we will prepare a custom quote.' },
+      { q: 'How often do you release new products?', a: 'We publish new products and major updates roughly once a month. Subscribe to the newsletter for early-access notifications.' },
+      { q: 'Are future updates free?', a: 'Yes. Every purchase includes lifetime access to updates at no additional cost.' },
+      { q: 'What file formats are included?', a: 'Formats vary by product: PDF, XLSX, DOCX, PPTX, SVG, Figma, or Notion. The exact formats are listed on each product page.' },
+      { q: 'How do I contact support?', a: 'Visit the <a href="/contact" class="text-primary hover:underline">contact page</a> or email support@digitelon.shop. We respond within one business day.' }
+    ].map(item => '<details class="group bg-white border border-gray-200 rounded-xl overflow-hidden">' +
+      '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-gray-900 text-sm hover:text-primary transition">' +
+        '<span class="pr-4">' + item.q + '</span>' +
+        '<svg class="w-4 h-4 text-gray-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+      '</summary>' +
+      '<div class="px-4 pb-3.5 text-gray-500 text-xs leading-relaxed border-t border-gray-100 pt-3">' + item.a + '</div>' +
+    '</details>').join('')}
+  </div>
+
+  <div class="bg-gray-50 rounded-xl p-6 text-center mt-10">
+    <h3 class="text-base font-bold text-gray-900 mb-2">Still have questions?</h3>
+    <p class="text-xs text-gray-400 mb-4">Our support team is happy to help.</p>
+    <a href="/contact" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Contact Support</a>
+  </div>
+</div>
+`, store }) %>

@@ -108,7 +108,7 @@ module.exports = function createStripeRouter(ctx) {
       const intentParams = {
         amount: amountInCents,
         currency: donor.currency.toLowerCase(),
-        automatic_payment_methods: { enabled: true },
+        automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
         metadata,
         description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
         statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
@@ -437,7 +437,7 @@ module.exports = function createStripeRouter(ctx) {
       const intentParams = {
         amount: amountInCents,
         currency: 'gbp',
-        automatic_payment_methods: { enabled: true },
+        automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
         metadata: {
           [mk.storeId || 'storeId']: ctx.getStoreDbId() || '',
           [mk.storeDomain || 'storeDomain']: STORE_DOMAIN,

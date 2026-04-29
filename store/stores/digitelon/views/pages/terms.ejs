@@ -1,0 +1,62 @@
+<% const pageTitle = 'Terms of Service'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Terms of Service</h1>
+  <p class="text-xs text-gray-400 mb-8">Last updated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6 text-gray-500 text-xs leading-relaxed">
+    <p>Welcome to ${store.name}. By using our website or purchasing products you agree to the following terms.</p>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">1. Products</h2>
+      <p>${store.name} sells digital products including design assets, templates, toolkits, and educational guides. All items are delivered electronically as instant downloads after successful payment.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">2. Payment</h2>
+      <p class="mb-2">Payments are handled by Stripe, a PCI-DSS Level 1 certified processor. Prices are shown in the applicable currency and may be subject to local taxes.</p>
+      <p>We may adjust prices at any time; changes do not affect existing purchases. Your card statement will show "${store.statement_descriptor || store.name}".</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">3. Delivery</h2>
+      <p>Files are available immediately upon payment. Delivery is considered complete once the download link is accessible. Contact support within 48 hours if you cannot access your files.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">4. Refunds</h2>
+      <p>Due to instant digital delivery, all sales are final. For genuine access issues, email \${store.contact_email || 'support@' + store.domain} and we will help.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">5. Licence</h2>
+      <p class="mb-2">Each purchase grants a non-exclusive, non-transferable licence for personal and commercial use. You may:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>Use in your own projects and client work</li>
+        <li>Modify and adapt for your needs</li>
+      </ul>
+      <p class="mt-2">You may not redistribute, resell, sublicence, or share the original files.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">6. Intellectual Property</h2>
+      <p>All content, designs, and materials remain the intellectual property of ${store.name} and are protected by applicable copyright law.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">7. Limitation of Liability</h2>
+      <p>Products are provided "as is". We are not liable for indirect, incidental, or consequential damages arising from use of any product.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">8. Changes</h2>
+      <p>We may update these terms at any time. Continued use of the site constitutes acceptance of the revised terms.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">9. Contact</h2>
+      <p>Questions? Email <a href="mailto:\${store.contact_email || 'support@' + store.domain}" class="text-primary hover:underline">\${store.contact_email || 'support@' + store.domain}</a>.</p>
+    </div>
+  </div>
+</div>
+`, store }) %>

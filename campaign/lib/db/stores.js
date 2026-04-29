@@ -1,9 +1,9 @@
 const { supabase } = require('./client');
 
 const FALLBACK_STORE = {
-  id: process.env.STORE_ID || 'haven-prints',
-  domain: process.env.STORE_DOMAIN || 'havenprints.shop',
-  name: process.env.STORE_NAME || 'Haven Prints',
+  id: process.env.STORE_ID || 'digitelon',
+  domain: process.env.STORE_DOMAIN || 'digitelon.shop',
+  name: process.env.STORE_NAME || 'Digitelon',
   payment_processor: 'stripe',
   status: 'active'
 };
