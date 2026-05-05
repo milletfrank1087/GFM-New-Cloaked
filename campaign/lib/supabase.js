@@ -4,7 +4,7 @@ const { getNextStore, getStoreStats, getStoreDetail, createStore, updateStore, t
 const { getRecentRealDonations, getCampaignRealStats } = require('./db/campaigns');
 const { getAllCustomers, getCustomerDetails, deleteCustomer, toggleCustomerStatus, updateCustomerNotes } = require('./db/customers');
 const { getAllPayments, getPaymentDetails, getRecentFailures } = require('./db/payments');
-const { getAdminDashboardStats, getTimeBasedAnalytics, getDeviceBrowserAnalytics } = require('./db/analytics');
+const { getAdminDashboardStats, getTimeBasedAnalytics, getDeviceBrowserAnalytics, getDashboardOverview } = require('./db/analytics');
 
 module.exports = {
   getRecentRealDonations,
@@ -23,6 +23,7 @@ module.exports = {
   formatTimeAgo,
   getTimeBasedAnalytics,
   getDeviceBrowserAnalytics,
+  getDashboardOverview,
   createDonationToken,
   getNextStore,
   getStoreStats,

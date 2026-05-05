@@ -1,7 +1,9 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-const path = require('path');
+
+const createAdminStoresRouter = require('./admin-stores');
+const createAdminCustomersRouter = require('./admin-customers');
 
 module.exports = function createAdminRouter(ctx) {
   const router = express.Router();
@@ -11,23 +13,10 @@ module.exports = function createAdminRouter(ctx) {
     ACTIVE_CAMPAIGN,
     loadCampaignFromFile,
     getAllCampaignFiles,
-    getAdminDashboardStats,
+    getDashboardOverview,
     getAllPayments,
-    getAllCustomers,
-    getCustomerDetails,
     getPaymentDetails,
-    getRecentFailures,
-    deleteCustomer,
-    toggleCustomerStatus,
-    updateCustomerNotes,
-    getTimeBasedAnalytics,
-    getDeviceBrowserAnalytics,
-    getStoreStats,
-    getStoreDetail,
-    createStore,
-    updateStore,
-    toggleStoreStatus,
-    deleteStore
+    getRecentFailures
   } = ctx;
 
   function adminAuth(req, res, next) {
@@ -39,6 +28,27 @@ module.exports = function createAdminRouter(ctx) {
     } catch {
       res.status(401).json({ error: 'Invalid token' });
     }
+  }
+
+  function parseDashboardFilters(req) {
+    const campaignFilter = req.query.campaign || 'all';
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
+    const dateRange = (startDate && endDate) ? { startDate, endDate } : null;
+    return {
+      campaignSlug: campaignFilter === 'all' ? null : campaignFilter,
+      campaignFilter,
+      dateRange,
+      startDate,
+      endDate
+    };
+  }
+
+  function listCampaignsFromDisk() {
+    return getAllCampaignFiles().map(f => {
+      const data = JSON.parse(fs.readFileSync(f, 'utf-8'));
+      return { id: data.id, title: data.title, goal: data.goal };
+    });
   }
 
   router.post('/api/admin/login', (req, res) => {
@@ -61,208 +71,97 @@ module.exports = function createAdminRouter(ctx) {
     res.json({ authenticated: true });
   });
 
+  async function buildRecentDonors(campaignSlug, dateRange) {
+    try {
+      const recentPayments = await getAllPayments(campaignSlug);
+      const filtered = dateRange
+        ? recentPayments.filter(p =>
+            p.rawDate >= dateRange.startDate && p.rawDate <= dateRange.endDate)
+        : recentPayments;
+      return filtered.slice(0, 10).map(p => ({
+        id: p.id, name: p.name, displayName: p.displayName,
+        amount: p.amount, currency: p.currency, time: p.date,
+        initials: p.initials, color: p.color,
+        transactionId: p.stripeChargeId, cardBrand: p.cardBrand,
+        cardLastDigits: p.cardLastDigits, donationType: p.donationType,
+        isAnonymous: p.isAnonymous, campaign: p.campaign, storeDomain: p.storeDomain
+      }));
+    } catch (e) {
+      console.error('[admin/dashboard] recent donors fetch failed:', e.message);
+      return [];
+    }
+  }
+
   router.get('/api/admin/dashboard', adminAuth, async (req, res) => {
     try {
-      const campaignFilter = req.query.campaign || 'all';
-      const startDate = req.query.startDate;
-      const endDate = req.query.endDate;
-      const dateRange = (startDate && endDate) ? { startDate, endDate } : null;
+      const { campaignSlug, campaignFilter, dateRange, startDate, endDate } = parseDashboardFilters(req);
+      const includeAll = req.query.include === 'all';
 
-      const realStats = await getAdminDashboardStats(
-        campaignFilter === 'all' ? null : campaignFilter,
-        dateRange
-      );
+      const overview = await getDashboardOverview(campaignSlug, dateRange);
+      if (!overview) {
+        return res.status(503).json({ error: 'Database unavailable' });
+      }
 
-      const recentPayments = await getAllPayments(campaignFilter === 'all' ? null : campaignFilter);
-
-      const recentDonors = recentPayments.slice(0, 10).map(p => ({
-        id: p.id,
-        name: p.name,
-        displayName: p.displayName,
-        amount: p.amount,
-        currency: p.currency,
-        time: p.date,
-        initials: p.initials,
-        color: p.color,
-        transactionId: p.stripeChargeId,
-        cardBrand: p.cardBrand,
-        cardLastDigits: p.cardLastDigits,
-        donationType: p.donationType,
-        isAnonymous: p.isAnonymous,
-        campaign: p.campaign,
-        storeDomain: p.storeDomain
-      }));
-
-      const campaignFiles = getAllCampaignFiles();
-      const campaigns = campaignFiles.map(f => {
-        const data = JSON.parse(fs.readFileSync(f, 'utf-8'));
-        return { id: data.id, title: data.title, goal: data.goal };
-      });
-
+      const recentDonors = await buildRecentDonors(campaignSlug, dateRange);
+      const campaigns = listCampaignsFromDisk();
       const currentCampaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
 
-      res.json({
+      const response = {
         title: campaignFilter === 'all' ? 'All Campaigns' : (currentCampaign?.title || campaignFilter),
         goal: currentCampaign?.goal || 0,
-        raised: realStats?.raised || 0,
-        tips: realStats?.tips || 0,
-        gross: realStats?.gross || 0,
-        fees: realStats?.fees || 0,
-        net: realStats?.net || 0,
-        donorCount: realStats?.donorCount || 0,
-        avgDonation: realStats?.avgDonation || 0,
-        transactionCount: realStats?.transactionCount || 0,
-        baseCurrency: realStats?.baseCurrency || 'EUR',
-        currencyBreakdown: realStats?.currencyBreakdown || {},
-        recentDonors,
-        campaigns,
-        campaignBreakdown: realStats?.campaignBreakdown || {},
-        storeBreakdown: realStats?.storeBreakdown || {},
-        filters: {
-          campaign: campaignFilter,
-          startDate: startDate || null,
-          endDate: endDate || null
-        }
-      });
+        raised: overview.raised, tips: overview.tips, gross: overview.gross,
+        fees: overview.fees, net: overview.net,
+        donorCount: overview.donorCount, avgDonation: overview.avgDonation,
+        transactionCount: overview.transactionCount,
+        baseCurrency: overview.baseCurrency,
+        currencyBreakdown: overview.currencyBreakdown,
+        recentDonors, campaigns,
+        campaignBreakdown: overview.campaignBreakdown,
+        storeBreakdown: overview.storeBreakdown,
+        filters: { campaign: campaignFilter, startDate: startDate || null, endDate: endDate || null }
+      };
+
+      if (includeAll) {
+        response.timeAnalytics = overview.timeAnalytics;
+        response.deviceAnalytics = overview.deviceAnalytics;
+      }
+
+      res.json(response);
     } catch (error) {
-      console.error('Error loading dashboard:', error);
+      console.error('[admin/dashboard] error:', error);
       res.status(500).json({ error: 'Failed to load data' });
     }
   });
 
   router.get('/api/admin/analytics/time', adminAuth, async (req, res) => {
     try {
-      const campaignFilter = req.query.campaign || 'all';
-      const startDate = req.query.startDate;
-      const endDate = req.query.endDate;
-      const dateRange = (startDate && endDate) ? { startDate, endDate } : null;
-
-      const timeAnalytics = await getTimeBasedAnalytics(
-        campaignFilter === 'all' ? null : campaignFilter,
-        dateRange
-      );
-      res.json(timeAnalytics || {});
+      const { campaignSlug, dateRange } = parseDashboardFilters(req);
+      const overview = await getDashboardOverview(campaignSlug, dateRange);
+      res.json(overview?.timeAnalytics || {});
     } catch (error) {
-      console.error('Error loading time analytics:', error);
+      console.error('[admin/analytics/time] error:', error);
       res.status(500).json({ error: 'Failed to load time analytics' });
     }
   });
 
   router.get('/api/admin/analytics/device', adminAuth, async (req, res) => {
     try {
-      const campaignFilter = req.query.campaign || 'all';
-      const startDate = req.query.startDate;
-      const endDate = req.query.endDate;
-      const dateRange = (startDate && endDate) ? { startDate, endDate } : null;
-
-      const deviceAnalytics = await getDeviceBrowserAnalytics(
-        campaignFilter === 'all' ? null : campaignFilter,
-        dateRange
-      );
-      res.json(deviceAnalytics || {});
+      const { campaignSlug, dateRange } = parseDashboardFilters(req);
+      const overview = await getDashboardOverview(campaignSlug, dateRange);
+      res.json(overview?.deviceAnalytics || {});
     } catch (error) {
-      console.error('Error loading device analytics:', error);
+      console.error('[admin/analytics/device] error:', error);
       res.status(500).json({ error: 'Failed to load device analytics' });
-    }
-  });
-
-  router.get('/api/admin/stores', adminAuth, async (req, res) => {
-    try {
-      const stores = await getStoreStats();
-      res.json(stores);
-    } catch (error) {
-      console.error('Error loading stores:', error);
-      res.status(500).json({ error: 'Failed to load stores' });
-    }
-  });
-
-  router.get('/api/admin/stores/:id', adminAuth, async (req, res) => {
-    try {
-      const detail = await getStoreDetail(req.params.id);
-      if (!detail) return res.status(404).json({ error: 'Store not found' });
-      res.json(detail);
-    } catch (error) {
-      console.error('Error loading store detail:', error);
-      res.status(500).json({ error: 'Failed to load store detail' });
-    }
-  });
-
-  router.post('/api/admin/stores', adminAuth, async (req, res) => {
-    try {
-      const { slug, domain, name, paymentProcessor, maxMonthlyVolume, status } = req.body;
-      if (!slug || !domain || !name) {
-        return res.status(400).json({ error: 'slug, domain, and name are required' });
-      }
-      const result = await createStore({ slug, domain, name, paymentProcessor, maxMonthlyVolume, status });
-      if (!result.success) return res.status(400).json({ error: result.error });
-      res.json(result);
-    } catch (error) {
-      console.error('Error creating store:', error);
-      res.status(500).json({ error: 'Failed to create store' });
-    }
-  });
-
-  router.put('/api/admin/stores/:id', adminAuth, async (req, res) => {
-    try {
-      const result = await updateStore(req.params.id, req.body);
-      if (!result.success) return res.status(400).json({ error: result.error });
-      res.json(result);
-    } catch (error) {
-      console.error('Error updating store:', error);
-      res.status(500).json({ error: 'Failed to update store' });
-    }
-  });
-
-  router.post('/api/admin/stores/:id/toggle', adminAuth, async (req, res) => {
-    try {
-      const { status } = req.body;
-      const result = await toggleStoreStatus(req.params.id, status);
-      res.json(result);
-    } catch (error) {
-      console.error('Error toggling store:', error);
-      res.status(500).json({ error: 'Failed to toggle store' });
-    }
-  });
-
-  router.delete('/api/admin/stores/:id', adminAuth, async (req, res) => {
-    try {
-      const result = await deleteStore(req.params.id);
-      if (!result.success) return res.status(400).json({ error: result.error });
-      res.json(result);
-    } catch (error) {
-      console.error('Error deleting store:', error);
-      res.status(500).json({ error: 'Failed to delete store' });
-    }
-  });
-
-  router.get('/api/admin/customers', adminAuth, async (req, res) => {
-    try {
-      const customers = await getAllCustomers();
-      res.json(customers);
-    } catch (error) {
-      console.error('Error loading customers:', error);
-      res.status(500).json({ error: 'Failed to load customers' });
-    }
-  });
-
-  router.get('/api/admin/customers/:id', adminAuth, async (req, res) => {
-    try {
-      const details = await getCustomerDetails(req.params.id);
-      if (!details) return res.status(404).json({ error: 'Customer not found' });
-      res.json(details);
-    } catch (error) {
-      console.error('Error loading customer details:', error);
-      res.status(500).json({ error: 'Failed to load customer details' });
     }
   });
 
   router.get('/api/admin/transactions', adminAuth, async (req, res) => {
     try {
       const campaignFilter = req.query.campaign;
-      const payments = await getAllPayments(campaignFilter && campaignFilter !== 'all' ? campaignFilter : null);
-      res.json(payments);
+      const slug = campaignFilter && campaignFilter !== 'all' ? campaignFilter : null;
+      res.json(await getAllPayments(slug));
     } catch (error) {
-      console.error('Error loading transactions:', error);
+      console.error('[admin/transactions] error:', error);
       res.status(500).json({ error: 'Failed to load transactions' });
     }
   });
@@ -273,65 +172,22 @@ module.exports = function createAdminRouter(ctx) {
       if (!details) return res.status(404).json({ error: 'Transaction not found' });
       res.json(details);
     } catch (error) {
-      console.error('Error loading transaction details:', error);
+      console.error('[admin/transactions/:id] error:', error);
       res.status(500).json({ error: 'Failed to load transaction details' });
     }
   });
 
   router.get('/api/admin/failures', adminAuth, async (req, res) => {
     try {
-      const failures = await getRecentFailures(50);
-      res.json(failures);
+      res.json(await getRecentFailures(50));
     } catch (error) {
-      console.error('Error loading failures:', error);
+      console.error('[admin/failures] error:', error);
       res.status(500).json({ error: 'Failed to load failures' });
     }
   });
 
-  router.delete('/api/admin/customers/:id', adminAuth, async (req, res) => {
-    try {
-      const result = await deleteCustomer(req.params.id);
-      if (!result.success) return res.status(400).json({ error: result.error });
-      res.json(result);
-    } catch (error) {
-      console.error('Error deleting customer:', error);
-      res.status(500).json({ error: 'Failed to delete customer' });
-    }
-  });
-
-  router.post('/api/admin/customers/:id/pause', adminAuth, async (req, res) => {
-    try {
-      const result = await toggleCustomerStatus(req.params.id, 'paused');
-      if (!result.success) return res.status(400).json({ error: result.error });
-      res.json(result);
-    } catch (error) {
-      console.error('Error pausing customer:', error);
-      res.status(500).json({ error: 'Failed to pause customer' });
-    }
-  });
-
-  router.post('/api/admin/customers/:id/resume', adminAuth, async (req, res) => {
-    try {
-      const result = await toggleCustomerStatus(req.params.id, 'active');
-      if (!result.success) return res.status(400).json({ error: result.error });
-      res.json(result);
-    } catch (error) {
-      console.error('Error resuming customer:', error);
-      res.status(500).json({ error: 'Failed to resume customer' });
-    }
-  });
-
-  router.post('/api/admin/customers/:id/notes', adminAuth, async (req, res) => {
-    try {
-      const { notes } = req.body;
-      const result = await updateCustomerNotes(req.params.id, notes);
-      if (!result.success) return res.status(400).json({ error: result.error });
-      res.json(result);
-    } catch (error) {
-      console.error('Error updating notes:', error);
-      res.status(500).json({ error: 'Failed to update notes' });
-    }
-  });
+  router.use(createAdminStoresRouter(ctx, adminAuth));
+  router.use(createAdminCustomersRouter(ctx, adminAuth));
 
   return router;
 };

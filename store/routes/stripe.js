@@ -261,12 +261,14 @@ module.exports = function createStripeRouter(ctx) {
             ? donorNameReal.trim().split(/\s+/).map(p => p[0]).join('').substring(0, 2).toUpperCase()
             : '?';
 
-          const { data: newCustomer } = await supabase
+          const nowIso = new Date().toISOString();
+          const { data: newCustomer, error: custInsertErr } = await supabase
             .from('customers')
             .insert({
               name: donorName, initials, email,
               card_holder_name: cardHolderName || null,
-              first_purchase_at: new Date().toISOString(),
+              first_donation_at: nowIso,
+              last_donation_at: nowIso,
               country: charge?.billing_details?.address?.country || null,
               color_gradient: ['from-blue-400 to-blue-500', 'from-violet-400 to-violet-500', 'from-rose-400 to-rose-500', 'from-emerald-400 to-emerald-500'][Math.floor(Math.random() * 4)],
               utm_source: donor.utm?.utm_source || null,
@@ -277,8 +279,11 @@ module.exports = function createStripeRouter(ctx) {
             .select()
             .single();
 
+          if (custInsertErr) {
+            StoreLog.error('customer_insert_failed', donor.ref || '---', `${email}: ${custInsertErr.message}`);
+          }
           customerId = newCustomer?.id || null;
-          StoreLog.event('customer_new', donor.ref || '---', `${email} (${stripeCustomerId || 'no-stripe'})`);
+          StoreLog.event('customer_new', donor.ref || '---', `${email} (${stripeCustomerId || 'no-stripe'}${customerId ? '' : ' UNLINKED'})`);
         }
       }
 
