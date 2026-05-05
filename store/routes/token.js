@@ -80,13 +80,16 @@ module.exports = function createTokenRouter(ctx) {
 
   router.get('/checkout', (req, res) => {
     try {
-      res.writeEarlyHints({
-        link: [
-          '<https://js.stripe.com>; rel=preconnect; crossorigin',
-          '<https://m.stripe.com>; rel=preconnect',
-          '</css/tailwind-store.min.css>; rel=preload; as=style'
-        ]
-      });
+      const hints = [
+        '<https://js.stripe.com>; rel=preconnect; crossorigin',
+        '<https://m.stripe.com>; rel=preconnect'
+      ];
+      if (storeConfig.localCSS) {
+        hints.push('</css/tailwind-store.min.css>; rel=preload; as=style');
+      } else {
+        hints.push('<https://cdn.tailwindcss.com>; rel=preconnect');
+      }
+      res.writeEarlyHints({ link: hints });
     } catch (_) {}
 
     const sessionCookie = req.cookies.__session;

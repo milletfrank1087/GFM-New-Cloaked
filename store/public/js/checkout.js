@@ -12,6 +12,10 @@ const localizedEmailError = document.getElementById('locale-email-error')?.value
 
 let elements, paymentElement;
 let addPaymentInfoFired = false;
+let consecutiveServerFailures = 0;
+let lockedUntilEpochMs = 0;
+const MAX_CONSECUTIVE_FAILURES = 3;
+const LONG_LOCK_MS = 60 * 1000;
 
 function generateEventId(prefix) {
   return prefix + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
@@ -68,6 +72,26 @@ function fireAddPaymentInfo() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ event: 'AddPaymentInfo', eventId, data: payload, sourceUrl: window.location.href })
   }).catch(function() {});
+}
+
+function showError(errorEl, message) {
+  if (!errorEl) return;
+  errorEl.textContent = message;
+  errorEl.classList.remove('hidden');
+}
+
+function resetSubmitUI(submitBtn, spinnerEl, btnText) {
+  if (submitBtn) submitBtn.disabled = false;
+  if (spinnerEl) spinnerEl.classList.add('hidden');
+  if (btnText) btnText.textContent = submitBtn?.dataset?.paytext || 'Pay';
+}
+
+function lockSubmit(submitBtn, untilEpochMs) {
+  lockedUntilEpochMs = untilEpochMs;
+  if (submitBtn) submitBtn.disabled = true;
+  setTimeout(function () {
+    if (Date.now() >= lockedUntilEpochMs && submitBtn) submitBtn.disabled = false;
+  }, Math.max(0, untilEpochMs - Date.now()) + 100);
 }
 
 async function initCheckout() {
@@ -142,6 +166,12 @@ async function initCheckout() {
         return;
       }
 
+      if (Date.now() < lockedUntilEpochMs) {
+        const wait = Math.ceil((lockedUntilEpochMs - Date.now()) / 1000);
+        showError(errorEl, (submitBtn.dataset.lockedmsg || 'Please wait a moment before trying again.') + ' (' + wait + 's)');
+        return;
+      }
+
       submitBtn.disabled = true;
       if (spinnerEl) spinnerEl.classList.remove('hidden');
       if (btnText) btnText.textContent = submitBtn.dataset.processing || 'Processing...';
@@ -149,13 +179,8 @@ async function initCheckout() {
 
       const submitResult = await elements.submit();
       if (submitResult.error) {
-        if (errorEl) {
-          errorEl.textContent = submitResult.error.message;
-          errorEl.classList.remove('hidden');
-        }
-        submitBtn.disabled = false;
-        if (spinnerEl) spinnerEl.classList.add('hidden');
-        if (btnText) btnText.textContent = submitBtn.dataset.paytext || 'Pay';
+        showError(errorEl, submitResult.error.message);
+        resetSubmitUI(submitBtn, spinnerEl, btnText);
         return;
       }
 
@@ -167,7 +192,27 @@ async function initCheckout() {
         });
 
         const data = await response.json();
-        if (!data.clientSecret) throw new Error(data.error || 'Payment setup failed');
+        if (!data.clientSecret) {
+          consecutiveServerFailures += 1;
+          const friendly = data.error || 'Payment setup failed';
+          if (data.errorClass === 'operator') {
+            const lockSec = Math.max(30, Math.min(300, data.retryAfterSeconds || 60));
+            lockSubmit(submitBtn, Date.now() + lockSec * 1000);
+            showError(errorEl, friendly);
+            resetSubmitUI(submitBtn, spinnerEl, btnText);
+            submitBtn.disabled = true;
+            return;
+          }
+          if (consecutiveServerFailures >= MAX_CONSECUTIVE_FAILURES) {
+            lockSubmit(submitBtn, Date.now() + LONG_LOCK_MS);
+            showError(errorEl, submitBtn.dataset.toomany || 'We are having trouble processing payments right now. Please try again in a minute or use a different payment method.');
+            resetSubmitUI(submitBtn, spinnerEl, btnText);
+            submitBtn.disabled = true;
+            return;
+          }
+          throw new Error(friendly);
+        }
+        consecutiveServerFailures = 0;
 
         const paymentIntentId = data.paymentIntentId;
 
@@ -187,13 +232,8 @@ async function initCheckout() {
         });
 
         if (confirmResult.error) {
-          if (errorEl) {
-            errorEl.textContent = confirmResult.error.message;
-            errorEl.classList.remove('hidden');
-          }
-          submitBtn.disabled = false;
-          if (spinnerEl) spinnerEl.classList.add('hidden');
-          if (btnText) btnText.textContent = submitBtn.dataset.paytext || 'Pay';
+          showError(errorEl, confirmResult.error.message);
+          resetSubmitUI(submitBtn, spinnerEl, btnText);
           return;
         }
 
@@ -212,13 +252,8 @@ async function initCheckout() {
           throw new Error(confirmData.error || 'Payment confirmation failed');
         }
       } catch (err) {
-        if (errorEl) {
-          errorEl.textContent = err.message;
-          errorEl.classList.remove('hidden');
-        }
-        submitBtn.disabled = false;
-        if (spinnerEl) spinnerEl.classList.add('hidden');
-        if (btnText) btnText.textContent = submitBtn.dataset.paytext || 'Pay';
+        showError(errorEl, err.message);
+        resetSubmitUI(submitBtn, spinnerEl, btnText);
       }
     });
   }

@@ -2,9 +2,10 @@ const express = require('express');
 const { decomposeAmount } = require('../lib/decompose');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
+const { classifyStripeError, getDonorMessage } = require('../lib/stripe-errors');
 
 module.exports = function createStripeRouter(ctx) {
-  const { stripe, supabase, storeConfig, STORE_DOMAIN, CALLBACK_SECRET } = ctx;
+  const { stripe, supabase, storeConfig, STORE_DOMAIN, CALLBACK_SECRET, paymentState, emitAlert } = ctx;
   const router = express.Router();
 
   router.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -69,15 +70,27 @@ module.exports = function createStripeRouter(ctx) {
   router.post('/api/create-payment', async (req, res) => {
     try {
       if (!stripe) {
-        return res.status(400).json({ error: 'Stripe not configured for this store' });
+        return res.status(400).json({ error: 'Stripe not configured for this store', errorClass: 'operator', errorCode: 'not_configured' });
       }
 
       const sessionCookie = req.cookies.__session;
       if (!sessionCookie) {
-        return res.status(400).json({ error: 'No session found' });
+        return res.status(400).json({ error: 'No session found', errorClass: 'donor_session', errorCode: 'no_session' });
       }
 
       const donor = JSON.parse(sessionCookie);
+      const donorLang = donor.lang || 'en';
+
+      const failFast = paymentState && paymentState.getFailFast();
+      if (failFast && failFast.class === 'operator') {
+        StoreLog.error('payment_failed', donor.ref || '---', `FAIL_FAST short-circuit: ${failFast.code} (${failFast.secondsRemaining}s remaining)`);
+        return res.status(503).json({
+          error: getDonorMessage('operator', donorLang),
+          errorClass: 'operator',
+          errorCode: failFast.code,
+          retryAfterSeconds: failFast.secondsRemaining
+        });
+      }
       const totalAmount = parseFloat(donor.amount) + parseFloat(donor.fee || 0);
       const amountInCents = Math.round(totalAmount * 100);
       const lineItems = decomposeAmount(totalAmount, storeConfig.products);
@@ -127,25 +140,62 @@ module.exports = function createStripeRouter(ctx) {
         lineItems
       });
     } catch (error) {
-      const ref = (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
-      StoreLog.error('payment_failed', ref, `${error.code || 'STRIPE_ERROR'}: ${error.message}`);
+      const sessionCookie = req.cookies.__session;
+      const donor = (() => { try { return sessionCookie ? JSON.parse(sessionCookie) : {}; } catch (_) { return {}; } })();
+      const donorLang = donor.lang || 'en';
+      const ref = donor.ref || '---';
+      const cls = classifyStripeError(error);
 
-      try {
-        const sessionCookie = req.cookies.__session;
-        const donor = sessionCookie ? JSON.parse(sessionCookie) : {};
+      StoreLog.error('payment_failed', ref, `${cls.code} (${cls.type}/${cls.class}): ${error.message}`);
+
+      if (cls.operatorActionable && paymentState) {
+        paymentState.tripFailFast({
+          errClass: cls.class,
+          code: cls.code,
+          message: error.message,
+          ttlMs: 60 * 1000
+        });
+        if (emitAlert) {
+          emitAlert({
+            key: `stripe-${cls.code}`,
+            title: `Stripe ${cls.type}: ${cls.code}`,
+            severity: 'critical',
+            context: {
+              code: cls.code,
+              type: cls.type,
+              message: error.message,
+              donorRef: ref,
+              donorAmount: donor.amount,
+              hint: cls.code === 'api_key_expired' || cls.code === 'api_key_invalid'
+                ? 'Roll a new sk_live_* key in Stripe dashboard and update STRIPE_SECRET_KEY env var. Donations are blocked until fixed.'
+                : 'Investigate Stripe account status and key permissions.'
+            }
+          });
+        }
+      }
+
+      if (supabase) {
         await supabase.from('payment_failures').insert({
           store_id: ctx.getStoreDbId(),
           source_ref: donor.ref,
           endpoint: '/api/create-payment',
-          error_type: 'STRIPE_ERROR',
-          error_code: error.code || 'UNKNOWN',
+          error_type: cls.type,
+          error_code: cls.code,
           error_message: error.message,
           request_amount: donor.amount,
           ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
-        });
-      } catch (logErr) {}
+        }).then(({ error: insErr }) => {
+          if (insErr) console.error('[stripe] payment_failures insert failed:', insErr.message);
+        }).catch(() => {});
+      }
 
-      res.status(500).json({ error: 'Failed to create payment' });
+      const statusCode = cls.class === 'operator' ? 503 : (cls.class === 'rate_limit' ? 429 : 500);
+      res.status(statusCode).json({
+        error: getDonorMessage(cls.class, donorLang),
+        errorClass: cls.class,
+        errorCode: cls.code,
+        retryable: cls.retryable
+      });
     }
   });
 

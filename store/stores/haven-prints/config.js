@@ -1,6 +1,7 @@
 module.exports = {
   name: 'Haven Prints',
   statementDescriptor: 'HAVENPRINTS.SHOP',
+  localCSS: true,
   metadataKeys: {
     storeId: 'outlet_ref',
     storeDomain: 'source_url',

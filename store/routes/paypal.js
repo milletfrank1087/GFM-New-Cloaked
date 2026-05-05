@@ -4,8 +4,22 @@ const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { PAYPAL_CLIENT_ID, PAYPAL_API_BASE, getPayPalAccessToken } = require('../lib/paypal');
 
+function classifyPayPalError(error, response, body) {
+  const status = response ? response.status : 0;
+  const code = (body && (body.name || body.error)) || (error && error.code) || 'UNKNOWN';
+  const codeStr = String(code).toUpperCase();
+  const isAuthFailure = status === 401 || status === 403 ||
+    /INVALID_CLIENT|INVALID_TOKEN|AUTHENTICATION_FAILURE|NOT_AUTHORIZED|PERMISSION_DENIED/.test(codeStr);
+  return {
+    operatorActionable: isAuthFailure,
+    code: codeStr,
+    type: isAuthFailure ? 'PayPalAuthError' : 'PayPalError',
+    class: isAuthFailure ? 'operator' : 'unknown'
+  };
+}
+
 module.exports = function createPayPalRouter(ctx) {
-  const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN, CALLBACK_SECRET } = ctx;
+  const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN, CALLBACK_SECRET, paymentState, emitAlert } = ctx;
   const router = express.Router();
 
   router.get('/api/payment/provider', (req, res) => {
@@ -106,21 +120,41 @@ module.exports = function createPayPalRouter(ctx) {
       res.json({ orderId: order.id, lineItems });
     } catch (error) {
       const ref = (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
-      StoreLog.error('paypal_order_failed', ref, error.message);
+      const cls = classifyPayPalError(error, null, null);
+      StoreLog.error('paypal_order_failed', ref, `${cls.code}: ${error.message}`);
 
-      try {
-        const sessionCookie = req.cookies.__session;
-        const donor = sessionCookie ? JSON.parse(sessionCookie) : {};
-        await supabase.from('payment_failures').insert({
-          store_id: ctx.getStoreDbId(), source_ref: donor.ref,
-          endpoint: '/api/paypal/orders', error_type: 'PAYPAL_ERROR',
-          error_code: 'ORDER_CREATE', error_message: error.message,
-          payment_method: 'paypal', request_amount: donor.amount,
-          ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
+      if (cls.operatorActionable) {
+        if (paymentState) paymentState.tripFailFast({ errClass: 'operator', code: cls.code, message: error.message, ttlMs: 60 * 1000 });
+        if (emitAlert) emitAlert({
+          key: `paypal-${cls.code}`,
+          title: `PayPal ${cls.type}: ${cls.code}`,
+          severity: 'critical',
+          context: {
+            code: cls.code, message: error.message, donorRef: ref,
+            hint: 'Verify PAYPAL_CLIENT_ID + PAYPAL_CLIENT_SECRET env vars and that the PayPal app is live'
+          }
         });
-      } catch (logErr) {}
+      }
 
-      res.status(500).json({ error: 'Failed to create payment' });
+      if (supabase) {
+        try {
+          const sessionCookie = req.cookies.__session;
+          const donor = sessionCookie ? JSON.parse(sessionCookie) : {};
+          await supabase.from('payment_failures').insert({
+            store_id: ctx.getStoreDbId(), source_ref: donor.ref,
+            endpoint: '/api/paypal/orders', error_type: cls.type,
+            error_code: cls.code, error_message: error.message,
+            payment_method: 'paypal', request_amount: donor.amount,
+            ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
+          });
+        } catch (logErr) {}
+      }
+
+      res.status(cls.operatorActionable ? 503 : 500).json({
+        error: 'Failed to create payment',
+        errorClass: cls.class,
+        errorCode: cls.code
+      });
     }
   });
 

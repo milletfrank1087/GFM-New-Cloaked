@@ -7,7 +7,9 @@ const Stripe = require('stripe');
 const supabase = require('./lib/supabase');
 const { loadStoreConfig } = require('./lib/store-config');
 const { StoreLog, getTimestamp } = require('./lib/logger');
-const { isPayPalLive, PAYPAL_CLIENT_ID } = require('./lib/paypal');
+const { isPayPalLive, PAYPAL_CLIENT_ID, getPayPalAccessToken } = require('./lib/paypal');
+const { emitAlert } = require('./lib/alerts');
+const paymentState = require('./lib/payment-state');
 const createStripeRouter = require('./routes/stripe');
 const createTokenRouter = require('./routes/token');
 const createPayPalRouter = require('./routes/paypal');
@@ -56,6 +58,8 @@ async function resolveStoreId() {
 const ctx = {
   stripe, supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN, CALLBACK_SECRET,
   getStoreDbId: () => storeDbId,
+  paymentState,
+  emitAlert
 };
 
 const storeDir = path.join(__dirname, 'stores', process.env.STORE_ID || 'zenflow-tools');
@@ -89,6 +93,55 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
+app.get('/healthz', async (req, res) => {
+  const checks = { processor: PAYMENT_PROCESSOR, supabase: 'unknown', stripe: 'unknown', paypal: 'unknown' };
+  let healthy = true;
+
+  try {
+    if (supabase) {
+      const { error } = await supabase.from('stores').select('id').limit(1);
+      checks.supabase = error ? `error: ${error.message}` : 'ok';
+      if (error) healthy = false;
+    } else {
+      checks.supabase = 'not-configured';
+    }
+  } catch (err) {
+    checks.supabase = `exception: ${err.message}`;
+    healthy = false;
+  }
+
+  if (PAYMENT_PROCESSOR === 'stripe') {
+    try {
+      if (!stripe) { checks.stripe = 'not-configured'; healthy = false; }
+      else {
+        await stripe.balance.retrieve();
+        checks.stripe = 'ok';
+      }
+    } catch (err) {
+      checks.stripe = `${err.code || err.type || 'error'}: ${err.message}`;
+      healthy = false;
+    }
+  } else if (PAYMENT_PROCESSOR === 'paypal') {
+    try {
+      if (!PAYPAL_CLIENT_ID) { checks.paypal = 'not-configured'; healthy = false; }
+      else {
+        await getPayPalAccessToken();
+        checks.paypal = 'ok';
+      }
+    } catch (err) {
+      checks.paypal = `error: ${err.message}`;
+      healthy = false;
+    }
+  }
+
+  const failFast = paymentState.getFailFast();
+  res.status(healthy ? 200 : 503).json({
+    healthy, checks, failFast, storeId: process.env.STORE_ID, domain: STORE_DOMAIN, ts: new Date().toISOString()
+  });
+});
+
 app.get('/.well-known/apple-developer-merchantid-domain-association', (req, res) => {
   const filePaths = [
     path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association'),
@@ -115,11 +168,57 @@ app.use(createTokenRouter(ctx));
 app.use(createPayPalRouter(ctx));
 app.use(createPagesRouter(storeConfig));
 
+async function verifyProcessorBootHealth() {
+  if (PAYMENT_PROCESSOR === 'stripe' && stripe) {
+    try {
+      await stripe.balance.retrieve();
+      paymentState.setStripeBootHealth(true);
+      StoreLog.system('\u2705', 'Stripe API key verified at boot (balance.retrieve OK)');
+    } catch (err) {
+      paymentState.setStripeBootHealth(false, err);
+      paymentState.tripFailFast({
+        errClass: 'operator',
+        code: err.code || err.type || 'boot_check_failed',
+        message: err.message,
+        ttlMs: 60 * 1000
+      });
+      StoreLog.error('payment_failed', '---', `BOOT_CHECK ${err.code || err.type}: ${err.message}`);
+      emitAlert({
+        key: `stripe-boot-${err.code || err.type || 'unknown'}`,
+        title: 'Stripe boot health check FAILED',
+        severity: 'critical',
+        context: {
+          code: err.code || 'unknown',
+          type: err.type || err.constructor?.name || 'Unknown',
+          message: err.message,
+          hint: 'Roll a new sk_live_* key and update STRIPE_SECRET_KEY env var'
+        }
+      });
+    }
+  }
+  if (PAYMENT_PROCESSOR === 'paypal' && PAYPAL_CLIENT_ID) {
+    try {
+      await getPayPalAccessToken();
+      paymentState.setPayPalBootHealth(true);
+      StoreLog.system('\u2705', 'PayPal credentials verified at boot');
+    } catch (err) {
+      paymentState.setPayPalBootHealth(false, err);
+      emitAlert({
+        key: 'paypal-boot-failed',
+        title: 'PayPal boot health check FAILED',
+        severity: 'critical',
+        context: { message: err.message, hint: 'Verify PAYPAL_CLIENT_ID + PAYPAL_CLIENT_SECRET env vars' }
+      });
+    }
+  }
+}
+
 resolveStoreId().then(() => {
   app.listen(PORT, () => {
     const processorLabel = PAYMENT_PROCESSOR === 'paypal'
       ? (PAYPAL_CLIENT_ID ? `PayPal (${isPayPalLive ? 'live' : 'sandbox'})` : 'PayPal (missing creds)')
       : (stripe ? 'Stripe Connected' : 'Stripe (missing key)');
     StoreLog.startup(PORT, storeConfig.name, STORE_DOMAIN, storeDbId, processorLabel);
+    verifyProcessorBootHealth();
   });
 });
