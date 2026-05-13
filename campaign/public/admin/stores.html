@@ -93,7 +93,7 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gfm-dark mb-1">Max Monthly Volume</label>
-          <input type="number" id="add-max-volume" value="5000" min="100" step="100" class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:outline-none">
+          <input type="number" id="add-max-volume" value="100000" min="100" step="1000" class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:outline-none">
         </div>
         <div>
           <label class="block text-sm font-medium text-gfm-dark mb-1">Initial Status</label>
@@ -144,7 +144,7 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gfm-dark mb-1">Max Monthly Volume</label>
-          <input type="number" id="edit-max-volume" min="100" step="100" class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:outline-none">
+          <input type="number" id="edit-max-volume" min="100" step="1000" class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:outline-none">
         </div>
       </div>
       <div class="flex gap-3 mt-6">
@@ -361,7 +361,7 @@
       var domain = document.getElementById('add-domain').value.trim();
       var name = document.getElementById('add-name').value.trim();
       var processor = document.getElementById('add-processor').value;
-      var maxVol = parseFloat(document.getElementById('add-max-volume').value) || 5000;
+      var maxVol = parseFloat(document.getElementById('add-max-volume').value) || 100000;
       var status = document.getElementById('add-status').value;
 
       if (!slug || !domain || !name) { showToast('All fields are required', 'warning'); return; }
@@ -396,7 +396,7 @@
       document.getElementById('edit-id').value = s.id;
       document.getElementById('edit-name').value = s.name || '';
       document.getElementById('edit-domain').value = s.domain || '';
-      document.getElementById('edit-max-volume').value = s.maxMonthlyVolume || 5000;
+      document.getElementById('edit-max-volume').value = s.maxMonthlyVolume || 100000;
       document.getElementById('edit-modal').classList.remove('hidden');
     }
 

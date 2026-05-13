@@ -169,7 +169,7 @@ async function createStore(storeData) {
         domain: storeData.domain,
         name: storeData.name,
         payment_processor: storeData.paymentProcessor || 'stripe',
-        max_monthly_volume: storeData.maxMonthlyVolume || 5000,
+        max_monthly_volume: storeData.maxMonthlyVolume || 100000,
         status: storeData.status || 'warming'
       })
       .select()
