@@ -1,6 +1,8 @@
 module.exports = {
   name: 'Nova Essentials',
   statementDescriptor: 'NOVA ESSENTIALS',
+  currency: 'EUR',
+  currencySymbol: '€',
   metadataKeys: {
     storeId: 'vendor_id',
     storeDomain: 'origin',

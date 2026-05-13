@@ -1,6 +1,8 @@
 module.exports = {
   name: 'ZenFlow Tools',
   statementDescriptor: 'ZENFLOW TOOLS',
+  currency: 'EUR',
+  currencySymbol: '€',
   metadataKeys: {
     storeId: 'shop_id',
     storeDomain: 'shop_url',

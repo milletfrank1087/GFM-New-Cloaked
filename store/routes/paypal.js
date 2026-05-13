@@ -460,10 +460,11 @@ module.exports = function createPayPalRouter(ctx) {
       }
 
       const refCode = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      const currencyCode = (storeConfig.currency || 'GBP').toUpperCase();
 
       const ppItems = validItems.map(item => ({
         name: item.name.substring(0, 127),
-        unit_amount: { currency_code: 'GBP', value: item.price.toFixed(2) },
+        unit_amount: { currency_code: currencyCode, value: item.price.toFixed(2) },
         quantity: String(item.quantity),
         category: 'DIGITAL_GOODS',
       }));
@@ -479,8 +480,8 @@ module.exports = function createPayPalRouter(ctx) {
           reference_id: refCode,
           description: `Order from ${storeConfig.name}`,
           amount: {
-            currency_code: 'GBP', value: storeItemTotalStr,
-            breakdown: { item_total: { currency_code: 'GBP', value: storeItemTotalStr } }
+            currency_code: currencyCode, value: storeItemTotalStr,
+            breakdown: { item_total: { currency_code: currencyCode, value: storeItemTotalStr } }
           },
           items: ppItems,
         }],
@@ -503,7 +504,8 @@ module.exports = function createPayPalRouter(ctx) {
         return res.status(response.status).json({ error: order.message || 'PayPal order creation failed' });
       }
 
-      StoreLog.event('store_checkout', refCode, `PayPal ${order.id} - £${total.toFixed(2)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
+      const symbol = storeConfig.currencySymbol || '£';
+      StoreLog.event('store_checkout', refCode, `PayPal ${order.id} - ${symbol}${total.toFixed(2)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
       res.json({ orderId: order.id, amount: total.toFixed(2) });
     } catch (error) {
       StoreLog.error('store_checkout', '---', `PayPal: ${error.message}`);

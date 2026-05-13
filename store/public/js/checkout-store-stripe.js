@@ -14,14 +14,14 @@
   var btnText = document.getElementById('btn-text');
   var loadingEl = document.getElementById('payment-loading');
 
-  btnText.textContent = 'Pay \u00a3' + sc.total.toFixed(2);
-  submitBtn.setAttribute('data-paytext', 'Pay \u00a3' + sc.total.toFixed(2));
+  btnText.textContent = 'Pay ' + sc.symbol + sc.total.toFixed(2);
+  submitBtn.setAttribute('data-paytext', 'Pay ' + sc.symbol + sc.total.toFixed(2));
 
   setTimeout(function() {
     elements = stripe.elements({
       mode: 'payment',
       amount: Math.round(sc.total * 100),
-      currency: 'gbp',
+      currency: sc.currency,
       appearance: {
         theme: 'stripe',
         variables: {

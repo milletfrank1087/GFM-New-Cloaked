@@ -488,10 +488,11 @@ module.exports = function createStripeRouter(ctx) {
       const amountInCents = Math.round(total * 100);
       const mk = storeConfig.metadataKeys || {};
       const refCode = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      const currency = (storeConfig.currency || 'gbp').toLowerCase();
 
       const intentParams = {
         amount: amountInCents,
-        currency: 'gbp',
+        currency,
         automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
         metadata: {
           [mk.storeId || 'storeId']: ctx.getStoreDbId() || '',
@@ -516,7 +517,8 @@ module.exports = function createStripeRouter(ctx) {
 
       const paymentIntent = await stripe.paymentIntents.create(intentParams);
 
-      StoreLog.event('store_checkout', refCode, `${paymentIntent.id.substring(0, 18)}... - £${total.toFixed(2)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
+      const symbol = storeConfig.currencySymbol || '£';
+      StoreLog.event('store_checkout', refCode, `${paymentIntent.id.substring(0, 18)}... - ${symbol}${total.toFixed(2)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
 
       res.json({ clientSecret: paymentIntent.client_secret, paymentIntentId: paymentIntent.id, amount: total.toFixed(2) });
     } catch (error) {

@@ -3,6 +3,8 @@ module.exports = {
   statementDescriptor: 'DIGITELON.SHOP',
   tagline: 'Digital tools and creative assets for modern makers.',
   contact_email: 'support@digitelon.shop',
+  currency: 'EUR',
+  currencySymbol: '€',
   metadataKeys: {
     storeId: 'merchant_ref',
     storeDomain: 'shop_origin',

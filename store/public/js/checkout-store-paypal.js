@@ -8,8 +8,8 @@
   var btnText = document.getElementById('btn-text');
   var loadingEl = document.getElementById('payment-loading');
 
-  btnText.textContent = 'Pay \u00a3' + sc.total.toFixed(2);
-  submitBtn.setAttribute('data-paytext', 'Pay \u00a3' + sc.total.toFixed(2));
+  btnText.textContent = 'Pay ' + sc.symbol + sc.total.toFixed(2);
+  submitBtn.setAttribute('data-paytext', 'Pay ' + sc.symbol + sc.total.toFixed(2));
 
   function showOrderComplete() {
     localStorage.removeItem(sc.CART_KEY);
@@ -48,7 +48,7 @@
     var data = await resp.json();
     await new Promise(function(resolve, reject) {
       var s = document.createElement('script');
-      s.src = 'https://www.paypal.com/sdk/js?client-id=' + data.clientId + '&components=buttons,card-fields&currency=GBP';
+      s.src = 'https://www.paypal.com/sdk/js?client-id=' + data.clientId + '&components=buttons,card-fields&currency=' + (sc.currency || 'gbp').toUpperCase();
       s.setAttribute('data-sdk-integration-source', 'developer-studio');
       s.onload = resolve;
       s.onerror = reject;
