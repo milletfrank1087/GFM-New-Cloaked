@@ -1,0 +1,255 @@
+<% const pageTitle = 'Home'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+
+<section class="py-12 md:py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 bg-primary-50 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-5">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        Built with marketing teams in 28 countries
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-[1.15] mb-4">
+        Marketing assets, shipped at studio quality
+      </h1>
+      <p class="text-base sm:text-lg text-gray-500 leading-relaxed mb-7 max-w-lg">
+        Ad creative kits, copywriting libraries, brand systems and reporting dashboards \u2014 made by working strategists and downloaded in seconds.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="#products" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm transition hover:shadow-lg hover:shadow-primary/20">
+          Browse the Catalogue
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+        </a>
+        <a href="#about" class="inline-flex items-center justify-center gap-2 text-gray-600 bg-white border border-gray-200 px-6 py-3 rounded-xl font-semibold text-sm transition hover:border-gray-300">
+          About the Studio
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-gray-100 bg-gray-50/50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">11K+</p>
+        <p class="text-xs text-gray-400 mt-0.5">Marketers served</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">24</p>
+        <p class="text-xs text-gray-400 mt-0.5">Products</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">28</p>
+        <p class="text-xs text-gray-400 mt-0.5">Countries</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900">4.9</p>
+        <p class="text-xs text-gray-400 mt-0.5">Avg. rating</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="products" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900">All Products</h2>
+      <p class="text-sm text-gray-400 mt-1">${(products || []).length} products available</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      ${(products || []).map((p, i) => {
+        const icons = [
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 00-2.58 5.84"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>',
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>'
+        ];
+        const bgColors = ['bg-indigo-50', 'bg-emerald-50', 'bg-violet-50', 'bg-amber-50', 'bg-rose-50', 'bg-cyan-50'];
+        const textColors = ['text-indigo-600', 'text-emerald-600', 'text-violet-600', 'text-amber-600', 'text-rose-600', 'text-cyan-600'];
+        return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition-all">' +
+          '<div class="w-10 h-10 rounded-lg ' + bgColors[i % 6] + ' flex items-center justify-center ' + textColors[i % 6] + ' shrink-0">' + icons[i % 5] + '</div>' +
+          '<div class="flex-1 min-w-0">' +
+            '<h3 class="font-semibold text-gray-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+            '<p class="text-xs text-gray-400 mt-0.5">' + (p.category || 'Digital') + '</p>' +
+          '</div>' +
+          '<span class="text-sm font-bold text-gray-900">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+        '</a>';
+      }).join('')}
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-50 py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-3">Why marketing teams choose ${store.name}</h2>
+    <p class="text-sm text-gray-400 text-center mb-10 max-w-lg mx-auto">Every asset is pressure-tested on a live campaign before it ships to the catalogue.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Instant Download</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">Files unlock the moment a payment confirms. No waiting on a fulfilment queue.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Secure Checkout</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">Payments are processed by Stripe over 256-bit TLS. Cards are never seen by our servers.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+          <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">Free Updates</h3>
+        <p class="text-xs text-gray-500 leading-relaxed">When we improve a template you already own, the new version arrives in your library at no extra cost.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-3xl mx-auto">
+      <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">About the Studio</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">A small studio for working marketers</h2>
+      <p class="text-sm text-gray-500 leading-relaxed mb-8">${store.about_text || 'Alzworks Digital was started by a tiny team of marketers and designers who wanted to spend less time recreating the same briefs and ad layouts every quarter. Every asset on the catalogue came out of an actual client engagement and was reworked into something teams could pick up and ship the same afternoon.'}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-gray-200 p-5">
+          <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
+            <svg class="w-4.5 h-4.5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1.5">What we make</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Templates, scripts, dashboards and playbooks for the moments where most marketing teams reach for a blank page.</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-5">
+          <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+            <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1.5">How we work</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Each release goes through a live campaign first. If it does not earn its keep on a paying client, it does not get listed here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-50 py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-8">What buyers say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      ${[
+        { name: 'Ines L.', role: 'Performance Marketer', text: 'The Meta Ads Creative Pack saved us roughly two days of designer time on our last launch. Worth it on the first campaign alone.' },
+        { name: 'Tomislav R.', role: 'Agency Founder', text: 'We dropped the Agency Proposal System into our sales workflow and closed two retainers the same week. Highly recommend.' },
+        { name: 'Selin K.', role: 'Brand Lead', text: 'The Tone of Voice Guide finally gave our copywriters a reference they actually wanted to use. Quietly excellent work.' }
+      ].map(t => '<div class="bg-white border border-gray-200 rounded-xl p-5">' +
+        '<div class="flex items-center gap-0.5 mb-3">' + Array(5).fill('<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>').join('') + '</div>' +
+        '<p class="text-gray-600 text-xs leading-relaxed mb-4">"' + t.text + '"</p>' +
+        '<div class="flex items-center gap-2.5">' +
+          '<div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold text-gray-500">' + t.name.split(' ').map(w => w[0]).join('') + '</div>' +
+          '<div><p class="text-xs font-semibold text-gray-900">' + t.name + '</p><p class="text-[10px] text-gray-400">' + t.role + '</p></div>' +
+        '</div>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Common questions</h2>
+    <p class="text-sm text-gray-400 mb-8">Short answers to the questions buyers ask us most often.</p>
+    <div class="space-y-2">
+      ${[
+        { q: 'Which payment methods can I use?', a: 'Visa, Mastercard, Amex, Apple Pay and Google Pay are all available. Stripe handles the processing and all data is sent over a 256-bit TLS connection.' },
+        { q: 'When do I get access to the files?', a: 'Immediately. Your library link appears on the confirmation screen and a copy is emailed to the address you used at checkout within a few minutes.' },
+        { q: 'Will I see Alzworks on my bank statement?', a: 'Your statement will read "ITG-ALZWORKS", which is the registered legal name of the studio. Same business, slightly more formal label.' },
+        { q: 'Can I use the assets in client work?', a: 'Yes. Every product ships with a standard commercial licence covering use in your own projects and in deliverables for paying clients. Reselling the original source files is not permitted.' },
+        { q: 'Do I get future updates?', a: 'Yes. When we improve a product you already own, your library updates automatically and you can download the new version at no extra charge.' },
+        { q: 'Do you offer team or seat-based pricing?', a: 'For teams larger than five seats we will quote a custom licence on request. Drop us a note via the contact form with your team size and the products you are interested in.' },
+        { q: 'What if a file will not open?', a: 'Email support within forty-eight hours and we will either send a working copy or refund the order. We test everything in current versions of the named tools before shipping.' },
+        { q: 'Where is the studio based?', a: 'The legal entity ITG-ALZWORKS is registered in Vinkovci, Croatia. The team itself works remotely across the EU.' }
+      ].map(item => '<details class="group bg-white border border-gray-200 rounded-xl overflow-hidden">' +
+        '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-gray-900 text-sm hover:text-primary transition">' +
+          '<span class="pr-4">' + item.q + '</span>' +
+          '<svg class="w-4 h-4 text-gray-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+        '</summary>' +
+        '<div class="px-4 pb-3.5 text-gray-500 text-xs leading-relaxed border-t border-gray-100 pt-3">' + item.a + '</div>' +
+      '</details>').join('')}
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="bg-gray-50 py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Say hello</h2>
+    <p class="text-sm text-gray-400 mb-8">Product questions, licence requests or partnership ideas \u2014 send them over and we will reply within one business day.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs font-semibold text-gray-900">Email</p>
+          <p class="text-[11px] text-gray-400 truncate">${store.contact_email || 'support@' + store.domain}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-900">Response</p>
+          <p class="text-[11px] text-gray-400">Within 24 hours</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-gray-900">Region</p>
+          <p class="text-[11px] text-gray-400">EU-based, ships worldwide</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <form class="space-y-4" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Message Sent!'; this.querySelector('button').disabled=true;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">First name</label>
+            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Mara" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Last name</label>
+            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Vidi\u0107" required>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">Email</label>
+          <input type="email" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="mara@brand.co" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">Message</label>
+          <textarea rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm resize-none" placeholder="What can the studio help with?" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary w-full text-white py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-950 py-12">
+  <div class="max-w-xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-lg sm:text-xl font-bold text-white mb-2">New releases, one email a month</h2>
+    <p class="text-xs text-gray-500 mb-6">A short note when something fresh hits the catalogue. No noise in between.</p>
+    <form class="flex gap-2 max-w-sm mx-auto" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed!'; this.querySelector('button').disabled=true; this.querySelector('input').disabled=true;">
+      <input type="email" placeholder="you@brand.co" required class="flex-1 bg-white/10 border border-white/10 text-white placeholder-gray-600 px-3.5 py-2.5 rounded-lg text-sm focus:outline-none focus:border-white/25">
+      <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg font-semibold text-sm shrink-0 transition">Subscribe</button>
+    </form>
+    <p class="text-[10px] text-gray-700 mt-2">No spam. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+`, store, products }) %>

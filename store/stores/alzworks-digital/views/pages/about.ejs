@@ -1,0 +1,52 @@
+<% const pageTitle = 'About'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="mb-10">
+    <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">About the Studio</span>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">A small studio behind ${store.name}</h1>
+    <p class="text-sm text-gray-500 leading-relaxed">A remote EU team of marketers, designers and writers who ship the same kits we use on paying client engagements.</p>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+    <p class="text-sm text-gray-600 leading-relaxed">${store.about_text || 'Alzworks Digital is a remote EU studio. We spent years rebuilding the same briefs, ad layouts, dashboards and proposal docs for every new client, so we started packaging the best of them and selling them at a price an in-house marketing team could actually approve without a meeting.'}</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+    <div class="bg-white rounded-xl border border-gray-200 p-5">
+      <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
+        <svg class="w-4.5 h-4.5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      </div>
+      <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Mission</h3>
+      <p class="text-xs text-gray-500 leading-relaxed">Make high-quality marketing assets available to small teams without the agency price tag attached.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5">
+      <div class="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center mb-3">
+        <svg class="w-4.5 h-4.5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </div>
+      <h3 class="font-semibold text-gray-900 text-sm mb-1.5">Method</h3>
+      <p class="text-xs text-gray-500 leading-relaxed">Every product is used on a live campaign first. Nothing ships to the catalogue until it has done real work for a real team.</p>
+    </div>
+  </div>
+
+  <h2 class="text-lg font-bold text-gray-900 mb-4">How we are different</h2>
+  <div class="space-y-2 mb-10">
+    ${[
+      { title: 'Practitioner-built', desc: 'Every asset comes out of an in-house brief or client engagement, not a course curriculum.' },
+      { title: 'Edit-ready', desc: 'Files arrive in editable Figma, Notion, Sheets and PDF formats. No locked PNGs.' },
+      { title: 'EU-registered', desc: 'Operated by ITG-ALZWORKS in Vinkovci, Croatia. Local invoicing and VAT handling for EU buyers.' },
+      { title: 'Real support', desc: 'A human replies to support emails within one business day.' },
+      { title: 'Full commercial licence', desc: 'Use in your own work and in deliverables for paying clients. No additional licence fees.' },
+      { title: 'Transparent pricing', desc: 'One-time prices on individual products. Optional pass for teams that want everything in one go.' }
+    ].map(item => '<div class="flex items-start gap-2.5 p-3 bg-gray-50 rounded-lg">' +
+      '<svg class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' +
+      '<div><p class="font-semibold text-gray-900 text-xs">' + item.title + '</p><p class="text-[11px] text-gray-400">' + item.desc + '</p></div>' +
+    '</div>').join('')}
+  </div>
+
+  <div class="bg-gray-50 rounded-xl p-6 text-center">
+    <h3 class="text-base font-bold text-gray-900 mb-2">Have a question?</h3>
+    <p class="text-xs text-gray-400 mb-4">Drop us a note and we will reply within one business day.</p>
+    <a href="/contact" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Contact the studio</a>
+  </div>
+</div>
+`, store }) %>

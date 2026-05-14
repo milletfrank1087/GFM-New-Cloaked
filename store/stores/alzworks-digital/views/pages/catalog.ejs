@@ -1,0 +1,36 @@
+<% const pageTitle = typeof searchQuery !== 'undefined' ? 'Search: ' + searchQuery : 'Catalogue'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-12">
+  <div class="mb-8">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">${typeof searchQuery !== 'undefined' && searchQuery ? 'Results for "' + searchQuery + '"' : 'Full catalogue'}</h1>
+    <p class="text-sm text-gray-400">${(products || []).length} marketing and creative tools, ready to download.</p>
+  </div>
+
+  <div class="sm:hidden mb-6">
+    <form action="/search" method="GET">
+      <input type="text" name="q" placeholder="Search the catalogue..." value="${typeof searchQuery !== 'undefined' ? searchQuery : ''}" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50">
+    </form>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    ${(products || []).map((p, i) => {
+      const icons = [
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/></svg>',
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>',
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 00-2.58 5.84"/></svg>',
+        '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>'
+      ];
+      const bgColors = ['bg-blue-50', 'bg-emerald-50', 'bg-violet-50', 'bg-amber-50', 'bg-rose-50', 'bg-cyan-50'];
+      const textColors = ['text-blue-600', 'text-emerald-600', 'text-violet-600', 'text-amber-600', 'text-rose-600', 'text-cyan-600'];
+      return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition-all">' +
+        '<div class="w-10 h-10 rounded-lg ' + bgColors[i % 6] + ' flex items-center justify-center ' + textColors[i % 6] + ' shrink-0">' + icons[i % 4] + '</div>' +
+        '<div class="flex-1 min-w-0">' +
+          '<h3 class="font-semibold text-gray-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+          '<p class="text-xs text-gray-400 mt-0.5 truncate">' + (p.description || p.category || 'Digital asset') + '</p>' +
+        '</div>' +
+        '<span class="font-bold text-gray-900 text-sm shrink-0">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+      '</a>';
+    }).join('')}
+  </div>
+</div>
+`, store, products, searchQuery: typeof searchQuery !== 'undefined' ? searchQuery : '' }) %>

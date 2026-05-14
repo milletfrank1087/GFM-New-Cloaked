@@ -1,0 +1,62 @@
+<% const pageTitle = 'Terms of Service'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Terms of Service</h1>
+  <p class="text-xs text-gray-400 mb-8">Last updated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6 text-gray-500 text-xs leading-relaxed">
+    <p>Welcome to ${store.name}, operated by ITG-ALZWORKS (Vinkovci, Croatia). By browsing this site or buying a product you agree to the terms below.</p>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">1. Products</h2>
+      <p>${store.name} sells digital products including templates, asset kits, dashboards, playbooks and editorial guides. Everything is delivered electronically as an instant download after a successful payment.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">2. Payment</h2>
+      <p class="mb-2">Payments are processed by Stripe, a PCI-DSS Level 1 certified processor. Prices are listed in the displayed currency and may be subject to local VAT or sales tax.</p>
+      <p>Prices can change at any time without notice; changes never affect orders that have already been completed. Your bank or card statement will show "${store.statement_descriptor || store.statementDescriptor || 'ITG-ALZWORKS'}".</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">3. Delivery</h2>
+      <p>Files are available immediately upon payment. Delivery is considered complete once the download link is accessible. If you cannot reach your files, contact support within forty-eight hours.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">4. Refunds</h2>
+      <p>Because products are delivered instantly as digital files, all sales are final. For genuine access issues, email ${store.contact_email || 'support@' + store.domain} and we will resolve it.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">5. Licence</h2>
+      <p class="mb-2">Each purchase grants a non-exclusive, non-transferable licence for personal and commercial use. You may:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>Use the asset in your own projects and in client deliverables</li>
+        <li>Modify or adapt the asset to fit your needs</li>
+      </ul>
+      <p class="mt-2">You may not redistribute, resell, sublicence or share the original source files. For multi-seat or agency-wide licences, contact the studio first.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">6. Intellectual property</h2>
+      <p>All content, designs and source files remain the intellectual property of ITG-ALZWORKS and are protected by applicable copyright law in the European Union.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">7. Limitation of liability</h2>
+      <p>Products are provided "as is". The studio is not liable for indirect, incidental or consequential damages arising from use of any product, to the maximum extent permitted by law.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">8. Changes</h2>
+      <p>These terms may be updated from time to time. Continued use of the site after publication of revised terms constitutes acceptance of the change.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-gray-900 mb-2">9. Contact</h2>
+      <p>Questions about these terms? Email <a href="mailto:${store.contact_email || 'support@' + store.domain}" class="text-primary hover:underline">${store.contact_email || 'support@' + store.domain}</a>.</p>
+    </div>
+  </div>
+</div>
+`, store }) %>
