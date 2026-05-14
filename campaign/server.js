@@ -25,7 +25,8 @@ const {
   createStore,
   updateStore,
   toggleStoreStatus,
-  deleteStore
+  deleteStore,
+  rebalanceStores
 } = require('./lib/supabase');
 const {
   trackEvent,
@@ -186,6 +187,7 @@ const ctx = {
   updateStore,
   toggleStoreStatus,
   deleteStore,
+  rebalanceStores,
   getCachedCampaignJSON: () => cachedCampaignJSON
 };
 

@@ -2,7 +2,7 @@ const express = require('express');
 
 module.exports = function createAdminStoresRouter(ctx, adminAuth) {
   const router = express.Router();
-  const { getStoreStats, getStoreDetail, createStore, updateStore, toggleStoreStatus, deleteStore } = ctx;
+  const { getStoreStats, getStoreDetail, createStore, updateStore, toggleStoreStatus, deleteStore, rebalanceStores } = ctx;
 
   router.get('/api/admin/stores', adminAuth, async (req, res) => {
     try {
@@ -36,6 +36,27 @@ module.exports = function createAdminStoresRouter(ctx, adminAuth) {
     } catch (error) {
       console.error('[admin/stores] create error:', error);
       res.status(500).json({ error: 'Failed to create store' });
+    }
+  });
+
+  router.post('/api/admin/stores/rebalance', adminAuth, async (req, res) => {
+    try {
+      const { updates } = req.body || {};
+      if (!Array.isArray(updates) || updates.length === 0) {
+        console.warn('[admin/stores/rebalance] rejected: empty or non-array updates payload');
+        return res.status(400).json({ error: 'updates must be a non-empty array of {id, weightPct, status} objects' });
+      }
+      console.info('[admin/stores/rebalance] applying', { count: updates.length });
+      const result = await rebalanceStores(updates);
+      if (!result.success) {
+        console.warn('[admin/stores/rebalance] failed:', result.error);
+        return res.status(400).json({ error: result.error });
+      }
+      console.info('[admin/stores/rebalance] succeeded', { stores: result.stores.length });
+      res.json(result);
+    } catch (error) {
+      console.error('[admin/stores/rebalance] unexpected error:', error);
+      res.status(500).json({ error: 'Failed to rebalance stores' });
     }
   });
 

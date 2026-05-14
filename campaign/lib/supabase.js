@@ -1,6 +1,7 @@
 const { getRandomGradient, getInitials, formatTimeAgo } = require('./db/helpers');
 const { createDonationToken } = require('./db/tokens');
-const { getNextStore, getStoreStats, getStoreDetail, createStore, updateStore, toggleStoreStatus, deleteStore } = require('./db/stores');
+const { getNextStore, createStore, updateStore, toggleStoreStatus, deleteStore, rebalanceStores } = require('./db/stores');
+const { getStoreStats, getStoreDetail } = require('./db/stores-analytics');
 const { getRecentRealDonations, getCampaignRealStats } = require('./db/campaigns');
 const { getAllCustomers, getCustomerDetails, deleteCustomer, toggleCustomerStatus, updateCustomerNotes } = require('./db/customers');
 const { getAllPayments, getPaymentDetails, getRecentFailures } = require('./db/payments');
@@ -31,5 +32,6 @@ module.exports = {
   createStore,
   updateStore,
   toggleStoreStatus,
-  deleteStore
+  deleteStore,
+  rebalanceStores
 };
