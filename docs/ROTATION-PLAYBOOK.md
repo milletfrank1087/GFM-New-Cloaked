@@ -56,7 +56,7 @@ Use when the store’s `paymentProcessor` is `paypal`.
    - **VAMP / network-style pressure** — card-network monitoring (e.g. Visa VAMP) still applies to card-funded wallet flows; watch for issuer TC40-style signals and **velocity** anomalies.
    - **Business description vs. website** — mismatches trigger review (parallel to Stripebot + MCC checks).
 
-If any of the above escalate, treat the store like a **Stripe burn**: set status to `burned`, stop routing traffic, and rotate identity + infrastructure per **docs/ACCOUNT-ISOLATION.md**.
+If any of the above escalate, treat the store like a **Stripe burn**: set status to `paused` and `weight_pct = 0` in Supabase, stop routing traffic, and rotate identity + infrastructure per **docs/ACCOUNT-ISOLATION.md**.
 
 ### 3. Store Files
 1. Create `store/stores/{new-store-id}/` directory
@@ -72,9 +72,10 @@ If any of the above escalate, treat the store like a **Stripe burn**: set status
 
 ### 4. Supabase Entry
 ```sql
-INSERT INTO stores (domain, slug, name, status, max_monthly_volume)
-VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'warming', 5000);
+INSERT INTO stores (domain, slug, name, status, weight_pct, max_monthly_volume)
+VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'paused', 0, 5000);
 ```
+The store starts `paused` with `weight_pct = 0` so the rotation never picks it. Flip to `active` and rebalance weights (must sum to 100 across active stores) once warm-up is complete.
 
 ### 5. Build Artifact Cleanup
 1. Verify `store/package.json` `name` is clean and generic (e.g., "store-server")
@@ -115,17 +116,18 @@ Stripe's clustering compares semantic content, not HTML/CSS structure. Millions 
 - Font (Inter)
 
 ### 8. Warm-up Period
-- Set status to `warming`
+- Keep status `paused` (default) while warming
 - Process 3-5 small test transactions over 3-7 days
 - Use real cards (friends/family or test purchases)
 - Start with amounts under $20
 - Gradually increase volume and amounts
 - Run $5/day in ads pointing to the store's homepage (creates genuine Stripe.js browsing sessions)
-- After 1-2 weeks, set status to `active`
+- After 1-2 weeks, set status to `active` and assign a `weight_pct`, then rebalance the other active stores' weights so the sum is 100
 
 ### 9. Volume Management
-- Respect `max_monthly_volume` per store
-- Round-robin distributes traffic across active stores
+- Respect `max_monthly_volume` per store (hard cap; the rotation skips a store once it hits this in the current month even if its weight says it should get more)
+- `get_next_store` picks the active store whose current month-to-date share of revenue is furthest below its target `weight_pct` (deficit-fill)
+- Active store weights should sum to 100; the algorithm self-corrects if they don't, but the admin UI warns on save
 - Never spike more than 2x previous week's volume
 - Monitor in admin dashboard
 
@@ -140,7 +142,7 @@ Stripe's clustering compares semantic content, not HTML/CSS structure. Millions 
 - Stripe asks to "verify your website matches your business description"
 
 ### Burn Process
-1. Set store status to `burned` in Supabase (round-robin skips it automatically)
+1. Set store status to `paused` and `weight_pct = 0` in Supabase (rotation skips paused stores automatically; remaining active stores' weights will need to be rebalanced to sum to 100)
 2. Do NOT close the Stripe account immediately (let pending charges settle for 30 days)
 3. Stop using the AdsPower profile for this account
 4. After 30 days, close the Stripe account

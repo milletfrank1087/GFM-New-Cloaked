@@ -160,7 +160,7 @@ Run $5/day in ads pointing to each store's homepage. This creates genuine browsi
 | Store setup time | 2-4 hours (domain + Stripe + Railway + content) |
 | Warm-up period | 2-4 weeks per store |
 | Expected store lifetime | 12-24 months (with zero chargebacks) |
-| Stores needed per year | 3 active + 1 warming + 1-2 replacements |
+| Stores needed per year | 3 active + 1 paused (pre-warmed backup) + 1-2 replacements |
 | Monthly capacity per store | $5,000-$15,000 (depending on MCC and age) |
 
 ## Project Structure

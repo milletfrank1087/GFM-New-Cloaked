@@ -114,7 +114,7 @@ Account #2: Nova Essentials
 ## Burn & Replace Process
 
 ### Step 1: Burn the Old Account
-1. Set store status to `burned` in Supabase (round-robin skips it automatically)
+1. Set store status to `paused` and `weight_pct = 0` in Supabase (rotation skips it automatically; rebalance the remaining active stores' weights to sum to 100)
 2. Do NOT close the Stripe account immediately (let pending charges settle for 30 days)
 3. Stop using the AdsPower profile for this account
 4. After 30 days, close the Stripe account
@@ -129,11 +129,11 @@ Account #2: Nova Essentials
 6. Write NEW content: product names, descriptions, about text, reviews
 7. Choose NEW metadata key names in `config.js`
 8. Create new Railway service, set new `.env`
-9. Add to Supabase `stores` table with status `warming`
+9. Add to Supabase `stores` table with status `paused` and `weight_pct = 0`
 10. Register Apple Pay domain in new Stripe Dashboard
 11. Register webhook endpoint in new Stripe Dashboard
-12. Warm up: 3-5 small transactions over 1-2 weeks
-13. Set status to `active`
+12. Warm up: 3-5 small transactions over 1-2 weeks (stays `paused` for warm-up)
+13. Set status to `active`, assign `weight_pct`, and rebalance active stores' weights to sum to 100
 
 ### Step 3: Never Cross-Contaminate
 - Never log into the new dashboard from the old AdsPower profile

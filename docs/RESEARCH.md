@@ -331,7 +331,7 @@ If a rented account has an incompatible MCC, you have three options:
 
 - With 3 stores, each lasting 12+ months: effectively infinite
 - Budget for 1-2 new stores per year as preventive replacements
-- Keep 1 store in "warming" status at all times as backup
+- Keep 1 store `paused` with `weight_pct = 0` at all times as a pre-warmed backup
 
 ---
 

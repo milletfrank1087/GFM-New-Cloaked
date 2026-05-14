@@ -1,9 +1,10 @@
-INSERT INTO stores (slug, domain, name, status, total_processed, transaction_count, max_monthly_volume)
+INSERT INTO stores (slug, domain, name, status, weight_pct, total_processed, transaction_count, max_monthly_volume)
 VALUES (
   'digitelon',
   'www.digitelon.shop',
   'Digitelon',
-  'warming',
+  'paused',
+  0,
   0,
   0,
   5000

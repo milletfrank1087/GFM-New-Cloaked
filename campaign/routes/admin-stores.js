@@ -26,11 +26,11 @@ module.exports = function createAdminStoresRouter(ctx, adminAuth) {
 
   router.post('/api/admin/stores', adminAuth, async (req, res) => {
     try {
-      const { slug, domain, name, paymentProcessor, maxMonthlyVolume, status } = req.body;
+      const { slug, domain, name, paymentProcessor, maxMonthlyVolume, status, weightPct } = req.body;
       if (!slug || !domain || !name) {
         return res.status(400).json({ error: 'slug, domain, and name are required' });
       }
-      const result = await createStore({ slug, domain, name, paymentProcessor, maxMonthlyVolume, status });
+      const result = await createStore({ slug, domain, name, paymentProcessor, maxMonthlyVolume, status, weightPct });
       if (!result.success) return res.status(400).json({ error: result.error });
       res.json(result);
     } catch (error) {

@@ -42,6 +42,7 @@ async function getStoreStats() {
       name: s.name,
       status: s.status,
       paymentProcessor: s.payment_processor,
+      weightPct: s.weight_pct || 0,
       totalProcessed: parseFloat(s.total_processed || 0),
       transactionCount: s.transaction_count || 0,
       maxMonthlyVolume: parseFloat(s.max_monthly_volume || 0),
@@ -106,6 +107,7 @@ async function getStoreDetail(storeId) {
       name: store.name,
       status: store.status,
       paymentProcessor: store.payment_processor,
+      weightPct: store.weight_pct || 0,
       totalProcessed: parseFloat(store.total_processed || 0),
       transactionCount: store.transaction_count || 0,
       maxMonthlyVolume: parseFloat(store.max_monthly_volume || 0),
@@ -161,6 +163,9 @@ async function getStoreDetail(storeId) {
 async function createStore(storeData) {
   if (!supabase) return { success: false, error: 'Supabase not configured' };
 
+  const status = storeData.status === 'active' ? 'active' : 'paused';
+  const weightPct = Number.isFinite(storeData.weightPct) ? Math.max(0, Math.min(100, parseInt(storeData.weightPct, 10))) : 0;
+
   try {
     const { data, error } = await supabase
       .from('stores')
@@ -170,7 +175,8 @@ async function createStore(storeData) {
         name: storeData.name,
         payment_processor: storeData.paymentProcessor || 'stripe',
         max_monthly_volume: storeData.maxMonthlyVolume || 100000,
-        status: storeData.status || 'warming'
+        status,
+        weight_pct: weightPct
       })
       .select()
       .single();
@@ -190,7 +196,19 @@ async function updateStore(storeId, updates) {
     if (updates.name !== undefined) allowed.name = updates.name;
     if (updates.domain !== undefined) allowed.domain = updates.domain;
     if (updates.maxMonthlyVolume !== undefined) allowed.max_monthly_volume = updates.maxMonthlyVolume;
-    if (updates.status !== undefined) allowed.status = updates.status;
+    if (updates.status !== undefined) {
+      if (!['active', 'paused'].includes(updates.status)) {
+        return { success: false, error: 'status must be active or paused' };
+      }
+      allowed.status = updates.status;
+    }
+    if (updates.weightPct !== undefined) {
+      const w = parseInt(updates.weightPct, 10);
+      if (!Number.isFinite(w) || w < 0 || w > 100) {
+        return { success: false, error: 'weightPct must be an integer between 0 and 100' };
+      }
+      allowed.weight_pct = w;
+    }
 
     if (Object.keys(allowed).length === 0) return { success: false, error: 'No valid fields to update' };
 
@@ -211,10 +229,17 @@ async function updateStore(storeId, updates) {
 async function toggleStoreStatus(storeId, status) {
   if (!supabase) return { success: false, error: 'Supabase not configured' };
 
+  if (!['active', 'paused'].includes(status)) {
+    return { success: false, error: 'status must be active or paused' };
+  }
+
   try {
+    const patch = { status };
+    if (status === 'paused') patch.weight_pct = 0;
+
     const { error } = await supabase
       .from('stores')
-      .update({ status })
+      .update(patch)
       .eq('id', storeId);
 
     if (error) return { success: false, error: error.message };
@@ -239,7 +264,7 @@ async function deleteStore(storeId) {
     if (store.transaction_count > 0) {
       const { error } = await supabase
         .from('stores')
-        .update({ status: 'removed' })
+        .update({ status: 'paused', weight_pct: 0 })
         .eq('id', storeId);
 
       if (error) return { success: false, error: error.message };

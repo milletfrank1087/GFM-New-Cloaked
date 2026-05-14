@@ -321,12 +321,16 @@ NODE_ENV=production
 
 **What to do**:
 ```sql
--- Mark old store as burned
-UPDATE stores SET status = 'burned' WHERE slug = 'old-store-id';
+-- Retire the old store (rotation skips paused + weight=0 automatically)
+UPDATE stores SET status = 'paused', weight_pct = 0 WHERE slug = 'old-store-id';
 
--- Add new store
-INSERT INTO stores (domain, slug, name, status, max_monthly_volume)
-VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'warming', 5000);
+-- Add new store (stays paused with weight 0 until warm-up is complete)
+INSERT INTO stores (domain, slug, name, status, weight_pct, max_monthly_volume)
+VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'paused', 0, 5000);
+
+-- Once warm-up is done, flip to active and rebalance the active stores' weights to sum to 100, e.g.:
+-- UPDATE stores SET status = 'active', weight_pct = 30 WHERE slug = 'new-store-id';
+-- UPDATE stores SET weight_pct = 70 WHERE slug = 'older-active-store';
 ```
 
 ---
@@ -336,8 +340,9 @@ VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'warming', 5000);
 Use this checklist every time you replace a Stripe account:
 
 ### Phase 1: Burn (Day 0)
-- [ ] Set store status to `burned` in Supabase
-- [ ] Stop routing traffic to this store (round-robin auto-skips)
+- [ ] Set store status to `paused` and `weight_pct = 0` in Supabase
+- [ ] Rebalance the remaining active stores' weights so they sum to 100
+- [ ] Stop routing traffic to this store (rotation auto-skips paused / weight=0 stores)
 - [ ] Stop accessing the Stripe Dashboard for this account
 - [ ] Note the AdsPower profile # and NodeMaven IP to never reuse
 
@@ -372,7 +377,7 @@ Use this checklist every time you replace a Stripe account:
 - [ ] Create new `.env` with all new Stripe keys and domain
 - [ ] Create new Railway service and deploy
 - [ ] Point domain DNS to new Railway deployment
-- [ ] Add store to Supabase `stores` table with status `warming`
+- [ ] Add store to Supabase `stores` table with status `paused` and `weight_pct = 0`
 
 ### Phase 6: Warm Up (Day 7–21)
 - [ ] Process 3-5 small test transactions ($5-$20 range)
@@ -383,8 +388,9 @@ Use this checklist every time you replace a Stripe account:
 - [ ] Monitor Stripe Dashboard for any compliance notices
 
 ### Phase 7: Go Live (Day 14–21)
-- [ ] Set store status to `active` in Supabase
-- [ ] Verify round-robin is routing traffic to the new store
+- [ ] Set store status to `active` in Supabase and assign a target `weight_pct`
+- [ ] Rebalance the other active stores' weights so the sum is 100
+- [ ] Verify the rotation is routing traffic to the new store (run `SELECT * FROM get_next_store();` repeatedly to see the deficit-fill picker in action)
 - [ ] Run the full sterility check (see TESTING-GUIDE.md)
 - [ ] Monitor first week closely for any Stripe flags
 
@@ -405,7 +411,7 @@ Even without account burns, consider rotating proactively:
 |----------|--------|
 | Every 6 months | Rotate the NodeMaven IP for each active profile (even if not burned) |
 | Every 12 months | Consider proactively rotating the oldest active store |
-| Continuous | Keep 1 store in "warming" status as backup |
+| Continuous | Keep 1 store in `paused` status with `weight_pct = 0` as a pre-warmed backup |
 | Weekly | Monitor chargeback rates, compliance notices, payment failure rates |
 
 ---
@@ -451,13 +457,13 @@ NEW ACCOUNT ROTATION QUICK REF
 □ New fulfillment key aliases (fulfillmentStatus, fulfilledAt, deliveryMethod)
 □ New Railway service
 □ New .env with all new keys
-□ Supabase: INSERT stores + SET status = 'warming'
+□ Supabase: INSERT stores with status='paused', weight_pct=0
 □ Stripe Dashboard: Apple Pay domain + webhook + descriptor
 □ Delete + regenerate package-lock.json (verify clean names)
 □ Grep entire deploy dir for prohibited terms
-□ Warm up 2-3 weeks
+□ Warm up 2-3 weeks (status stays 'paused' during warm-up)
 □ Run sterility check (TESTING-GUIDE.md)
-□ Set status = 'active'
+□ Set status='active' + assign weight_pct + rebalance active stores' weights to sum to 100
 ================================
 NEVER REUSE from burned account:
 ✗ Bank account

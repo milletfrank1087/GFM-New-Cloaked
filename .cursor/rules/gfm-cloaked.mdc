@@ -22,7 +22,7 @@
 - Supabase project: "DB for Projects" (wzialsfdguuircomaqvp)
 - Service role key in env vars, never hardcoded
 - Triggers auto-update customer_totals and store_stats
-- Round-robin store selection via `get_next_store()` RPC
+- Weighted store selection via `get_next_store()` RPC: each `stores` row carries `weight_pct` (0-100), and the RPC picks the active store whose current month-to-date revenue share is furthest below its target weight (deficit-fill). Active store weights should sum to 100; `status` is binary `active|paused`.
 
 ## Store Frontend
 - EJS templates with Tailwind CSS (CDN)
