@@ -1,9 +1,8 @@
 module.exports = {
   name: 'Alzworks Digital',
-  domain: 'alzworks.digital',
   statementDescriptor: 'ITG-ALZWORKS',
   tagline: 'Digital marketing tools, creative kits and brand assets for modern teams.',
-  contact_email: 'support@alzworks.digital',
+  contact_email: 'support@alzworks.shop',
   about_text: 'Alzworks Digital is a small EU-based studio that builds the tools we ship to our own clients. Every product on this catalogue started as something an in-house marketer or creative director asked us to make; once it had been used on a few real campaigns we wrapped it up and put it here.',
   currency: 'EUR',
   currencySymbol: '€',
