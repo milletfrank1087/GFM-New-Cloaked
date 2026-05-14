@@ -5,3 +5,6 @@ node_modules/
 *.jsonl
 npm-debug.log*
 tools/
+
+# local audit dumps
+.audit-envvars.txt
