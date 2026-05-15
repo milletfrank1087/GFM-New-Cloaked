@@ -69,9 +69,13 @@ const StoreLog = {
     const B = '\x1b[1m';
     const D = '\x1b[2m';
     const pad = (s, n = 52) => String(s).padEnd(n);
+    const brand = String(storeName || 'Store').toUpperCase();
+    const bannerLine = `           🏪 ${B}${brand}${R} - Store Server`;
+    const visibleLen = brand.length + 22;
+    const bannerPad = ' '.repeat(Math.max(0, w - visibleLen));
     console.log('');
     console.log(`${C}╔${'═'.repeat(w)}╗${R}`);
-    console.log(`${C}║${R}           🏪 ${B}GFM CLOAKED${R} - Store Server                                     ${C}║${R}`);
+    console.log(`${C}║${R}${bannerLine}${bannerPad}${C}║${R}`);
     console.log(`${C}╠${'═'.repeat(w)}╣${R}`);
     console.log(`${C}║${R}  🌐 Server:   http://localhost:${pad(port, 45)}${C}║${R}`);
     console.log(`${C}║${R}  🏷️  Store:    ${pad(storeName)}${C}║${R}`);

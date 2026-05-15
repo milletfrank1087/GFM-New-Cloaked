@@ -59,16 +59,29 @@ Use when the store’s `paymentProcessor` is `paypal`.
 If any of the above escalate, treat the store like a **Stripe burn**: set status to `paused` and `weight_pct = 0` in Supabase, stop routing traffic, and rotate identity + infrastructure per **docs/ACCOUNT-ISOLATION.md**.
 
 ### 3. Store Files
-1. Create `store/stores/{new-store-id}/` directory
-2. Copy from existing store (template/code sharing is safe), then customize:
-   - `config.js`: unique name, statement descriptor, **unique metadata keys** (including fulfillment keys), products with irregular prices
-   - All EJS page content: unique product descriptions, about text, reviews, FAQ answers
-3. `cart.js` and `checkout.js` can remain identical (standard Stripe integration code)
-4. Fulfillment keys in `config.js` `metadataKeys`:
-   - `fulfillmentStatus` — aliased name for delivery status (e.g., "file_status", "order_state")
-   - `fulfilledAt` — aliased name for fulfillment timestamp (e.g., "access_granted", "completed_at")
-   - `deliveryMethod` — aliased name for delivery type (e.g., "file_delivery", "send_method")
-   - Each alias MUST be unique across all stores
+1. Create `store/stores/{new-store-id}/` directory.
+2. Add a `VARIANTS` entry to `store/lib/layout-fingerprint.js` for the new store ID. Pick distinct CSS variable names, nav class names, body class, header class, transition timing/easing, and font stack — must not match any existing variant. **If you skip this step, the server boot will throw "No layout fingerprint defined for store ..."** This is the per-store HTML/CSS fingerprint defense identified in `CLUSTERING-AUDIT-2026-05.md`.
+3. Generate a per-store unique 24-price vector:
+   ```powershell
+   node store/scripts/generate-prices.js --store={new-store-id} --dry-run
+   node store/scripts/generate-prices.js --store={new-store-id}
+   ```
+   The vector is deterministic (seed = store ID) so the same store ID always reproduces the same vector. NEVER copy prices from another store.
+4. Copy `views/` from an existing store, then customize:
+   - `config.js`: unique name, statement descriptor, **unique metadata keys** (including fulfillment keys), `currency`, `currencySymbol`.
+   - Logo SVG + nav labels in `views/partials/header.ejs` — these are intentional content differentiators.
+   - All EJS page content: unique product descriptions, about text, reviews, FAQ answers — write new content; do NOT find-and-replace from another store.
+5. `cart.js` and `checkout.js` can remain identical (standard Stripe integration code).
+6. Fulfillment keys in `config.js` `metadataKeys`:
+   - `fulfillmentStatus` — aliased name for delivery status (e.g., `file_status`, `order_state`)
+   - `fulfilledAt` — aliased name for fulfillment timestamp (e.g., `access_granted`, `completed_at`)
+   - `deliveryMethod` — aliased name for delivery type (e.g., `file_delivery`, `send_method`)
+   - Each alias MUST be unique across all stores.
+7. Run the sterility check and confirm PASS:
+   ```powershell
+   cd store; npm run sterility-check
+   ```
+   The check also runs automatically at `prestart`, so a regression will fail Railway boot.
 
 ### 4. Supabase Entry
 ```sql
@@ -78,42 +91,49 @@ VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'paused', 0, 5000);
 The store starts `paused` with `weight_pct = 0` so the rotation never picks it. Flip to `active` and rebalance weights (must sum to 100 across active stores) once warm-up is complete.
 
 ### 5. Build Artifact Cleanup
-1. Verify `store/package.json` `name` is clean and generic (e.g., "store-server")
-2. Delete `store/package-lock.json`
-3. Run `npm install` in the store directory to regenerate
-4. Open the new lockfile and confirm lines 2 and 8 show the clean name
-5. Run `rg -i "gfm|cloaked|donation|campaign|fundrais" --type json` and verify zero matches
+1. Verify `store/package.json` `name` is clean and generic (e.g., `store-server`).
+2. Delete `store/package-lock.json`.
+3. Run `npm install` in the store directory to regenerate.
+4. Open the new lockfile and confirm lines 2 and 8 show the clean name.
+5. Run `cd store; npm run sterility-check` and verify PASS. This replaces the older `rg -i "gfm|cloaked..."` manual check — the script is now the source of truth.
 
 ### 6. Railway Deployment
-- Create a NEW Railway service for this store
-- Set environment variables (STORE_ID, STRIPE keys, CALLBACK_SECRET, etc.)
-- CRITICAL: Use a generic CALLBACK_SECRET (no "gfm", "cloaked", or "donation" in the value)
-- Deploy from the `store/` directory
+- Create a NEW Railway service for this store.
+- Set environment variables (`STORE_ID`, `STORE_DOMAIN`, Stripe / PayPal credentials, `CALLBACK_SECRET`, Supabase keys, `APPLE_PAY_DOMAIN_ASSOCIATION`).
+- `APPLE_PAY_DOMAIN_ASSOCIATION` MUST be the file Stripe issued for THIS store's account. Never reuse another store's file. The repo `.gitignore` prevents accidental check-ins.
+- CRITICAL: `CALLBACK_SECRET` MUST be a generic random string (no `gfm`, `cloaked`, `fundrais`, or shared suffix patterns across deployments).
+- Deploy from the `store/` directory. The Railway boot runs `prestart` → `node scripts/sterility-check.js` → fails the boot if the check fails.
 
-### 7. What MUST Differ Per Store (Content)
+### 7. What MUST Differ Per Store
+**Content (operator-curated):**
 - Domain name
 - Store name and tagline
 - Payment processor account — **Stripe** *or* **PayPal Business** (completely separate per store; never shared across stores)
 - Product names and descriptions (text similarity detection compares CONTENT, not code)
 - About text and contact email
 - Statement descriptor
-- **PaymentIntent metadata key names** (see STORE-CONFIG.md)
-- **Fulfillment metadata key aliases** (fulfillmentStatus, fulfilledAt, deliveryMethod)
+- **PaymentIntent metadata key names** (see `STORE-CONFIG.md`)
+- **Fulfillment metadata key aliases** (`fulfillmentStatus`, `fulfilledAt`, `deliveryMethod`)
 - Customer reviews content
 - FAQ answers (can cover same topics, but different wording)
+- Logo SVG and nav labels in `views/partials/header.ejs`
 
-### 8. What CAN Be Shared (Template/Code)
-Stripe's clustering compares semantic content, not HTML/CSS structure. Millions of merchants use identical Shopify themes and SamCart templates — template sharing is safe.
-- HTML/CSS template structure and EJS layout
-- Page structure and template code layout
-- `checkout.js` and `cart.js` logic
-- `decompose.js` logic
-- Tailwind CSS classes and color scheme
-- Supabase database
-- Number of products (24)
-- Price point coverage ranges
-- Number of pages
-- Font (Inter)
+**Fingerprint (code-enforced — see `CLUSTERING-AUDIT-2026-05.md`):**
+- **Layout fingerprint** — new `VARIANTS` entry in `store/lib/layout-fingerprint.js`. Drives CSS variable names, nav class names, body class, header class, transition timing, font stack.
+- **24-product price vector** — run `node store/scripts/generate-prices.js --store=<id>`. Deterministic per-store unique vector.
+- **Apple Pay merchant-domain-association file** — per-deploy `APPLE_PAY_DOMAIN_ASSOCIATION` env var, issued by THIS store's Stripe account.
+- **`CALLBACK_SECRET`** — unique random string per deploy; never share a suffix pattern across deploys.
+
+### 8. What CAN Be Shared (Safe Within Defense Strategy)
+- Tailwind CDN, Inter font, Google Fonts preconnect — universal across the web.
+- Express + Stripe SDK pinned at the same version — server-side, never reaches Stripe.
+- `checkout.js`, `cart.js`, `paypal-*.js` script bodies — Stripe doesn't fingerprint script bodies.
+- `decompose.js` logic — server-side, invisible to Stripe.
+- Supabase project — server-side.
+- Railway hosting subnet (`66.33.22.0/24`) — cloud IPs are low-signal on their own.
+- Number of pages (Home, About, FAQ, Contact, etc.) — universal e-commerce pattern.
+- Page structure skeleton (`<main>` + header + footer) — every storefront on the internet has this.
+- `store/server.js`, `store/routes/*`, `store/lib/*` — server-side, invisible to Stripe.
 
 ### 8. Warm-up Period
 - Keep status `paused` (default) while warming

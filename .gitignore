@@ -8,3 +8,11 @@ tools/
 
 # local audit dumps
 .audit-envvars.txt
+
+# Apple Pay merchant-domain-association files MUST NEVER be committed.
+# Each Stripe account issues its own (pspId is account-bound). Sharing one
+# file across multiple deployments creates a deterministic cluster signal
+# for Stripe Risk. Provide via APPLE_PAY_DOMAIN_ASSOCIATION env var per deploy.
+apple-developer-merchantid-domain-association
+apple-developer-merchantid-domain-association*
+**/.well-known/apple-developer-merchantid-domain-association

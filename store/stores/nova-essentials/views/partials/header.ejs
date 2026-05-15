@@ -1,4 +1,4 @@
-<header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+<header class="<%= store.fingerprint.headerClass %>">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
     <a href="/" class="flex items-center gap-2 shrink-0">
       <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
@@ -28,8 +28,8 @@
   </div>
 </header>
 
-<div id="nav-overlay" class="nav-overlay fixed inset-0 bg-black/30 z-50 md:hidden"></div>
-<div id="nav-drawer" class="nav-drawer fixed top-0 right-0 bottom-0 w-72 bg-white z-50 md:hidden shadow-2xl">
+<div id="<%= store.fingerprint.overlayId %>" class="<%= store.fingerprint.overlayClass %> fixed inset-0 bg-black/30 z-50 md:hidden"></div>
+<div id="<%= store.fingerprint.navId %>" class="<%= store.fingerprint.navClass %> fixed top-0 right-0 bottom-0 w-72 bg-white z-50 md:hidden shadow-2xl">
   <div class="flex items-center justify-between px-5 h-14 border-b border-gray-100">
     <span class="font-bold text-gray-900"><%= store.name %></span>
     <button id="menu-close" class="p-2 -mr-2 text-gray-400 hover:text-gray-900 transition" aria-label="Close">
@@ -50,8 +50,8 @@
 (function(){
   var toggle=document.getElementById('menu-toggle'),
       close=document.getElementById('menu-close'),
-      drawer=document.getElementById('nav-drawer'),
-      overlay=document.getElementById('nav-overlay');
+      drawer=document.getElementById('<%= store.fingerprint.navId %>'),
+      overlay=document.getElementById('<%= store.fingerprint.overlayId %>');
   function open(){drawer.classList.add('open');overlay.classList.add('open');document.body.style.overflow='hidden';}
   function shut(){drawer.classList.remove('open');overlay.classList.remove('open');document.body.style.overflow='';}
   if(toggle)toggle.addEventListener('click',open);

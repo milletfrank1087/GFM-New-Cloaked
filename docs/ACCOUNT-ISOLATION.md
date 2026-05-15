@@ -10,7 +10,7 @@ This document lists EVERY attribute Stripe tracks and whether it must be rotated
 
 ## What Stripe Tracks for Cross-Account Linking
 
-Stripe's official similarity clustering blog (2020) and the Payments Foundation Model (2025) reveal that account linking uses:
+Stripe's similarity clustering (2020), the Payments Foundation Model (2025), and the Fraudulent Website Signal LLM (2026 preview) reveal that account linking uses:
 
 1. **Bank account numbers** — strongest signal, hardest to fake
 2. **Email addresses and domains** — both the account email and pattern
@@ -22,6 +22,9 @@ Stripe's official similarity clustering blog (2020) and the Payments Foundation 
 8. **Card fingerprints** — if the same card was ever used on the account
 9. **Text similarity** — business name, description, product content (semantic, not HTML)
 10. **Behavioral patterns** — transaction timing, amounts, frequency
+11. **Apple Pay merchant-domain-association file pspId** — account-bound; same file served on N domains links those N accounts (verified empirically in 2026-05 audit)
+12. **HTML/CSS template fingerprint** — the Fraudulent Website Signal LLM evaluates template similarity; identical layout `<head>` across accounts is a high-confidence cluster signal
+13. **Price-tuple similarity** — Payments Foundation Model surfaces identical 20+ price vectors across accounts as an embedding-collision pattern
 
 ---
 
@@ -59,26 +62,31 @@ Stripe's official similarity clustering blog (2020) and the Payments Foundation 
 | AdsPower profile used for burned dashboard | Device fingerprint match |
 | IP used to access burned dashboard | IP overlap |
 
+### MUST Diverge Across Stores (Enforced in Code — 2026-05 Audit)
+
+| Attribute | Why | Enforcement |
+|-----------|-----|-------------|
+| **Apple Pay merchant-domain-association file** | Account-bound (pspId is Stripe-issued, 1:1 with account). Identical file across deployments deterministically links the accounts via Stripe's `payment_method_domains` data. | `.gitignore` blocks check-in; `store/server.js` serves via `APPLE_PAY_DOMAIN_ASSOCIATION` env var per deploy. |
+| **24-product price vector** | Identical price tuple across 5 MCC-5734 accounts is an embedding-collision signal for the Payments Foundation Model. | `store/scripts/generate-prices.js` — deterministic per-store unique 24-price vector seeded from store ID. |
+| **HTML/CSS layout fingerprint** | LLM Fraudulent Website Signal explicitly targets "fake storefronts" with identical rendered head/style blocks. | `store/lib/layout-fingerprint.js` — 5 distinct variants with different CSS var names, nav classes, body class, header class, transition, font stack, structural CSS. Adding a store requires a new `VARIANTS` entry. |
+| **PaymentIntent metadata key names** | Cross-store metadata-shape similarity. | Each store picks unique `metadataKeys` in its `config.js`; cross-check by hand against every other store's `config.js`. |
+| **Logger startup banner** | Any operator-identifying string leaked to logs / Stripe support tickets / Railway exports links the deployments. | `store/lib/logger.js` reads brand from `storeName` param. `store/scripts/sterility-check.js` blocks `gfm`/`cloaked`/`fundrais` literals at `prestart`. |
+
 ### Safe to Reuse (NO rotation needed)
 
 | Attribute | Why Safe |
 |-----------|---------|
-| **HTML/CSS template code** | Millions of merchants share Shopify/WooCommerce templates. Stripe compares content, not code structure. |
-| **Color scheme (CSS)** | CSS is framework-level. Stripe compares text content, not visual design. All stores share the same green palette. |
-| **EJS template layout** | Framework-level, not content-level |
-| **`checkout.js` / `cart.js`** | Standard Stripe integration code, identical to millions of Stripe integrations |
+| **`checkout.js` / `cart.js`** | Standard Stripe integration code, identical to millions of Stripe integrations. Script bodies don't fingerprint sites at Stripe's evaluation layer. |
 | **`decompose.js` logic** | Server-side, invisible to Stripe |
-| **Tailwind CSS** | CSS framework used by millions |
-| **Page structure** (header, nav, footer) | Universal e-commerce pattern |
-| **Number of products** (24) | Not a meaningful signal |
+| **Tailwind CSS via CDN** | CSS framework used by millions of sites |
+| **Inter font via Google Fonts** | Used by millions of websites |
+| **Page structure** (header, nav, footer skeleton) | Universal e-commerce pattern. Per-store content (links, copy, logo SVG) must still differ. |
 | **Number of pages** | Common pattern |
-| **Price point coverage range** | Common across e-commerce |
 | **Supabase database** | Server-side, invisible to Stripe |
-| **Railway hosting IP** | Cloud IPs shared by millions of sites |
+| **Railway hosting IP block** | Cloud IPs shared by millions of sites; low individual signal |
 | **Campaign server URLs** | Never visible to Stripe (referrer broken by meta-refresh) |
-| **`CALLBACK_SECRET`** | Server-to-server, invisible to Stripe |
+| **`CALLBACK_SECRET`** structure | Server-to-server, invisible to Stripe — but the literal string MUST be unique per deploy and MUST NOT contain `gfm`/`cloaked`/`fundrais` |
 | **`SUPABASE_SERVICE_ROLE_KEY`** | Server-side only |
-| **Font (Inter)** | Used by millions of websites |
 | **Checkout UX flow** | Standard e-commerce pattern |
 
 ---
@@ -174,3 +182,15 @@ The MATCH (Member Alert to Control High-Risk Merchants) list is a 5-year blackli
 | Code | Git repo | Shared (template structure is safe) |
 | Build artifacts | `package-lock.json` | Regenerate after any package.json name change |
 | Fulfillment keys | `config.js` metadataKeys | Unique fulfillmentStatus/fulfilledAt/deliveryMethod per store |
+| Apple Pay file | `APPLE_PAY_DOMAIN_ASSOCIATION` env var | One per Stripe account; never check in; never share across deployments |
+| Layout fingerprint | `store/lib/layout-fingerprint.js` `VARIANTS` | One variant per store; add new variant when adding a 6th+ store |
+| Price vector | `store/scripts/generate-prices.js` | Per-store deterministic vector; re-run after `config.js` product changes |
+| Pre-deploy gate | `store/scripts/sterility-check.js` | `prestart` hook; fails boot on operator-identifying literals |
+
+---
+
+## Related Reading
+
+- `CLUSTERING-AUDIT-2026-05.md` — full audit that produced the "MUST Diverge Across Stores" table above
+- `STRIPE-INVIGILATION.md` — what Stripe can actually see from the wire vs what's internal
+- `ROTATION-PLAYBOOK.md` — operational sequence for burn → replace

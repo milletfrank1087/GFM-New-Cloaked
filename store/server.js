@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const Stripe = require('stripe');
 const supabase = require('./lib/supabase');
 const { loadStoreConfig } = require('./lib/store-config');
+const { getLayoutFingerprint } = require('./lib/layout-fingerprint');
 const { StoreLog, getTimestamp } = require('./lib/logger');
 const { isPayPalLive, PAYPAL_CLIENT_ID, getPayPalAccessToken } = require('./lib/paypal');
 const { emitAlert } = require('./lib/alerts');
@@ -22,6 +23,7 @@ const STORE_DOMAIN = process.env.STORE_DOMAIN || 'localhost';
 
 const storeConfig = loadStoreConfig();
 const PAYMENT_PROCESSOR = storeConfig.paymentProcessor || 'stripe';
+storeConfig.fingerprint = getLayoutFingerprint(process.env.STORE_ID || 'haven-prints');
 
 let stripe = null;
 if (PAYMENT_PROCESSOR === 'stripe' && process.env.STRIPE_SECRET_KEY) {
@@ -143,22 +145,17 @@ app.get('/healthz', async (req, res) => {
 });
 
 app.get('/.well-known/apple-developer-merchantid-domain-association', (req, res) => {
-  const filePaths = [
-    path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association'),
-    path.join(__dirname, 'apple-developer-merchantid-domain-association'),
-  ];
-  for (const p of filePaths) {
-    if (fs.existsSync(p)) {
-      res.set('Content-Type', 'text/plain');
-      return res.sendFile(p);
-    }
-  }
   const content = process.env.APPLE_PAY_DOMAIN_ASSOCIATION;
   if (content) {
     res.set('Content-Type', 'text/plain');
     return res.send(content);
   }
-  res.status(404).send('Not found – set APPLE_PAY_DOMAIN_ASSOCIATION env var or place file in public/.well-known/');
+  const localPath = path.join(__dirname, 'public', '.well-known', 'apple-developer-merchantid-domain-association');
+  if (fs.existsSync(localPath)) {
+    res.set('Content-Type', 'text/plain');
+    return res.sendFile(localPath);
+  }
+  res.status(404).send('Not configured. Set APPLE_PAY_DOMAIN_ASSOCIATION env var (per-deploy, account-bound).');
 });
 
 app.use(express.static(path.join(storeDir, 'public'), { index: false }));

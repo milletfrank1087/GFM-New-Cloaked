@@ -1,0 +1,57 @@
+---
+description: Project architecture, conventions, and invariants. Loaded for every conversation.
+alwaysApply: true
+---
+
+# Project Architecture & Invariants
+
+Two-domain system. Campaign servers (per language) drive donor traffic, multi-tenant store server processes payments. Routing is via signed token → store domain → store-side checkout-donor.ejs (cookie-authenticated) or checkout-store.ejs (cookie-less crawler / reviewer surface).
+
+## Hard invariants — never violate
+
+- Campaign servers never touch Stripe directly. All payments go through the store deployment.
+- Donor session cookie is `httpOnly`. Token expiry is 5 minutes or less.
+- Referrer-Policy is `strict-origin-when-cross-origin` globally. The ONLY `no-referrer` use is the meta-refresh HTML at `/s/:token` (breaks campaign→store referrer chain).
+- Never log Stripe secret keys or include them in error messages.
+- Never use `payment_method_types`. Always use `automatic_payment_methods: { enabled: true, allow_redirects: 'never' }`.
+- Never use `?donated=true` or any donation-revealing query parameters. Use `?status=complete`.
+- Never add micro-variance to decomposed line-item prices — Stripe drops all L2/L3 data when line sum ≠ total.
+
+## Stripe metadata discipline (per PaymentIntent)
+
+- `payment_details.order_reference` = reference code (required for L2/L3).
+- `amount_details.tax.total_tax_amount` = 0 (required for L2/L3).
+- `amount_details.line_items[]` = decomposed product items; exact sum must equal the PaymentIntent amount.
+- Use store-specific metadata key names from `storeConfig.metadataKeys`. Each store MUST have unique key names — `store/scripts/sterility-check.js` is not the enforcement layer for this; the operator must hand-pick names per store.
+- Update fulfillment evidence post-payment (`fulfillmentStatus = "delivered"`, `fulfilledAt = ISO timestamp`, `deliveryMethod = "digital_download"`).
+
+## Stripe clustering defense (high-stakes)
+
+Stripe's similarity clustering (2020), Payments Foundation Model (2025), and Fraudulent Website Signal (LLM, 2026 preview) detect cross-account links from:
+
+- Shared bank account / email / IP / device fingerprint (operator hygiene).
+- Identical product price tuples across accounts.
+- Identical HTML/CSS template fingerprints across accounts.
+- A single Apple Pay merchant-domain-association file served from multiple Stripe accounts.
+
+Mitigations enforced in this repo:
+
+- Per-store layout variants in `store/lib/layout-fingerprint.js` (one of 5 variants per store, controls CSS variable names, nav class names, body class, header class, transition, font stack). Adding a new store REQUIRES adding a `VARIANTS` entry.
+- Per-store price vectors generated with `store/scripts/generate-prices.js` (24 unique irregular prices per store, deterministic seed = store ID).
+- Apple Pay file served ONLY via `APPLE_PAY_DOMAIN_ASSOCIATION` env var per deploy. The file is `.gitignored`. Never check in.
+- `store/scripts/sterility-check.js` runs at `prestart` and fails the boot on `gfm`/`cloaked`/`fundrais` literals outside the allowlist.
+
+See `docs/CLUSTERING-AUDIT-2026-05.md` for the full audit and rationale.
+
+## Database
+
+- Supabase project: `wzialsfdguuircomaqvp` (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` in env).
+- Use the Supabase MCP server for any schema-changing operation.
+- Weighted store selection via `get_next_store()` RPC. `stores.weight_pct` (0-100); active weights should sum to 100. `status` is binary `active|paused`. Deficit-fill: the active store furthest below its target month-to-date share is picked.
+- All money columns are decimal in the database. Stripe amounts are in cents (×100 at the boundary).
+
+## Conventions
+
+- No code comments unless they explain non-obvious intent/trade-offs.
+- Campaign server port 3000, store server port 4000.
+- Pull deeper context from `docs/`. AGENTS.md at root is the pointer map.

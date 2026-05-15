@@ -1,0 +1,45 @@
+---
+description: Per-store editing discipline. Auto-attaches when working in any store/stores/** file, the layout fingerprint helper, or per-store generators.
+globs: store/stores/**, store/lib/layout-fingerprint.js, store/lib/locale.js, store/scripts/generate-prices.js, store/scripts/sterility-check.js
+alwaysApply: false
+---
+
+# Store-Creation & Editing Discipline
+
+Every fingerprint that is identical across all stores becomes a Stripe-side cluster signal. Variation is enforced mechanically — see the checklist below before editing or adding a store.
+
+## When adding a new store (canonical sequence)
+
+1. Pick the store ID (slug, kebab-case).
+2. Pick a `VARIANTS` slot in `store/lib/layout-fingerprint.js`. If all 5 existing slots are taken, design a 6th variant (different CSS variable names, different nav class names, different body class, different header class, different transition timing/easing, different font stack, structurally different `<style>` block).
+3. Run `node store/scripts/generate-prices.js --store=<id>` to mint a unique 24-price vector. NEVER reuse prices from another store.
+4. Create `store/stores/<id>/config.js` with:
+   - Unique `name`, `tagline`, `statementDescriptor`, `contact_email`.
+   - Unique `currency` + `currencySymbol`.
+   - Fully unique `metadataKeys` — pick names not used by any existing store (cross-check by reading every existing `config.js`).
+   - 24 products with NEW names, descriptions, categories. Do NOT copy from another store and rename.
+5. Copy `views/` from an existing store, then rewrite all visible content per store. Do NOT just swap the brand string.
+6. Add `store/stores/<id>/views/partials/header.ejs` (logo SVG and nav labels are intentional content differentiators — make them visibly different from neighbours).
+7. Add a row to Supabase `stores` table with `status = 'paused'` and `weight_pct = 0`. See `docs/ROTATION-PLAYBOOK.md` for warm-up.
+8. Set the deployment's `APPLE_PAY_DOMAIN_ASSOCIATION` env var to the file Stripe issued for THIS store's account. Never reuse another store's file.
+9. Run `npm run sterility-check` from `store/` and confirm PASS. If it WARNs on a soft term in a NEW location, update `ALLOWLIST` in `store/scripts/sterility-check.js` with the explicit path.
+
+## When editing an existing store
+
+- Never edit `store/stores/<id>/views/layouts/store.ejs` to hard-code the head. The layout MUST delegate to `store.fingerprint.head(store, pageTitle)`.
+- If you rename a CSS class in `lib/layout-fingerprint.js`, also update the corresponding `views/partials/header.ejs` for that store (search for the old class name; the inline JS at the bottom of header.ejs queries the IDs).
+- Never copy product names, descriptions, or about text from one store into another.
+- Donor-checkout strings (`Complete Your Donation`, `Donate Now`, etc. in `store/lib/locale.js`) are intentional and remain. Don't reflexively "fix" them.
+
+## Hard prohibitions (sterility-check enforces)
+
+- `gfm`, `cloaked`, `fundrais` MUST NOT appear anywhere in the `store/` tree. The check runs at `prestart`.
+- `donation`, `donate`, `donor` MUST only appear in the explicit allowlist (`store/lib/locale.js`, `store/lib/stripe-errors.js`, `store/lib/campaign-routing.js`, `store/routes/{stripe,paypal,token}.js`, donor checkout EJS). New locations require an explicit allowlist entry.
+
+## Files that intentionally remain shared across stores (do NOT diverge)
+
+- `store/server.js`, `store/routes/*`, `store/lib/*` (server-side, invisible to Stripe).
+- `store/public/js/*` (shared scripts — Stripe doesn't fingerprint script bodies).
+- `store/stores/<id>/views/layouts/store.ejs` (delegates to fingerprint; the rendered HTML diverges per store, the EJS file content is uniform).
+
+Pages (`views/pages/*.ejs`) and partials (`views/partials/header.ejs`, `footer.ejs`) MUST diverge per store at the content level. Different copy, different SVG, different sections — not just swapped brand strings.
