@@ -278,10 +278,13 @@ async function handle3DSReturn() {
       if (data.success && data.redirectUrl) {
         firePurchaseBrowser();
         window.location.href = data.redirectUrl;
+        return true;
       }
     } catch (_) {}
+    return true;
   }
-  return true;
+
+  return false;
 }
 
 async function boot() {
