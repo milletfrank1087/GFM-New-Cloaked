@@ -30,9 +30,10 @@ const DONOR_FACING_TERMS = [
   /\bdonor\b/i,
 ];
 
-const SCAN_EXTENSIONS = new Set(['.js', '.ejs', '.json', '.md', '.html', '.css', '.env', '.txt']);
+const SCAN_EXTENSIONS = new Set(['.js', '.ejs', '.json', '.md', '.html', '.css', '.txt']);
 
 const SKIP_DIRS = new Set(['node_modules', '.git', 'public', '.well-known', 'scripts']);
+const SKIP_FILENAMES = new Set(['.env', '.env.local', '.env.development', '.env.production']);
 
 const ALLOWLIST = [
   /^lib[\\/]locale\.js$/,
@@ -60,6 +61,7 @@ function walk(dir, hits) {
       continue;
     }
     if (!entry.isFile()) continue;
+    if (SKIP_FILENAMES.has(entry.name)) continue;
     const ext = path.extname(entry.name).toLowerCase();
     if (ext && !SCAN_EXTENSIONS.has(ext)) continue;
     if (entry.name.endsWith('.min.js') || entry.name.endsWith('.min.css')) continue;

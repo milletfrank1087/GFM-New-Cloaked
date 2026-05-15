@@ -79,19 +79,24 @@ function createJourneyLog(fmtCurrency) {
     },
 
     startup(port, campaign, currency, language, trackingStatus) {
+      const w = 79;
+      const brand = String(campaign || 'campaign').toUpperCase().replace(/-/g, ' ');
+      const bannerCore = `           📋 \x1b[1m${brand}\x1b[0m - Campaign Server`;
+      const visibleLen = brand.length + 27;
+      const bannerPad = ' '.repeat(Math.max(0, w - visibleLen));
       console.log('');
-      console.log('\x1b[36m╔═══════════════════════════════════════════════════════════════════════════════╗\x1b[0m');
-      console.log('\x1b[36m║\x1b[0m           🔒 \x1b[1mGFM CLOAKED\x1b[0m - Campaign Server                                    \x1b[36m║\x1b[0m');
-      console.log('\x1b[36m╠═══════════════════════════════════════════════════════════════════════════════╣\x1b[0m');
+      console.log(`\x1b[36m╔${'═'.repeat(w)}╗\x1b[0m`);
+      console.log(`\x1b[36m║\x1b[0m${bannerCore}${bannerPad}\x1b[36m║\x1b[0m`);
+      console.log(`\x1b[36m╠${'═'.repeat(w)}╣\x1b[0m`);
       console.log(`\x1b[36m║\x1b[0m  🌐 Server:   http://localhost:${String(port).padEnd(45)}\x1b[36m║\x1b[0m`);
       console.log(`\x1b[36m║\x1b[0m  📋 Campaign: ${campaign.padEnd(52)}\x1b[36m║\x1b[0m`);
       console.log(`\x1b[36m║\x1b[0m  🌍 Language: ${language.padEnd(52)}\x1b[36m║\x1b[0m`);
-      console.log(`\x1b[36m║\x1b[0m  💳 Payment:  ${'Cloaked (Stripe + PayPal rotation)'.padEnd(52)}\x1b[36m║\x1b[0m`);
+      console.log(`\x1b[36m║\x1b[0m  💳 Payment:  ${'Stripe + PayPal'.padEnd(52)}\x1b[36m║\x1b[0m`);
       console.log(`\x1b[36m║\x1b[0m  💰 Currency: ${currency.padEnd(52)}\x1b[36m║\x1b[0m`);
       console.log(`\x1b[36m║\x1b[0m  📊 Tracking: ${trackingStatus.padEnd(52)}\x1b[36m║\x1b[0m`);
-      console.log('\x1b[36m╠═══════════════════════════════════════════════════════════════════════════════╣\x1b[0m');
-      console.log('\x1b[36m║\x1b[0m  \x1b[2mLog: [TIME] EMOJI EVENT │ VISITOR-ID │ LOCATION │ MESSAGE\x1b[0m                    \x1b[36m║\x1b[0m');
-      console.log('\x1b[36m╚═══════════════════════════════════════════════════════════════════════════════╝\x1b[0m');
+      console.log(`\x1b[36m╠${'═'.repeat(w)}╣\x1b[0m`);
+      console.log(`\x1b[36m║\x1b[0m  \x1b[2mLog: [TIME] EMOJI EVENT │ VISITOR-ID │ LOCATION │ MESSAGE\x1b[0m                    \x1b[36m║\x1b[0m`);
+      console.log(`\x1b[36m╚${'═'.repeat(w)}╝\x1b[0m`);
       console.log('');
     }
   };

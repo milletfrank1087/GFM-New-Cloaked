@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "prestart": "node scripts/sterility-check.js",
+    "dev": "node server.js",
+    "sterility-check": "node scripts/sterility-check.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.90.0",

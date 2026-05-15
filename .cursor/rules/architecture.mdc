@@ -39,7 +39,7 @@ Mitigations enforced in this repo:
 - Per-store layout variants in `store/lib/layout-fingerprint.js` (one of 5 variants per store, controls CSS variable names, nav class names, body class, header class, transition, font stack). Adding a new store REQUIRES adding a `VARIANTS` entry.
 - Per-store price vectors generated with `store/scripts/generate-prices.js` (24 unique irregular prices per store, deterministic seed = store ID).
 - Apple Pay file served ONLY via `APPLE_PAY_DOMAIN_ASSOCIATION` env var per deploy. The file is `.gitignored`. Never check in.
-- `store/scripts/sterility-check.js` runs at `prestart` and fails the boot on `gfm`/`cloaked`/`fundrais` literals outside the allowlist.
+- `store/scripts/sterility-check.js` AND `campaign/scripts/sterility-check.js` both run at `prestart` and fail the boot on `gfm`/`cloaked`/`fundrais` literals (store side) / `gfm`/`cloaked` + `KNOWN_BAD_LITERALS` (campaign side). The campaign-side check is intentionally narrower because the campaign is donor-facing fundraising content where donor terminology is legitimate.
 
 See `docs/CLUSTERING-AUDIT-2026-05.md` for the full audit and rationale.
 
