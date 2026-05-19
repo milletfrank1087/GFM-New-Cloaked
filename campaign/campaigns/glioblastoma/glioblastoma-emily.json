@@ -7,12 +7,12 @@
     "initials": "SM",
     "location": "Boston, MA",
     "verified": true,
-    "createdDate": "5 Feb 2026"
+    "createdDate": "10 Apr 2026"
   },
   "goal": 150000,
-  "raised": 47200,
-  "donorCount": 812,
-  "daysLeft": 30,
+  "raised": 56640,
+  "donorCount": 974,
+  "daysLeft": 35,
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-emily/1.jpg",
@@ -41,12 +41,12 @@
       {
         "title": "The Diagnosis",
         "icon": "diagnosis",
-        "content": "It all started in October 2025, when Emily began experiencing persistent morning headaches accompanied by nausea and blurred vision in her left eye. On October 20th, after a seizure during a lecture at Boston University's pre-med program, she was rushed to the Neurosurgery Department at Massachusetts General Hospital.\n\nThe MRI revealed a 4.2 cm mass in her right frontal lobe with characteristic ring enhancement and perilesional edema. Stereotactic biopsy and molecular analysis confirmed the diagnosis: Glioblastoma Multiforme, IDH-wildtype, WHO grade IV, with unmethylated MGMT promoter — the most unfavorable molecular subtype, meaning reduced response to chemotherapy."
+        "content": "It all started in December 2025, when Emily began experiencing persistent morning headaches accompanied by nausea and blurred vision in her left eye. On December 24th, after a seizure during a lecture at Boston University's pre-med program, she was rushed to the Neurosurgery Department at Massachusetts General Hospital.\n\nThe MRI revealed a 4.2 cm mass in her right frontal lobe with characteristic ring enhancement and perilesional edema. Stereotactic biopsy and molecular analysis confirmed the diagnosis: Glioblastoma Multiforme, IDH-wildtype, WHO grade IV, with unmethylated MGMT promoter — the most unfavorable molecular subtype, meaning reduced response to chemotherapy."
       },
       {
         "title": "Standard Treatment and Its Limits",
         "icon": "treatment",
-        "content": "Emily underwent partial surgical resection (subtotal resection) on November 5, 2025 at Mass General — complete removal was not possible due to the tumor's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in January 2026 showed residual tumor stable in size, but her doctors warned that recurrence is almost certain."
+        "content": "Emily underwent partial surgical resection (subtotal resection) on January 10, 2026 at Mass General — complete removal was not possible due to the tumor's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in March 2026 showed residual tumor stable in size, but her doctors warned that recurrence is almost certain."
       },
       {
         "title": "The Hope: Dendritic Cell Immunotherapy",
@@ -78,11 +78,26 @@
         "icon": "cost",
         "totalLabel": "Total",
         "items": [
-          { "text": "Dendritic cell immunotherapy (4-6 cycles, Germany)", "amount": 55000 },
-          { "text": "Proton beam therapy (Germany)", "amount": 40000 },
-          { "text": "Molecular profiling & personalized treatment plan", "amount": 12000 },
-          { "text": "Travel, accommodation & caregiver expenses in Germany (12+ months)", "amount": 30000 },
-          { "text": "Unexpected medical expenses & reserve fund", "amount": 13000 }
+          {
+            "text": "Dendritic cell immunotherapy (4-6 cycles, Germany)",
+            "amount": 55000
+          },
+          {
+            "text": "Proton beam therapy (Germany)",
+            "amount": 40000
+          },
+          {
+            "text": "Molecular profiling & personalized treatment plan",
+            "amount": 12000
+          },
+          {
+            "text": "Travel, accommodation & caregiver expenses in Germany (12+ months)",
+            "amount": 30000
+          },
+          {
+            "text": "Unexpected medical expenses & reserve fund",
+            "amount": 13000
+          }
         ]
       }
     ],
@@ -93,61 +108,235 @@
   },
   "updates": [
     {
-      "date": "10 Mar 2026",
+      "date": "14 May 2026",
       "title": "Follow-up MRI results are in 📋",
       "content": "The follow-up MRI after completing radiation shows stable residual tumor with no new lesions. Her doctors at Mass General say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in April, if we secure the funding.",
       "isNew": true
     },
     {
-      "date": "5 Mar 2026",
+      "date": "9 May 2026",
       "title": "We've passed 600 donors! 🙏",
       "content": "Your support has been overwhelming. Emily has finished her maintenance temozolomide cycles and is feeling strong. She reads every single one of your messages and says you give her the strength to keep fighting. Every dollar brings us closer to Germany.",
       "isNew": false
     },
     {
-      "date": "20 Feb 2026",
+      "date": "25 Apr 2026",
       "title": "Treatment update",
       "content": "Emily has completed concurrent chemoradiation at Mass General. She experienced fatigue and nausea, but her mental strength is incredible. Her neuro-oncologist explained that with unmethylated MGMT, temozolomide alone isn't enough — which is why immunotherapy is critical.",
       "isNew": false
     },
     {
-      "date": "5 Feb 2026",
+      "date": "10 Apr 2026",
       "title": "The campaign has launched",
       "content": "With heavy hearts but determination, we're launching this appeal. After three months of intensive treatment through the standard care system, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it's not covered by any insurance in the US. We believe in the power of community.",
       "isNew": false
     }
   ],
   "milestones": [
-    { "amount": 30000, "label": "Standard treatment completed & molecular profiling", "reached": true },
-    { "amount": 75000, "label": "50% — Begin dendritic cell immunotherapy", "reached": false },
-    { "amount": 120000, "label": "80% — Proton beam therapy", "reached": false },
-    { "amount": 150000, "label": "Goal — Full treatment coverage in Germany 🎉", "reached": false }
+    {
+      "amount": 30000,
+      "label": "Standard treatment completed & molecular profiling",
+      "reached": true
+    },
+    {
+      "amount": 75000,
+      "label": "50% — Begin dendritic cell immunotherapy",
+      "reached": false
+    },
+    {
+      "amount": 120000,
+      "label": "80% — Proton beam therapy",
+      "reached": false
+    },
+    {
+      "amount": 150000,
+      "label": "Goal — Full treatment coverage in Germany 🎉",
+      "reached": false
+    }
   ],
   "topDonors": [
-    { "name": "BU Pre-Med Student Association", "amount": 1200, "initials": "BU", "color": "from-amber-400 to-amber-500", "rank": 1 },
-    { "name": "The Mitchell Family", "amount": 750, "initials": "MF", "color": "from-gray-400 to-gray-500", "rank": 2 },
-    { "name": "Anonymous", "amount": 500, "initials": "?", "color": "from-orange-400 to-orange-500", "rank": 3 }
+    {
+      "name": "BU Pre-Med Student Association",
+      "amount": 1200,
+      "initials": "BU",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "The Mitchell Family",
+      "amount": 750,
+      "initials": "MF",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anonymous",
+      "amount": 500,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
   ],
   "recentDonors": [
-    { "name": "Jessica M.", "amount": 25, "time": "8 minutes ago", "initials": "JM", "color": "from-rose-400 to-rose-500", "message": "Stay strong, Emily!" },
-    { "name": "Anonymous", "amount": 50, "time": "22 minutes ago", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "" },
-    { "name": "David P.", "amount": 20, "time": "38 minutes ago", "initials": "DP", "color": "from-blue-400 to-blue-500", "message": "From a fellow pre-med" },
-    { "name": "Karen W.", "amount": 75, "time": "1 hour ago", "initials": "KW", "color": "from-violet-400 to-violet-500", "message": "Praying for you sweetheart" },
-    { "name": "Michael A.", "amount": 35, "time": "1 hour ago", "initials": "MA", "color": "from-emerald-400 to-emerald-500", "message": "" },
-    { "name": "Anonymous", "amount": 100, "time": "2 hours ago", "initials": "?", "color": "from-amber-400 to-amber-500", "message": "You've got this" },
-    { "name": "Rachel D.", "amount": 15, "time": "2 hours ago", "initials": "RD", "color": "from-pink-400 to-pink-500", "message": "" },
-    { "name": "Chris L.", "amount": 40, "time": "3 hours ago", "initials": "CL", "color": "from-cyan-400 to-cyan-500", "message": "Keep fighting Emily!" },
-    { "name": "Amanda K.", "amount": 20, "time": "3 hours ago", "initials": "AK", "color": "from-indigo-400 to-indigo-500", "message": "From Connecticut with love" },
-    { "name": "Anonymous", "amount": 30, "time": "4 hours ago", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "" },
-    { "name": "Brian T.", "amount": 50, "time": "4 hours ago", "initials": "BT", "color": "from-teal-400 to-teal-500", "message": "" },
-    { "name": "Linda S.", "amount": 15, "time": "5 hours ago", "initials": "LS", "color": "from-orange-400 to-orange-500", "message": "Sending strength to the whole family" },
-    { "name": "Robert C.", "amount": 25, "time": "5 hours ago", "initials": "RC", "color": "from-purple-400 to-purple-500", "message": "" },
-    { "name": "Anonymous", "amount": 20, "time": "6 hours ago", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "We're with you" },
-    { "name": "Tyler N.", "amount": 30, "time": "6 hours ago", "initials": "TN", "color": "from-lime-400 to-lime-500", "message": "" },
-    { "name": "Stephanie H.", "amount": 10, "time": "7 hours ago", "initials": "SH", "color": "from-fuchsia-400 to-fuchsia-500", "message": "From Maine" },
-    { "name": "James G.", "amount": 35, "time": "8 hours ago", "initials": "JG", "color": "from-sky-400 to-sky-500", "message": "" },
-    { "name": "Anonymous", "amount": 10, "time": "8 hours ago", "initials": "?", "color": "from-gray-400 to-gray-500", "message": "What I can" },
-    { "name": "Patricia A.", "amount": 25, "time": "9 hours ago", "initials": "PA", "color": "from-red-400 to-red-500", "message": "Praying for you" },
-    { "name": "Mark Z.", "amount": 20, "time": "10 hours ago", "initials": "MZ", "color": "from-yellow-400 to-yellow-500", "message": "" }
+    {
+      "name": "Jessica M.",
+      "amount": 25,
+      "time": "8 min ago",
+      "initials": "JM",
+      "color": "from-rose-400 to-rose-500",
+      "message": "Stay strong, Emily!"
+    },
+    {
+      "name": "Anonymous",
+      "amount": 50,
+      "time": "23 min ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "David P.",
+      "amount": 20,
+      "time": "47 min ago",
+      "initials": "DP",
+      "color": "from-blue-400 to-blue-500",
+      "message": "From a fellow pre-med"
+    },
+    {
+      "name": "Karen W.",
+      "amount": 75,
+      "time": "1 hour ago",
+      "initials": "KW",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Praying for you sweetheart"
+    },
+    {
+      "name": "Michael A.",
+      "amount": 35,
+      "time": "1 hour ago",
+      "initials": "MA",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 100,
+      "time": "2 hours ago",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "You've got this"
+    },
+    {
+      "name": "Rachel D.",
+      "amount": 15,
+      "time": "2 hours ago",
+      "initials": "RD",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Chris L.",
+      "amount": 40,
+      "time": "3 hours ago",
+      "initials": "CL",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "Keep fighting Emily!"
+    },
+    {
+      "name": "Amanda K.",
+      "amount": 20,
+      "time": "3 hours ago",
+      "initials": "AK",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "From Connecticut with love"
+    },
+    {
+      "name": "Anonymous",
+      "amount": 30,
+      "time": "4 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Brian T.",
+      "amount": 50,
+      "time": "4 hours ago",
+      "initials": "BT",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Linda S.",
+      "amount": 15,
+      "time": "5 hours ago",
+      "initials": "LS",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Sending strength to the whole family"
+    },
+    {
+      "name": "Robert C.",
+      "amount": 25,
+      "time": "5 hours ago",
+      "initials": "RC",
+      "color": "from-purple-400 to-purple-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 20,
+      "time": "6 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "We're with you"
+    },
+    {
+      "name": "Tyler N.",
+      "amount": 30,
+      "time": "6 hours ago",
+      "initials": "TN",
+      "color": "from-lime-400 to-lime-500",
+      "message": ""
+    },
+    {
+      "name": "Stephanie H.",
+      "amount": 10,
+      "time": "7 hours ago",
+      "initials": "SH",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "From Maine"
+    },
+    {
+      "name": "James G.",
+      "amount": 35,
+      "time": "8 hours ago",
+      "initials": "JG",
+      "color": "from-sky-400 to-sky-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 10,
+      "time": "8 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "What I can"
+    },
+    {
+      "name": "Patricia A.",
+      "amount": 25,
+      "time": "9 hours ago",
+      "initials": "PA",
+      "color": "from-red-400 to-red-500",
+      "message": "Praying for you"
+    },
+    {
+      "name": "Mark Z.",
+      "amount": 20,
+      "time": "10 hours ago",
+      "initials": "MZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
   ]
 }

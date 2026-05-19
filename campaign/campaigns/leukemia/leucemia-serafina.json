@@ -7,12 +7,12 @@
     "initials": "EC",
     "location": "Milano, Italia",
     "verified": true,
-    "createdDate": "5 Feb 2026"
+    "createdDate": "10 Apr 2026"
   },
   "goal": 85000,
-  "raised": 31280,
-  "donorCount": 847,
-  "daysLeft": 28,
+  "raised": 37540,
+  "donorCount": 1016,
+  "daysLeft": 35,
   "images": [
     {
       "url": "/images/campaigns/leucemia-serafina/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "La Diagnosi",
-        "content": "Tutto è iniziato nel novembre 2025, quando Serafina ha cominciato a sentire un'intensa debolezza, a manifestare petecchie alle gambe e ad avere frequenti episodi febbrili. Il 15 novembre, dopo un emocromo che ha mostrato pancitopenia e sospette cellule blastiche, è stata trasferita d'urgenza all'Unità di Ematologia dell'Istituto Nazionale dei Tumori di Milano.\n\nLa biopsia del midollo osseo e l'analisi molecolare hanno confermato la diagnosi: Leucemia Linfoblastica Acuta a cellule B (B-LAL), con presenza del gene di fusione BCR-ABL1 (cromosoma Philadelphia positivo). Si tratta di una forma aggressiva di leucemia che richiede terapia intensiva e trapianto per la sopravvivenza a lungo termine.",
+        "content": "Tutto è iniziato nel gennaio 2026, quando Serafina ha cominciato a sentire un'intensa debolezza, a manifestare petecchie alle gambe e ad avere frequenti episodi febbrili. Il 20 gennaio, dopo un emocromo che ha mostrato pancitopenia e sospette cellule blastiche, è stata trasferita d'urgenza all'Unità di Ematologia dell'Istituto Nazionale dei Tumori di Milano.\n\nLa biopsia del midollo osseo e l'analisi molecolare hanno confermato la diagnosi: Leucemia Linfoblastica Acuta a cellule B (B-LAL), con presenza del gene di fusione BCR-ABL1 (cromosoma Philadelphia positivo). Si tratta di una forma aggressiva di leucemia che richiede terapia intensiva e trapianto per la sopravvivenza a lungo termine.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "8 Mar 2026",
+      "date": "12 Mag 2026",
       "title": "Notizie positive dal controllo molecolare! 💪",
-      "content": "I risultati dell'ultimo RT-PCR sono incoraggianti - i livelli di BCR-ABL sono sotto lo 0,01%! I medici sono molto soddisfatti della risposta alla terapia. Il trapianto è programmato per fine aprile. Sua sorella Costanza sta già facendo gli esami preliminari come donatrice.",
+      "content": "I risultati dell'ultimo RT-PCR sono incoraggianti - i livelli di BCR-ABL sono sotto lo 0,01%! I medici sono molto soddisfatti della risposta alla terapia. Il trapianto è programmato per fine giugno. Sua sorella Costanza sta già facendo gli esami preliminari come donatrice.",
       "isNew": true
     },
     {
-      "date": "1 Mar 2026",
+      "date": "5 Mag 2026",
       "title": "Superati i 700 donatori! 🙏",
       "content": "Non abbiamo parole per esprimere la nostra gratitudine. Serafina ha completato il secondo ciclo di chemioterapia e i medici hanno confermato la remissione ematologica completa. Ogni euro ci avvicina al trapianto.",
       "isNew": false
     },
     {
-      "date": "20 Feb 2026",
+      "date": "25 Apr 2026",
       "title": "Aggiornamento dall'ospedale",
       "content": "Serafina ha completato il primo ciclo di chemioterapia all'Istituto Nazionale dei Tumori. Aveva neutropenia dopo la terapia, ma sorrideva leggendo i vostri messaggi. Le infermiere le hanno portato una piccola festa in camera. La vostra risposta ci commuove profondamente.",
       "isNew": false
     },
     {
-      "date": "5 Feb 2026",
+      "date": "10 Apr 2026",
       "title": "La campagna è iniziata",
       "content": "Con il cuore pesante ma anche con speranza, iniziamo questo appello per aiuto. Dopo due mesi di terapia intensiva, i medici hanno confermato che il trapianto è l'unica opzione per la guarigione a lungo termine. Crediamo nella solidarietà.",
       "isNew": false
@@ -178,7 +178,7 @@
     {
       "name": "Celestino B.",
       "amount": 15,
-      "time": "12 minuti fa",
+      "time": "8 minuti fa",
       "initials": "CB",
       "color": "from-rose-400 to-rose-500",
       "message": "Forza ragazza!"
@@ -186,7 +186,7 @@
     {
       "name": "Anonimo",
       "amount": 20,
-      "time": "28 minuti fa",
+      "time": "23 minuti fa",
       "initials": "?",
       "color": "from-gray-400 to-gray-500",
       "message": ""
@@ -194,7 +194,7 @@
     {
       "name": "Giosuè R.",
       "amount": 10,
-      "time": "45 minuti fa",
+      "time": "47 minuti fa",
       "initials": "GR",
       "color": "from-blue-400 to-blue-500",
       "message": "Da uno studente per una collega"

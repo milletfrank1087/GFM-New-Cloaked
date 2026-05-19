@@ -7,12 +7,12 @@
     "initials": "CF",
     "location": "Porto, Portugal",
     "verified": true,
-    "createdDate": "5 Fev 2026"
+    "createdDate": "10 Abr 2026"
   },
   "goal": 85000,
-  "raised": 31280,
-  "donorCount": 847,
-  "daysLeft": 28,
+  "raised": 37540,
+  "donorCount": 1016,
+  "daysLeft": 35,
   "images": [
     {
       "url": "/images/campaigns/leucemia-mariana/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "O Diagnóstico",
-        "content": "Tudo começou em novembro de 2025, quando a Mariana começou a sentir uma fraqueza intensa, a apresentar petéquias nas pernas e a ter episódios frequentes de febre. A 15 de novembro, após um hemograma que revelou pancitopenia e células blásticas suspeitas, foi transferida de urgência para o Serviço de Hematologia do IPO do Porto.\n\nA biópsia da medula óssea e a análise molecular confirmaram o diagnóstico: Leucemia Linfoblástica Aguda de células B (LLA-B), com presença do gene de fusão BCR-ABL1 (cromossoma Philadelphia positivo). Trata-se de uma forma agressiva de leucemia que exige terapia intensiva e transplante para a sobrevivência a longo prazo.",
+        "content": "Tudo começou em janeiro de 2026, quando a Mariana começou a sentir uma fraqueza intensa, a apresentar petéquias nas pernas e a ter episódios frequentes de febre. A 20 de janeiro, após um hemograma que revelou pancitopenia e células blásticas suspeitas, foi transferida de urgência para o Serviço de Hematologia do IPO do Porto.\n\nA biópsia da medula óssea e a análise molecular confirmaram o diagnóstico: Leucemia Linfoblástica Aguda de células B (LLA-B), com presença do gene de fusão BCR-ABL1 (cromossoma Philadelphia positivo). Trata-se de uma forma agressiva de leucemia que exige terapia intensiva e transplante para a sobrevivência a longo prazo.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "8 Mar 2026",
+      "date": "12 Mai 2026",
       "title": "Notícias positivas do controlo molecular! 💪",
-      "content": "Os resultados do último RT-PCR são animadores — os níveis de BCR-ABL estão abaixo de 0,01%! Os médicos estão muito satisfeitos com a resposta ao tratamento. O transplante está programado para o final de abril. A irmã dela, a Beatriz, já está a fazer os exames preliminares como dadora.",
+      "content": "Os resultados do último RT-PCR são animadores — os níveis de BCR-ABL estão abaixo de 0,01%! Os médicos estão muito satisfeitos com a resposta ao tratamento. O transplante está programado para o final de junho. A irmã dela, a Beatriz, já está a fazer os exames preliminares como dadora.",
       "isNew": true
     },
     {
-      "date": "1 Mar 2026",
+      "date": "5 Mai 2026",
       "title": "Ultrapassámos os 700 doadores! 🙏",
       "content": "Não temos palavras para expressar a nossa gratidão. A Mariana completou o segundo ciclo de quimioterapia e os médicos confirmaram remissão hematológica completa. Cada euro aproxima-nos do transplante.",
       "isNew": false
     },
     {
-      "date": "20 Fev 2026",
+      "date": "25 Abr 2026",
       "title": "Atualização do hospital",
       "content": "A Mariana completou o primeiro ciclo de quimioterapia no IPO do Porto. Tinha neutropenia após o tratamento, mas sorria ao ler as vossas mensagens. As enfermeiras trouxeram-lhe uma pequena festa ao quarto. A vossa resposta emociona-nos profundamente.",
       "isNew": false
     },
     {
-      "date": "5 Fev 2026",
+      "date": "10 Abr 2026",
       "title": "A campanha começou",
       "content": "Com o coração pesado mas também com esperança, iniciamos este apelo por ajuda. Após dois meses de terapia intensiva, os médicos confirmaram que o transplante é a única opção para a cura a longo prazo. Acreditamos na solidariedade.",
       "isNew": false
@@ -178,7 +178,7 @@
     {
       "name": "Inês T.",
       "amount": 15,
-      "time": "12 minutos atrás",
+      "time": "8 minutos atrás",
       "initials": "IT",
       "color": "from-rose-400 to-rose-500",
       "message": "Força menina!"
@@ -186,7 +186,7 @@
     {
       "name": "Anónimo",
       "amount": 20,
-      "time": "28 minutos atrás",
+      "time": "23 minutos atrás",
       "initials": "?",
       "color": "from-gray-400 to-gray-500",
       "message": ""
@@ -194,7 +194,7 @@
     {
       "name": "Tiago R.",
       "amount": 10,
-      "time": "45 minutos atrás",
+      "time": "47 minutos atrás",
       "initials": "TR",
       "color": "from-blue-400 to-blue-500",
       "message": "De um estudante para uma colega"

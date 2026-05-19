@@ -16,13 +16,18 @@ Five storefronts currently rotate behind the campaign: `digitelon`, `haven-print
 | If you are about to... | Start with |
 |---|---|
 | Add a new storefront | `.cursor/rules/store-discipline.mdc`, then `docs/ROTATION-PLAYBOOK.md` |
+| Add a new language (campaign) | `LESSONS.md` § "Adding a new language" (2026-05-19 runbook) |
+| Refresh campaign dates so the page stops looking stale | `LESSONS.md` § "Refreshing campaign dates" + `campaign/scripts/refresh-dates-2026-05.js` as template |
 | Replace a burned Stripe account | `docs/ACCOUNT-ISOLATION.md`, then `docs/ROTATION-PLAYBOOK.md` |
 | Change anything on a checkout page | `docs/STRIPE-INVIGILATION.md` (what Stripe can see), then `docs/STORE-CONFIG.md` |
 | Change the campaign routing / token / decompose logic | `docs/ARCHITECTURE.md`, then `docs/TRACKING.md` |
 | Investigate a Stripe ban or risk signal | `docs/CLUSTERING-AUDIT-2026-05.md`, then `docs/STRIPE-INVIGILATION.md` |
 | Tweak the store rotation algorithm | `docs/ARCHITECTURE.md`, then `docs/STORE-CONFIG.md` (`get_next_store` RPC) |
 | Add tracking / pixel / CAPI changes | `docs/TRACKING.md` |
+| Attach a custom domain on Railway (gotcha) | `LESSONS.md` § "Railway customDomainCreate lies about its failures" |
 | Run a Stripe-Radar / risk-decision investigation | `docs/RESEARCH.md`, then `docs/CPA-ANALYSIS.md` |
+
+When you finish a non-trivial task that produced a non-obvious insight, append a brief entry to `LESSONS.md` BEFORE marking the task done.
 
 ## Always-on guardrails (already loaded)
 
