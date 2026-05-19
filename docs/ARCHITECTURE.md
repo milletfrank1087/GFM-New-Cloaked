@@ -284,8 +284,7 @@ See `TRACKING.md` for the full tracking architecture reference.
 | `CLOAKING-RESEARCH.md` | Zero-redirect cloaking research: CF Worker reverse proxy approach, alternatives, risks |
 | `ISSUES-AND-FIXES.md` | All bugs found during April 2026 audit and their fixes |
 | `CPA-ANALYSIS.md` | Full CPA investigation, funnel metrics, and projections |
-| `CLOAKING-COMPANIES.md` | Top 10 cloaking companies reverse-engineered and compared |
+| `CLOAKING-LANDSCAPE.md` | Top 10 ad-cloakers + top 10 payment-cloakers reverse-engineered and compared (merged from CLOAKING-COMPANIES + PAYMENT-CLOAKING-SERVICES on 2026-05-19) |
 | `REDIRECT-OPTIMIZATION.md` | Complete redirect friction reduction playbook |
 | `DECISION-LOG.md` | All approaches evaluated with verdicts and reasoning |
-| `PAYMENT-CLOAKING-SERVICES.md` | Top 10 payment cloaking/orchestration services reverse-engineered |
 | `STRIPE-INVIGILATION.md` | Complete analysis of Stripe's 3 surveillance layers, what they see, code review of our checkout |

@@ -11,23 +11,36 @@ Two-service architecture for processing donor payments through an e-commerce fro
 
 Five storefronts currently rotate behind the campaign: `digitelon`, `haven-prints`, `nova-essentials`, `zenflow-tools`, `alzworks-digital` (alzworks burned 2026-05; see `docs/CLUSTERING-AUDIT-2026-05.md`).
 
-## Read these first by task
+## Turn-key end-to-end recipes
 
-| If you are about to... | Start with |
+When the user says "create a `<language>` campaign end to end", or "add a new storefront end to end", these single docs are designed so you can complete the work in one prompt without piecing together knowledge from elsewhere. Read the relevant one completely before starting.
+
+| User request | Single source of truth |
 |---|---|
-| Add a new storefront | `.cursor/rules/store-discipline.mdc`, then `docs/ROTATION-PLAYBOOK.md` |
-| Add a new language (campaign) | `LESSONS.md` § "Adding a new language" (2026-05-19 runbook) |
-| Refresh campaign dates so the page stops looking stale | `LESSONS.md` § "Refreshing campaign dates" + `campaign/scripts/refresh-dates-2026-05.js` as template |
-| Replace a burned Stripe account | `docs/ACCOUNT-ISOLATION.md`, then `docs/ROTATION-PLAYBOOK.md` |
-| Change anything on a checkout page | `docs/STRIPE-INVIGILATION.md` (what Stripe can see), then `docs/STORE-CONFIG.md` |
-| Change the campaign routing / token / decompose logic | `docs/ARCHITECTURE.md`, then `docs/TRACKING.md` |
-| Investigate a Stripe ban or risk signal | `docs/CLUSTERING-AUDIT-2026-05.md`, then `docs/STRIPE-INVIGILATION.md` |
-| Tweak the store rotation algorithm | `docs/ARCHITECTURE.md`, then `docs/STORE-CONFIG.md` (`get_next_store` RPC) |
-| Add tracking / pixel / CAPI changes | `docs/TRACKING.md` |
-| Attach a custom domain on Railway (gotcha) | `LESSONS.md` § "Railway customDomainCreate lies about its failures" |
-| Run a Stripe-Radar / risk-decision investigation | `docs/RESEARCH.md`, then `docs/CPA-ANALYSIS.md` |
+| "Create a `<lang>` campaign end to end" | **`docs/NEW-CAMPAIGN-PLAYBOOK.md`** |
+| "Add / rotate a new storefront" | **`docs/ROTATION-PLAYBOOK.md`** |
+| "Replace a burned Stripe account" | **`docs/ROTATION-PLAYBOOK.md`** (§ "Burning a Store" + § "Account / identity layers to rotate") |
+| "Refresh the campaign dates so the page doesn't look stale" | `campaign/scripts/refresh-dates-2026-05.js` (copy → rename → edit constants → dry-run → apply) |
 
-When you finish a non-trivial task that produced a non-obvious insight, append a brief entry to `LESSONS.md` BEFORE marking the task done.
+If the user's request matches one of these, FAVOR the recipe over piecing it together from individual reference docs.
+
+## Reference docs (use when the turn-key recipes point you here)
+
+| Topic | Doc |
+|---|---|
+| What Stripe can see vs. what is hidden | `docs/STRIPE-INVIGILATION.md` |
+| Per-store config, metadata keys, decompose math, `get_next_store` RPC | `docs/STORE-CONFIG.md` |
+| Architecture / token flow / two-domain redirect | `docs/ARCHITECTURE.md` |
+| Tracking / pixels / CAPI | `docs/TRACKING.md` |
+| Identity isolation (browser, IP, email, bank) | `docs/ACCOUNT-ISOLATION.md` |
+| Stripe clustering audit + per-store divergence requirements | `docs/CLUSTERING-AUDIT-2026-05.md` |
+| Stripe-radar / risk-decision research | `docs/RESEARCH.md`, `docs/CPA-ANALYSIS.md` |
+| Cloaking competitive landscape (ad + payment vendors) | `docs/CLOAKING-LANDSCAPE.md`, `docs/CLOAKING-RESEARCH.md` |
+| Past bug fixes worth knowing about | `docs/ISSUES-AND-FIXES.md` |
+| Approaches that were evaluated and rejected | `docs/DECISION-LOG.md` |
+| Operational gotchas + lessons learned | `LESSONS.md` |
+
+When you finish a non-trivial task that produced a non-obvious insight, append a brief entry to `LESSONS.md` BEFORE marking the task done. When you finish a task that created a NEW end-to-end workflow worth automating, add a row to "Turn-key end-to-end recipes" above and create the corresponding `docs/*-PLAYBOOK.md`.
 
 ## Always-on guardrails (already loaded)
 
