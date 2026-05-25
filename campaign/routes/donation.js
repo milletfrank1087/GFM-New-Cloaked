@@ -117,6 +117,7 @@ module.exports = function createDonationRouter(ctx) {
     const { secret, tokenId, paymentData } = req.body;
 
     if (secret !== CALLBACK_SECRET) {
+      console.warn(`[payment-callback] 403 secret mismatch tokenId=${tokenId} from=${req.ip} amount=${paymentData?.amount} store=${paymentData?.storeDomain}`);
       return res.status(403).json({ error: 'Invalid callback secret' });
     }
 

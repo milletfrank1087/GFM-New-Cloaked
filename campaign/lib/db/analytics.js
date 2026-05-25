@@ -8,10 +8,25 @@ const DASHBOARD_FIELDS =
 
 const DASHBOARD_HARD_LIMIT = 5000;
 
+function toExclusiveEnd(endDate) {
+  const s = String(endDate);
+  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(s);
+  if (!dateOnly) return s;
+  const d = new Date(`${s}T00:00:00.000Z`);
+  if (Number.isNaN(d.getTime())) return s;
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString();
+}
+
 function applyFilters(query, campaignSlug, dateRange) {
   if (campaignSlug && campaignSlug !== 'all') query = query.eq('source_ref', campaignSlug);
   if (dateRange?.startDate) query = query.gte('created_at', dateRange.startDate);
-  if (dateRange?.endDate) query = query.lte('created_at', dateRange.endDate);
+  if (dateRange?.endDate) {
+    const end = toExclusiveEnd(dateRange.endDate);
+    query = end === String(dateRange.endDate)
+      ? query.lte('created_at', dateRange.endDate)
+      : query.lt('created_at', end);
+  }
   return query;
 }
 
