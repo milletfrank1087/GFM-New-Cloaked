@@ -1,158 +1,128 @@
 {
-  "nav": {
-    "dashboard": "Dashboard",
-    "customers": "Customers",
-    "transactions": "Transactions",
-    "logout": "Logout"
-  },
   "login": {
-    "title": "HopeRise Admin",
-    "subtitle": "Sign in to access dashboard",
+    "title": "Admin Access",
+    "subtitle": "HopeRise admin panel",
     "password": "Password",
-    "placeholder": "Enter admin password",
-    "invalidPassword": "Invalid password",
-    "signIn": "Sign In",
-    "backToSite": "← Back to site"
+    "passwordPlaceholder": "Enter admin password",
+    "loginButton": "Log In",
+    "loggingIn": "Logging in...",
+    "error": "Invalid password"
   },
   "dashboard": {
     "title": "Dashboard",
-    "totalDonations": "Total Donations",
-    "tipsReceived": "Tips Received",
-    "paypalFees": "PayPal Fees",
-    "netReceived": "Net Received",
-    "transactions": "Transactions",
-    "uniqueDonors": "Unique Donors",
-    "avgDonation": "Avg. Donation",
-    "goalProgress": "Goal Progress",
+    "welcome": "Welcome",
+    "campaign": "Campaign",
+    "stats": {
+      "raised": "Raised",
+      "tips": "Tips",
+      "gross": "Gross",
+      "fees": "Fees",
+      "net": "Net",
+      "donors": "Donors",
+      "avgDonation": "Avg. Donation",
+      "transactions": "Transactions"
+    },
     "recentDonations": "Recent Donations",
-    "noDonationsYet": "No donations yet"
+    "viewAll": "View All"
   },
-  "customers": {
-    "title": "Customers",
-    "search": "Search...",
-    "export": "Export",
-    "totalCustomers": "Total Customers",
-    "totalDonated": "Total Donated",
-    "avgPerCustomer": "Avg per Customer",
-    "customer": "Customer",
-    "email": "Email",
-    "total": "Total",
-    "payment": "Payment",
-    "status": "Status",
-    "actions": "Actions",
-    "noCustomersYet": "No customers yet",
-    "active": "Active",
-    "paused": "Paused",
-    "rebill": "Rebill",
-    "pause": "Pause",
-    "resume": "Resume",
-    "delete": "Delete",
-    "donations": "donations",
-    "donation": "donation"
-  },
-  "customerDetail": {
-    "title": "Customer Details",
-    "totalDonated": "Total Donated",
-    "donations": "Donations",
-    "average": "Average",
-    "paymentTokenAvailable": "Payment Token Available",
-    "canRebill": "This customer can be rebilled without re-entering payment details",
-    "noPaymentToken": "No Payment Token",
-    "needsNewDonation": "Customer needs to make a new donation before rebilling is available",
-    "accountDetails": "Account Details",
-    "paypalId": "PayPal ID",
-    "paypalEmail": "PayPal Email",
-    "country": "Country",
-    "firstDonation": "First Donation",
-    "lastDonation": "Last Donation",
-    "pausedAt": "Paused At",
-    "paymentHistory": "Payment History",
-    "noPaymentsFound": "No payments found",
-    "tip": "tip",
-    "fee": "fee"
-  },
-  "rebillModal": {
-    "title": "Rebill Customer",
-    "amount": "Amount ($)",
-    "cancel": "Cancel",
-    "charge": "Charge",
-    "processing": "Processing...",
-    "success": "Successfully charged ${amount} to ${name}",
-    "failed": "Rebill failed: ${error}"
-  },
-  "deleteModal": {
-    "title": "⚠️ Delete Customer",
-    "warning": "This will permanently delete the customer and ALL their transaction history. This action cannot be undone.",
-    "transactionsWillBeDeleted": "${count} transaction(s) totaling ${amount} will be deleted",
-    "cancel": "Cancel",
-    "deleteForever": "Delete Forever",
-    "deleting": "Deleting...",
-    "success": "Customer \"${name}\" and ${count} payment(s) deleted",
-    "failed": "Delete failed: ${error}"
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "customers": "Customers",
+    "failures": "Failures",
+    "logout": "Log Out"
   },
   "transactions": {
-    "title": "Transactions",
-    "allStatus": "All Status",
-    "completed": "Completed",
-    "pending": "Pending",
-    "refunded": "Refunded",
-    "export": "Export",
-    "donations": "Donations",
-    "fees": "Fees",
-    "count": "Transactions",
-    "average": "Average",
-    "customer": "Customer",
-    "amount": "Amount",
-    "fee": "Fee",
-    "net": "Net",
-    "payment": "Payment",
-    "date": "Date",
-    "action": "Action",
-    "noTransactionsYet": "No transactions yet",
-    "recurring": "Recurring"
+    "title": "All Transactions",
+    "search": "Search transactions...",
+    "filters": {
+      "all": "All",
+      "oneTime": "One-time",
+      "monthly": "Monthly",
+      "recurring": "Recurring"
+    },
+    "table": {
+      "donor": "Donor",
+      "amount": "Amount",
+      "type": "Type",
+      "method": "Method",
+      "date": "Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "details": "Transaction Details",
+    "noTransactions": "No transactions found"
   },
-  "transactionDetail": {
-    "title": "Transaction Details",
-    "donorInformation": "Donor Information",
-    "realName": "Real Name",
-    "displayAs": "Display As",
-    "anonymous": "anonymous",
-    "amountBreakdown": "Amount Breakdown",
-    "donation": "Donation",
-    "tip": "Tip",
-    "grossTotal": "Gross Total",
-    "paypalFee": "PayPal Fee",
-    "netReceived": "Net Received",
-    "cardDetails": "Card Details",
-    "cardholder": "Cardholder",
-    "brand": "Brand",
-    "lastFour": "Last 4",
-    "expiry": "Expiry",
-    "type": "Type",
-    "network": "Network",
-    "processingDetails": "Processing Details",
-    "status": "Status",
-    "method": "Method",
-    "responseCode": "Response Code",
-    "cvvCheck": "CVV Check",
-    "protection": "Protection",
-    "networkTxn": "Network Txn",
-    "vaultToken": "Vault Token",
-    "canRebill": "Can rebill",
-    "transactionIds": "Transaction IDs",
-    "internalId": "Internal ID",
-    "orderId": "Order ID",
-    "captureId": "Capture ID",
-    "metadata": "Metadata",
-    "campaign": "Campaign",
-    "ipAddress": "IP Address",
-    "created": "Created",
-    "paypalTime": "PayPal Time",
-    "failedToLoad": "Failed to load details"
+  "customers": {
+    "title": "Customer Management",
+    "search": "Search customers...",
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "paused": "Paused"
+    },
+    "table": {
+      "customer": "Customer",
+      "email": "Email",
+      "totalDonated": "Total Donated",
+      "donations": "Donations",
+      "firstDonation": "First Donation",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "details": "Customer Details",
+    "actions": {
+      "rebill": "Rebill",
+      "pause": "Pause",
+      "resume": "Resume",
+      "delete": "Delete",
+      "saveNotes": "Save Notes"
+    },
+    "rebillModal": {
+      "title": "Rebill Customer",
+      "amount": "Amount",
+      "confirm": "Confirm Rebill",
+      "cancel": "Cancel"
+    },
+    "deleteModal": {
+      "title": "Delete Customer",
+      "confirm": "Are you sure you want to delete this customer? This action cannot be undone.",
+      "confirmButton": "Yes, Delete",
+      "cancel": "Cancel"
+    },
+    "noCustomers": "No customers found"
+  },
+  "failures": {
+    "title": "Payment Failures",
+    "table": {
+      "date": "Date",
+      "errorType": "Error Type",
+      "errorCode": "Code",
+      "message": "Message",
+      "amount": "Amount",
+      "ip": "IP"
+    },
+    "noFailures": "No failures recorded"
   },
   "common": {
     "loading": "Loading...",
-    "anon": "(anon)",
-    "monthly": "Monthly"
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "refresh": "Refresh"
   }
 }

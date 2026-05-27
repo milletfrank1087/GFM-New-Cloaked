@@ -213,6 +213,62 @@ Store service IDs (project `7bb4befa-cbe4-4763-a782-43f1550857cd`):
 
 For each, query `variables(...)` for `CAMPAIGN_CALLBACK_URLS`. If `https://<DOMAIN>` is missing, append with `variableUpsert`.
 
+## 12b. FB seed comments CSV
+
+Each campaign needs a paid-seed comments CSV at repo root named `<patient-firstname>-comments.csv`. It's loaded by the FB ad agency / VA who pastes the comments under the live post. 25 rows of social-proof, 17 top-level comments + 8 threaded replies, all localized to the country's hospital, university, regulatory body, currency, and idiomatic phrasing.
+
+**Pattern (do NOT improvise the row order — these beats are calibrated):**
+
+| Row | Type | Beat |
+|---|---|---|
+| 1 | F comment | Trust skeptic: "how do we know money goes to treatment?" |
+| 2 | F reply→1 | "I donated $X and the page has MRI/cost updates, looks legit" |
+| 3 | M reply→1 | "she's at <localized hospital>, docs are real, I gave $X" |
+| 4 | M comment | "I lost a relative to brain tumor, treatments didn't exist then" |
+| 5 | F reply→4 | Solidarity, same loss |
+| 6 | M comment | "Does dendritic cell immunotherapy actually work for GBM?" |
+| 7 | M reply→6 | Cites Nature Communications 68% survival study, insurance gap |
+| 8 | F reply→6 | Family doctor explained it, blames regulator (FDA/AIFA/AEMPS/etc) |
+| 9 | F comment | "I shared in a group, they removed it, please share this post directly" |
+| 10 | F comment | "21yo med student — so unfair, donated what I could" |
+| 11 | M reply→10 | "wanted to be a doctor, now fighting as a patient" |
+| 12 | F comment | Short donation: "Donated. Stay strong <Patient> 🙏" |
+| 13 | M comment | "country shame — I donated $50, the least I can do" |
+| 14 | F comment | "share don't just like" |
+| 15 | M comment | Regional encouragement: "Keep fighting <Patient>! From <city>" |
+| 16 | F comment | Bureaucracy criticism — "if it saves lives why isn't it covered?" |
+| 17 | M reply→16 | Regulator approval timeline excuse |
+| 18 | M comment | Progress check: "they've raised $X of $Y goal, if we all chip in…" |
+| 19 | F comment | Same-age-as-patient identification, references patient's quote |
+| 20 | M comment | "done ✅ shared and donated" |
+| 21 | F comment | Mother-of-same-age-daughter perspective, "we both donated" |
+| 22 | M comment | Initial skeptic converted, references MRIs/updates on page |
+| 23 | F comment | "we're classmates at <Patient>'s university, the <top-donor org> is the biggest top donor, please help even $5" |
+| 24 | M comment | "if you can't help financially at least share" |
+| 25 | F comment | "I'm crying 😢 21 years old oh my God.. Donation made" |
+
+Header line: `#,Type,Gender,Profile Name,Comment Text,Reply To #`
+
+Per-row localization checklist when creating a new CSV:
+- Profile names → country-native first+last names (don't reuse the campaign JSON's `recentDonors[]` names — those are the donor list; comments should be a disjoint set).
+- Hospital reference (row 3) → match `story.sections[0].content` hospital in the campaign JSON.
+- University reference (row 23) → match the campaign JSON's `story.intro` university.
+- Regional shout (row 15) → use a DIFFERENT city than the patient's (otherwise looks like the only people who care are local).
+- Regulator name (row 8 + row 17) → FDA / AIFA / AEMPS / EMA / AEM / Infarmed / URPL.
+- Top donor reference (row 23) → match `topDonors[0].name` in the campaign JSON exactly.
+- Raised / goal numbers (row 18) → match the JSON's `raised` and `goal` (which is updated by `refresh-dates-*.js` periodically).
+- Currency symbol (rows 2, 3, 13, 22, 23) → match `CURRENCY` env var.
+- Patient quote excerpt (row 19) → quote the most viral line from `story.quote.text` in the JSON.
+
+Validate after writing:
+
+```powershell
+$lines = (Get-Content <patient>-comments.csv -Raw).Split("`n").Where({ $_ -ne '' })
+$lines.Count  # must be 26 (1 header + 25 data)
+($lines[1..25] | Where-Object { $_ -match '^\d+,comment' }).Count  # 17 or 18
+($lines[1..25] | Where-Object { $_ -match '^\d+,reply'   }).Count  # 7 or 8
+```
+
 ## 13. FB ad copy — language-agnostic template
 
 Same structure across all languages so the agent can produce a faithful translation. Substitute the bracketed tokens, translate prose, keep paragraph breaks identical.
