@@ -49,8 +49,9 @@ module.exports = function createDonationRouter(ctx) {
     const { amount, tip = 0, isAnonymous = false, donorEmail = null, tracking = null, clientLocation = null } = req.body;
 
     try {
-      if (!amount || amount < 0.50) {
-        return res.status(400).json({ error: 'Invalid donation amount' });
+      const minAmount = ACTIVE_CURRENCY.stripeMin || 0.50;
+      if (!amount || parseFloat(amount) < minAmount) {
+        return res.status(400).json({ error: `Invalid donation amount (minimum ${minAmount} ${ACTIVE_CURRENCY.code})` });
       }
 
       const store = await getNextStore();

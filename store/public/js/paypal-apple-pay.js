@@ -25,7 +25,9 @@
       var storeName = document.querySelector('meta[name="store-name"]')?.content || 'Store';
       var totalAmount = document.getElementById('payment-amount')?.value;
       var currencyCode = (document.getElementById('payment-currency')?.value || 'eur').toUpperCase();
-      var amountStr = totalAmount ? (parseInt(totalAmount, 10) / 100).toFixed(2) : '0.00';
+      var decimals = parseInt(document.getElementById('payment-decimals')?.value || '2', 10);
+      var divisor = Math.pow(10, decimals);
+      var amountStr = totalAmount ? (parseInt(totalAmount, 10) / divisor).toFixed(decimals) : (0).toFixed(decimals);
 
       applePayBtn.addEventListener('click', function() {
         var paymentRequest = {

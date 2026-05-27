@@ -8,8 +8,13 @@
   var btnText = document.getElementById('btn-text');
   var loadingEl = document.getElementById('payment-loading');
 
-  btnText.textContent = 'Pay ' + sc.symbol + sc.total.toFixed(2);
-  submitBtn.setAttribute('data-paytext', 'Pay ' + sc.symbol + sc.total.toFixed(2));
+  var decimals = parseInt(document.getElementById('payment-decimals')?.value || '2', 10);
+  var position = (document.getElementById('payment-symbol-position')?.value || 'before');
+  var paytextAmount = (position === 'after')
+    ? sc.total.toFixed(decimals) + ' ' + sc.symbol
+    : sc.symbol + sc.total.toFixed(decimals);
+  btnText.textContent = 'Pay ' + paytextAmount;
+  submitBtn.setAttribute('data-paytext', 'Pay ' + paytextAmount);
 
   function showOrderComplete() {
     localStorage.removeItem(sc.CART_KEY);

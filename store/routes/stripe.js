@@ -1,5 +1,6 @@
 const express = require('express');
 const { decomposeAmount } = require('../lib/decompose');
+const { toSmallestUnit, fromSmallestUnit, getDecimals, formatAmount } = require('../lib/currency');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { classifyStripeError, getDonorMessage } = require('../lib/stripe-errors');
@@ -33,7 +34,7 @@ module.exports = function createStripeRouter(ctx) {
     switch (event.type) {
       case 'payment_intent.succeeded': {
         const pi = event.data.object;
-        StoreLog.event('webhook_ok', ref, `Payment succeeded ${pi.id} - ${pi.amount / 100} ${pi.currency.toUpperCase()}`);
+        StoreLog.event('webhook_ok', ref, `Payment succeeded ${pi.id} - ${fromSmallestUnit(pi.amount, pi.currency)} ${pi.currency.toUpperCase()}`);
         break;
       }
       case 'payment_intent.payment_failed': {
@@ -47,19 +48,19 @@ module.exports = function createStripeRouter(ctx) {
             error_type: 'PAYMENT_FAILED',
             error_code: pi.last_payment_error?.code || 'UNKNOWN',
             error_message: pi.last_payment_error?.message || 'Payment failed',
-            request_amount: pi.amount / 100
+            request_amount: fromSmallestUnit(pi.amount, pi.currency)
           }).catch(() => {});
         }
         break;
       }
       case 'charge.dispute.created': {
         const dispute = event.data.object;
-        StoreLog.error('webhook_dispute', ref, `DISPUTE ${dispute.id} - ${dispute.amount / 100} ${dispute.currency} - ${dispute.reason}`);
+        StoreLog.error('webhook_dispute', ref, `DISPUTE ${dispute.id} - ${fromSmallestUnit(dispute.amount, dispute.currency)} ${dispute.currency} - ${dispute.reason}`);
         break;
       }
       case 'charge.refunded': {
         const charge = event.data.object;
-        StoreLog.event('webhook_refund', ref, `Refund ${charge.id} - ${charge.amount_refunded / 100} ${charge.currency}`);
+        StoreLog.event('webhook_refund', ref, `Refund ${charge.id} - ${fromSmallestUnit(charge.amount_refunded, charge.currency)} ${charge.currency}`);
         break;
       }
     }
@@ -92,8 +93,9 @@ module.exports = function createStripeRouter(ctx) {
         });
       }
       const totalAmount = parseFloat(donor.amount) + parseFloat(donor.fee || 0);
-      const amountInCents = Math.round(totalAmount * 100);
-      const lineItems = decomposeAmount(totalAmount, storeConfig.products);
+      const donorCurrency = donor.currency || 'EUR';
+      const amountInUnits = toSmallestUnit(totalAmount, donorCurrency);
+      const lineItems = decomposeAmount(totalAmount, storeConfig.products, donorCurrency);
 
       const refCode = (donor.sid || '').substring(0, 4).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const mk = storeConfig.metadataKeys || {};
@@ -113,14 +115,14 @@ module.exports = function createStripeRouter(ctx) {
         product_name: item.name.substring(0, 26),
         product_code: (item.slug || 'item').substring(0, 12).toUpperCase().replace(/-/g, ''),
         quantity: item.quantity,
-        unit_cost: Math.round(item.price * 100),
+        unit_cost: toSmallestUnit(item.price, donorCurrency),
         unit_of_measure: 'ACT',
         tax: { total_tax_amount: 0 }
       }));
 
       const intentParams = {
-        amount: amountInCents,
-        currency: donor.currency.toLowerCase(),
+        amount: amountInUnits,
+        currency: donorCurrency.toLowerCase(),
         automatic_payment_methods: { enabled: true, allow_redirects: 'always' },
         metadata,
         description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
@@ -247,11 +249,11 @@ module.exports = function createStripeRouter(ctx) {
         }
       }
       if (resolvedBt) {
-        const feeInSettlement = resolvedBt.fee / 100;
+        const feeInSettlement = fromSmallestUnit(resolvedBt.fee, resolvedBt.currency);
         stripeFee = resolvedBt.exchange_rate ? feeInSettlement / resolvedBt.exchange_rate : feeInSettlement;
       }
 
-      const totalAmount = paymentIntent.amount / 100;
+      const totalAmount = fromSmallestUnit(paymentIntent.amount, paymentIntent.currency);
 
       let cardHolderName = pm?.billing_details?.name || '';
       let cardLastDigits = pm?.card?.last4 || null;
@@ -275,7 +277,7 @@ module.exports = function createStripeRouter(ctx) {
         donorName = parts.length >= 2 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : donorNameReal;
       }
 
-      const lineItems = decomposeAmount(parseFloat(donor.amount) + parseFloat(donor.fee || 0), storeConfig.products);
+      const lineItems = decomposeAmount(parseFloat(donor.amount) + parseFloat(donor.fee || 0), storeConfig.products, donor.currency || 'EUR');
 
       let customerId = null;
       const email = donor.email || charge?.billing_details?.email || null;
@@ -485,14 +487,14 @@ module.exports = function createStripeRouter(ctx) {
         return res.status(400).json({ error: 'Invalid cart total' });
       }
 
-      const amountInCents = Math.round(total * 100);
+      const storeCurrency = storeConfig.currency || 'GBP';
+      const amountInUnits = toSmallestUnit(total, storeCurrency);
       const mk = storeConfig.metadataKeys || {};
       const refCode = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-      const currency = (storeConfig.currency || 'gbp').toLowerCase();
 
       const intentParams = {
-        amount: amountInCents,
-        currency,
+        amount: amountInUnits,
+        currency: storeCurrency.toLowerCase(),
         automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
         metadata: {
           [mk.storeId || 'storeId']: ctx.getStoreDbId() || '',
@@ -508,7 +510,7 @@ module.exports = function createStripeRouter(ctx) {
             product_name: item.name.substring(0, 26),
             product_code: (item.slug || 'item').substring(0, 12).toUpperCase().replace(/-/g, ''),
             quantity: item.quantity,
-            unit_cost: Math.round(item.price * 100),
+            unit_cost: toSmallestUnit(item.price, storeCurrency),
             unit_of_measure: 'ACT',
             tax: { total_tax_amount: 0 }
           }))
@@ -517,10 +519,10 @@ module.exports = function createStripeRouter(ctx) {
 
       const paymentIntent = await stripe.paymentIntents.create(intentParams);
 
-      const symbol = storeConfig.currencySymbol || '£';
-      StoreLog.event('store_checkout', refCode, `${paymentIntent.id.substring(0, 18)}... - ${symbol}${total.toFixed(2)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
+      const storeDecimals = getDecimals(storeCurrency);
+      StoreLog.event('store_checkout', refCode, `${paymentIntent.id.substring(0, 18)}... - ${formatAmount(total, storeCurrency)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
 
-      res.json({ clientSecret: paymentIntent.client_secret, paymentIntentId: paymentIntent.id, amount: total.toFixed(2) });
+      res.json({ clientSecret: paymentIntent.client_secret, paymentIntentId: paymentIntent.id, amount: total.toFixed(storeDecimals) });
     } catch (error) {
       StoreLog.error('store_checkout', '---', `${error.code || 'ERROR'}: ${error.message}`);
       res.status(500).json({ error: 'Payment setup failed' });

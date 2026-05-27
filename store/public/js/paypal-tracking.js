@@ -2,8 +2,9 @@
   let addPaymentInfoFired = false;
 
   function getPaymentAmount() {
-    const cents = parseInt(document.getElementById('payment-amount')?.value || '0', 10);
-    return cents / 100;
+    const units = parseInt(document.getElementById('payment-amount')?.value || '0', 10);
+    const decimals = parseInt(document.getElementById('payment-decimals')?.value || '2', 10);
+    return units / Math.pow(10, decimals);
   }
 
   function getPaymentCurrency() {

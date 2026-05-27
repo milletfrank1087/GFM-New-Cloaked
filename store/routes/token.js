@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { decomposeAmount } = require('../lib/decompose');
 const { CHECKOUT_LOCALE, CURRENCY_SYMBOLS } = require('../lib/locale');
+const { getSymbol, getPosition, getDecimals, toSmallestUnit, formatAmount } = require('../lib/currency');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 
@@ -99,24 +100,35 @@ module.exports = function createTokenRouter(ctx) {
         const donor = JSON.parse(sessionCookie);
         const lang = donor.lang || 'en';
         const locale = CHECKOUT_LOCALE[lang] || CHECKOUT_LOCALE.en;
-        const symbol = CURRENCY_SYMBOLS[donor.currency] || donor.currency;
+        const donorCurrency = donor.currency || 'EUR';
+        const symbol = getSymbol(donorCurrency);
+        const symbolPosition = getPosition(donorCurrency);
+        const decimals = getDecimals(donorCurrency);
         const totalAmount = parseFloat(donor.amount) + parseFloat(donor.fee || 0);
-        const orderItems = decomposeAmount(totalAmount, storeConfig.products);
+        const orderItems = decomposeAmount(totalAmount, storeConfig.products, donorCurrency);
 
-        StoreLog.event('checkout_view', donor.ref || '---', `Viewing checkout - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
+        StoreLog.event('checkout_view', donor.ref || '---', `Viewing checkout - ${fmtAmount(totalAmount, donorCurrency)} ${donorCurrency}`);
 
         const campaignDisplay = donor.utm?.campaignDisplay || {};
         const donationAmount = parseFloat(donor.amount);
         const serviceFee = parseFloat(donor.fee || 0);
+
+        const fmt = (n) => formatAmount(n, donorCurrency);
 
         return res.render('pages/checkout-donor', {
           store: req.store,
           donor,
           locale,
           symbol,
-          totalAmount: totalAmount.toFixed(2),
-          donationAmount: donationAmount.toFixed(2),
-          serviceFee: serviceFee.toFixed(2),
+          symbolPosition,
+          currencyDecimals: decimals,
+          paymentAmountUnits: toSmallestUnit(totalAmount, donorCurrency),
+          totalAmount: totalAmount.toFixed(decimals),
+          donationAmount: donationAmount.toFixed(decimals),
+          serviceFee: serviceFee.toFixed(decimals),
+          formattedTotal: fmt(totalAmount),
+          formattedDonation: fmt(donationAmount),
+          formattedFee: fmt(serviceFee),
           showFeeBreakdown: serviceFee > 0,
           campaignDisplay,
           orderItems,

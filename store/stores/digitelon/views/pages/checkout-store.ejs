@@ -167,8 +167,10 @@
 
   <meta name="store-name" content="<%= store.name %>">
   <meta name="payment-processor" content="<%= paymentProcessor %>">
-  <input type="hidden" id="payment-currency" value="<%= (store.currency || 'GBP').toLowerCase() %>">
-  <input type="hidden" id="payment-symbol" value="<%= store.currencySymbol || '£' %>">
+  <input type="hidden" id="payment-currency" value="<%= (store.currency || 'EUR').toLowerCase() %>">
+  <input type="hidden" id="payment-symbol" value="<%= store.currencySymbol || '€' %>">
+  <input type="hidden" id="payment-decimals" value="<%= store.currencyDecimals != null ? store.currencyDecimals : 2 %>">
+  <input type="hidden" id="payment-symbol-position" value="<%= store.currencyPosition || 'before' %>">
 
   <script src="/js/checkout-store-cart.js"></script>
   <% if (paymentProcessor === 'stripe') { %>

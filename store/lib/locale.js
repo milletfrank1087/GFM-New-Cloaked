@@ -148,8 +148,10 @@ const CHECKOUT_LOCALE = {
   }
 };
 
-const CURRENCY_SYMBOLS = {
-  USD: '$', EUR: '€', GBP: '£', PLN: 'zł'
-};
+const { CURRENCIES, getSymbol, getPosition, formatAmount } = require('./currency');
 
-module.exports = { CHECKOUT_LOCALE, CURRENCY_SYMBOLS };
+const CURRENCY_SYMBOLS = Object.fromEntries(
+  Object.entries(CURRENCIES).map(([code, meta]) => [code, meta.symbol])
+);
+
+module.exports = { CHECKOUT_LOCALE, CURRENCY_SYMBOLS, getSymbol, getPosition, formatAmount };

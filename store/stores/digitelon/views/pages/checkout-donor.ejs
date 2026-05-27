@@ -76,7 +76,7 @@
             <p class="text-xs text-gray-400 mt-0.5"><%= locale.subtitle %></p>
           </div>
         </div>
-        <span class="text-2xl font-bold text-brand-primary"><%= symbol %><%= totalAmount %></span>
+        <span class="text-2xl font-bold text-brand-primary"><%= formattedTotal %></span>
       </div>
 
       <div class="px-6 pt-4 pb-5">
@@ -133,14 +133,14 @@
 
         <button id="submit-payment" disabled
           class="w-full bg-brand-primary hover:bg-brand-dark text-white py-3.5 rounded-xl font-bold text-base transition-all duration-300 hover:shadow-lg hover:shadow-brand-primary/25 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-3"
-          data-paytext="<%= locale.pay %> <%= symbol %><%= totalAmount %>"
+          data-paytext="<%= locale.pay %> <%= formattedTotal %>"
           data-processing="<%= locale.processing %>">
           <svg id="payment-spinner" class="hidden animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
           </svg>
           <svg class="w-4 h-4 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span id="btn-text"><%= locale.pay %> <%= symbol %><%= totalAmount %></span>
+          <span id="btn-text"><%= locale.pay %> <%= formattedTotal %></span>
         </button>
 
         <div class="mt-4 bg-gray-50 rounded-xl p-3 border border-gray-100">
@@ -217,8 +217,9 @@
   </div>
 
   <meta name="store-name" content="<%= store.name %>">
-  <input type="hidden" id="payment-amount" value="<%= Math.round(totalAmount * 100) %>">
+  <input type="hidden" id="payment-amount" value="<%= paymentAmountUnits %>">
   <input type="hidden" id="payment-currency" value="<%= (donor.currency || 'eur').toLowerCase() %>">
+  <input type="hidden" id="payment-decimals" value="<%= currencyDecimals %>">
   <input type="hidden" id="locale-email-error" value="<%= locale.emailError %>">
   <% if (metaPixelId) { %>
   <input type="hidden" id="payment-pixel-id" value="<%= metaPixelId %>">

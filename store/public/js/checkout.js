@@ -4,9 +4,11 @@ if (!stripeKey) throw new Error('Stripe key missing');
 const stripeLocale = document.getElementById('payment-locale')?.value || 'auto';
 const stripe = Stripe(stripeKey, { locale: stripeLocale });
 
-const paymentAmountCents = parseInt(document.getElementById('payment-amount')?.value || '0', 10);
+const paymentAmountUnits = parseInt(document.getElementById('payment-amount')?.value || '0', 10);
 const paymentCurrency = (document.getElementById('payment-currency')?.value || 'eur').toLowerCase();
-const paymentValueMajor = paymentAmountCents / 100;
+const paymentDecimals = parseInt(document.getElementById('payment-decimals')?.value || '2', 10);
+const paymentDivisor = Math.pow(10, paymentDecimals);
+const paymentValueMajor = paymentAmountUnits / paymentDivisor;
 const paymentPixelId = document.getElementById('payment-pixel-id')?.value || null;
 const localizedEmailError = document.getElementById('locale-email-error')?.value || 'Please enter a valid email address.';
 
@@ -106,7 +108,7 @@ async function initCheckout() {
   try {
     elements = stripe.elements({
       mode: 'payment',
-      amount: paymentAmountCents,
+      amount: paymentAmountUnits,
       currency: paymentCurrency,
       locale: stripeLocale,
       appearance: {

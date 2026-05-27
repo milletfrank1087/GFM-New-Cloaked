@@ -1,3 +1,10 @@
+const CURRENCY_SYMBOL = '\u00a3';
+const CURRENCY_POSITION = 'before';
+function fmt(v) {
+  var s = (parseFloat(v) || 0).toFixed(2);
+  return CURRENCY_POSITION === 'after' ? s + ' ' + CURRENCY_SYMBOL : CURRENCY_SYMBOL + s;
+}
+
 const Cart = {
   KEY: 'store_cart',
 
@@ -91,7 +98,7 @@ const Cart = {
     if (emptyEl) emptyEl.style.display = 'none';
     if (filledEl) filledEl.style.display = 'block';
     if (countEl) countEl.textContent = this.count() + ' item' + (this.count() !== 1 ? 's' : '');
-    if (totalEl) totalEl.textContent = '\u20ac' + this.total().toFixed(2);
+    if (totalEl) totalEl.textContent = fmt(this.total());
 
     container.innerHTML = items.map(item => `
       <div class="flex items-center justify-between py-4 border-b border-gray-100 last:border-0">
@@ -101,7 +108,7 @@ const Cart = {
           </div>
           <div>
             <h3 class="font-semibold text-gray-900 text-sm">${item.name}</h3>
-            <p class="text-sm text-gray-500">\u20ac${item.price.toFixed(2)} each</p>
+            <p class="text-sm text-gray-500">${fmt(item.price)} each</p>
           </div>
         </div>
         <div class="flex items-center gap-3">
@@ -109,7 +116,7 @@ const Cart = {
             class="border border-gray-200 rounded-lg px-2 py-1 text-sm bg-white">
             ${[1,2,3,4,5].map(n => `<option value="${n}" ${item.quantity === n ? 'selected' : ''}>${n}</option>`).join('')}
           </select>
-          <span class="font-semibold text-gray-900 w-16 text-right">\u20ac${(item.price * item.quantity).toFixed(2)}</span>
+          <span class="font-semibold text-gray-900 w-16 text-right">${fmt(item.price * item.quantity)}</span>
           <button onclick="Cart.remove('${item.slug}'); Cart.renderCartPage();"
             class="text-gray-400 hover:text-red-500 transition p-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>

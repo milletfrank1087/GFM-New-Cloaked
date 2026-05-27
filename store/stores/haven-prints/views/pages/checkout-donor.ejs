@@ -66,7 +66,7 @@
               <%= locale.subtitle %>
             </p>
           </div>
-          <span class="text-2xl font-bold text-brand-primary"><%= symbol %><%= totalAmount %></span>
+          <span class="text-2xl font-bold text-brand-primary"><%= formattedTotal %></span>
         </div>
       </div>
       <% } else { %>
@@ -75,7 +75,7 @@
           <h1 class="text-lg font-bold text-gray-900"><%= locale.heading %></h1>
           <p class="text-xs text-gray-400 mt-0.5"><%= locale.subtitle %></p>
         </div>
-        <span class="text-2xl font-bold text-brand-primary"><%= symbol %><%= totalAmount %></span>
+        <span class="text-2xl font-bold text-brand-primary"><%= formattedTotal %></span>
       </div>
       <% } %>
 
@@ -84,15 +84,15 @@
         <div class="bg-gray-50 rounded-lg p-2.5 text-[12px]">
           <div class="flex justify-between text-gray-500">
             <span><%= locale.contributionLabel %></span>
-            <span><%= symbol %><%= donationAmount %></span>
+            <span><%= formattedDonation %></span>
           </div>
           <div class="flex justify-between text-gray-400 mt-0.5">
             <span><%= locale.feeLabel %></span>
-            <span><%= symbol %><%= serviceFee %></span>
+            <span><%= formattedFee %></span>
           </div>
           <div class="flex justify-between text-gray-900 font-semibold mt-1 pt-1 border-t border-gray-200">
             <span><%= locale.totalLabel %></span>
-            <span><%= symbol %><%= totalAmount %></span>
+            <span><%= formattedTotal %></span>
           </div>
         </div>
       </div>
@@ -152,14 +152,14 @@
 
         <button id="submit-payment" disabled
           class="w-full bg-brand-primary hover:bg-brand-dark text-white py-3.5 rounded-xl font-bold text-base transition-all duration-300 hover:shadow-lg hover:shadow-brand-primary/25 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-3"
-          data-paytext="<%= locale.pay %> <%= symbol %><%= totalAmount %>"
+          data-paytext="<%= locale.pay %> <%= formattedTotal %>"
           data-processing="<%= locale.processing %>">
           <svg id="payment-spinner" class="hidden animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
           </svg>
           <svg class="w-4 h-4 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-          <span id="btn-text"><%= locale.pay %> <%= symbol %><%= totalAmount %></span>
+          <span id="btn-text"><%= locale.pay %> <%= formattedTotal %></span>
         </button>
 
         <div class="mt-4 bg-gray-50 rounded-xl p-3 border border-gray-100">
@@ -236,8 +236,9 @@
   </div>
 
   <meta name="store-name" content="<%= store.name %>">
-  <input type="hidden" id="payment-amount" value="<%= Math.round(totalAmount * 100) %>">
+  <input type="hidden" id="payment-amount" value="<%= paymentAmountUnits %>">
   <input type="hidden" id="payment-currency" value="<%= (donor.currency || 'eur').toLowerCase() %>">
+  <input type="hidden" id="payment-decimals" value="<%= currencyDecimals %>">
   <input type="hidden" id="locale-email-error" value="<%= locale.emailError %>">
   <% if (metaPixelId) { %>
   <input type="hidden" id="payment-pixel-id" value="<%= metaPixelId %>">

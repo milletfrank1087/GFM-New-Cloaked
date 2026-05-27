@@ -54,9 +54,23 @@ const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'en';
 
 const CURRENCY = process.env.CURRENCY || 'USD';
 const CURRENCY_CONFIG = {
-  USD: { code: 'USD', symbol: '$', position: 'before', locale: 'en-US', presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
-  EUR: { code: 'EUR', symbol: '€', position: 'before', locale: 'it-IT', presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
-  PLN: { code: 'PLN', symbol: 'zł', position: 'after', locale: 'pl-PL', presetAmounts: [40, 100, 200, 500, 1000, 2000], defaultAmount: 200 }
+  USD: { code: 'USD', symbol: '$',  position: 'before', locale: 'en-US', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
+  EUR: { code: 'EUR', symbol: '€',  position: 'before', locale: 'it-IT', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
+  GBP: { code: 'GBP', symbol: '£',  position: 'before', locale: 'en-GB', decimals: 2, stripeMin: 0.30, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
+  PLN: { code: 'PLN', symbol: 'zł', position: 'after',  locale: 'pl-PL', decimals: 2, stripeMin: 2.00, presetAmounts: [40, 100, 200, 500, 1000, 2000], defaultAmount: 200 },
+  CHF: { code: 'CHF', symbol: 'CHF', position: 'before', locale: 'de-CH', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
+  SEK: { code: 'SEK', symbol: 'kr', position: 'after',  locale: 'sv-SE', decimals: 2, stripeMin: 3.00, presetAmounts: [50, 100, 250, 500, 1000, 2500], defaultAmount: 500 },
+  NOK: { code: 'NOK', symbol: 'kr', position: 'after',  locale: 'nb-NO', decimals: 2, stripeMin: 3.00, presetAmounts: [50, 100, 250, 500, 1000, 2500], defaultAmount: 500 },
+  DKK: { code: 'DKK', symbol: 'kr', position: 'after',  locale: 'da-DK', decimals: 2, stripeMin: 2.50, presetAmounts: [50, 100, 250, 500, 1000, 2500], defaultAmount: 350 },
+  CZK: { code: 'CZK', symbol: 'Kč', position: 'after',  locale: 'cs-CZ', decimals: 2, stripeMin: 15.00, presetAmounts: [200, 500, 1000, 2500, 5000, 10000], defaultAmount: 1000 },
+  HUF: { code: 'HUF', symbol: 'Ft', position: 'after',  locale: 'hu-HU', decimals: 2, stripeMin: 175.00, presetAmounts: [2000, 5000, 10000, 25000, 50000, 100000], defaultAmount: 15000 },
+  RON: { code: 'RON', symbol: 'lei', position: 'after', locale: 'ro-RO', decimals: 2, stripeMin: 2.00, presetAmounts: [50, 100, 250, 500, 1000, 2500], defaultAmount: 200 },
+  CAD: { code: 'CAD', symbol: 'CA$', position: 'before', locale: 'en-CA', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
+  AUD: { code: 'AUD', symbol: 'A$', position: 'before', locale: 'en-AU', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
+  NZD: { code: 'NZD', symbol: 'NZ$', position: 'before', locale: 'en-NZ', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
+  BRL: { code: 'BRL', symbol: 'R$', position: 'before', locale: 'pt-BR', decimals: 2, stripeMin: 0.50, presetAmounts: [25, 50, 100, 250, 500, 1000], defaultAmount: 100 },
+  MXN: { code: 'MXN', symbol: 'MX$', position: 'before', locale: 'es-MX', decimals: 2, stripeMin: 10.00, presetAmounts: [100, 250, 500, 1000, 2500, 5000], defaultAmount: 500 },
+  JPY: { code: 'JPY', symbol: '¥',  position: 'before', locale: 'ja-JP', decimals: 0, stripeMin: 50, presetAmounts: [1000, 3000, 5000, 10000, 25000, 50000], defaultAmount: 5000 },
 };
 const ACTIVE_CURRENCY = CURRENCY_CONFIG[CURRENCY] || CURRENCY_CONFIG.USD;
 

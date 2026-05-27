@@ -1,5 +1,6 @@
 const express = require('express');
 const { decomposeAmount } = require('../lib/decompose');
+const { toSmallestUnit, fromSmallestUnit, getDecimals, formatAmount } = require('../lib/currency');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { PAYPAL_CLIENT_ID, PAYPAL_API_BASE, getPayPalAccessToken } = require('../lib/paypal');
@@ -46,7 +47,9 @@ module.exports = function createPayPalRouter(ctx) {
 
       const donor = JSON.parse(sessionCookie);
       const totalAmount = parseFloat(donor.amount) + parseFloat(donor.fee || 0);
-      const lineItems = decomposeAmount(totalAmount, storeConfig.products);
+      const donorCurrency = donor.currency || 'EUR';
+      const currencyDecimals = getDecimals(donorCurrency);
+      const lineItems = decomposeAmount(totalAmount, storeConfig.products, donorCurrency);
 
       const refCode = (donor.sid || '').substring(0, 4).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const mk = storeConfig.metadataKeys || {};
@@ -59,22 +62,22 @@ module.exports = function createPayPalRouter(ctx) {
 
       const ppItems = lineItems.map(item => ({
         name: item.name.substring(0, 127),
-        unit_amount: { currency_code: donor.currency.toUpperCase(), value: item.price.toFixed(2) },
+        unit_amount: { currency_code: donorCurrency.toUpperCase(), value: item.price.toFixed(currencyDecimals) },
         quantity: String(item.quantity),
         category: 'DIGITAL_GOODS',
       }));
 
-      const itemTotalCents = ppItems.reduce(
-        (sum, item) => sum + Math.round(parseFloat(item.unit_amount.value) * 100) * parseInt(item.quantity, 10), 0
+      const itemTotalUnits = ppItems.reduce(
+        (sum, item) => sum + toSmallestUnit(item.unit_amount.value, donorCurrency) * parseInt(item.quantity, 10), 0
       );
-      const orderTotalCents = Math.round(totalAmount * 100);
+      const orderTotalUnits = toSmallestUnit(totalAmount, donorCurrency);
 
-      if (itemTotalCents !== orderTotalCents) {
-        StoreLog.error('decompose_mismatch', donor.ref || '---', `itemTotal=${itemTotalCents / 100} orderTotal=${totalAmount}; rejecting to prevent overcharge`);
+      if (itemTotalUnits !== orderTotalUnits) {
+        StoreLog.error('decompose_mismatch', donor.ref || '---', `itemTotal=${fromSmallestUnit(itemTotalUnits, donorCurrency)} orderTotal=${totalAmount}; rejecting to prevent overcharge`);
         return res.status(500).json({ error: 'Payment amount mismatch; please contact support' });
       }
 
-      const orderTotalStr = (orderTotalCents / 100).toFixed(2);
+      const orderTotalStr = fromSmallestUnit(orderTotalUnits, donorCurrency).toFixed(currencyDecimals);
 
       const customIdRaw = JSON.stringify(sessionMeta);
       const customId = customIdRaw.length > 127 ? customIdRaw.substring(0, 127) : customIdRaw;
@@ -86,10 +89,10 @@ module.exports = function createPayPalRouter(ctx) {
           description: `Order from ${storeConfig.name}`,
           custom_id: customId,
           amount: {
-            currency_code: donor.currency.toUpperCase(),
+            currency_code: donorCurrency.toUpperCase(),
             value: orderTotalStr,
             breakdown: {
-              item_total: { currency_code: donor.currency.toUpperCase(), value: orderTotalStr }
+              item_total: { currency_code: donorCurrency.toUpperCase(), value: orderTotalStr }
             }
           },
           items: ppItems,
@@ -279,7 +282,7 @@ module.exports = function createPayPalRouter(ctx) {
         donorName = parts.length >= 2 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : donorNameReal;
       }
 
-      const lineItems = decomposeAmount(parseFloat(donor.amount) + parseFloat(donor.fee || 0), storeConfig.products);
+      const lineItems = decomposeAmount(parseFloat(donor.amount) + parseFloat(donor.fee || 0), storeConfig.products, donor.currency || 'EUR');
 
       let customerId = null;
       const email = donor.email || payer?.email_address || null;
@@ -461,10 +464,11 @@ module.exports = function createPayPalRouter(ctx) {
 
       const refCode = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const currencyCode = (storeConfig.currency || 'GBP').toUpperCase();
+      const storeDecimals = getDecimals(currencyCode);
 
       const ppItems = validItems.map(item => ({
         name: item.name.substring(0, 127),
-        unit_amount: { currency_code: currencyCode, value: item.price.toFixed(2) },
+        unit_amount: { currency_code: currencyCode, value: item.price.toFixed(storeDecimals) },
         quantity: String(item.quantity),
         category: 'DIGITAL_GOODS',
       }));
@@ -472,7 +476,7 @@ module.exports = function createPayPalRouter(ctx) {
       const storeItemTotal = ppItems.reduce(
         (sum, item) => sum + parseFloat(item.unit_amount.value) * parseInt(item.quantity, 10), 0
       );
-      const storeItemTotalStr = storeItemTotal.toFixed(2);
+      const storeItemTotalStr = storeItemTotal.toFixed(storeDecimals);
 
       const orderPayload = {
         intent: 'CAPTURE',
@@ -504,9 +508,8 @@ module.exports = function createPayPalRouter(ctx) {
         return res.status(response.status).json({ error: order.message || 'PayPal order creation failed' });
       }
 
-      const symbol = storeConfig.currencySymbol || '£';
-      StoreLog.event('store_checkout', refCode, `PayPal ${order.id} - ${symbol}${total.toFixed(2)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
-      res.json({ orderId: order.id, amount: total.toFixed(2) });
+      StoreLog.event('store_checkout', refCode, `PayPal ${order.id} - ${formatAmount(total, currencyCode)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);
+      res.json({ orderId: order.id, amount: total.toFixed(storeDecimals) });
     } catch (error) {
       StoreLog.error('store_checkout', '---', `PayPal: ${error.message}`);
       res.status(500).json({ error: 'Payment setup failed' });

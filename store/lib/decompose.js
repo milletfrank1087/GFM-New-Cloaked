@@ -1,83 +1,77 @@
-function toCents(value) {
-  return Math.round(parseFloat(value) * 100);
-}
+const { toSmallestUnit, fromSmallestUnit } = require('./currency');
 
-function fromCents(cents) {
-  return Math.round(cents) / 100;
-}
-
-function decomposeAmount(amount, products) {
-  const totalCents = toCents(amount);
+function decomposeAmount(amount, products, currency = 'EUR') {
+  const totalUnits = toSmallestUnit(amount, currency);
 
   if (!products || !products.length) {
-    return [{ name: 'Digital Product', slug: 'digital-product', quantity: 1, price: fromCents(totalCents) }];
+    return [{ name: 'Digital Product', slug: 'digital-product', quantity: 1, price: fromSmallestUnit(totalUnits, currency) }];
   }
 
-  const productsCents = products.map(p => ({ ...p, priceCents: toCents(p.price) }));
+  const productsUnits = products.map(p => ({ ...p, priceUnits: toSmallestUnit(p.price, currency) }));
 
-  const exactMatch = productsCents.find(p => p.priceCents === totalCents);
+  const exactMatch = productsUnits.find(p => p.priceUnits === totalUnits);
   if (exactMatch) {
     return [{
       name: exactMatch.name,
       slug: exactMatch.slug || 'item',
       quantity: 1,
-      price: fromCents(totalCents)
+      price: fromSmallestUnit(totalUnits, currency)
     }];
   }
 
-  for (let i = 0; i < productsCents.length; i++) {
-    for (let j = i; j < productsCents.length; j++) {
-      const pi = productsCents[i];
-      const pj = productsCents[j];
-      if (pi.priceCents + pj.priceCents === totalCents) {
+  for (let i = 0; i < productsUnits.length; i++) {
+    for (let j = i; j < productsUnits.length; j++) {
+      const pi = productsUnits[i];
+      const pj = productsUnits[j];
+      if (pi.priceUnits + pj.priceUnits === totalUnits) {
         if (i === j) {
-          return [{ name: pi.name, slug: pi.slug || 'item', quantity: 2, price: fromCents(pi.priceCents) }];
+          return [{ name: pi.name, slug: pi.slug || 'item', quantity: 2, price: fromSmallestUnit(pi.priceUnits, currency) }];
         }
         return [
-          { name: pi.name, slug: pi.slug || 'item', quantity: 1, price: fromCents(pi.priceCents) },
-          { name: pj.name, slug: pj.slug || 'item', quantity: 1, price: fromCents(pj.priceCents) }
+          { name: pi.name, slug: pi.slug || 'item', quantity: 1, price: fromSmallestUnit(pi.priceUnits, currency) },
+          { name: pj.name, slug: pj.slug || 'item', quantity: 1, price: fromSmallestUnit(pj.priceUnits, currency) }
         ];
       }
     }
   }
 
-  const sorted = [...productsCents].sort((a, b) => b.priceCents - a.priceCents);
+  const sorted = [...productsUnits].sort((a, b) => b.priceUnits - a.priceUnits);
   const items = [];
-  let remainingCents = totalCents;
+  let remainingUnits = totalUnits;
 
   for (const product of sorted) {
-    if (remainingCents <= 0) break;
-    if (product.priceCents <= remainingCents) {
-      const qty = Math.floor(remainingCents / product.priceCents);
+    if (remainingUnits <= 0) break;
+    if (product.priceUnits <= remainingUnits) {
+      const qty = Math.floor(remainingUnits / product.priceUnits);
       if (qty > 0) {
         items.push({
           name: product.name,
           slug: product.slug || 'item',
           quantity: qty,
-          priceCents: product.priceCents
+          priceUnits: product.priceUnits
         });
-        remainingCents -= product.priceCents * qty;
+        remainingUnits -= product.priceUnits * qty;
       }
     }
   }
 
-  if (remainingCents > 0) {
+  if (remainingUnits > 0) {
     if (items.length > 0) {
       const head = items[0];
-      const newHeadTotalCents = head.priceCents * head.quantity + remainingCents;
-      head.priceCents = Math.floor(newHeadTotalCents / head.quantity);
-      let reconstructedTotalCents = items.reduce((s, it) => s + it.priceCents * it.quantity, 0);
-      let delta = totalCents - reconstructedTotalCents;
+      const newHeadTotalUnits = head.priceUnits * head.quantity + remainingUnits;
+      head.priceUnits = Math.floor(newHeadTotalUnits / head.quantity);
+      let reconstructedTotalUnits = items.reduce((s, it) => s + it.priceUnits * it.quantity, 0);
+      let delta = totalUnits - reconstructedTotalUnits;
       if (delta !== 0) {
-        head.priceCents += Math.trunc(delta / head.quantity);
-        reconstructedTotalCents = items.reduce((s, it) => s + it.priceCents * it.quantity, 0);
-        delta = totalCents - reconstructedTotalCents;
+        head.priceUnits += Math.trunc(delta / head.quantity);
+        reconstructedTotalUnits = items.reduce((s, it) => s + it.priceUnits * it.quantity, 0);
+        delta = totalUnits - reconstructedTotalUnits;
         if (delta !== 0) {
           items.push({
             name: head.name,
             slug: head.slug || 'item',
             quantity: 1,
-            priceCents: delta
+            priceUnits: delta
           });
         }
       }
@@ -87,7 +81,7 @@ function decomposeAmount(amount, products) {
         name: fallback.name,
         slug: fallback.slug || 'item',
         quantity: 1,
-        priceCents: remainingCents
+        priceUnits: remainingUnits
       });
     }
   }
@@ -96,8 +90,16 @@ function decomposeAmount(amount, products) {
     name: it.name,
     slug: it.slug || 'item',
     quantity: it.quantity,
-    price: fromCents(it.priceCents)
+    price: fromSmallestUnit(it.priceUnits, currency)
   }));
+}
+
+function toCents(value) {
+  return toSmallestUnit(value, 'EUR');
+}
+
+function fromCents(cents) {
+  return fromSmallestUnit(cents, 'EUR');
 }
 
 module.exports = { decomposeAmount, toCents, fromCents };

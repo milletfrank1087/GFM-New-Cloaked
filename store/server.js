@@ -21,9 +21,16 @@ const PORT = process.env.PORT || 4000;
 const CALLBACK_SECRET = process.env.CALLBACK_SECRET || 'change-me';
 const STORE_DOMAIN = process.env.STORE_DOMAIN || 'localhost';
 
+const { getMeta: getCurrencyMeta } = require('./lib/currency');
+
 const storeConfig = loadStoreConfig();
 const PAYMENT_PROCESSOR = storeConfig.paymentProcessor || 'stripe';
 storeConfig.fingerprint = getLayoutFingerprint(process.env.STORE_ID || 'haven-prints');
+
+const _storeCurrencyMeta = getCurrencyMeta(storeConfig.currency || 'EUR');
+storeConfig.currencyDecimals = _storeCurrencyMeta.decimals;
+storeConfig.currencyPosition = _storeCurrencyMeta.position;
+if (!storeConfig.currencySymbol) storeConfig.currencySymbol = _storeCurrencyMeta.symbol;
 
 let stripe = null;
 if (PAYMENT_PROCESSOR === 'stripe' && process.env.STRIPE_SECRET_KEY) {

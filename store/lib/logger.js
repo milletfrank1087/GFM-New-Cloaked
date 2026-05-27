@@ -1,13 +1,11 @@
-const { CURRENCY_SYMBOLS } = require('./locale');
+const { formatAmount } = require('./currency');
 
 function getTimestamp() {
   return new Date().toLocaleTimeString('en-GB', { hour12: false, timeZone: 'Europe/Athens' });
 }
 
 function fmtAmount(amount, currency) {
-  const sym = CURRENCY_SYMBOLS[currency] || currency || '';
-  const val = parseFloat(amount || 0).toFixed(2);
-  return `${sym}${val}`;
+  return formatAmount(amount, currency || 'EUR');
 }
 
 function extractOriginHost(url) {
