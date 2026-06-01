@@ -292,7 +292,8 @@ module.exports = function createStripeRouter(ctx) {
             const newStripeCustomer = await stripe.customers.create({ email, name: cardHolderName || undefined });
             stripeCustomerId = newStripeCustomer.id;
           }
-          await stripe.paymentIntents.update(paymentIntentId, { customer: stripeCustomerId, receipt_email: email });
+          // receipt_email intentionally omitted: it forces a Stripe receipt even with dashboard emails off (live mode). We send our own receipt.
+          await stripe.paymentIntents.update(paymentIntentId, { customer: stripeCustomerId });
         } catch (custErr) {
           StoreLog.error('confirm_failed', donor.ref || '---', `Stripe customer attach (non-critical): ${custErr.message}`);
         }
