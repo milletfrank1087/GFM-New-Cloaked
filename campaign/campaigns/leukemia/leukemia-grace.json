@@ -1,0 +1,343 @@
+{
+  "id": "leukemia-grace",
+  "title": "Help Grace Beat Leukaemia",
+  "description": "Grace, 21, is fighting high-risk acute lymphoblastic leukaemia (ALL). She urgently needs an allogeneic haematopoietic stem cell transplant to survive.",
+  "organizer": {
+    "name": "Emma Clarke",
+    "initials": "EC",
+    "location": "Manchester, UK",
+    "verified": true,
+    "createdDate": "10 Apr 2026"
+  },
+  "goal": 75000,
+  "raised": 29870,
+  "donorCount": 690,
+  "daysLeft": 33,
+  "images": [
+    {
+      "url": "/images/campaigns/leukemia-grace/1.jpg",
+      "thumb": "/images/campaigns/leukemia-grace/1.jpg",
+      "alt": "Grace in the hospital"
+    },
+    {
+      "url": "/images/campaigns/leukemia-grace/2.jpg",
+      "thumb": "/images/campaigns/leukemia-grace/2.jpg",
+      "alt": "Medical care"
+    },
+    {
+      "url": "/images/campaigns/leukemia-grace/3.jpg",
+      "thumb": "/images/campaigns/leukemia-grace/3.jpg",
+      "alt": "Treatment"
+    },
+    {
+      "url": "/images/campaigns/leukemia-grace/4.jpg",
+      "thumb": "/images/campaigns/leukemia-grace/4.jpg",
+      "alt": "Family support"
+    }
+  ],
+  "story": {
+    "intro": "Grace is a 21-year-old medical student at the University of Manchester who was diagnosed with high-risk Philadelphia chromosome-positive Acute Lymphoblastic Leukaemia (Ph+ ALL). She urgently needs an allogeneic haematopoietic stem cell transplant to have a chance at long-term survival. While the NHS covers her standard treatment, the cost of faster private access, travel, relocation near her specialist centre, and lost income has become overwhelming for her family.",
+    "sections": [
+      {
+        "title": "The Diagnosis",
+        "content": "It all started in January 2026, when Grace began experiencing intense weakness, petechiae on her legs, and frequent febrile episodes. On 20th January, after a blood panel showed pancytopenia and suspicious blast cells, she was rushed to the Haematology Department at The Christie NHS Foundation Trust in Manchester.\n\nBone marrow biopsy and molecular analysis confirmed the diagnosis: B-cell Acute Lymphoblastic Leukaemia (B-ALL), with the BCR-ABL1 fusion gene (Philadelphia chromosome positive). This is an aggressive form of leukaemia that requires intensive therapy and a transplant for long-term survival.",
+        "icon": "diagnosis"
+      },
+      {
+        "title": "The Treatment Protocol",
+        "content": "Grace immediately began induction therapy with the HyperCVAD protocol combined with a tyrosine kinase inhibitor (TKI — dasatinib) due to her Ph+ status. After two cycles of chemotherapy, she has achieved complete haematologic remission and minimal residual disease (MRD) is now measured at levels < 0.01%.\n\nHer doctors recommend an allogeneic haematopoietic stem cell transplant from a matched donor to consolidate the remission. Her younger sister, Hannah, has been found to be a perfect HLA match (10/10 compatibility) and has already agreed to be the donor.",
+        "icon": "treatment"
+      },
+      {
+        "title": "Why We Need Your Help",
+        "content": "We want to be completely transparent. Grace's core treatment — chemotherapy, the TKI, and the transplant itself — is provided by the NHS at The Christie. But the NHS cannot cover everything quickly enough, and several options that could save Grace's life are simply not available on the NHS or carry waiting times she does not have.",
+        "icon": "help",
+        "coveredLabel": "Covered by the NHS",
+        "coveredItems": [
+          "Induction and consolidation chemotherapy (HyperCVAD) — The Christie",
+          "Tyrosine kinase inhibitor (dasatinib) for Ph+ status",
+          "Allogeneic stem cell transplant + donor workup (Hannah)",
+          "Hospitalisation in a positive-pressure isolation room",
+          "Standard immunosuppressants (ciclosporin, tacrolimus, mycophenolate)"
+        ],
+        "notCoveredLabel": "Not Available on the NHS / Requires Private Access",
+        "notCoveredItems": [
+          "Next-generation TKIs (ponatinib) if resistance develops — restricted NHS access and long approval delays",
+          "Biologic therapies if relapse occurs (blinatumomab, inotuzumab) — limited NHS funding for Ph+ ALL",
+          "MRD monitoring by NGS sequencing — not routinely funded, private labs only",
+          "Private or overseas treatment to avoid NHS waiting times if the disease progresses",
+          "Family relocation and living expenses near The Christie during 6+ months post-transplant",
+          "Loss of income while both parents are on extended leave to care for Grace"
+        ]
+      },
+      {
+        "title": "Cost Breakdown",
+        "icon": "cost",
+        "totalLabel": "Total",
+        "items": [
+          {
+            "text": "Private next-generation TKIs and biologic therapies (if relapse/resistance)",
+            "amount": 30000
+          },
+          {
+            "text": "MRD monitoring by NGS and advanced molecular testing (private labs)",
+            "amount": 10000
+          },
+          {
+            "text": "Private/overseas treatment access to avoid NHS waiting times",
+            "amount": 15000
+          },
+          {
+            "text": "Family relocation and living expenses near The Christie (6+ months)",
+            "amount": 12000
+          },
+          {
+            "text": "Loss of income (both parents on extended leave)",
+            "amount": 5000
+          },
+          {
+            "text": "Reserve fund for unforeseen complications",
+            "amount": 3000
+          }
+        ]
+      }
+    ],
+    "quote": {
+      "text": "I wanted to become a doctor to help people. Now I'm the one in the hospital bed, and I understand how important it is when strangers show up for you. Every donation isn't just money — it's a chance to keep dreaming. I promise you, when I beat this, I will spend my life helping patients who are going through what I'm going through right now.",
+      "author": "Grace W."
+    }
+  },
+  "updates": [
+    {
+      "date": "12 May 2026",
+      "title": "Positive news from molecular testing! 💪",
+      "content": "The latest RT-PCR results are encouraging — BCR-ABL levels are below 0.01%! Her doctors at The Christie are very pleased with the treatment response. The transplant is scheduled for late June. Her sister Hannah is already completing preliminary donor testing.",
+      "isNew": true
+    },
+    {
+      "date": "5 May 2026",
+      "title": "We've passed 600 donors! 🙏",
+      "content": "We have no words to express our gratitude. Grace has completed the second cycle of chemotherapy and her doctors have confirmed complete haematologic remission. Every pound brings us closer to the transplant.",
+      "isNew": false
+    },
+    {
+      "date": "25 Apr 2026",
+      "title": "Update from the hospital",
+      "content": "Grace has completed the first cycle of chemotherapy at The Christie. She had neutropenia after treatment, but she was smiling while reading your messages. The nurses brought her a small celebration in her room. Your response has moved us deeply.",
+      "isNew": false
+    },
+    {
+      "date": "10 Apr 2026",
+      "title": "The campaign has launched",
+      "content": "With heavy hearts but also with hope, we're launching this appeal for help. After two months of intensive therapy, her doctors have confirmed that the transplant is the only option for a long-term cure. Even with the NHS covering the core treatment, the financial toll on our family has been devastating. We believe in the power of community.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    {
+      "amount": 25000,
+      "label": "Cover advanced molecular testing and private access",
+      "reached": true
+    },
+    {
+      "amount": 37500,
+      "label": "50% — Begin transplant preparation",
+      "reached": false
+    },
+    {
+      "amount": 60000,
+      "label": "80% — Transplant and post-care support",
+      "reached": false
+    },
+    {
+      "amount": 75000,
+      "label": "Goal — Full treatment and family support 🎉",
+      "reached": false
+    }
+  ],
+  "topDonors": [
+    {
+      "name": "Manchester Medical Students' Society",
+      "amount": 950,
+      "initials": "MM",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "The Clarke Family",
+      "amount": 600,
+      "initials": "CF",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anonymous",
+      "amount": 400,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
+  ],
+  "recentDonors": [
+    {
+      "name": "Olivia H.",
+      "amount": 25,
+      "time": "8 min ago",
+      "initials": "OH",
+      "color": "from-rose-400 to-rose-500",
+      "message": "Stay strong, Grace!"
+    },
+    {
+      "name": "Anonymous",
+      "amount": 30,
+      "time": "23 min ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Jack T.",
+      "amount": 15,
+      "time": "47 min ago",
+      "initials": "JT",
+      "color": "from-blue-400 to-blue-500",
+      "message": "From one student to another"
+    },
+    {
+      "name": "Sophie R.",
+      "amount": 50,
+      "time": "1 hour ago",
+      "initials": "SR",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Get well soon x"
+    },
+    {
+      "name": "Harry W.",
+      "amount": 30,
+      "time": "1 hour ago",
+      "initials": "HW",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 75,
+      "time": "2 hours ago",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "Hoping for the best for you"
+    },
+    {
+      "name": "Amelia B.",
+      "amount": 15,
+      "time": "2 hours ago",
+      "initials": "AB",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Charlie L.",
+      "amount": 40,
+      "time": "3 hours ago",
+      "initials": "CL",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "You're going to beat this, Grace!"
+    },
+    {
+      "name": "Ella K.",
+      "amount": 20,
+      "time": "3 hours ago",
+      "initials": "EK",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "From Leeds with love"
+    },
+    {
+      "name": "Anonymous",
+      "amount": 25,
+      "time": "4 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "George T.",
+      "amount": 50,
+      "time": "4 hours ago",
+      "initials": "GT",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Isla S.",
+      "amount": 15,
+      "time": "5 hours ago",
+      "initials": "IS",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Strength to the whole family"
+    },
+    {
+      "name": "Oliver C.",
+      "amount": 30,
+      "time": "5 hours ago",
+      "initials": "OC",
+      "color": "from-purple-400 to-purple-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 20,
+      "time": "6 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "We're with you"
+    },
+    {
+      "name": "Thomas N.",
+      "amount": 25,
+      "time": "6 hours ago",
+      "initials": "TN",
+      "color": "from-lime-400 to-lime-500",
+      "message": ""
+    },
+    {
+      "name": "Poppy H.",
+      "amount": 10,
+      "time": "7 hours ago",
+      "initials": "PH",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "From Bristol"
+    },
+    {
+      "name": "William G.",
+      "amount": 35,
+      "time": "8 hours ago",
+      "initials": "WG",
+      "color": "from-sky-400 to-sky-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 10,
+      "time": "8 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "What I can"
+    },
+    {
+      "name": "Freya A.",
+      "amount": 25,
+      "time": "9 hours ago",
+      "initials": "FA",
+      "color": "from-red-400 to-red-500",
+      "message": "Praying for you"
+    },
+    {
+      "name": "Daisy Z.",
+      "amount": 20,
+      "time": "10 hours ago",
+      "initials": "DZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
+  ]
+}

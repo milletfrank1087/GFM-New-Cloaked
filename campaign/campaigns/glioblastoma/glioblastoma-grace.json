@@ -1,0 +1,342 @@
+{
+  "id": "glioblastoma-grace",
+  "title": "Help Grace Fight Her Brain Tumour",
+  "description": "Grace, 21, has been diagnosed with a grade IV glioblastoma (GBM) — the most aggressive malignant brain tumour. She urgently needs dendritic cell immunotherapy in Germany — a treatment that is not funded by the NHS.",
+  "organizer": {
+    "name": "Emma Clarke",
+    "initials": "EC",
+    "location": "Manchester, UK",
+    "verified": true,
+    "createdDate": "10 Apr 2026"
+  },
+  "goal": 90000,
+  "raised": 34210,
+  "donorCount": 612,
+  "daysLeft": 33,
+  "images": [
+    {
+      "url": "/images/campaigns/glioblastoma-grace/1.jpg",
+      "thumb": "/images/campaigns/glioblastoma-grace/1.jpg",
+      "alt": "Grace in the hospital"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-grace/2.jpg",
+      "thumb": "/images/campaigns/glioblastoma-grace/2.jpg",
+      "alt": "Medical care"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-grace/3.jpg",
+      "thumb": "/images/campaigns/glioblastoma-grace/3.jpg",
+      "alt": "Treatment"
+    },
+    {
+      "url": "/images/campaigns/glioblastoma-grace/4.jpg",
+      "thumb": "/images/campaigns/glioblastoma-grace/4.jpg",
+      "alt": "Family support"
+    }
+  ],
+  "story": {
+    "intro": "Grace is a 21-year-old medical student at the University of Manchester who was diagnosed with Glioblastoma Multiforme (GBM), WHO grade IV — the most aggressive malignant brain tumour. Standard treatment (surgery, radiotherapy, temozolomide) offers a median survival of just 14-16 months. The only therapy that could significantly extend her survival — dendritic cell immunotherapy — is available only at specialised centres in Germany and is not funded by the NHS.",
+    "sections": [
+      {
+        "title": "The Diagnosis",
+        "icon": "diagnosis",
+        "content": "It all started in December 2025, when Grace began experiencing persistent morning headaches accompanied by nausea and blurred vision in her left eye. On 24th December, after a seizure during a lecture at the University of Manchester Medical School, she was rushed to the Manchester Centre for Clinical Neurosciences at Salford Royal Hospital.\n\nThe MRI revealed a 4.2 cm mass in her right frontal lobe with characteristic ring enhancement and perilesional oedema. Stereotactic biopsy and molecular analysis confirmed the diagnosis: Glioblastoma Multiforme, IDH-wildtype, WHO grade IV, with unmethylated MGMT promoter — the most unfavourable molecular subtype, meaning reduced response to chemotherapy."
+      },
+      {
+        "title": "Standard Treatment and Its Limits",
+        "icon": "treatment",
+        "content": "Grace underwent partial surgical resection (subtotal resection) on 10th January 2026 at Salford Royal — complete removal was not possible due to the tumour's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in March 2026 showed residual tumour stable in size, but her doctors warned that recurrence is almost certain."
+      },
+      {
+        "title": "The Hope: Dendritic Cell Immunotherapy",
+        "icon": "hope",
+        "content": "After extensive research, Grace's family identified a specialised dendritic cell immunotherapy programme at a certified oncology centre in Germany. A recent clinical study (Human Vaccines & Immunotherapeutics, 2025) demonstrated a 68% increase in median overall survival for glioblastoma patients who received dendritic cell vaccines.\n\nThe therapy works as follows: cells are harvested from Grace's blood, converted into dendritic cells in the laboratory, 'trained' with antigens from her own tumour, and reinfused to activate her immune system against the cancer. 4-6 cycles are required over 12 months.\n\nThis therapy is NOT funded by the NHS and has not been approved by NICE. It is classified as 'experimental' and is available only on a private-pay basis at specialised centres in Germany."
+      },
+      {
+        "title": "Why We Need Your Help",
+        "icon": "help",
+        "content": "We want to be completely transparent. Grace's standard treatment — surgery, radiotherapy and chemotherapy — was provided free of charge by the NHS at Salford Royal. That is covered. What is NOT available on the NHS, and not funded by NICE, is dendritic cell immunotherapy in Germany — a treatment that clinical studies show can increase survival by 68%. We need £90,000 to give Grace a real chance at life beyond the 14-month standard prognosis.",
+        "coveredLabel": "Covered by the NHS",
+        "coveredItems": [
+          "Initial diagnosis — MRI and brain biopsy (Salford Royal, NHS)",
+          "Surgical tumour resection (Salford Royal, NHS)",
+          "Radiotherapy — 30 sessions (NHS)",
+          "Temozolomide chemotherapy (NHS)"
+        ],
+        "notCoveredLabel": "Not Funded by the NHS",
+        "notCoveredItems": [
+          "Dendritic cell immunotherapy — 4-6 cycles in Germany",
+          "Proton beam therapy — minimises damage to healthy brain tissue",
+          "Tumour Treating Fields (Optune) — not routinely funded on the NHS",
+          "Next-generation molecular profiling for personalised treatment",
+          "Travel, accommodation & carer support in Germany for 12+ months"
+        ]
+      },
+      {
+        "title": "Cost Breakdown",
+        "icon": "cost",
+        "totalLabel": "Total",
+        "items": [
+          {
+            "text": "Dendritic cell immunotherapy (4-6 cycles, Germany)",
+            "amount": 48000
+          },
+          {
+            "text": "Proton beam therapy (Germany)",
+            "amount": 22000
+          },
+          {
+            "text": "Molecular profiling & personalised treatment plan",
+            "amount": 8000
+          },
+          {
+            "text": "Travel, accommodation & carer expenses in Germany (12+ months)",
+            "amount": 9000
+          },
+          {
+            "text": "Unexpected medical expenses & reserve fund",
+            "amount": 3000
+          }
+        ]
+      }
+    ],
+    "quote": {
+      "text": "I wanted to become a doctor to help people. Now I'm learning what it means to be a patient — and how unbearable it is to know that a treatment exists that could save you, but you can't access it. Every donation isn't just money — it's time. Time I get to keep living. If I make it through this, I promise to dedicate my life to neuro-oncology, so no one else has to go through what I'm going through.",
+      "author": "Grace W."
+    }
+  },
+  "updates": [
+    {
+      "date": "14 May 2026",
+      "title": "Follow-up MRI results are in 📋",
+      "content": "The follow-up MRI after completing radiotherapy shows stable residual tumour with no new lesions. Her doctors at Salford Royal say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in April, if we secure the funding.",
+      "isNew": true
+    },
+    {
+      "date": "9 May 2026",
+      "title": "We've passed 500 donors! 🙏",
+      "content": "Your support has been overwhelming. Grace has finished her maintenance temozolomide cycles and is feeling strong. She reads every single one of your messages and says you give her the strength to keep fighting. Every pound brings us closer to Germany.",
+      "isNew": false
+    },
+    {
+      "date": "25 Apr 2026",
+      "title": "Treatment update",
+      "content": "Grace has completed concurrent chemoradiation at Salford Royal. She experienced fatigue and nausea, but her mental strength is incredible. Her neuro-oncologist explained that with unmethylated MGMT, temozolomide alone isn't enough — which is why immunotherapy is critical.",
+      "isNew": false
+    },
+    {
+      "date": "10 Apr 2026",
+      "title": "The campaign has launched",
+      "content": "With heavy hearts but determination, we're launching this appeal. After three months of intensive treatment on the NHS, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it isn't funded by the NHS. We believe in the power of community.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    {
+      "amount": 25000,
+      "label": "Standard treatment completed & molecular profiling",
+      "reached": true
+    },
+    {
+      "amount": 45000,
+      "label": "50% — Begin dendritic cell immunotherapy",
+      "reached": false
+    },
+    {
+      "amount": 72000,
+      "label": "80% — Proton beam therapy",
+      "reached": false
+    },
+    {
+      "amount": 90000,
+      "label": "Goal — Full treatment coverage in Germany 🎉",
+      "reached": false
+    }
+  ],
+  "topDonors": [
+    {
+      "name": "Manchester Medical Students' Society",
+      "amount": 1000,
+      "initials": "MM",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "The Clarke Family",
+      "amount": 650,
+      "initials": "CF",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anonymous",
+      "amount": 400,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
+  ],
+  "recentDonors": [
+    {
+      "name": "Olivia H.",
+      "amount": 25,
+      "time": "8 min ago",
+      "initials": "OH",
+      "color": "from-rose-400 to-rose-500",
+      "message": "Stay strong, Grace!"
+    },
+    {
+      "name": "Anonymous",
+      "amount": 50,
+      "time": "23 min ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Jack T.",
+      "amount": 20,
+      "time": "47 min ago",
+      "initials": "JT",
+      "color": "from-blue-400 to-blue-500",
+      "message": "From a fellow Manchester student"
+    },
+    {
+      "name": "Sophie R.",
+      "amount": 75,
+      "time": "1 hour ago",
+      "initials": "SR",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Praying for you x"
+    },
+    {
+      "name": "Harry W.",
+      "amount": 30,
+      "time": "1 hour ago",
+      "initials": "HW",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 100,
+      "time": "2 hours ago",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "You've got this"
+    },
+    {
+      "name": "Amelia B.",
+      "amount": 15,
+      "time": "2 hours ago",
+      "initials": "AB",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Charlie L.",
+      "amount": 40,
+      "time": "3 hours ago",
+      "initials": "CL",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "Keep fighting Grace!"
+    },
+    {
+      "name": "Ella K.",
+      "amount": 20,
+      "time": "3 hours ago",
+      "initials": "EK",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "From Leeds with love"
+    },
+    {
+      "name": "Anonymous",
+      "amount": 30,
+      "time": "4 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "George T.",
+      "amount": 50,
+      "time": "4 hours ago",
+      "initials": "GT",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Isla S.",
+      "amount": 15,
+      "time": "5 hours ago",
+      "initials": "IS",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Sending strength to the whole family"
+    },
+    {
+      "name": "Oliver C.",
+      "amount": 25,
+      "time": "5 hours ago",
+      "initials": "OC",
+      "color": "from-purple-400 to-purple-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 20,
+      "time": "6 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "We're with you"
+    },
+    {
+      "name": "Thomas N.",
+      "amount": 30,
+      "time": "6 hours ago",
+      "initials": "TN",
+      "color": "from-lime-400 to-lime-500",
+      "message": ""
+    },
+    {
+      "name": "Poppy H.",
+      "amount": 10,
+      "time": "7 hours ago",
+      "initials": "PH",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "From Bristol"
+    },
+    {
+      "name": "William G.",
+      "amount": 35,
+      "time": "8 hours ago",
+      "initials": "WG",
+      "color": "from-sky-400 to-sky-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 10,
+      "time": "8 hours ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": "What I can"
+    },
+    {
+      "name": "Freya A.",
+      "amount": 25,
+      "time": "9 hours ago",
+      "initials": "FA",
+      "color": "from-red-400 to-red-500",
+      "message": "Praying for you"
+    },
+    {
+      "name": "Daisy Z.",
+      "amount": 20,
+      "time": "10 hours ago",
+      "initials": "DZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
+  ]
+}
