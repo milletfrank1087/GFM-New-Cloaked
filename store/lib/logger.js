@@ -28,6 +28,8 @@ const STORE_EVENTS = {
   customer_exists:  { emoji: '👤', type: 'CUSTOMER_HIT' },
   callback_sent:    { emoji: '📤', type: 'CALLBACK_SENT' },
   callback_failed:  { emoji: '⚠️ ', type: 'CALLBACK_FAIL' },
+  email_sent:       { emoji: '📧', type: 'EMAIL_SENT' },
+  email_failed:     { emoji: '⚠️ ', type: 'EMAIL_FAIL' },
   redirect:         { emoji: '🔄', type: 'REDIRECT' },
   track_proxied:    { emoji: '📝', type: 'TRACK_PROXIED' },
   track_proxy_failed: { emoji: '❌', type: 'TRACK_PROXY_FAIL' },

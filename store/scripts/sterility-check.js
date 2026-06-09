@@ -37,6 +37,7 @@ const SKIP_FILENAMES = new Set(['.env', '.env.local', '.env.development', '.env.
 
 const ALLOWLIST = [
   /^lib[\\/]locale\.js$/,
+  /^lib[\\/]email\.js$/,
   /^lib[\\/]stripe-errors\.js$/,
   /^lib[\\/]campaign-routing\.js$/,
   /^routes[\\/]stripe\.js$/,

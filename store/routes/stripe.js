@@ -4,6 +4,7 @@ const { toSmallestUnit, fromSmallestUnit, getDecimals, formatAmount } = require(
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { classifyStripeError, getDonorMessage } = require('../lib/stripe-errors');
+const { sendDonationConfirmation } = require('../lib/email');
 
 module.exports = function createStripeRouter(ctx) {
   const { stripe, supabase, storeConfig, STORE_DOMAIN, CALLBACK_SECRET, paymentState, emitAlert } = ctx;
@@ -386,6 +387,24 @@ module.exports = function createStripeRouter(ctx) {
         });
 
       const fmk = storeConfig.metadataKeys || {};
+      if (email) {
+        const refKeyName = fmk.referenceCode || 'referenceCode';
+        const donationReference = (paymentIntent.metadata && paymentIntent.metadata[refKeyName]) || paymentIntent.id.slice(-8).toUpperCase();
+        sendDonationConfirmation({
+          to: email,
+          name: donorNameReal !== 'Unknown' ? donorNameReal : '',
+          currency: donor.currency,
+          donationAmount: parseFloat(donor.amount),
+          tip: parseFloat(donor.fee || 0),
+          total: totalAmount,
+          cardBrand,
+          cardLast4: cardLastDigits,
+          paymentSource,
+          reference: donationReference,
+          paymentIntentId: paymentIntent.id
+        });
+      }
+
       await stripe.paymentIntents.update(paymentIntent.id, {
         metadata: {
           ...paymentIntent.metadata,
