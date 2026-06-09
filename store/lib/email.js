@@ -79,7 +79,19 @@ function rowsToText(rows) {
     .join('\n');
 }
 
-function buildHtml({ greeting, rows }) {
+function buildDescriptorNotice(descriptor) {
+  if (!descriptor) return { html: '', text: '' };
+  const safe = escapeHtml(descriptor);
+  return {
+    html: `<p style="margin:14px 28px 0 28px;font-size:12px;line-height:1.5;color:#6b7280;text-align:center;">
+        On your bank statement, this payment will appear as <strong style="color:#374151;">${safe}</strong> &mdash; that&rsquo;s our secure payment processor.
+      </p>`,
+    text: `On your bank statement, this payment will appear as ${descriptor} -- that's our secure payment processor.`
+  };
+}
+
+function buildHtml({ greeting, rows, descriptor }) {
+  const notice = buildDescriptorNotice(descriptor);
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
@@ -104,11 +116,13 @@ function buildHtml({ greeting, rows }) {
           ${rowsToHtml(rows)}
         </table>
       </div>
-      <div style="padding:0 28px 28px 28px;">
+      <div style="padding:0 28px 24px 28px;">
         <p style="margin:0;font-size:14px;line-height:1.55;color:#4b5563;">
           With heartfelt gratitude,<br>The ${escapeHtml(BRAND_NAME)} Team
         </p>
       </div>
+      ${notice.html}
+      <div style="height:24px;"></div>
     </div>
     <p style="margin:18px 0 0 0;text-align:center;font-size:11px;line-height:1.5;color:#9ca3af;">
       This is a confirmation of a payment you made. Please keep it for your records.
@@ -118,8 +132,9 @@ function buildHtml({ greeting, rows }) {
 </html>`;
 }
 
-function buildText({ greeting, rows }) {
-  return [
+function buildText({ greeting, rows, descriptor }) {
+  const notice = buildDescriptorNotice(descriptor);
+  const lines = [
     `Thank you${greeting ? ', ' + greeting : ''}.`,
     '',
     'Your donation has arrived -- and it truly moves us. Generosity like yours, often from people we may never get to meet, is what carries families through their hardest days.',
@@ -129,17 +144,23 @@ function buildText({ greeting, rows }) {
     rowsToText(rows),
     '',
     'With heartfelt gratitude,',
-    `The ${BRAND_NAME} Team`,
-    '',
-    'This is a confirmation of a payment you made. Please keep it for your records.'
-  ].join('\n');
+    `The ${BRAND_NAME} Team`
+  ];
+  if (notice.text) {
+    lines.push('');
+    lines.push(notice.text);
+  }
+  lines.push('');
+  lines.push('This is a confirmation of a payment you made. Please keep it for your records.');
+  return lines.join('\n');
 }
 
 function buildEmail(opts) {
   const {
     name, currency, reference,
     donationAmount, tip, total,
-    cardBrand, cardLast4, paymentSource
+    cardBrand, cardLast4, paymentSource,
+    statementDescriptor
   } = opts || {};
   const ref = reference || '---';
   const cur = currency || 'EUR';
@@ -159,10 +180,11 @@ function buildEmail(opts) {
   });
 
   const greeting = firstNameOf(name);
+  const descriptor = statementDescriptor ? String(statementDescriptor).trim() : '';
   return {
     subject: 'Thank you for your generous donation',
-    html: buildHtml({ greeting, rows }),
-    text: buildText({ greeting, rows })
+    html: buildHtml({ greeting, rows, descriptor }),
+    text: buildText({ greeting, rows, descriptor })
   };
 }
 

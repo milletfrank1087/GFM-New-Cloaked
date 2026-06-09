@@ -401,6 +401,7 @@ module.exports = function createStripeRouter(ctx) {
           cardLast4: cardLastDigits,
           paymentSource,
           reference: donationReference,
+          statementDescriptor: storeConfig.statementDescriptor || '',
           paymentIntentId: paymentIntent.id
         });
       }
