@@ -56,6 +56,17 @@ const VARIANTS = {
     descriptionFallback: 'Digital marketing tools, creative kits and brand assets for modern teams.',
     style: variantE,
   },
+  'optimisystems': {
+    bodyClass: 'font-inter min-h-screen flex flex-col text-neutral-700 selection:bg-emerald-100',
+    headerClass: 'bg-white/92 border-b border-neutral-100 sticky top-0 z-40 backdrop-blur',
+    navClass: 'opt-menu-pane',
+    navId: 'opt-menu-pane',
+    overlayClass: 'opt-menu-veil',
+    overlayId: 'opt-menu-veil',
+    fontStack: ['Inter', '"SF Pro Display"', 'BlinkMacSystemFont', '-apple-system', 'sans-serif'],
+    descriptionFallback: 'Lead generation toolkits, ad creative and sales playbooks for installer agencies.',
+    style: variantF,
+  },
 };
 
 function variantA(colors) {
@@ -209,6 +220,35 @@ function variantE(colors) {
     .rail-veil.open { opacity: 1; pointer-events: auto; }
     html { scroll-behavior: smooth; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn-primary { transition: none; } }`;
+}
+
+function variantF(colors) {
+  const p = colors.primary || '#0f9d58';
+  const a = colors.accent || '#0b7a44';
+  const b = colors.bg || '#fafafa';
+  return `@keyframes opt-slide-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    input:focus, textarea:focus, select:focus { border-color: ${p} !important; box-shadow: 0 0 0 4px color-mix(in srgb, ${p} 11%, transparent); outline: 0; }
+    :root { --opt-key: ${p}; --opt-mark: ${a}; --opt-canvas: ${b}; --opt-rest: color-mix(in srgb, ${p} 9%, white); --opt-line: color-mix(in srgb, ${p} 18%, #e5e5e5); }
+    body { background-color: var(--opt-canvas); }
+    ::selection { background-color: var(--opt-key); color: #fff; }
+    .text-primary { color: var(--opt-key); }
+    .text-accent { color: var(--opt-mark); }
+    .bg-primary { background-color: var(--opt-key); }
+    .bg-accent { background-color: var(--opt-mark); }
+    .bg-primary-50 { background-color: var(--opt-rest); }
+    .bg-primary-100 { background-color: color-mix(in srgb, var(--opt-key) 16%, white); }
+    .border-primary { border-color: var(--opt-key); }
+    .ring-primary { --tw-ring-color: var(--opt-key); }
+    .btn-primary { background-color: var(--opt-key); transition: filter 0.16s linear, transform 0.16s ease-out; }
+    .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .opt-fade { animation: opt-slide-in 0.32s cubic-bezier(0.32, 0.72, 0.36, 1.04); }
+    .opt-card { border: 1px solid var(--opt-line); }
+    .opt-menu-pane { transform: translateX(100%); transition: transform 0.26s cubic-bezier(0.32, 0.72, 0.36, 1.04); }
+    .opt-menu-pane.open { transform: translateX(0); }
+    .opt-menu-veil { opacity: 0; pointer-events: none; transition: opacity 0.26s cubic-bezier(0.32, 0.72, 0.36, 1.04); }
+    .opt-menu-veil.open { opacity: 1; pointer-events: auto; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn-primary { transition: none; } .opt-fade { animation: none; } }`;
 }
 
 function buildStyleBlock(variant, store) {

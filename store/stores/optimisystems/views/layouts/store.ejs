@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- store.fingerprint.head(store, typeof pageTitle !== 'undefined' ? pageTitle : null) %>
+  <% if (typeof extraHead !== 'undefined') { %><%- extraHead %><% } %>
+</head>
+<body class="<%= store.fingerprint.bodyClass %>">
+  <%- include('../partials/header', { store }) %>
+  <main class="flex-1">
+    <%- body %>
+  </main>
+  <%- include('../partials/footer', { store }) %>
+  <script src="/js/cart.js"></script>
+</body>
+</html>

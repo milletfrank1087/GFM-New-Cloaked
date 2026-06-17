@@ -1,0 +1,131 @@
+<% const pageTitle = 'Home'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+
+<section class="py-12 md:py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 bg-primary-50 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-5">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>
+        Used by 320+ installer brands across the EU
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-neutral-900 leading-[1.15] mb-4">
+        Lead generation tooling, built specifically for solar installers
+      </h1>
+      <p class="text-base sm:text-lg text-neutral-500 leading-relaxed mb-7 max-w-lg">
+        Off-the-shelf ad creative, sales scripts, CRM blueprints and quarterly market reports we use to run lead generation programmes for residential and commercial installer brands. Download once, use across every campaign.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="/products" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm transition hover:shadow-lg hover:shadow-primary/20">
+          Browse toolkits
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+        </a>
+        <a href="#playbook" class="inline-flex items-center justify-center gap-2 text-neutral-600 bg-white border border-neutral-200 px-6 py-3 rounded-xl font-semibold text-sm transition hover:border-neutral-300">
+          See how it fits together
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-neutral-100 bg-neutral-50/60">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">320+</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Installer brands</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">11 yrs</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Running paid media</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">24</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Production toolkits</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">EU + UK</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Coverage focus</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="playbook" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl mb-10">
+      <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">The playbook</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 mb-3">Four assets that move installer pipelines</h2>
+      <p class="text-sm text-neutral-500 leading-relaxed">Every installer agency we work with eventually rebuilds the same four pieces from scratch. We packaged the production-ready versions so your team can skip the rebuild and start generating qualified appointments in week one.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      ${[
+        { num: '01', t: 'A creative vault that does not burn out', d: 'Three to five tested concepts per month, written specifically for residential homeowners and small commercial sites. No stock photos, no generic energy savings claims.' },
+        { num: '02', t: 'A discovery call structure your reps will use', d: 'A twenty-minute first call script that qualifies on roof age, electricity bill, ownership and decision timing without sounding scripted.' },
+        { num: '03', t: 'A CRM pipeline that mirrors how the deal really moves', d: 'Stages, automations and forecasting that reflect surveys, design approval, finance application and install scheduling. Compatible with HubSpot, Pipedrive and Close.' },
+        { num: '04', t: 'A dashboard your leadership team trusts', d: 'A weekly Looker Studio view that ties ad spend to signed contracts and net new MWp installed. Surfaces channel-level CAC inside a single page.' }
+      ].map(s => '<div class="opt-card bg-white rounded-xl p-5">' +
+        '<span class="inline-block text-[10px] font-bold text-primary tracking-widest mb-3">' + s.num + '</span>' +
+        '<h3 class="font-semibold text-neutral-900 text-sm mb-2">' + s.t + '</h3>' +
+        '<p class="text-xs text-neutral-500 leading-relaxed">' + s.d + '</p>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-neutral-900">Featured toolkits</h2>
+      <p class="text-sm text-neutral-400 mt-1">${(products || []).length} downloadable assets, sorted by depth.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      ${(products || []).slice(0, 12).map((p, i) => {
+        const accents = ['bg-emerald-50 text-emerald-600','bg-sky-50 text-sky-600','bg-amber-50 text-amber-600','bg-violet-50 text-violet-600','bg-rose-50 text-rose-600','bg-teal-50 text-teal-600'];
+        return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white opt-card rounded-xl p-4 hover:shadow-sm transition-all">' +
+          '<div class="w-10 h-10 rounded-lg ' + accents[i % 6] + ' flex items-center justify-center shrink-0">' +
+            '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5-3v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3l2-2h4l2 2h3a2 2 0 012 2z"/></svg>' +
+          '</div>' +
+          '<div class="flex-1 min-w-0">' +
+            '<h3 class="font-semibold text-neutral-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+            '<p class="text-xs text-neutral-400 mt-0.5">' + (p.category || 'Toolkit') + '</p>' +
+          '</div>' +
+          '<span class="text-sm font-bold text-neutral-900 shrink-0">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+        '</a>';
+      }).join('')}
+    </div>
+    <div class="mt-6 text-center">
+      <a href="/products" class="text-sm text-primary font-semibold hover:underline">See all ${(products || []).length} toolkits &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section class="bg-neutral-50 py-12 md:py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 text-center mb-3">What installer founders actually say</h2>
+    <p class="text-sm text-neutral-400 text-center mb-10 max-w-lg mx-auto">Pulled from quarterly debriefs with installer leadership using these toolkits in live campaigns.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      ${[
+        { name: 'Helena R.', role: 'MD, residential installer (DE)', text: 'We replaced our retainer agency with two of these toolkits and a part-time strategist. Pipeline coverage went up about 40 percent in the first quarter.' },
+        { name: 'Tomasz K.', role: 'CMO, commercial EPC (PL)', text: 'The CRM pipeline template was honestly worth the entire annual partnership. It finally surfaces where our deals stall.' },
+        { name: 'Aurélien P.', role: 'Founder, regional installer (FR)', text: 'I have downloaded a lot of templates over the years. This is the first set that was written by someone who has actually run installer ads.' }
+      ].map(t => '<div class="bg-white opt-card rounded-xl p-5">' +
+        '<div class="flex items-center gap-0.5 mb-3">' + Array(5).fill('<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.07 3.29a1 1 0 00.95.69h3.46c.97 0 1.37 1.24.59 1.81l-2.8 2.03a1 1 0 00-.37 1.12l1.07 3.29c.3.92-.75 1.69-1.54 1.12l-2.8-2.03a1 1 0 00-1.17 0l-2.8 2.03c-.78.57-1.84-.2-1.54-1.12l1.07-3.29a1 1 0 00-.37-1.12L2.98 8.72c-.78-.57-.38-1.81.59-1.81h3.46a1 1 0 00.95-.69L9.05 2.93z"/></svg>').join('') + '</div>' +
+        '<p class="text-neutral-600 text-xs leading-relaxed mb-4">"' + t.text + '"</p>' +
+        '<div class="flex items-center gap-2.5">' +
+          '<div class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-xs font-semibold text-neutral-500">' + t.name.split(' ').map(w => w[0]).join('') + '</div>' +
+          '<div><p class="text-xs font-semibold text-neutral-900">' + t.name + '</p><p class="text-[10px] text-neutral-400">' + t.role + '</p></div>' +
+        '</div>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 mb-3">Want a private walkthrough?</h2>
+    <p class="text-sm text-neutral-500 leading-relaxed mb-6">Book a 30-minute call with our team. We will share the toolkits that map to your current funnel gaps and answer whatever you ask. No pitch deck, no slides.</p>
+    <a href="/contact" class="btn-primary inline-flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:shadow-lg">Talk to us &rarr;</a>
+  </div>
+</section>
+
+`, store, products }) %>
