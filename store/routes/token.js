@@ -94,8 +94,20 @@ module.exports = function createTokenRouter(ctx) {
     } catch (_) {}
 
     const sessionCookie = req.cookies.__session;
+    const wantsStoreCheckout = req.query.store === '1';
+    const sessionCookieOpts = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Lax',
+      path: '/'
+    };
 
-    if (sessionCookie) {
+    if (wantsStoreCheckout && sessionCookie) {
+      res.clearCookie('__session', sessionCookieOpts);
+      StoreLog.event('store_checkout', '---', 'Cleared donor session for public store checkout');
+    }
+
+    if (!wantsStoreCheckout && sessionCookie) {
       try {
         const donor = JSON.parse(sessionCookie);
         const lang = donor.lang || 'en';
