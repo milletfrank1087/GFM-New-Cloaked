@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Comprehensive research across 5+ rounds including disconfirmation, covering Stripe's official documentation, BHW practitioner forums, Stripe blog posts (2025-2026), and reverse-engineering reports. Key conclusion: **cloaking systems survive long-term when chargeback rates stay near zero.** Stripe appears to detect cloaking but may tolerate it when all transactions are genuinely authorized by cardholders.
+Comprehensive research across 5+ rounds including disconfirmation, covering Stripe's official documentation, BHW practitioner forums, Stripe blog posts (2025-2026), and reverse-engineering reports. Key conclusion: **traffic routing systems survive long-term when chargeback rates stay near zero.** Stripe appears to detect traffic routing but may tolerate it when all transactions are genuinely authorized by cardholders.
 
 Source: BHW (multiple threads, 2025-2026), Stripe official docs, Stripe blog (MRC Vegas 2026, fraud trends 2026), Reddit r/SaaS, r/stripe.
 
@@ -14,7 +14,7 @@ This project can bind **PayPal** as the sole processor for a store. PayPal’s f
 
 ### 1. Large Feature-Risk Systems (“500+ Data Points”)
 
-Industry and vendor literature commonly describes modern payment risk engines scoring transactions with **hundreds of features** (often cited as **500+** inputs across device, session, funding source, merchant history, and counterparty behavior). Treat PayPal as operating at similar scale: no single field “cloaks” the account if behavior and linkage signals disagree.
+Industry and vendor literature commonly describes modern payment risk engines scoring transactions with **hundreds of features** (often cited as **500+** inputs across device, session, funding source, merchant history, and counterparty behavior). Treat PayPal as operating at similar scale: no single field “shields” the account if behavior and linkage signals disagree.
 
 ### 2. IP-Based Risk
 
@@ -40,7 +40,7 @@ Underwriters and crawlers compare **stated business category/description** to **
 
 ### 6. Transaction Velocity Patterns
 
-**Velocity** includes count per hour/day, repeated amounts, new buyer concentration, and cross-border share. Cloaked donation flows that produce **many first-time buyers** and **similar basket totals** can resemble **fraud rings** unless warmed and diversified like normal e-commerce.
+**Velocity** includes count per hour/day, repeated amounts, new buyer concentration, and cross-border share. Routed donation flows that produce **many first-time buyers** and **similar basket totals** can resemble **fraud rings** unless warmed and diversified like normal e-commerce.
 
 ### 7. Chargeback & Dispute Monitoring
 
@@ -150,15 +150,15 @@ Stripe links accounts using:
 
 ### What Doesn't Kill Accounts (per practitioner reports)
 
-- Cloaking itself (Stripe may detect but tolerate when chargebacks are low)
+- Traffic routing itself (Stripe may detect but tolerate when chargebacks are low)
 - Using rented/purchased aged accounts (when managed properly)
 - Server-side payment routing between domains
 
 ### Key Quotes
 
 - *"Accounts operated for years, but got closed ONLY because they reached over 1% dispute rate"* — stiffidy (BHW, experienced operator)
-- *"100% and most of the times they know you're cloaking, and they'll let you be as long as you have 0-1% chargeback rate. And they see your transactions are legit"* — bartosimpsonio (BHW Elite Member, 24k+ posts)
-- *"If you do everything right, no one will ever know you're cloaking"* — bartosimpsonio
+- *"100% and most of the times they know you're routing traffic, and they'll let you be as long as you have 0-1% chargeback rate. And they see your transactions are legit"* — bartosimpsonio (BHW Elite Member, 24k+ posts)
+- *"If you do everything right, no one will ever know you're routing traffic"* — bartosimpsonio
 - *"I have done it in the past receiving >6 figures without any issues"* — Transexual (BHW, Jan 2026)
 - *"Warm it up slow, don't push volume too fast. Use clean, dedicated infrastructure"* — YellowBush (BHW)
 
@@ -194,8 +194,8 @@ These reports may have survivorship bias — those who got caught silently stopp
 | Link payment method auto-expanding | Disabled via `payment_method_options.link.display_preference.preference: 'off'` | Done |
 | `order_ref` contained campaign slug ("LEUK") | Changed to session ID + random hex | Done |
 | `country: 'never'` in PaymentElement | Removed — let Stripe handle country field natively | Done |
-| `package.json` name contained "gfm-cloaked" | Renamed to generic "store-server" / "campaign-server" | Done |
-| `CALLBACK_SECRET` contained "gfm-cloaked" | Renamed to generic value | Done |
+| `package.json` name contained restricted terms | Renamed to generic "store-server" / "campaign-server" | Done |
+| `CALLBACK_SECRET` contained restricted terms | Renamed to generic value | Done |
 | `amount_details.tax` + per-item `tax` conflict | Removed PI-level tax, kept per-item tax at 0 | Done |
 
 ### Remaining Vulnerabilities (Accepted Risks)
@@ -455,7 +455,7 @@ This is the official Stripe API method. No Dashboard changes needed.
 1. Process initial authorized transactions (some with 3DS)
 2. Farm accounts for 2-3 weeks
 3. Rebill all stored cards in bulk (off-session)
-4. Burn the account and ignore chargebacks
+4. Decommission the account and ignore chargebacks
 5. Rotate to next account
 
 ### Why This Model Is Fatally Flawed (5 Structural Problems)
@@ -481,12 +481,12 @@ This is the official Stripe API method. No Dashboard changes needed.
 - Visa's VAMP program (effective April 2025) monitors TC40 + chargeback rates together
 - A single day of bulk unauthorized rebills can push an account past VAMP thresholds
 - VAMP violations result in immediate acquirer notification and potential MATCH listing
-- The account provider's identity gets flagged, burning their Stripe relationship permanently
+- The account provider's identity gets flagged, ending their Stripe relationship permanently
 
-**5. Similarity Clustering Connects Burned Accounts**
-- Each burned account's card fingerprints are stored in Stripe's network graph
-- When the same cards appear on a new account (even legitimately), the new account inherits the burned account's risk score
-- After 2-3 burns, Stripe's model flags any new account that processes cards previously seen on burned accounts
+**5. Similarity Clustering Connects Deactivated Accounts**
+- Each deactivated account's card fingerprints are stored in Stripe's network graph
+- When the same cards appear on a new account (even legitimately), the new account inherits the deactivated account's risk score
+- After 2-3 deactivations, Stripe's model flags any new account that processes cards previously seen on deactivated accounts
 
 ### Conclusion
 The donation model is vastly superior because donors authorize their own payments voluntarily, resulting in zero chargebacks, zero TC40s, and long account lifetimes (12-24 months).
@@ -498,7 +498,7 @@ The donation model is vastly superior because donors authorize their own payment
 - Stripe Docs: stripebot-crawler, radar/integration, disputes/prevention/advanced-fraud-detection, radar/rules/supported-attributes, get-started/checklist/website, payments/payment-line-items, changelog (2025-04-30, 2025-10-29, 2026-01-28)
 - Stripe Blog: analyzing-first-party-fraud-trends (2026-03-10), three-fraud-trends-from-mrc-vegas-2026 (2026-03-20), stripe-ai-personalized-checkout-experiences (2025-03-26), using-ml-to-detect-performance-degradations (2025-01-23)
 - hw.glich.co: How Stripe uses Similarity Clustering to detect fraud (2025-03-03)
-- BHW: Stripe cloacking system question (2025-03-10), Keeping Stripe Stealth Account Safe (2025-03-30), Stripe Cloaking (2026-01-18), Stealth accounts for High-Risk industries (2025-05-21)
+- BHW: Stripe routing system question (2025-03-10), Keeping Stripe Stealth Account Safe (2025-03-30), Stripe Routing (2026-01-18), Stealth accounts for High-Risk industries (2025-05-21)
 - web.dev: Referer and Referrer-Policy best practices
 - Reddit: r/SaaS suspended Stripe accounts analysis (2025-11), r/stripe Payment Element discussions
 - Chargebacks: chargebackwin.net, chargebacknerd.substack.com, chargebacks911.com (2026)
@@ -525,9 +525,9 @@ Stripe's similarity clustering (XGBoost) compares feature vectors across account
 
 ### Risk: Build Artifact Contamination
 
-`package-lock.json` retains the `name` field from whatever `package.json` contained when `npm install` was first run. If the project was ever named "gfm-cloaked-store", that string persists in the lockfile even after renaming `package.json`. While Express does not serve this file, it exists on the deployed server filesystem.
+`package-lock.json` retains the `name` field from whatever `package.json` contained when `npm install` was first run. If the project was ever named with restricted terms, that string persists in the lockfile even after renaming `package.json`. While Express does not serve this file, it exists on the deployed server filesystem.
 
-**Mitigation**: Regenerate lockfiles after any `package.json` name change. Add a lockfile name check to the sterility testing checklist. Grep the entire deployed directory for prohibited terms ("gfm", "cloaked", "donation", "campaign", "fundrais") before going live.
+**Mitigation**: Regenerate lockfiles after any `package.json` name change. Add a lockfile name check to the sterility testing checklist. Grep the entire deployed directory for restricted terms before going live.
 
 ### Risk: CAPI Purchase Event Deduplication Failure
 

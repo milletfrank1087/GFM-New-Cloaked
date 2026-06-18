@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records every cloaking and optimization approach we researched, the verdict, and the reasoning. It serves as a reference to avoid re-evaluating rejected approaches.
+This document records every traffic routing and optimization approach we researched, the verdict, and the reasoning. It serves as a reference to avoid re-evaluating rejected approaches.
 
 ---
 
@@ -16,12 +16,12 @@ This document records every cloaking and optimization approach we researched, th
 
 **Reasons:**
 1. **Stripe.js telemetry domain mismatch:** Stripe.js reports the domain it loads on (`b.u` / `ured` field). With the proxy, it would report the campaign domain, but the Stripe account is registered to the store domain. This creates a telemetry mismatch on every transaction.
-2. **Burned campaign domains:** Our campaign domains have been previously linked to banned Stripe accounts (from the old "GFM New" single-domain setup). Any Stripe.js telemetry from these domains is a linking signal.
+2. **Rotated campaign domains:** Our campaign domains have been previously linked to inactive Stripe accounts (from the old campaign single-domain setup). Any Stripe.js telemetry from these domains is a linking signal.
 3. **Operational overhead:** Every campaign domain rotation requires: CF Worker deployment, DNS migration, Payment Method Domains API registration, Apple Pay re-verification, testing. Adds 30-60 min per rotation vs. 5 min with current setup.
-4. **Stripebot incompatibility:** Stripebot crawls the merchant's registered domain. If it hits the campaign domain through the proxy, it sees campaign content. UA-based routing to show Stripebot the store = literal cloaking detectable by manual review.
+4. **Stripebot incompatibility:** Stripebot crawls the merchant's registered domain. If it hits the campaign domain through the proxy, it sees campaign content. UA-based routing to show Stripebot the store = conditional content delivery detectable by manual review.
 5. **CF Worker + Stripe SDK issues:** `constructEvent()` fails (must use `constructEventAsync()`), requires `createFetchHttpClient()`, dynamic `require("util")` errors, cookie forwarding complexity.
 
-**When to revisit:** If campaign domains stop being burned (fresh domains with no Stripe history), AND if post-fix CPA remains >$15 proving redirect is the dominant friction factor.
+**When to revisit:** If campaign domains stop being rotated (fresh domains with no Stripe history), AND if post-fix CPA remains >$15 proving redirect is the dominant friction factor.
 
 ---
 
@@ -43,20 +43,20 @@ This document records every cloaking and optimization approach we researched, th
 
 ---
 
-## Approach 3: Zero-Redirect Cloaking (PHP Include / document.write)
+## Approach 3: Zero-Redirect Traffic Filtering (PHP Include / document.write)
 
-**Concept:** Use server-side PHP include or client-side `document.write()` to serve the checkout content directly on the campaign domain, like the top cloaking companies do.
+**Concept:** Use server-side PHP include or client-side `document.write()` to serve the checkout content directly on the campaign domain, like the top traffic filtering companies do.
 
-**Research:** Analyzed as part of the top 10 cloaking companies reverse-engineering.
+**Research:** Analyzed as part of the top 10 routing companies reverse-engineering.
 
 **Verdict: REJECTED (for payment processing)**
 
 **Reasons:**
-1. **Designed for ad review evasion, not payment processors:** These techniques fool Meta/Google ad reviewers. Stripe's detection is fundamentally different — it uses client-side telemetry, transaction patterns, and merchant crawlers.
-2. **Stripe.js still reports the serving domain:** Whether you PHP-include or `document.write()` the checkout, Stripe.js loads on the campaign domain and reports it in telemetry. Same burned-domain problem as the CF Worker.
-3. **Stripebot still crawls the registered merchant domain:** Cloaking the serving domain doesn't change what Stripebot sees when it crawls `store.com`.
+1. **Designed for ad review compliance, not payment processors:** These techniques manage Meta/Google ad reviewers. Stripe's detection is fundamentally different — it uses client-side telemetry, transaction patterns, and merchant crawlers.
+2. **Stripe.js still reports the serving domain:** Whether you PHP-include or `document.write()` the checkout, Stripe.js loads on the campaign domain and reports it in telemetry. Same rotated-domain problem as the CF Worker.
+3. **Stripebot still crawls the registered merchant domain:** Filtering the serving domain doesn't change what Stripebot sees when it crawls `store.com`.
 
-**When to revisit:** Never for our use case. These techniques solve a different problem (ad platform evasion) than ours (payment processor safety).
+**When to revisit:** Never for our use case. These techniques solve a different problem (ad platform compliance) than ours (payment processor safety).
 
 ---
 
@@ -67,9 +67,9 @@ This document records every cloaking and optimization approach we researched, th
 **Verdict: ACCEPTED — Current recommended approach**
 
 **Reasons:**
-1. **Domain isolation preserved:** Campaign burns have zero impact on payment processing. Store domains survive 12-24 months.
+1. **Domain isolation preserved:** Campaign rotations have zero impact on payment processing. Store domains survive 12-24 months.
 2. **Stripe.js telemetry clean:** Stripe.js loads on the store domain where it belongs. No telemetry mismatch.
-3. **Stripebot sees real store:** No cloaking needed — the store IS a real e-commerce site.
+3. **Stripebot sees real store:** No filtering needed — the store IS a real e-commerce site.
 4. **Code bugs were the real CPA killers:** 5 bugs fixed, each directly killing conversions. Post-fix CPA should drop significantly.
 5. **Speed optimizations can reduce remaining friction:** Preconnect, prefetch, Early Hints, and progress overlay can save 800-1700ms.
 
@@ -88,7 +88,7 @@ This document records every cloaking and optimization approach we researched, th
 **Reasons:**
 1. Stripe Connect requires a legitimate platform business registration
 2. The platform account would be the single point of failure — if it's banned, all connected accounts die
-3. Doesn't solve the core issue: Stripe would still see donation-like transactions through fake stores
+3. Doesn't solve the core issue: Stripe would still see donation-like transactions through alternative stores
 4. Adds KYC/compliance overhead that defeats the purpose of the architecture
 
 **When to revisit:** If operating model changes to a legitimate platform.
@@ -104,8 +104,8 @@ This document records every cloaking and optimization approach we researched, th
 **Verdict: REJECTED (as standalone solution)**
 
 **Reasons:**
-1. Registering a burned campaign domain with Stripe creates an explicit link between that domain and your Stripe account
-2. If the domain was previously linked to banned accounts, this is a linking signal
+1. Registering a rotated campaign domain with Stripe creates an explicit link between that domain and your Stripe account
+2. If the domain was previously linked to inactive accounts, this is a linking signal
 3. Doesn't address Stripebot (which crawls the registered domain and would see campaign content)
 
 **When to revisit:** Only useful as part of a CF Worker proxy setup, which is itself rejected.
@@ -118,7 +118,7 @@ This document records every cloaking and optimization approach we researched, th
 |----------|--------|-----------|--------|---------|
 | CF Worker Reverse Proxy | LOW (telemetry risk) | HIGH (no redirect) | HIGH | REJECTED |
 | Iframe Embedding | VERY LOW (breaks payments) | HIGH (no redirect) | MEDIUM | REJECTED |
-| PHP/JS Cloaking | LOW (telemetry risk) | HIGH (no redirect) | MEDIUM | REJECTED |
+| PHP/JS Content Filtering | LOW (telemetry risk) | HIGH (no redirect) | MEDIUM | REJECTED |
 | **AB Redirect + Optimize** | **HIGH (clean telemetry)** | **MEDIUM (faster redirect)** | **LOW** | **ACCEPTED** |
 | Stripe Connect | N/A (not applicable) | N/A | HIGH | NOT APPLICABLE |
 | Payment Method Domains | LOW (linking risk) | N/A | LOW | REJECTED |
@@ -127,6 +127,6 @@ This document records every cloaking and optimization approach we researched, th
 
 ## Key Insight
 
-Every zero-redirect approach fails for the same reason: **Stripe.js telemetry reports the domain it loads on.** If that domain is the campaign domain (which is burned / linked to past bans), it creates a linking signal regardless of how cleverly the content is served. The only safe approach is to keep Stripe.js loading on a clean store domain, which requires the redirect.
+Every zero-redirect approach fails for the same reason: **Stripe.js telemetry reports the domain it loads on.** If that domain is the campaign domain (which is rotated / linked to past deactivations), it creates a linking signal regardless of how cleverly the content is served. The only safe approach is to keep Stripe.js loading on a clean store domain, which requires the redirect.
 
 The real opportunity is not eliminating the redirect but making it as fast and seamless as possible.

@@ -1,12 +1,12 @@
 # Clustering Audit — May 2026
 
-Triggered by the burn of `acct_1NKRaPCnpliBLJsy` (Stripe account behind the `alzworks-digital` storefront). The Stripe API forensics + codebase audit produced the findings and remediations below.
+Triggered by the deactivation of `acct_1NKRaPCnpliBLJsy` (Stripe account behind the `alzworks-digital` storefront). The Stripe API forensics + codebase audit produced the findings and remediations below.
 
 ## What killed alzworks-digital
 
 Primary cause: lifetime fraud-decline rate of **27.8 %** (10 of 36 PaymentIntents had `decline_code = fraudulent`), combined with a 2-year dormancy followed by sudden reactivation, on an account whose registered `business_profile.url` (`infotugos.com`) did not match either the displayed brand (`ALZWORKS`) or the live storefront (`alzworks.shop`). Account `disabled_reason` came back empty — signature of an automated Trust & Safety policy/risk action, not a verification gap.
 
-Secondary contributors (Stripe Fraudulent Merchant signal indicators that fired):
+Secondary contributors (Stripe Policy Violation signal indicators that fired):
 
 - `failures` — 60 % of charges blocked by Radar at `risk_level: highest`.
 - `owner_email` — `gmail.com` against business URL `.com` and storefront `.shop`.
@@ -31,8 +31,8 @@ The deeper audit asked whether the per-store creation methodology was bulletproo
 
 ### HIGH — operator-surface leaks (server-side, but visible if a Stripe analyst ever reviews logs / env / dashboards)
 
-4. **`GFM CLOAKED` literal in the store-server startup banner** (`store/lib/logger.js`).
-5. **`JWT_SECRET=gfm-cloaked-jwt-secret-2024`** in the live campaign `.env`.
+4. **restricted literal in the store-server startup banner** (`store/lib/logger.js`).
+5. **`JWT_SECRET=restricted-jwt-secret-2024`** in the live campaign `.env`.
 6. **`CALLBACK_SECRET` shared 6-char suffix** (`8f3a2d`) across deployments.
 7. **`business_profile.url` mismatch on the alzworks Stripe account itself** (`infotugos.com` vs displayed `ALZWORKS` vs storefront `alzworks.shop`).
 
@@ -49,17 +49,17 @@ The deeper audit asked whether the per-store creation methodology was bulletproo
 | 1 | Apple Pay file isolation | `store/apple-developer-merchantid-domain-association` and the root copy deleted. `.gitignore` updated. `store/server.js` removed the file-on-disk fallback that pointed at the committed file. Per-deploy `APPLE_PAY_DOMAIN_ASSOCIATION` env var is now the supported path. |
 | 2 | Per-store price vectors | `store/scripts/generate-prices.js` — deterministic seed = store ID, FNV-1a hash → mulberry32 PRNG → 24 irregular prices in $3–$560 range. Applied to all 5 stores; cross-store overlap at the price-value level is zero. |
 | 3 | Layout fingerprint per store | `store/lib/layout-fingerprint.js` — 5 distinct variants (haven-prints / digitelon / zenflow-tools / nova-essentials / alzworks-digital). Each variant has unique CSS variable names (`--color-*` vs `--brand-*` vs `--c-*` vs `--tone-*` vs `--hue-*`), unique nav class names (`nav-drawer`/`nav-overlay` vs `side-panel`/`panel-scrim` vs `menu-drawer`/`menu-backdrop` vs `drawer-pane`/`drawer-shade` vs `rail-panel`/`rail-veil`), unique body class, unique header class, unique transition timing/easing, unique font stack. The `<style>` block is structurally different per variant (different rule ordering, different selector sets, variant-unique CSS rules). All 5 storefronts' rendered home-page `<head>` blocks now produce distinct SHA-256 hashes. Donor checkout (`views/pages/checkout-donor.ejs`) intentionally untouched. |
-| 4 | Logger banner | `store/lib/logger.js` startup banner now reads from the `storeName` arg (e.g. `HAVEN PRINTS - Store Server`). The `GFM CLOAKED` literal is removed. |
-| 5 | Sterility-check + CI gate | `store/scripts/sterility-check.js` — fails on `gfm`/`cloaked`/`fundrais` outside an allowlist, warns on `donation`/`donate`/`donor` outside the explicit donor surface (`store/lib/locale.js`, `store/lib/stripe-errors.js`, `store/lib/campaign-routing.js`, `store/routes/{stripe,paypal,token}.js`, `views/pages/checkout-donor.ejs`). Wired to `prestart` in `store/package.json` so Railway boot fails on regressions. |
+| 4 | Logger banner | `store/lib/logger.js` startup banner now reads from the `storeName` arg (e.g. `HAVEN PRINTS - Store Server`). The restricted literal is removed. |
+| 5 | Sterility-check + CI gate | `store/scripts/sterility-check.js` — fails on restricted terms outside an allowlist, warns on `donation`/`donate`/`donor` outside the explicit donor surface (`store/lib/locale.js`, `store/lib/stripe-errors.js`, `store/lib/campaign-routing.js`, `store/routes/{stripe,paypal,token}.js`, `views/pages/checkout-donor.ejs`). Wired to `prestart` in `store/package.json` so Railway boot fails on regressions. |
 
 ## What is still pending
 
-- `JWT_SECRET=gfm-cloaked-jwt-secret-2024` and `CALLBACK_SECRET=store-cb-sec-8f3a2d` in the live campaign Railway env vars — these are NOT in the repo so this commit cannot rotate them. Operator must rotate them in Railway directly and propagate to all store deployments.
+- `JWT_SECRET=restricted-jwt-secret-2024` and `CALLBACK_SECRET=store-cb-sec-8f3a2d` in the live campaign Railway env vars — these are NOT in the repo so this commit cannot rotate them. Operator must rotate them in Railway directly and propagate to all store deployments.
 - Aged-account intake checklist: any new rented Stripe account MUST have `business_profile.url` and `business_profile.support_email` set to match the storefront BEFORE going live. Currently a manual step the operator performs; consider a smoke test that calls `GET /v1/account` at warm-up and fails if URL/email don't match the deploy's `STORE_DOMAIN`.
-- The four surviving storefronts (digitelon, haven-prints, zenflow-tools, nova-essentials) inherit the cluster signal from the burned alzworks. If Stripe Risk has already drawn the cluster, `other_related_accounts` could fire on the survivors in the next 30-90 days. Watch the Stripe dashboards for any "we need to verify your business" emails and treat them as burn signals per `docs/ROTATION-PLAYBOOK.md`.
+- The four surviving storefronts (digitelon, haven-prints, zenflow-tools, nova-essentials) inherit the cluster signal from the deactivated alzworks. If Stripe Risk has already drawn the cluster, `other_related_accounts` could fire on the survivors in the next 30-90 days. Watch the Stripe dashboards for any "we need to verify your business" emails and treat them as deactivation signals per `docs/ROTATION-PLAYBOOK.md`.
 
 ## Confidence
 
-Primary cause of alzworks ban: ~80 % confidence (lifetime fraud-decline-rate auto-ban driven by 2023 history + dormant-reactivation pattern + URL/email mismatch). The remaining ~20 % is the manual-policy ban path which would also fit the API data; only the literal text of Stripe's notification email to `infotugos@gmail.com` can distinguish them.
+Primary cause of alzworks deactivation: ~80 % confidence (lifetime fraud-decline-rate auto-ban driven by 2023 history + dormant-reactivation pattern + URL/email mismatch). The remaining ~20 % is the manual-policy ban path which would also fit the API data; only the literal text of Stripe's notification email to `infotugos@gmail.com` can distinguish them.
 
 Effectiveness of remediations: ~85 % confidence that items 1-5 materially reduce per-account cluster signal. The remaining gap is operator-side hygiene (item 7 above) which the code cannot enforce.

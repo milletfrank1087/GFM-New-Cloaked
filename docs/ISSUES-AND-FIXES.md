@@ -2,7 +2,7 @@
 
 ## Overview
 
-During a comprehensive audit of the GFM Cloaked system (April 2026), we identified 5 critical code bugs that were actively destroying conversions. All were fixed and pushed in commit `944765d`.
+During a comprehensive audit of the Campaign Store system (April 2026), we identified 5 critical code bugs that were actively destroying conversions. All were fixed and pushed in commit `944765d`.
 
 ---
 

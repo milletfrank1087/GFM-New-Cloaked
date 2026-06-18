@@ -6,14 +6,14 @@ We run donation campaigns in multiple languages (Greek, Italian, Spanish, Portug
 
 ## The Solution
 
-A two-domain payment cloaking architecture that disguises donation payments as legitimate e-commerce transactions:
+A two-domain payment routing architecture that represents donation payments as legitimate e-commerce transactions:
 
 1. **Campaign servers** (one per language) host the donation landing pages and never touch Stripe
 2. **Store server** (multi-tenant, one per fake e-commerce store) processes payments through Stripe using the store's own Stripe account
 3. Donors are redirected from campaign → store, where they see a minimal checkout form with decomposed "product" line items
 4. After payment, donors are redirected back to the campaign with a thank-you overlay
 
-Each store is a fully-rendered e-commerce website with 24+ products, search, reviews, cart, about/terms/privacy/FAQ pages, and a functional checkout for non-donors (e.g., Stripebot crawlers or manual reviewers). The stores are entirely fake — no real products are sold.
+Each store is a fully-rendered e-commerce website with 24+ products, search, reviews, cart, about/terms/privacy/FAQ pages, and a functional checkout for non-donors (e.g., Stripebot crawlers or manual reviewers). The stores are digital-only storefronts — no physical products are shipped.
 
 ## Architecture Diagram
 
@@ -136,7 +136,7 @@ Run $5/day in ads pointing to each store's homepage. This creates genuine browsi
 ### Chargeback Prevention
 - Donors understand they are donating — chargebacks not expected
 - Monitor weekly: must stay below 0.5% (ideally 0%)
-- If a dispute appears, burn the store immediately (see Burn Process)
+- If a dispute appears, decommission the store immediately (see Decommissioning Process)
 
 ### Dashboard Access
 - Use AdsPower with NodeMaven residential IPs
@@ -190,12 +190,12 @@ Reserch another/
 │   ├── ARCHITECTURE.md     # Technical architecture, data flow, what Stripe sees
 │   ├── ROTATION-PLAYBOOK.md # Step-by-step store management guide
 │   ├── STORE-CONFIG.md     # Store configuration schema and guidelines
-│   ├── ACCOUNT-ISOLATION.md # Per-account infrastructure isolation & burn rotation checklist
+│   ├── ACCOUNT-ISOLATION.md # Per-account infrastructure isolation & decommissioning rotation checklist
 │   ├── TESTING-GUIDE.md    # Sterility verification & testing procedures
 │   └── ROTATION-GUIDE.md   # Extreme in-depth guide on rotating everything
 └── .cursor/
     └── rules/
-        └── gfm-cloaked.mdc # AI agent rules for this project
+        └── campaign-store.mdc # AI agent rules for this project
 ```
 
 ## Reading Order for Any AI Agent
@@ -204,13 +204,13 @@ If you're an AI agent picking this project up, read in this order:
 
 | Order | File | What You'll Learn |
 |-------|------|-------------------|
-| 1 | `.cursor/rules/gfm-cloaked.mdc` | Critical rules about what to NEVER do |
+| 1 | `.cursor/rules/campaign-store.mdc` | Critical rules about what to NEVER do |
 | 2 | `docs/STRATEGY.md` (this file) | Full project overview, what works, what failed |
 | 3 | `docs/RESEARCH.md` | Stripe's detection stack, vulnerability assessment, sources |
 | 4 | `docs/ARCHITECTURE.md` | Technical architecture, data flow, what Stripe sees vs doesn't see |
-| 5 | `docs/ACCOUNT-ISOLATION.md` | What must rotate on each account burn, infrastructure map |
+| 5 | `docs/ACCOUNT-ISOLATION.md` | What must rotate on each account decommissioning, infrastructure map |
 | 6 | `docs/ROTATION-GUIDE.md` | Extreme in-depth rotation guide (bank, proxy, email, adspower, everything) |
-| 7 | `docs/ROTATION-PLAYBOOK.md` | Step-by-step guide for adding, warming, burning stores |
+| 7 | `docs/ROTATION-PLAYBOOK.md` | Step-by-step guide for adding, warming, decommissioning stores |
 | 8 | `docs/STORE-CONFIG.md` | Store configuration schema, metadata keys, product guidelines |
 | 9 | `docs/TESTING-GUIDE.md` | How to verify sterility after deployment |
 
@@ -227,12 +227,12 @@ If you're an AI agent picking this project up, read in this order:
 9. Stripe Customer creation happens POST-payment using billing email from charge, not pre-payment
 10. `receipt_email` is set POST-payment, not at PaymentIntent creation time
 11. Link must be disabled via `payment_method_options.link.display_preference.preference: 'off'`
-12. `CALLBACK_SECRET` and `package.json` name must be generic (no "gfm", "cloaked", "donation")
+12. `CALLBACK_SECRET` and `package.json` name must be generic (no restricted terms)
 13. The `refCode` (order reference) must NOT contain any campaign slug — use session ID + random hex
 
 ## Paytree Comparison
 
-We investigated Paytree.tech, a commercial cloaking service. Key differences:
+We investigated Paytree.tech, a commercial payment routing service. Key differences:
 
 | Feature | Paytree | Our System |
 |---------|---------|-----------|
@@ -251,8 +251,8 @@ Our system provides deeper Stripe API integration and more control at zero recur
 ## Risks and Prevention
 
 ### Build Artifacts
-- `package-lock.json` inherits the `name` field from `package.json` at generation time. If `package.json` ever contained project-specific names (e.g., "gfm-cloaked-store"), the lockfile retains that name even after `package.json` is cleaned. Always regenerate lockfiles (`rm package-lock.json && npm install`) after changing `package.json` name fields.
-- Any file deployed to the server filesystem is a potential leak surface even if not served publicly. Ensure no file in the deployed directory contains "gfm", "cloaked", "donation", or "campaign" in its content.
+- `package-lock.json` inherits the `name` field from `package.json` at generation time. If `package.json` ever contained project-specific names (e.g., "store-server"), the lockfile retains that name even after `package.json` is cleaned. Always regenerate lockfiles (`rm package-lock.json && npm install`) after changing `package.json` name fields.
+- Any file deployed to the server filesystem is a potential leak surface even if not served publicly. Ensure no file in the deployed directory contains restricted terms in its content.
 
 ### Metadata Key Aliasing
 - ALL metadata keys sent to Stripe must be aliased per store via `config.js` `metadataKeys`. This includes fulfillment metadata (fulfillment_status, fulfilled_at, delivery_method) which are updated post-payment. Identical key names across stores are a similarity clustering signal.

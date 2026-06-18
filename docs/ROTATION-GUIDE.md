@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document provides a complete, step-by-step guide on everything that must be rotated when replacing a Stripe account — whether proactively (scheduled rotation) or reactively (account burned/flagged). It covers every layer of the infrastructure stack from the Stripe account itself to the browser profile, proxy, email, bank account, domain, and code-level configuration.
+This document provides a complete, step-by-step guide on everything that must be rotated when replacing a Stripe account — whether proactively (scheduled rotation) or reactively (account deactivated/flagged). It covers every layer of the infrastructure stack from the Stripe account itself to the browser profile, proxy, email, bank account, domain, and code-level configuration.
 
 ---
 
@@ -18,7 +18,7 @@ The goal of rotation is to ensure **zero overlap** between any terminated accoun
 
 ### Tier 1: CRITICAL (Stripe Directly Tracks These)
 
-These are attributes that Stripe's similarity clustering actively monitors. Sharing ANY of these between a burned account and a new account is extremely high risk.
+These are attributes that Stripe's similarity clustering actively monitors. Sharing ANY of these between a deactivated account and a new account is extremely high risk.
 
 #### 1. Bank Account / Payout Destination
 
@@ -335,11 +335,11 @@ VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'paused', 0, 5000);
 
 ---
 
-## Complete Burn & Rotate Checklist
+## Complete Decommission & Rotate Checklist
 
 Use this checklist every time you replace a Stripe account:
 
-### Phase 1: Burn (Day 0)
+### Phase 1: Decommission (Day 0)
 - [ ] Set store status to `paused` and `weight_pct = 0` in Supabase
 - [ ] Rebalance the remaining active stores' weights so they sum to 100
 - [ ] Stop routing traffic to this store (rotation auto-skips paused / weight=0 stores)
@@ -405,11 +405,11 @@ Use this checklist every time you replace a Stripe account:
 
 ## Rotation Schedule (Proactive)
 
-Even without account burns, consider rotating proactively:
+Even without account deactivations, consider rotating proactively:
 
 | Interval | Action |
 |----------|--------|
-| Every 6 months | Rotate the NodeMaven IP for each active profile (even if not burned) |
+| Every 6 months | Rotate the NodeMaven IP for each active profile (even if not deactivated) |
 | Every 12 months | Consider proactively rotating the oldest active store |
 | Continuous | Keep 1 store in `paused` status with `weight_pct = 0` as a pre-warmed backup |
 | Weekly | Monitor chargeback rates, compliance notices, payment failure rates |
@@ -465,7 +465,7 @@ NEW ACCOUNT ROTATION QUICK REF
 □ Run sterility check (TESTING-GUIDE.md)
 □ Set status='active' + assign weight_pct + rebalance active stores' weights to sum to 100
 ================================
-NEVER REUSE from burned account:
+NEVER REUSE from deactivated account:
 ✗ Bank account
 ✗ Email address
 ✗ Phone number
@@ -484,7 +484,7 @@ When rotating to a new store or renaming an existing one:
 2. Delete `package-lock.json` completely
 3. Run `npm install` to regenerate with the clean name
 4. Verify: open the new `package-lock.json` and confirm line 2 and line 8 both show the clean name
-5. Grep the entire project for prohibited terms: `rg -i "gfm|cloaked|donation|campaign|fundrais" --type json`
+5. Grep the entire project for restricted terms
 
 ## Fulfillment Key Rotation
 

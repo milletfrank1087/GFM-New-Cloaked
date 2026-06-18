@@ -198,13 +198,13 @@ Chrome closes idle preconnect sockets after 10 seconds. Users may spend 15-45s i
 
 | Technique | Why It Doesn't Help |
 |-----------|-------------------|
-| Static preconnect to Stripe in HTML | Visible to Meta/Stripe crawlers — breaks cloaking |
+| Static preconnect to Stripe in HTML | Visible to Meta/Stripe crawlers — breaks traffic isolation |
 | `<link rel="prefetch">` cross-site | Cache partitioning makes it useless across different top-level sites |
 | Speculation Rules API | Dynamic one-time-use token URL, cross-site limitations |
 | instant.page / SmartPrefetch | Built for same-origin links; our redirect is cross-origin + programmatic |
 | Speculation Rules prerender | Same-origin only; useless for cross-domain |
 | Full-page iframe embedding | Stripe explicitly warns against; breaks payment methods |
-| CF Worker reverse proxy | Stripe.js telemetry exposes burned campaign domain |
+| CF Worker reverse proxy | Stripe.js telemetry exposes deactivated campaign domain |
 
 ---
 

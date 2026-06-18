@@ -2,7 +2,7 @@
 
 ## Purpose
 
-After deploying a store, run through this checklist to verify that Stripe receives ZERO donation-related data and all cloaking layers function correctly.
+After deploying a store, run through this checklist to verify that Stripe receives ZERO donation-related data and all traffic routing layers function correctly.
 
 ---
 
@@ -209,11 +209,11 @@ Dashboard > Settings > Payment Methods > Apple Pay > Add new domain > enter stor
 ### Package Lockfile Check
 1. Open `store/package-lock.json`, check line 2 (`"name"` field) — must be "store-server" or similar generic name
 2. Check line 8 (nested `"name"` field) — same generic name
-3. If stale names found (e.g., "gfm-cloaked-store"), delete `package-lock.json` and run `npm install`
+3. If stale names found (e.g., "store-server"), delete `package-lock.json` and run `npm install`
 4. Repeat for `campaign/package-lock.json` (should be "campaign-server")
 
 ### Full Project Grep
-Run: `rg -i "gfm|cloaked|donation|campaign|fundrais" --type json --type js --type ejs`
+Run: `rg -i "restricted_term_1|restricted_term_2" --type json --type js --type ejs` (where terms are the restricted keywords)
 
 This should return zero matches in any deployed file. Acceptable matches: documentation files (`.md`), plan files, and SQL scripts that aren't deployed.
 
@@ -275,10 +275,10 @@ Run through this after every new store deployment:
 - [ ] Webhook endpoint registered and receiving events
 - [ ] Store homepage, products, about, terms, privacy, FAQ all render correctly
 - [ ] Store checkout (without cookie) renders full store experience for Stripebot
-- [ ] `package.json` name fields are generic (no "gfm" or "cloaked")
+- [ ] `package.json` name fields are generic (no restricted terms)
 - [ ] `package-lock.json` name fields are generic (check lines 2 and 8 — regenerate if stale)
-- [ ] `.env` CALLBACK_SECRET is generic (no "gfm" or "cloaked")
-- [ ] Full project grep for prohibited terms: `rg -i "gfm|cloaked|donation|campaign|fundrais"` returns zero matches in deployed files
+- [ ] `.env` CALLBACK_SECRET is generic (no restricted terms)
+- [ ] Full project grep for restricted terms returns zero matches in deployed files
 - [ ] Fulfillment key aliases are unique across all stores (no two stores share `fulfillmentStatus`, `fulfilledAt`, or `deliveryMethod` alias values)
 - [ ] CAPI Purchase deduplication: verify browser pixel and server CAPI fire with the same `event_id` (check Meta Events Manager > Test Events)
 

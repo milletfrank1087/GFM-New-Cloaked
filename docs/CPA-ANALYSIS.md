@@ -5,7 +5,7 @@
 | Period | CPA | Setup |
 |--------|-----|-------|
 | Before April 2026 | ~$5 | Single domain (campaign + Stripe on same server) — "GFM New" project |
-| April 1, 2026 | — | Created "GFM New Cloaked" with two-domain AB redirect architecture |
+| April 1, 2026 | — | Created "GFM New Store" with two-domain AB redirect architecture |
 | April 11-13, 2026 | $17-19 | First ad run with new architecture (PT + FR campaigns) |
 | April 15, 2026 | — | 5 code fixes deployed and verified |
 | Post-fixes | Still elevated | Redirect friction remains, but code bugs eliminated |

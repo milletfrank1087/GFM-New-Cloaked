@@ -113,10 +113,10 @@ These commands assume `$cfg.user.token` is loaded from `$HOME/.railway/config.js
 ```powershell
 $cfg = Get-Content "$HOME\.railway\config.json" | ConvertFrom-Json
 $headers = @{ "Authorization" = "Bearer $($cfg.user.token)"; "Content-Type" = "application/json" }
-$cloakedProj = '7bb4befa-cbe4-4763-a782-43f1550857cd'
-$cloakedEnv = '14944148-a284-4f59-a2cc-0b7447138f84'
+$projId = '7bb4befa-cbe4-4763-a782-43f1550857cd'
+$envId = '14944148-a284-4f59-a2cc-0b7447138f84'
 
-$body = @{ query = 'mutation($input: ServiceCreateInput!) { serviceCreate(input: $input) { id name } }'; variables = @{ input = @{ projectId = $cloakedProj; name = '<LANG_FULL_ABBREV> Campaign'; branch = 'main'; source = @{ repo = 'personalprojectsgr/GFM-New-Cloaked' } } } } | ConvertTo-Json -Depth 10
+$body = @{ query = 'mutation($input: ServiceCreateInput!) { serviceCreate(input: $input) { id name } }'; variables = @{ input = @{ projectId = $projId; name = '<LANG_FULL_ABBREV> Campaign'; branch = 'main'; source = @{ repo = 'personalprojectsgr/GFM-New-Store' } } } } | ConvertTo-Json -Depth 10
 $r = Invoke-RestMethod -Uri "https://backboard.railway.com/graphql/v2" -Method Post -Headers $headers -Body $body
 $svcId = $r.data.serviceCreate.id
 Write-Host "Service ID: $svcId"
@@ -127,7 +127,7 @@ Note: name like `'BG Campaign'` (2-letter code + space + 'Campaign'). The id you
 ## 8. Set root directory + builder
 
 ```powershell
-$body = @{ query = 'mutation($serviceId: String!, $environmentId: String, $input: ServiceInstanceUpdateInput!) { serviceInstanceUpdate(serviceId: $serviceId, environmentId: $environmentId, input: $input) }'; variables = @{ serviceId = $svcId; environmentId = $cloakedEnv; input = @{ rootDirectory = '/campaign'; builder = 'RAILPACK' } } } | ConvertTo-Json -Depth 10
+$body = @{ query = 'mutation($serviceId: String!, $environmentId: String, $input: ServiceInstanceUpdateInput!) { serviceInstanceUpdate(serviceId: $serviceId, environmentId: $environmentId, input: $input) }'; variables = @{ serviceId = $svcId; environmentId = $envId; input = @{ rootDirectory = '/campaign'; builder = 'RAILPACK' } } } | ConvertTo-Json -Depth 10
 Invoke-RestMethod -Uri "https://backboard.railway.com/graphql/v2" -Method Post -Headers $headers -Body $body
 ```
 
@@ -138,7 +138,7 @@ $vars = @{
   'NODE_ENV'='production'; 'PORT'='3000'
   'DEFAULT_LANGUAGE'='<LANG>'; 'CURRENCY'='<CURRENCY>'; 'MERCHANT_COUNTRY'='<COUNTRY>'
   'ACTIVE_CAMPAIGN'='<CAMPAIGN_SLUG_GBM>'
-  'JWT_SECRET'='gfm-cloaked-jwt-secret-2024'; 'ADMIN_PASSWORD'='admin123'
+'JWT_SECRET'='restricted-jwt-secret-2024'; 'ADMIN_PASSWORD'='admin123'
   'CALLBACK_SECRET'='store-cb-sec-8f3a2d'
   'TRACKING_ENABLED'='true'
   'FB_PIXEL_ID'='1533961664530010'
@@ -148,21 +148,21 @@ $vars = @{
   'SUPABASE_URL'='https://wzialsfdguuircomaqvp.supabase.co'
   'SUPABASE_SERVICE_ROLE_KEY'='<copy from any existing campaign service env>'
 }
-$body = @{ query = 'mutation($input: VariableCollectionUpsertInput!) { variableCollectionUpsert(input: $input) }'; variables = @{ input = @{ projectId = $cloakedProj; environmentId = $cloakedEnv; serviceId = $svcId; variables = $vars } } } | ConvertTo-Json -Depth 10
+$body = @{ query = 'mutation($input: VariableCollectionUpsertInput!) { variableCollectionUpsert(input: $input) }'; variables = @{ input = @{ projectId = $projId; environmentId = $envId; serviceId = $svcId; variables = $vars } } } | ConvertTo-Json -Depth 10
 Invoke-RestMethod -Uri "https://backboard.railway.com/graphql/v2" -Method Post -Headers $headers -Body $body
 ```
 
 **Note on `JWT_SECRET`**: all campaign services currently share this literal. It's an internal-only signing secret and is fine to reuse across campaigns. Do NOT use it anywhere donor-facing.
 
-**Pixels**: sharing the same `FB_PIXEL_ID` / `TIKTOK_PIXEL_ID` across all language campaigns is the current operational choice (consolidated funnel data). If clustering defense becomes more important than analytics, give each campaign its own pixel.
+**Pixels**: sharing the same `FB_PIXEL_ID` / `TIKTOK_PIXEL_ID` across all language campaigns is the current operational choice (consolidated funnel data). If account isolation becomes more important than analytics, give each campaign its own pixel.
 
 ## 10. Trigger initial deploy + create Railway-managed domain
 
 ```powershell
-$body = @{ query = 'mutation($environmentId: String!, $serviceId: String!) { serviceInstanceDeployV2(environmentId: $environmentId, serviceId: $serviceId) }'; variables = @{ environmentId = $cloakedEnv; serviceId = $svcId } } | ConvertTo-Json -Depth 10
+$body = @{ query = 'mutation($environmentId: String!, $serviceId: String!) { serviceInstanceDeployV2(environmentId: $environmentId, serviceId: $serviceId) }'; variables = @{ environmentId = $envId; serviceId = $svcId } } | ConvertTo-Json -Depth 10
 Invoke-RestMethod -Uri "https://backboard.railway.com/graphql/v2" -Method Post -Headers $headers -Body $body
 
-$body = @{ query = 'mutation($input: ServiceDomainCreateInput!) { serviceDomainCreate(input: $input) { id domain } }'; variables = @{ input = @{ serviceId = $svcId; environmentId = $cloakedEnv; targetPort = 3000 } } } | ConvertTo-Json -Depth 10
+$body = @{ query = 'mutation($input: ServiceDomainCreateInput!) { serviceDomainCreate(input: $input) { id domain } }'; variables = @{ input = @{ serviceId = $svcId; environmentId = $envId; targetPort = 3000 } } } | ConvertTo-Json -Depth 10
 Invoke-RestMethod -Uri "https://backboard.railway.com/graphql/v2" -Method Post -Headers $headers -Body $body
 ```
 
@@ -180,7 +180,7 @@ do {
 ## 11. Attach custom domain (with gotcha)
 
 ```powershell
-$body = @{ query = 'mutation($input: CustomDomainCreateInput!) { customDomainCreate(input: $input) { id domain } }'; variables = @{ input = @{ projectId = $cloakedProj; environmentId = $cloakedEnv; serviceId = $svcId; domain = '<DOMAIN>' } } } | ConvertTo-Json -Depth 10
+$body = @{ query = 'mutation($input: CustomDomainCreateInput!) { customDomainCreate(input: $input) { id domain } }'; variables = @{ input = @{ projectId = $projId; environmentId = $envId; serviceId = $svcId; domain = '<DOMAIN>' } } } | ConvertTo-Json -Depth 10
 $r = Invoke-RestMethod -Uri "https://backboard.railway.com/graphql/v2" -Method Post -Headers $headers -Body $body
 $r | ConvertTo-Json -Depth 10
 ```
@@ -329,7 +329,7 @@ These are partial workflows where most of the playbook does NOT apply.
 
 **"Switch a campaign from GBM to leukemia variant"** (or vice-versa, e.g. for fresh ad creative): only env-var change. `variableUpsert(name='ACTIVE_CAMPAIGN', value='leucemia-<patient>')` on the relevant service. Generate matching FB ad copy with the leukemia template (mirror §13 but adapt disease: leukemia AML/ALL/CML, HSCT in Germany, sibling donor, ~€90k same target). The leukemia FB ad template lives at the bottom of this section once that ad has been written for the first time.
 
-**"Burn-and-rotate a campaign service"** (e.g. when the language's FB ad accounts get flagged and you want a clean campaign service): create a new Railway campaign service from §7-11, but skip JSON / locale work (they're already in the repo). Change just the domain in §11 and update the `CAMPAIGN_CALLBACK_URLS` whitelist on the 4 stores. Old service can be deleted via `serviceDelete` mutation once DNS cuts over.
+**"Decommission-and-rotate a campaign service"** (e.g. when the language's FB ad accounts get flagged and you want a clean campaign service): create a new Railway campaign service from §7-11, but skip JSON / locale work (they're already in the repo). Change just the domain in §11 and update the `CAMPAIGN_CALLBACK_URLS` whitelist on the 4 stores. Old service can be deleted via `serviceDelete` mutation once DNS cuts over.
 
 ## 17. Common mistakes (already cost us hours)
 

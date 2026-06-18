@@ -1,10 +1,10 @@
-# Account Isolation & Burn Rotation Checklist
+# Account Isolation & Decommissioning Rotation Checklist
 
 ## Overview
 
-When a Stripe account is burned (flagged, restricted, or terminated), ALL infrastructure associated with that account must be retired. Stripe's similarity clustering uses **account-level attributes** to link related accounts. If any attribute is shared between a burned account and a new one, the new account inherits the risk profile.
+When a Stripe account is deactivated (flagged, restricted, or terminated), ALL infrastructure associated with that account must be retired. Stripe's similarity clustering uses **account-level attributes** to link related accounts. If any attribute is shared between a deactivated account and a new one, the new account inherits the risk profile.
 
-This document lists EVERY attribute Stripe tracks and whether it must be rotated on each account burn.
+This document lists EVERY attribute Stripe tracks and whether it must be rotated on each account decommissioning.
 
 ---
 
@@ -30,11 +30,11 @@ Stripe's similarity clustering (2020), the Payments Foundation Model (2025), and
 
 ## Complete Rotation Checklist
 
-### MUST Rotate on Every Account Burn
+### MUST Rotate on Every Account Decommissioning
 
 | Attribute | Why | How to Rotate |
 |-----------|-----|---------------|
-| **Stripe account** | Core identity — burned account is flagged | Rent a new aged account from a different provider |
+| **Stripe account** | Core identity — deactivated account is flagged | Rent a new aged account from a different provider |
 | **Domain name** | Plaintext in Stripe.js telemetry, linked to the account | Buy a new domain (different registrar is a bonus, not required) |
 | **AdsPower browser profile** | Device fingerprint for dashboard access | Create a brand new AdsPower profile |
 | **Residential proxy/IP** | Dashboard login IP is tracked | Assign a new NodeMaven residential IP to the new profile |
@@ -50,17 +50,17 @@ Stripe's similarity clustering (2020), the Payments Foundation Model (2025), and
 | **Railway deployment** | Separation of environments | New Railway service |
 | **Store `.env` file** | All new keys, domain, etc. | Fresh `.env` with new Stripe keys |
 
-### MUST NOT Reuse from Burned Account
+### MUST NOT Reuse from Deactivated Account
 
 | Attribute | Risk if Reused |
 |-----------|---------------|
-| Stripe account email | Instant link to burned account |
+| Stripe account email | Instant link to deactivated account |
 | Bank account for payouts | Strongest linking signal |
 | Phone number on Stripe | Direct attribute match |
 | Business address on Stripe | Attribute match |
 | Tax ID (SSN/EIN) | Identity match (only for self-created accounts) |
-| AdsPower profile used for burned dashboard | Device fingerprint match |
-| IP used to access burned dashboard | IP overlap |
+| AdsPower profile used for deactivated dashboard | Device fingerprint match |
+| IP used to access deactivated dashboard | IP overlap |
 
 ### MUST Diverge Across Stores (Enforced in Code — 2026-05 Audit)
 
@@ -70,7 +70,7 @@ Stripe's similarity clustering (2020), the Payments Foundation Model (2025), and
 | **24-product price vector** | Identical price tuple across 5 MCC-5734 accounts is an embedding-collision signal for the Payments Foundation Model. | `store/scripts/generate-prices.js` — deterministic per-store unique 24-price vector seeded from store ID. |
 | **HTML/CSS layout fingerprint** | LLM Fraudulent Website Signal explicitly targets "fake storefronts" with identical rendered head/style blocks. | `store/lib/layout-fingerprint.js` — 5 distinct variants with different CSS var names, nav classes, body class, header class, transition, font stack, structural CSS. Adding a store requires a new `VARIANTS` entry. |
 | **PaymentIntent metadata key names** | Cross-store metadata-shape similarity. | Each store picks unique `metadataKeys` in its `config.js`; cross-check by hand against every other store's `config.js`. |
-| **Logger startup banner** | Any operator-identifying string leaked to logs / Stripe support tickets / Railway exports links the deployments. | `store/lib/logger.js` reads brand from `storeName` param. `store/scripts/sterility-check.js` blocks `gfm`/`cloaked`/`fundrais` literals at `prestart`. |
+| **Logger startup banner** | Any operator-identifying string leaked to logs / Stripe support tickets / Railway exports links the deployments. | `store/lib/logger.js` reads brand from `storeName` param. `store/scripts/sterility-check.js` blocks restricted literals at `prestart`. |
 
 ### Safe to Reuse (NO rotation needed)
 
@@ -85,7 +85,7 @@ Stripe's similarity clustering (2020), the Payments Foundation Model (2025), and
 | **Supabase database** | Server-side, invisible to Stripe |
 | **Railway hosting IP block** | Cloud IPs shared by millions of sites; low individual signal |
 | **Campaign server URLs** | Never visible to Stripe (referrer broken by meta-refresh) |
-| **`CALLBACK_SECRET`** structure | Server-to-server, invisible to Stripe — but the literal string MUST be unique per deploy and MUST NOT contain `gfm`/`cloaked`/`fundrais` |
+| **`CALLBACK_SECRET`** structure | Server-to-server, invisible to Stripe — but the literal string MUST be unique per deploy and MUST NOT contain restricted terms |
 | **`SUPABASE_SERVICE_ROLE_KEY`** | Server-side only |
 | **Checkout UX flow** | Standard e-commerce pattern |
 
@@ -119,9 +119,9 @@ Account #2: Nova Essentials
 
 ---
 
-## Burn & Replace Process
+## Decommission & Replace Process
 
-### Step 1: Burn the Old Account
+### Step 1: Decommission the Old Account
 1. Set store status to `paused` and `weight_pct = 0` in Supabase (rotation skips it automatically; rebalance the remaining active stores' weights to sum to 100)
 2. Do NOT close the Stripe account immediately (let pending charges settle for 30 days)
 3. Stop using the AdsPower profile for this account
@@ -146,8 +146,8 @@ Account #2: Nova Essentials
 ### Step 3: Never Cross-Contaminate
 - Never log into the new dashboard from the old AdsPower profile
 - Never use the same residential IP for two different dashboards
-- Never transfer the domain from the burned account to the new one
-- Never reference the burned store in any new account metadata
+- Never transfer the domain from the deactivated account to the new one
+- Never reference the deactivated store in any new account metadata
 - Never use the same bank account for the new Stripe account
 
 ---
@@ -172,7 +172,7 @@ The MATCH (Member Alert to Control High-Risk Merchants) list is a 5-year blackli
 | Layer | Tool | Rule |
 |-------|------|------|
 | Dashboard access | AdsPower | 1 profile per Stripe account, never shared |
-| IP masking | NodeMaven residential | 1 dedicated IP per profile, rotate on burn |
+| IP masking | NodeMaven residential | 1 dedicated IP per profile, rotate on deactivation |
 | Email | ProtonMail / Tutanota | Unique email per Stripe account |
 | 2FA | Authenticator app | Separate entry per account |
 | Payouts | Bank from account owner | Managed by account provider |
@@ -193,4 +193,4 @@ The MATCH (Member Alert to Control High-Risk Merchants) list is a 5-year blackli
 
 - `CLUSTERING-AUDIT-2026-05.md` — full audit that produced the "MUST Diverge Across Stores" table above
 - `STRIPE-INVIGILATION.md` — what Stripe can actually see from the wire vs what's internal
-- `ROTATION-PLAYBOOK.md` — operational sequence for burn → replace
+- `ROTATION-PLAYBOOK.md` — operational sequence for decommission → replace

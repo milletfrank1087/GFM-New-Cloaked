@@ -49,14 +49,14 @@ Use when the store’s `paymentProcessor` is `paypal`.
    | `PAYPAL_SANDBOX_CLIENT_ID` / `PAYPAL_SANDBOX_SECRET` | Sandbox REST credentials. |
    | Plus | `STORE_ID`, `STORE_DOMAIN`, `SUPABASE_*`, `CALLBACK_SECRET`, `CAMPAIGN_CALLBACK_URLS` — same as Stripe stores. |
 
-6. **PayPal-specific burn indicators**
+6. **PayPal-specific deactivation indicators**
    - **Fund holds or rolling reserves** — sudden increase in holds often precedes limitation.
    - **Account limitations** — requests for invoices, supplier proof, or “explain spikes in volume.”
    - **Buyer complaints / chargebacks** — PayPal monitors dispute and chargeback rates; keep them negligible (same operational goal as Stripe).
    - **VAMP / network-style pressure** — card-network monitoring (e.g. Visa VAMP) still applies to card-funded wallet flows; watch for issuer TC40-style signals and **velocity** anomalies.
    - **Business description vs. website** — mismatches trigger review (parallel to Stripebot + MCC checks).
 
-If any of the above escalate, treat the store like a **Stripe burn**: set status to `paused` and `weight_pct = 0` in Supabase, stop routing traffic, and rotate identity + infrastructure per **docs/ACCOUNT-ISOLATION.md**.
+If any of the above escalate, treat the store like a **Stripe deactivation**: set status to `paused` and `weight_pct = 0` in Supabase, stop routing traffic, and rotate identity + infrastructure per **docs/ACCOUNT-ISOLATION.md**.
 
 ### 3. Store Files
 1. Create `store/stores/{new-store-id}/` directory.
@@ -95,13 +95,13 @@ The store starts `paused` with `weight_pct = 0` so the rotation never picks it. 
 2. Delete `store/package-lock.json`.
 3. Run `npm install` in the store directory to regenerate.
 4. Open the new lockfile and confirm lines 2 and 8 show the clean name.
-5. Run `cd store; npm run sterility-check` and verify PASS. This replaces the older `rg -i "gfm|cloaked..."` manual check — the script is now the source of truth.
+5. Run `cd store; npm run sterility-check` and verify PASS. This replaces the older manual restricted-term check — the script is now the source of truth.
 
 ### 6. Railway Deployment
 - Create a NEW Railway service for this store.
 - Set environment variables (`STORE_ID`, `STORE_DOMAIN`, Stripe / PayPal credentials, `CALLBACK_SECRET`, Supabase keys, `APPLE_PAY_DOMAIN_ASSOCIATION`).
 - `APPLE_PAY_DOMAIN_ASSOCIATION` MUST be the file Stripe issued for THIS store's account. Never reuse another store's file. The repo `.gitignore` prevents accidental check-ins.
-- CRITICAL: `CALLBACK_SECRET` MUST be a generic random string (no `gfm`, `cloaked`, `fundrais`, or shared suffix patterns across deployments).
+CRITICAL: `CALLBACK_SECRET` MUST be a generic random string (no restricted terms, or shared suffix patterns across deployments).
 - Deploy from the `store/` directory. The Railway boot runs `prestart` → `node scripts/sterility-check.js` → fails the boot if the check fails.
 
 ### 7. What MUST Differ Per Store
@@ -151,9 +151,9 @@ The store starts `paused` with `weight_pct = 0` so the rotation never picks it. 
 - Never spike more than 2x previous week's volume
 - Monitor in admin dashboard
 
-## Burning a Store
+## Decommissioning a Store
 
-### When to Burn
+### When to Decommission
 - Stripe requests additional documentation or identity verification
 - Stripe restricts the account or freezes payouts
 - Chargeback rate exceeds 0.5%
@@ -161,7 +161,7 @@ The store starts `paused` with `weight_pct = 0` so the rotation never picks it. 
 - Account flagged for review
 - Stripe asks to "verify your website matches your business description"
 
-### Burn Process
+### Decommissioning Process
 1. Set store status to `paused` and `weight_pct = 0` in Supabase (rotation skips paused stores automatically; remaining active stores' weights will need to be rebalanced to sum to 100)
 2. Do NOT close the Stripe account immediately (let pending charges settle for 30 days)
 3. Stop using the AdsPower profile for this account
@@ -170,7 +170,7 @@ The store starts `paused` with `weight_pct = 0` so the rotation never picks it. 
 6. Never reuse: Stripe account email, AdsPower profile, residential IP, bank account
 
 ### Full Isolation Checklist for Replacement
-See **docs/ACCOUNT-ISOLATION.md** for the complete list of what must rotate and what can be reused when replacing a burned store.
+See **docs/ACCOUNT-ISOLATION.md** for the complete list of what must rotate and what can be reused when replacing a deactivated store.
 
 ### MATCH List Risk
 If an account is MATCH-listed (5-year ban across all processors), the identity behind the account is flagged, not the website or domain. Since we rent accounts, MATCH risk falls on the account provider. See docs/RESEARCH.md > MATCH List section for details.
@@ -232,6 +232,6 @@ Before setting any store to `active`, run the full checklist in **docs/TESTING-G
 9. Verify Link is disabled in the PaymentElement
 10. Verify `package.json` and `.env` contain no identifying strings
 11. Delete and regenerate `package-lock.json`, verify clean name on lines 2 and 8
-12. Grep entire project for prohibited terms: `rg -i "gfm|cloaked|donation|campaign|fundrais"`
+12. Grep entire project for restricted terms
 13. Verify fulfillment key aliases are unique (not shared with any other store)
 14. Verify CAPI Purchase deduplication: browser pixel and server CAPI use the same event_id

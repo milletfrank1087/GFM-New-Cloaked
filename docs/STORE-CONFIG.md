@@ -184,7 +184,7 @@ Typical patterns:
 
 Shared with Stripe stores: `SUPABASE_*`, `CALLBACK_SECRET`, `CAMPAIGN_CALLBACK_URLS`, `STORE_ID`, `STORE_DOMAIN`, `PORT`, `NODE_ENV`.
 
-CRITICAL: `CALLBACK_SECRET` must be a generic string with no project-identifying words. Never use "gfm", "cloaked", "donation", etc.
+CRITICAL: `CALLBACK_SECRET` must be a generic string with no project-identifying words. Never use restricted terms.
 
 ### Example PayPal Store `config.js` (excerpt)
 

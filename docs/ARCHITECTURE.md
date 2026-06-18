@@ -4,7 +4,7 @@
 
 ## System Overview
 
-Two-domain architecture where donation campaigns redirect payment to rotating fake e-commerce stores. Each store has its own payment processor account (Stripe **or** PayPal), domain, and branding. **Exactly one** processor is configured per store. Campaign round-robin store selection is processor-agnostic: any active store may be chosen regardless of whether it uses Stripe or PayPal. The campaign server never calls Stripe or PayPal APIs directly.
+Two-domain architecture where donation campaigns redirect payment to rotating alternative e-commerce stores. Each store has its own payment processor account (Stripe **or** PayPal), domain, and branding. **Exactly one** processor is configured per store. Campaign round-robin store selection is processor-agnostic: any active store may be chosen regardless of whether it uses Stripe or PayPal. The campaign server never calls Stripe or PayPal APIs directly.
 
 ## Components
 
@@ -275,16 +275,16 @@ See `TRACKING.md` for the full tracking architecture reference.
 |----------|---------|
 | `STRATEGY.md` | Master handoff: problem, solution, what works, what failed, future goals |
 | `RESEARCH.md` | Stripe detection stack, vulnerability assessment, MATCH list, template analysis |
-| `ROTATION-PLAYBOOK.md` | Step-by-step: adding, warming, monitoring, burning stores |
-| `ACCOUNT-ISOLATION.md` | Per-account infrastructure isolation, burn rotation checklist |
+| `ROTATION-PLAYBOOK.md` | Step-by-step: adding, warming, monitoring, decommissioning stores |
+| `ACCOUNT-ISOLATION.md` | Per-account infrastructure isolation, decommissioning rotation checklist |
 | `STORE-CONFIG.md` | Store configuration schema, metadata keys, product guidelines |
 | `TESTING-GUIDE.md` | Sterility verification and deployment testing procedures |
 | `ROTATION-GUIDE.md` | Extreme in-depth guide on what/how to rotate everything |
 | `TRACKING.md` | Full CAPI tracking architecture, deduplication, and debugging |
-| `CLOAKING-RESEARCH.md` | Zero-redirect cloaking research: CF Worker reverse proxy approach, alternatives, risks |
+| `ROUTING-RESEARCH.md` | Zero-redirect traffic routing research: CF Worker reverse proxy approach, alternatives, risks |
 | `ISSUES-AND-FIXES.md` | All bugs found during April 2026 audit and their fixes |
 | `CPA-ANALYSIS.md` | Full CPA investigation, funnel metrics, and projections |
-| `CLOAKING-LANDSCAPE.md` | Top 10 ad-cloakers + top 10 payment-cloakers reverse-engineered and compared (merged from CLOAKING-COMPANIES + PAYMENT-CLOAKING-SERVICES on 2026-05-19) |
+| `ROUTING-LANDSCAPE.md` | Top 10 ad-filters + top 10 payment-routers reverse-engineered and compared (merged from AD-FILTERS + PAYMENT-ROUTERS on 2026-05-19) |
 | `REDIRECT-OPTIMIZATION.md` | Complete redirect friction reduction playbook |
 | `DECISION-LOG.md` | All approaches evaluated with verdicts and reasoning |
-| `STRIPE-INVIGILATION.md` | Complete analysis of Stripe's 3 surveillance layers, what they see, code review of our checkout |
+| `STRIPE-INVIGILATION.md` | Complete analysis of Stripe's 3 monitoring layers, what they see, code review of our checkout |

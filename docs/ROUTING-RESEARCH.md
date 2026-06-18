@@ -1,4 +1,4 @@
-# Zero-Redirect Cloaking Research
+# Zero-Redirect Traffic Routing Research
 
 ## Problem Statement
 
@@ -19,7 +19,7 @@ The redirect path: `risehope.online` → `stripe.havenprints.shop/s/TOKEN` → m
 
 ## FINAL RECOMMENDATION: KEEP THE CURRENT AB REDIRECT
 
-After thorough analysis factoring in frequent domain/campaign burns, Stripe account rotation, and AI-coded maintenance, the CF Worker proxy is **not worth implementing**. The current redirect flow should be kept and optimized instead.
+After thorough analysis factoring in frequent domain/campaign rotations, Stripe account rotation, and AI-coded maintenance, the CF Worker proxy is **not worth implementing**. The current redirect flow should be kept and optimized instead.
 
 ---
 
@@ -27,21 +27,21 @@ After thorough analysis factoring in frequent domain/campaign burns, Stripe acco
 
 ### 1. Operational Overhead vs. Benefit (The Real Killer)
 
-Every time a campaign domain burns (which happens frequently), you need to:
+Every time a campaign domain rotates (which happens frequently), you need to:
 - Move DNS to Cloudflare (or already have it there)
 - Deploy a new CF Worker with the correct proxy routes
 - Register the new campaign domain in Stripe's Payment Method Domains (API call or Dashboard)
 - Test the proxy works for checkout, 3D Secure, cookies
 - Re-verify Apple Pay domain registration through the proxy
 
-This adds **30-60 minutes of setup per campaign domain rotation**, compared to the current flow which requires **zero store-side changes** when a campaign domain burns. The campaign server is a simple Express app — deploy, point DNS, done.
+This adds **30-60 minutes of setup per campaign domain rotation**, compared to the current flow which requires **zero store-side changes** when a campaign domain rotates. The campaign server is a simple Express app — deploy, point DNS, done.
 
-### 2. Campaign Domains Burn. Store Domains Don't.
+### 2. Campaign Domains Rotate. Store Domains Don't.
 
 The current architecture's biggest strength is **isolation**:
-- Campaign domains are disposable. They burn with Meta ad accounts.
+- Campaign domains are disposable. They rotate with Meta ad accounts.
 - Store domains are long-lived (12-24 months with zero chargebacks).
-- When a campaign domain burns, the store is completely unaffected.
+- When a campaign domain rotates, the store is completely unaffected.
 
 With a CF Worker proxy, the campaign domain is now **coupled to the store's payment flow**. If the Worker misconfigures, breaks, or the campaign domain DNS lapses, payments stop.
 
@@ -54,7 +54,7 @@ While this pattern exists legitimately (CDNs, white-labels), it's an unnecessary
 ### 4. Stripebot Cannot Be Cleanly Solved
 
 Stripebot crawls the merchant's registered domain. Options:
-- **UA-based routing**: Show Stripebot the store, users the campaign = literal cloaking. Manual reviewers use real browsers — instant account kill.
+- **UA-based routing**: Show Stripebot the store, users the campaign = conditional content delivery. Manual reviewers use real browsers — instant account risk.
 - **Keep store domain for Stripe**: Works but the telemetry mismatch remains.
 - **Hybrid paths**: Campaign domain hosts both campaign AND store pages at different paths. Most complex, most maintenance.
 
@@ -77,7 +77,7 @@ Each is solvable but adds debugging surface area to an AI-coded project.
 
 ### 1. The $5 CPA Was Single-Domain, Not "No Redirect"
 
-The old $5 CPA was achieved before AB redirect cloaking — when everything ran on one domain. That setup was abandoned because it exposed the Stripe account to campaign content. The redirect was added for Stripe account protection, which it accomplishes perfectly.
+The old $5 CPA was achieved before AB redirect traffic routing — when everything ran on one domain. That setup was abandoned because it exposed the Stripe account to campaign content. The redirect was added for Stripe account protection, which it accomplishes perfectly.
 
 The CPA increase from $5 to $17-19 was caused by MULTIPLE factors, most of which we already fixed:
 - Decompose bug (4999 vs 5000) — **fixed**
@@ -150,7 +150,7 @@ Use Cloudflare for campaign domains for DDoS protection and CDN caching, but NOT
 | Setup per Stripe rotation | New Worker config needed | Zero changes |
 | Stripe.js telemetry | Mismatch (campaign ≠ store) | Clean (store = store) |
 | Stripebot compatibility | Complex routing needed | Perfect (crawls store) |
-| Campaign domain burn impact | Breaks payment flow until fixed | Zero impact on payments |
+| Campaign domain rotation impact | Breaks payment flow until fixed | Zero impact on payments |
 | Estimated CPA improvement | $5-8 (best case) | $7-12 (with fixes) |
 | Maintenance complexity | Medium-High | Low (already built) |
 | Debugging surface area | Large (proxy + Stripe + CF) | Small (direct) |
@@ -162,7 +162,7 @@ Use Cloudflare for campaign domains for DDoS protection and CDN caching, but NOT
 
 The proxy becomes worth it IF:
 1. After testing with fixes, CPA remains above $15 (proving redirect is the dominant factor)
-2. Campaign domains stabilize (not burning every 2-4 weeks)
+2. Campaign domains stabilize (not rotating every 2-4 weeks)
 3. You standardize on a single Cloudflare account for all campaign domains
 4. You build automation for the full setup (CF Worker deploy + PMD registration + Apple Pay domain)
 
@@ -205,7 +205,7 @@ Returns immediately with status for Apple Pay, Google Pay, Link, PayPal. This re
 - Stripe API docs: Payment Method Domains (POST /v1/payment_method_domains)
 - Stripe docs: Stripebot crawler, Advanced Fraud Detection (m.stripe.com)
 - CF Workers + Stripe issues: constructEventAsync, createFetchHttpClient, dynamic require("util")
-- Adspect docs: reverse proxy recommendation for cloaking
-- Cloaktrack.io 2026: cloaker comparison, domain rotation every 2-4 weeks
+- Adspect docs: reverse proxy recommendation for traffic routing
+- Routingtrack.io 2026: router comparison, domain rotation every 2-4 weeks
 - BHW 2025-2026: practitioner reports on redirect tolerance
-- TrafficShield/Trustcloaker 2026: modern cloaking approaches
+- TrafficShield/TrustFilter 2026: modern traffic routing approaches
