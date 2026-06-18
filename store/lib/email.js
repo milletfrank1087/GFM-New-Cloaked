@@ -2,8 +2,8 @@ const { Resend } = require('resend');
 const { StoreLog } = require('./logger');
 const { formatAmount } = require('./currency');
 
-const FROM_ADDRESS = process.env.RESEND_FROM || 'RiseHope <receipts@risehope.online>';
-const BRAND_NAME = process.env.RESEND_BRAND || 'RiseHope';
+const BRAND_NAME = process.env.RESEND_BRAND || 'OPERATION';
+const FROM_ADDRESS = process.env.RESEND_FROM || `${BRAND_NAME} <receipts@risehope.online>`;
 const REPLY_TO = process.env.RESEND_REPLY_TO || '';
 
 const apiKey = process.env.RESEND_API_KEY || '';
@@ -79,19 +79,19 @@ function rowsToText(rows) {
     .join('\n');
 }
 
-function buildDescriptorNotice(descriptor) {
-  if (!descriptor) return { html: '', text: '' };
-  const safe = escapeHtml(descriptor);
+function buildDescriptorNotice() {
+  if (!BRAND_NAME) return { html: '', text: '' };
+  const safe = escapeHtml(BRAND_NAME);
   return {
     html: `<p style="margin:14px 28px 0 28px;font-size:12px;line-height:1.5;color:#6b7280;text-align:center;">
         On your bank statement, this payment will appear as <strong style="color:#374151;">${safe}</strong> &mdash; that&rsquo;s our secure payment processor.
       </p>`,
-    text: `On your bank statement, this payment will appear as ${descriptor} -- that's our secure payment processor.`
+    text: `On your bank statement, this payment will appear as ${BRAND_NAME} -- that's our secure payment processor.`
   };
 }
 
-function buildHtml({ greeting, rows, descriptor }) {
-  const notice = buildDescriptorNotice(descriptor);
+function buildHtml({ greeting, rows }) {
+  const notice = buildDescriptorNotice();
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
@@ -132,8 +132,8 @@ function buildHtml({ greeting, rows, descriptor }) {
 </html>`;
 }
 
-function buildText({ greeting, rows, descriptor }) {
-  const notice = buildDescriptorNotice(descriptor);
+function buildText({ greeting, rows }) {
+  const notice = buildDescriptorNotice();
   const lines = [
     `Thank you${greeting ? ', ' + greeting : ''}.`,
     '',
@@ -159,8 +159,7 @@ function buildEmail(opts) {
   const {
     name, currency, reference,
     donationAmount, tip, total,
-    cardBrand, cardLast4, paymentSource,
-    statementDescriptor
+    cardBrand, cardLast4, paymentSource
   } = opts || {};
   const ref = reference || '---';
   const cur = currency || 'EUR';
@@ -180,11 +179,10 @@ function buildEmail(opts) {
   });
 
   const greeting = firstNameOf(name);
-  const descriptor = statementDescriptor ? String(statementDescriptor).trim() : '';
   return {
     subject: 'Thank you for your generous donation',
-    html: buildHtml({ greeting, rows, descriptor }),
-    text: buildText({ greeting, rows, descriptor })
+    html: buildHtml({ greeting, rows }),
+    text: buildText({ greeting, rows })
   };
 }
 
