@@ -6,7 +6,7 @@ function fmt(v) {
 }
 
 const Cart = {
-  KEY: 'optimisystems_cart',
+  KEY: 'store_cart',
 
   get() {
     try { return JSON.parse(localStorage.getItem(this.KEY)) || []; }
