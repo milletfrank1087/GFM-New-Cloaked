@@ -9,7 +9,7 @@ Two-service architecture for processing donor payments through an e-commerce fro
 - `campaign/` — Node/Express, port 3000. Per-language landing pages. Generates signed tokens, redirects donors to the rotating store domain. Never touches Stripe.
 - `store/` — Node/Express, port 4000. Multi-tenant store server. One Railway deployment per `STORE_ID`. Loads its store-specific config from `store/stores/<id>/config.js` and serves both a public e-commerce storefront (cookie-less, for Stripebot / LLM review / direct visitors) and a donor checkout (cookie-authenticated).
 
-Five storefronts currently rotate behind the campaign: `digitelon`, `haven-prints`, `nova-essentials`, `zenflow-tools`, `alzworks-digital` (alzworks deactivated 2026-05; see `docs/CLUSTERING-AUDIT-2026-05.md`).
+Storefronts that exist behind the campaign: `digitelon`, `haven-prints`, `nova-essentials`, `zenflow-tools`, `alzworks-digital`, `optimisystems`, `precious-couture`. Roster status is authoritative in the Supabase `stores` table (`status`, `weight_pct`), not here. As of 2026-06: `optimisystems` and `precious-couture` are the active pair (50/50); `alzworks-digital` deactivated 2026-05 (see `docs/CLUSTERING-AUDIT-2026-05.md`). `precious-couture` (variant G, USD, MCC clothing/accessories with a digital-fashion catalog) is the only USD storefront — all others are EUR.
 
 ## Turn-key end-to-end recipes
 
