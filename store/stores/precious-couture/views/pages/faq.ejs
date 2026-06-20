@@ -1,0 +1,37 @@
+<% const pageTitle = 'Help'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="mb-8">
+    <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">Help &amp; FAQ</h1>
+    <p class="text-sm text-neutral-400">Common questions about our patterns, guides and downloads.</p>
+  </div>
+
+  <div class="space-y-2">
+    ${[
+      { q: 'How are the products delivered?', a: 'Everything is a digital download. After payment you receive a confirmation email with your download links \u2014 PDFs, workbooks, video lessons or preset files depending on the title. Delivery is immediate.' },
+      { q: 'What do I need to use the sewing patterns?', a: 'Each pattern includes a print-at-home layered PDF (tile and tape on standard Letter/A4 paper) and a large-format A0 file for copy-shop or wide-format printing. A 24-page illustrated construction guide is included in every pattern.' },
+      { q: 'What sizes do the patterns cover?', a: 'Patterns are graded across XS to XXL with finished-garment measurements and a size chart printed in the guide, so you can blend between sizes for the best fit.' },
+      { q: 'What payment methods do you accept?', a: 'We accept all major credit and debit cards (Visa, Mastercard, American Express) through Stripe. Apple Pay and Google Pay are supported where available.' },
+      { q: 'Can I get a refund?', a: 'Because files are delivered instantly and cannot be returned, we run a 14-day issue-resolution policy: if a download fails, a file is corrupt, or print layers do not scale correctly, we will fix it or refund you. Email ${store.contact_email || "support@" + store.domain} within 14 days.' },
+      { q: 'Is checkout secure?', a: 'Yes. All payments are processed by Stripe, a PCI-DSS Level 1 certified processor. Cards are encrypted with 256-bit SSL and never touch our servers.' },
+      { q: 'Can I sell garments I make from your patterns?', a: 'Yes \u2014 the standard licence covers personal use and small-batch handmade sales of finished garments. You may not resell or redistribute the original pattern or guide files themselves.' },
+      { q: 'Do the guides and lookbooks work outside the US?', a: 'Absolutely. Patterns include both Letter and A4 print layouts, measurements are given in inches and centimetres, and the styling content is not region-specific.' },
+      { q: 'What is included in the membership?', a: 'The Annual Style Membership delivers new patterns, seasonal lookbooks and quarterly trend reports across the year, all as digital downloads, plus early access to new releases.' },
+      { q: 'I am a beginner \u2014 where should I start?', a: 'Begin with the Sewing Fundamentals Video Course and an A-line skirt or wrap dress pattern. The course covers tools, seams and finishes before your first garment.' },
+      { q: 'Can I get help choosing?', a: 'Yes \u2014 use the contact page and tell us your level and what you want to make or style. We will recommend the right titles. We reply within one working day.' }
+    ].map(item => '<details class="group bg-white pc-card rounded-xl overflow-hidden">' +
+      '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-neutral-900 text-sm hover:text-primary transition">' +
+        '<span class="pr-4">' + item.q + '</span>' +
+        '<svg class="w-4 h-4 text-neutral-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+      '</summary>' +
+      '<div class="px-4 pb-3.5 text-neutral-500 text-xs leading-relaxed border-t border-neutral-100 pt-3">' + item.a + '</div>' +
+    '</details>').join('')}
+  </div>
+
+  <div class="bg-neutral-50 rounded-xl p-6 text-center mt-10">
+    <h3 class="text-base font-bold text-neutral-900 mb-2">Still have a question?</h3>
+    <p class="text-xs text-neutral-400 mb-4">We answer most messages within one working day.</p>
+    <a href="/contact" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Contact the atelier</a>
+  </div>
+</div>
+`, store }) %>

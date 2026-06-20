@@ -67,6 +67,17 @@ const VARIANTS = {
     descriptionFallback: 'Lead generation toolkits, ad creative and sales playbooks for installer agencies.',
     style: variantF,
   },
+  'precious-couture': {
+    bodyClass: 'font-inter min-h-screen flex flex-col text-stone-700 selection:bg-rose-100 tracking-normal',
+    headerClass: 'bg-white/90 border-b border-stone-100 sticky top-0 z-30 backdrop-blur-sm',
+    navClass: 'pc-menu-pane',
+    navId: 'pc-menu-pane',
+    overlayClass: 'pc-menu-veil',
+    overlayId: 'pc-menu-veil',
+    fontStack: ['Inter', '"Avenir Next"', '"Segoe UI"', 'sans-serif'],
+    descriptionFallback: 'Sewing patterns, styling guides and lookbooks for the modern women\u2019s wardrobe.',
+    style: variantG,
+  },
 };
 
 function variantA(colors) {
@@ -249,6 +260,41 @@ function variantF(colors) {
     .opt-menu-veil.open { opacity: 1; pointer-events: auto; }
     html { scroll-behavior: smooth; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn-primary { transition: none; } .opt-fade { animation: none; } }`;
+}
+
+function variantG(colors) {
+  const p = colors.primary || '#b76e79';
+  const a = colors.accent || '#9c5760';
+  const b = colors.bg || '#fbf8f7';
+  return `@keyframes pc-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    :root {
+      --pc-rose: ${p};
+      --pc-plum: ${a};
+      --pc-paper: ${b};
+      --pc-blush: color-mix(in srgb, ${p} 10%, white);
+      --pc-edge: color-mix(in srgb, ${p} 20%, #ede9e8);
+    }
+    body { background-color: var(--pc-paper); }
+    ::selection { background-color: var(--pc-rose); color: #fff; }
+    .text-primary { color: var(--pc-rose); }
+    .text-accent { color: var(--pc-plum); }
+    .bg-primary { background-color: var(--pc-rose); }
+    .bg-accent { background-color: var(--pc-plum); }
+    .bg-primary-50 { background-color: var(--pc-blush); }
+    .bg-primary-100 { background-color: color-mix(in srgb, var(--pc-rose) 16%, white); }
+    .border-primary { border-color: var(--pc-rose); }
+    .ring-primary { --tw-ring-color: var(--pc-rose); }
+    .btn-primary { background-color: var(--pc-rose); transition: background-color 0.28s cubic-bezier(0.33, 0, 0.2, 1), transform 0.28s cubic-bezier(0.33, 0, 0.2, 1); }
+    .btn-primary:hover { background-color: var(--pc-plum); transform: translateY(-1px); }
+    .pc-card { border: 1px solid var(--pc-edge); }
+    .pc-fade { animation: pc-rise 0.34s cubic-bezier(0.33, 0, 0.2, 1); }
+    input:focus, textarea:focus, select:focus { border-color: var(--pc-rose) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc-rose) 12%, transparent); outline: 0; }
+    .pc-menu-pane { transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.33, 0, 0.2, 1); }
+    .pc-menu-pane.open { transform: translateX(0); }
+    .pc-menu-veil { opacity: 0; pointer-events: none; transition: opacity 0.28s cubic-bezier(0.33, 0, 0.2, 1); }
+    .pc-menu-veil.open { opacity: 1; pointer-events: auto; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn-primary { transition: none; } .pc-fade { animation: none; } }`;
 }
 
 function buildStyleBlock(variant, store) {

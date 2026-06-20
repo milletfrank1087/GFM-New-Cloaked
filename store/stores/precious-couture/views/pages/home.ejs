@@ -1,0 +1,131 @@
+<% const pageTitle = 'Home'; const extraHead = ''; const sym = store.currencySymbol || '$'; %>
+<%- include('../layouts/store', { body: `
+
+<section class="py-12 md:py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 bg-primary-50 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-5">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>
+        Loved by 12,000+ home sewists and stylists
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-neutral-900 leading-[1.15] mb-4">
+        Sewing patterns, style guides and lookbooks for the modern wardrobe
+      </h1>
+      <p class="text-base sm:text-lg text-neutral-500 leading-relaxed mb-7 max-w-lg">
+        ${store.name} is a digital fashion studio. Download print-at-home sewing patterns, seasonal lookbooks, color and styling guides, and planning tools \u2014 instant delivery, yours to keep.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="/products" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm transition hover:shadow-lg hover:shadow-primary/20">
+          Shop the collection
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+        </a>
+        <a href="#editorial" class="inline-flex items-center justify-center gap-2 text-neutral-600 bg-white border border-neutral-200 px-6 py-3 rounded-xl font-semibold text-sm transition hover:border-neutral-300">
+          See what is inside
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-neutral-100 bg-neutral-50/60">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">12k+</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Downloads delivered</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">XS\u2013XXL</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Graded sizing</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">${(products || []).length}</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Digital titles</p>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl font-bold text-neutral-900">Instant</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Email delivery</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="editorial" class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl mb-10">
+      <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">The studio</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 mb-3">Four ways to dress with intention</h2>
+      <p class="text-sm text-neutral-500 leading-relaxed">Whether you sew your own clothes, plan a capsule wardrobe, or style clients, our downloads give you a finished, ready-to-use starting point \u2014 no guesswork, no rebuilding from scratch.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      ${[
+        { num: '01', t: 'Patterns drawn to fit, not to frustrate', d: 'Layered print-at-home and A0 PDFs graded across the full size range, with seam allowances marked and an illustrated construction guide in every file.' },
+        { num: '02', t: 'A capsule wardrobe you actually wear', d: 'Planners and essentials checklists that turn an overflowing closet into a tight, seasonless edit \u2014 with outfit grids and a cost-per-wear ledger.' },
+        { num: '03', t: 'Color and proportion, demystified', d: 'Seasonal color analysis and body-shape styling handbooks with at-home tests, swatch sheets and outfit formulas you can reuse forever.' },
+        { num: '04', t: 'Lookbooks that do the styling for you', d: 'Curated seasonal lookbooks with outfit-by-outfit notes, fabric pairings and accessory edits, so you can copy the look or make it your own.' }
+      ].map(s => '<div class="pc-card bg-white rounded-xl p-5">' +
+        '<span class="inline-block text-[10px] font-bold text-primary tracking-widest mb-3">' + s.num + '</span>' +
+        '<h3 class="font-semibold text-neutral-900 text-sm mb-2">' + s.t + '</h3>' +
+        '<p class="text-xs text-neutral-500 leading-relaxed">' + s.d + '</p>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-neutral-900">Featured downloads</h2>
+      <p class="text-sm text-neutral-400 mt-1">${(products || []).length} digital titles, from single patterns to the annual membership.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      ${(products || []).slice(0, 12).map((p, i) => {
+        const accents = ['bg-rose-50 text-rose-600','bg-pink-50 text-pink-600','bg-fuchsia-50 text-fuchsia-600','bg-amber-50 text-amber-600','bg-violet-50 text-violet-600','bg-stone-100 text-stone-600'];
+        return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white pc-card rounded-xl p-4 hover:shadow-sm transition-all">' +
+          '<div class="w-10 h-10 rounded-lg ' + accents[i % 6] + ' flex items-center justify-center shrink-0">' +
+            '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5-3v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3l2-2h4l2 2h3a2 2 0 012 2z"/></svg>' +
+          '</div>' +
+          '<div class="flex-1 min-w-0">' +
+            '<h3 class="font-semibold text-neutral-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+            '<p class="text-xs text-neutral-400 mt-0.5">' + (p.category || 'Download') + '</p>' +
+          '</div>' +
+          '<span class="text-sm font-bold text-neutral-900 shrink-0">${sym}' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+        '</a>';
+      }).join('')}
+    </div>
+    <div class="mt-6 text-center">
+      <a href="/products" class="text-sm text-primary font-semibold hover:underline">See all ${(products || []).length} titles &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section class="bg-neutral-50 py-12 md:py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 text-center mb-3">What our customers say</h2>
+    <p class="text-sm text-neutral-400 text-center mb-10 max-w-lg mx-auto">Notes from sewists, stylists and small-label designers who download with us.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      ${[
+        { name: 'Amara L.', role: 'Home sewist', text: 'The wrap dress pattern fit straight out of the envelope \u2014 the instructions were clearer than anything I have bought from the big pattern houses.' },
+        { name: 'Beatrice N.', role: 'Personal stylist', text: 'I give the color analysis guide to every new client. It pays for itself after one session and the worksheets look beautiful.' },
+        { name: 'Yuki T.', role: 'Indie label founder', text: 'The tech pack and grading templates saved me weeks before my first sample run. Worth every cent.' }
+      ].map(t => '<div class="bg-white pc-card rounded-xl p-5">' +
+        '<div class="flex items-center gap-0.5 mb-3">' + Array(5).fill('<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.07 3.29a1 1 0 00.95.69h3.46c.97 0 1.37 1.24.59 1.81l-2.8 2.03a1 1 0 00-.37 1.12l1.07 3.29c.3.92-.75 1.69-1.54 1.12l-2.8-2.03a1 1 0 00-1.17 0l-2.8 2.03c-.78.57-1.84-.2-1.54-1.12l1.07-3.29a1 1 0 00-.37-1.12L2.98 8.72c-.78-.57-.38-1.81.59-1.81h3.46a1 1 0 00.95-.69L9.05 2.93z"/></svg>').join('') + '</div>' +
+        '<p class="text-neutral-600 text-xs leading-relaxed mb-4">"' + t.text + '"</p>' +
+        '<div class="flex items-center gap-2.5">' +
+          '<div class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-xs font-semibold text-neutral-500">' + t.name.split(' ').map(w => w[0]).join('') + '</div>' +
+          '<div><p class="text-xs font-semibold text-neutral-900">' + t.name + '</p><p class="text-[10px] text-neutral-400">' + t.role + '</p></div>' +
+        '</div>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-16 scroll-mt-16">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 mb-3">New to sewing or styling?</h2>
+    <p class="text-sm text-neutral-500 leading-relaxed mb-6">Tell us what you are working on and we will point you to the right pattern, guide or bundle for your level. No pressure, no upsell.</p>
+    <a href="/contact" class="btn-primary inline-flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:shadow-lg">Ask the atelier &rarr;</a>
+  </div>
+</section>
+
+`, store, products }) %>

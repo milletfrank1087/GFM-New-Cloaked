@@ -1,0 +1,51 @@
+<% const pageTitle = 'Atelier'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="mb-10">
+    <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">The atelier</span>
+    <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-3">A digital fashion studio for people who love clothes</h1>
+    <p class="text-sm text-neutral-500 leading-relaxed">${store.name} designs and publishes downloadable sewing patterns, styling guides and seasonal lookbooks for women\u2019s fashion. Everything we make is delivered digitally \u2014 there is nothing to ship, and nothing to wait for.</p>
+  </div>
+
+  <div class="bg-white pc-card rounded-xl p-6 mb-8">
+    <p class="text-sm text-neutral-600 leading-relaxed mb-4">We started with a single wrap-dress pattern drawn at a kitchen table and a frustration shared by every home sewist: patterns that did not fit, instructions that assumed too much, and lookbooks that never explained the why behind an outfit. So we built the studio we wished existed.</p>
+    <p class="text-sm text-neutral-600 leading-relaxed">Today the catalogue spans graded sewing patterns, capsule-wardrobe planners, color and body-shape guides, seasonal lookbooks, and designer tools like tech packs and grading workbooks. Each title is drafted, test-sewn or test-styled, and proofread before it goes on sale.</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+    <div class="bg-white pc-card rounded-xl p-5">
+      <div class="w-9 h-9 rounded-lg bg-rose-50 flex items-center justify-center mb-3">
+        <svg class="w-4.5 h-4.5 text-rose-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l4 3-4 3-4-3 4-3zM12 9v3m0 0l-6 9h12l-6-9z"/></svg>
+      </div>
+      <h3 class="font-semibold text-neutral-900 text-sm mb-1.5">What we are</h3>
+      <p class="text-xs text-neutral-500 leading-relaxed">A small women\u2019s fashion studio publishing digital patterns, guides and lookbooks. We do not hold physical stock \u2014 every product is an instant download.</p>
+    </div>
+    <div class="bg-white pc-card rounded-xl p-5">
+      <div class="w-9 h-9 rounded-lg bg-pink-50 flex items-center justify-center mb-3">
+        <svg class="w-4.5 h-4.5 text-pink-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <h3 class="font-semibold text-neutral-900 text-sm mb-1.5">What we sell</h3>
+      <p class="text-xs text-neutral-500 leading-relaxed">Sewing patterns, styling and color guides, seasonal lookbooks, wardrobe planners and designer tools \u2014 all delivered as PDFs, workbooks and video.</p>
+    </div>
+  </div>
+
+  <h2 class="text-lg font-bold text-neutral-900 mb-4">How every title is made</h2>
+  <div class="space-y-2 mb-10">
+    ${[
+      { title: 'Draft', desc: 'Patterns are drafted and graded across the full size range; guides and lookbooks are researched and storyboarded before a single page is laid out.' },
+      { title: 'Test', desc: 'Patterns are test-sewn on real bodies and lookbooks are styled end to end, so what you download is what actually works.' },
+      { title: 'Proof', desc: 'Every file is proofread, the print layers are checked at 1:1 scale, and the construction notes are rewritten for clarity.' },
+      { title: 'Publish', desc: 'Titles go live as instant downloads, and members get new releases and seasonal updates throughout the year.' }
+    ].map(item => '<div class="flex items-start gap-2.5 p-3 bg-neutral-50 rounded-lg">' +
+      '<svg class="w-4 h-4 text-primary mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 011.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>' +
+      '<div><p class="font-semibold text-neutral-900 text-xs">' + item.title + '</p><p class="text-[11px] text-neutral-400">' + item.desc + '</p></div>' +
+    '</div>').join('')}
+  </div>
+
+  <div class="bg-neutral-50 rounded-xl p-6 text-center">
+    <h3 class="text-base font-bold text-neutral-900 mb-2">Want to browse before you buy?</h3>
+    <p class="text-xs text-neutral-400 mb-4">Most customers start with a single pattern or guide before joining the annual membership.</p>
+    <a href="/products" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Shop the collection</a>
+  </div>
+</div>
+`, store }) %>

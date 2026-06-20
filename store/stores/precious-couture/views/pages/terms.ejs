@@ -1,0 +1,68 @@
+<% const pageTitle = 'Terms of Service'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-1">Terms of Service</h1>
+  <p class="text-xs text-neutral-400 mb-8">Last updated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+
+  <div class="bg-white pc-card rounded-xl p-6 space-y-6 text-neutral-500 text-xs leading-relaxed">
+    <p>These Terms govern your access to and use of the ${store.name} website and the digital fashion products we sell through it. By placing an order you accept these Terms.</p>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">1. What we sell</h2>
+      <p>${store.name} sells digital women\u2019s fashion products: sewing patterns, styling and color guides, seasonal lookbooks, wardrobe planners, designer tools and online courses. All items are delivered electronically as downloads; we do not ship physical goods.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">2. Orders and pricing</h2>
+      <p>Prices are listed in US dollars and are charged once, in full, at checkout. We may update prices and product contents at any time; changes do not affect orders already placed.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">3. Payment</h2>
+      <p class="mb-2">All payments are processed by Stripe, a PCI-DSS Level 1 certified payment processor. We never see or store your full card number.</p>
+      <p>Card statements will show the charge as "${store.statementDescriptor || store.name}". Please contact us before raising a chargeback if anything looks unfamiliar &mdash; we resolve most issues within one working day.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">4. Delivery</h2>
+      <p>Digital products are delivered to the email address provided at checkout, typically within minutes, as secure download links. It is your responsibility to provide a correct email address.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">5. Refunds</h2>
+      <p>Because products are delivered immediately and cannot be returned, we operate a 14-day issue-resolution policy. If a download fails, a file is corrupt, or print layers do not scale correctly, contact ${store.contact_email || 'support@' + store.domain} within 14 days and we will fix the issue or issue a refund.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">6. Licence</h2>
+      <p class="mb-2">You receive a non-exclusive, non-transferable, perpetual licence to use each purchased product:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>for your own personal sewing, styling and wardrobe use;</li>
+        <li>to make and sell finished garments in small batches from our sewing patterns;</li>
+        <li>adapted to your own measurements and taste.</li>
+      </ul>
+      <p class="mt-2">You may not resell, share, sublicense or redistribute the original pattern, guide, course or template files as your own product.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">7. Intellectual property</h2>
+      <p>All patterns, copy, illustrations, photography, video and design delivered as part of our products remain the intellectual property of ${store.name}, subject to the licence granted above.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">8. Liability</h2>
+      <p>${store.name} provides its products "as is", without warranties as to specific results or fit. Our aggregate liability arising out of any order is limited to the amount paid for that order. Nothing in these Terms excludes liability that cannot lawfully be excluded.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">9. Changes</h2>
+      <p>We may update these Terms from time to time. Updates apply to orders placed after the revised version is published.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold text-neutral-900 mb-2">10. Contact</h2>
+      <p>Questions about these terms? Email <a href="mailto:${store.contact_email || 'support@' + store.domain}" class="text-primary hover:underline">${store.contact_email || 'support@' + store.domain}</a>.</p>
+    </div>
+  </div>
+</div>
+`, store }) %>

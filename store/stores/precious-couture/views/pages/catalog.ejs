@@ -1,0 +1,31 @@
+<% const pageTitle = typeof searchQuery !== 'undefined' && searchQuery ? 'Search: ' + searchQuery : 'Shop'; const extraHead = ''; const sym = store.currencySymbol || '$'; %>
+<%- include('../layouts/store', { body: `
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-12">
+  <div class="mb-8">
+    <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-1">${typeof searchQuery !== 'undefined' && searchQuery ? 'Results for "' + searchQuery + '"' : 'Shop the collection'}</h1>
+    <p class="text-sm text-neutral-400">${(products || []).length} digital patterns, guides, lookbooks and tools.</p>
+  </div>
+
+  <div class="sm:hidden mb-6">
+    <form action="/search" method="GET">
+      <input type="text" name="q" placeholder="Search patterns &amp; guides..." value="${typeof searchQuery !== 'undefined' ? searchQuery : ''}" class="w-full border border-neutral-200 rounded-lg px-3.5 py-2.5 text-sm bg-neutral-50">
+    </form>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    ${(products || []).map((p, i) => {
+      const accents = ['bg-rose-50 text-rose-600','bg-pink-50 text-pink-600','bg-fuchsia-50 text-fuchsia-600','bg-amber-50 text-amber-600','bg-violet-50 text-violet-600','bg-stone-100 text-stone-600'];
+      return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white pc-card rounded-xl p-4 hover:shadow-sm transition-all">' +
+        '<div class="w-10 h-10 rounded-lg ' + accents[i % 6] + ' flex items-center justify-center shrink-0">' +
+          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5-3v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3l2-2h4l2 2h3a2 2 0 012 2z"/></svg>' +
+        '</div>' +
+        '<div class="flex-1 min-w-0">' +
+          '<h3 class="font-semibold text-neutral-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
+          '<p class="text-xs text-neutral-400 mt-0.5 truncate">' + (p.description || p.category || 'Download') + '</p>' +
+        '</div>' +
+        '<span class="font-bold text-neutral-900 text-sm shrink-0">${sym}' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+      '</a>';
+    }).join('')}
+  </div>
+</div>
+`, store, products, searchQuery: typeof searchQuery !== 'undefined' ? searchQuery : '' }) %>
