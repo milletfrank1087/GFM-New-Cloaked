@@ -61,7 +61,7 @@
       const accents = ['bg-rose-50 text-rose-600','bg-pink-50 text-pink-600','bg-fuchsia-50 text-fuchsia-600','bg-violet-50 text-violet-600'];
       return '<a href="/products/' + (r.slug || '') + '" class="group flex items-center gap-3 bg-white pc-card rounded-xl p-3.5 hover:shadow-sm transition">' +
         '<div class="w-9 h-9 rounded-lg ' + accents[i % 4] + ' flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg></div>' +
-        '<div class="flex-1 min-w-0"><h3 class="font-semibold text-neutral-900 text-xs truncate group-hover:text-primary transition">' + r.name + '</h3><span class="text-xs font-bold text-neutral-900">${sym}' + (r.price?.toFixed(2) || '0.00') + '</span></div>' +
+        '<div class="flex-1 min-w-0"><h3 class="font-semibold text-neutral-900 text-xs truncate group-hover:text-primary transition">' + r.name + '</h3><span class="text-xs font-bold text-neutral-900">' + sym + (r.price?.toFixed(2) || '0.00') + '</span></div>' +
       '</a>';
     }).join('') +
   '</div></div>' : ''}

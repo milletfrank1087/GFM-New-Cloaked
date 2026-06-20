@@ -23,7 +23,7 @@
           '<h3 class="font-semibold text-neutral-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
           '<p class="text-xs text-neutral-400 mt-0.5 truncate">' + (p.description || p.category || 'Download') + '</p>' +
         '</div>' +
-        '<span class="font-bold text-neutral-900 text-sm shrink-0">${sym}' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+        '<span class="font-bold text-neutral-900 text-sm shrink-0">' + sym + (p.price?.toFixed(2) || '0.00') + '</span>' +
       '</a>';
     }).join('')}
   </div>
