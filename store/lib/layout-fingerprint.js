@@ -238,8 +238,14 @@ function variantF(colors) {
   const a = colors.accent || '#0b7a44';
   const b = colors.bg || '#fafafa';
   return `@keyframes opt-slide-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes opt-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+    @keyframes opt-pulse-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, ${p} 45%, transparent); } 70% { box-shadow: 0 0 0 14px color-mix(in srgb, ${p} 0%, transparent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+    @keyframes opt-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes opt-sheen { 0% { background-position: -160% 0; } 100% { background-position: 260% 0; } }
+    @keyframes opt-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     input:focus, textarea:focus, select:focus { border-color: ${p} !important; box-shadow: 0 0 0 4px color-mix(in srgb, ${p} 11%, transparent); outline: 0; }
-    :root { --opt-key: ${p}; --opt-mark: ${a}; --opt-canvas: ${b}; --opt-rest: color-mix(in srgb, ${p} 9%, white); --opt-line: color-mix(in srgb, ${p} 18%, #e5e5e5); }
+    :root { --opt-key: ${p}; --opt-mark: ${a}; --opt-canvas: ${b}; --opt-rest: color-mix(in srgb, ${p} 9%, white); --opt-line: color-mix(in srgb, ${p} 18%, #e5e5e5); --opt-ink: #0a0f0d; --opt-sky: #38bdf8; }
     body { background-color: var(--opt-canvas); }
     ::selection { background-color: var(--opt-key); color: #fff; }
     .text-primary { color: var(--opt-key); }
@@ -250,16 +256,41 @@ function variantF(colors) {
     .bg-primary-100 { background-color: color-mix(in srgb, var(--opt-key) 16%, white); }
     .border-primary { border-color: var(--opt-key); }
     .ring-primary { --tw-ring-color: var(--opt-key); }
-    .btn-primary { background-color: var(--opt-key); transition: filter 0.16s linear, transform 0.16s ease-out; }
-    .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .btn-primary { background-color: var(--opt-key); transition: filter 0.16s linear, transform 0.16s ease-out, box-shadow 0.18s ease; }
+    .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); box-shadow: 0 12px 26px -14px color-mix(in srgb, ${p} 72%, transparent); }
     .opt-fade { animation: opt-slide-in 0.32s cubic-bezier(0.32, 0.72, 0.36, 1.04); }
     .opt-card { border: 1px solid var(--opt-line); }
+    .opt-lift { transition: transform 0.22s cubic-bezier(0.32, 0.72, 0.36, 1.04), box-shadow 0.22s ease, border-color 0.22s ease; }
+    .opt-lift:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -26px color-mix(in srgb, var(--opt-ink) 60%, transparent); border-color: color-mix(in srgb, var(--opt-key) 45%, var(--opt-line)); }
+    .opt-grad-text { background: linear-gradient(118deg, var(--opt-key), color-mix(in srgb, var(--opt-key) 50%, var(--opt-sky))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .opt-mesh { background-image: radial-gradient(58% 60% at 86% 6%, color-mix(in srgb, var(--opt-key) 16%, transparent) 0%, transparent 60%), radial-gradient(48% 52% at 8% 0%, color-mix(in srgb, var(--opt-sky) 14%, transparent) 0%, transparent 58%), radial-gradient(46% 60% at 50% 108%, color-mix(in srgb, var(--opt-mark) 12%, transparent) 0%, transparent 62%); }
+    .opt-grid-bg { background-image: linear-gradient(color-mix(in srgb, var(--opt-key) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--opt-key) 8%, transparent) 1px, transparent 1px); background-size: 30px 30px; -webkit-mask-image: radial-gradient(72% 60% at 50% 28%, #000 0%, transparent 76%); mask-image: radial-gradient(72% 60% at 50% 28%, #000 0%, transparent 76%); }
+    .opt-glass { background: color-mix(in srgb, #ffffff 80%, transparent); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); }
+    .opt-float { animation: opt-float 6.5s ease-in-out infinite; }
+    .opt-ring { animation: opt-pulse-ring 2.6s ease-out infinite; }
+    .opt-bar { transform-origin: bottom; animation: opt-grow 0.95s cubic-bezier(0.32, 0.72, 0.36, 1.04) both; }
+    .opt-sheen { background: linear-gradient(110deg, transparent 20%, color-mix(in srgb, #ffffff 55%, transparent) 42%, transparent 64%); background-size: 220% 100%; animation: opt-sheen 2.8s ease-in-out infinite; }
+    .opt-link { position: relative; }
+    .opt-link::after { content: ''; position: absolute; left: 0; bottom: -3px; height: 2px; width: 100%; background: var(--opt-key); border-radius: 2px; transform: scaleX(0); transform-origin: right; transition: transform 0.26s ease; }
+    .opt-link:hover::after, .opt-link.is-active::after { transform: scaleX(1); transform-origin: left; }
+    .opt-chip { transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease; }
+    .opt-chip:hover { transform: translateY(-1px); }
+    .opt-marquee-track { display: inline-flex; animation: opt-marquee 26s linear infinite; }
+    .opt-marquee:hover .opt-marquee-track { animation-play-state: paused; }
+    .opt-head-scrolled { box-shadow: 0 8px 30px -22px color-mix(in srgb, var(--opt-ink) 70%, transparent); }
     .opt-menu-pane { transform: translateX(100%); transition: transform 0.26s cubic-bezier(0.32, 0.72, 0.36, 1.04); }
     .opt-menu-pane.open { transform: translateX(0); }
     .opt-menu-veil { opacity: 0; pointer-events: none; transition: opacity 0.26s cubic-bezier(0.32, 0.72, 0.36, 1.04); }
     .opt-menu-veil.open { opacity: 1; pointer-events: auto; }
+    .opt-js .opt-reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.62s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.62s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .opt-js .opt-reveal.opt-in { opacity: 1; transform: none; }
     html { scroll-behavior: smooth; }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn-primary { transition: none; } .opt-fade { animation: none; } }`;
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn-primary, .opt-lift, .opt-chip { transition: none; }
+      .opt-fade, .opt-float, .opt-ring, .opt-bar, .opt-sheen, .opt-marquee-track { animation: none; }
+      .opt-js .opt-reveal { opacity: 1; transform: none; transition: none; }
+    }`;
 }
 
 function variantG(colors) {

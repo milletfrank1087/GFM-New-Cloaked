@@ -1,51 +1,92 @@
 <% const pageTitle = 'Studio'; const extraHead = ''; %>
 <%- include('../layouts/store', { body: `
-<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-  <div class="mb-10">
-    <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">About the studio</span>
-    <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-3">We sell lead generation to installer brands &mdash; and the systems behind it</h1>
-    <p class="text-sm text-neutral-500 leading-relaxed">${store.name} is a lead generation studio focused on residential and small-commercial solar installers across Europe and the UK. We run paid acquisition for a handful of installer brands every quarter, and we package the systems we build for them into off-the-shelf toolkits.</p>
+<section class="relative overflow-hidden opt-mesh border-b border-neutral-100">
+  <div class="opt-grid-bg absolute inset-0 opacity-60 pointer-events-none"></div>
+  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-7 opt-reveal">
+        <span class="inline-flex items-center gap-1.5 bg-white/70 opt-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-5">About the studio</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight leading-[1.12] mb-4">We sell lead generation to installer brands &mdash; and the systems behind it</h1>
+        <p class="text-sm sm:text-base text-neutral-500 leading-relaxed max-w-xl">${store.name} is a lead generation studio focused on residential and small-commercial solar installers across Europe and the UK. We run paid acquisition for a handful of installer brands every quarter, and we package the systems we build for them into off-the-shelf toolkits.</p>
+      </div>
+      <div class="lg:col-span-5 opt-reveal" data-delay="120">
+        <div class="opt-card opt-glass bg-white/80 rounded-2xl p-6 shadow-xl shadow-emerald-900/5">
+          <div class="grid grid-cols-2 gap-4">
+            ${[
+              { v: '2015', s: '', l: 'Founded in Manchester' },
+              { v: '320', s: '+', l: 'Installer brands served' },
+              { v: '11', s: ' yrs', l: 'Running paid media' },
+              { v: '24', s: '', l: 'Production toolkits' }
+            ].map(m => '<div class="rounded-xl bg-neutral-50 border border-neutral-100 p-4">' +
+              '<p class="text-xl font-extrabold text-neutral-900">' + m.v + m.s + '</p>' +
+              '<p class="text-[11px] text-neutral-400 mt-0.5">' + m.l + '</p></div>').join('')}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</section>
 
-  <div class="bg-white opt-card rounded-xl p-6 mb-8">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+  <div class="opt-reveal opt-card bg-white rounded-2xl p-6 sm:p-8 mb-8">
     <p class="text-sm text-neutral-600 leading-relaxed mb-4">We started in 2015 running Facebook Lead Ads for a single roofing-and-solar installer in Manchester. Eleven years and a few hundred installer brands later, the playbook has not changed all that much &mdash; the offers, scripts and CRM stages still revolve around three questions a homeowner is silently asking before signing.</p>
     <p class="text-sm text-neutral-600 leading-relaxed">We sell two things. The first is a productised lead generation engagement for installer brands &mdash; the studio team handles paid media, creative and reporting on retainer. The second is the underlying toolkit, packaged so any installer marketing team can buy it and run it in-house. Both come from the same operations.</p>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-    <div class="bg-white opt-card rounded-xl p-5">
-      <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center mb-3">
-        <svg class="w-4.5 h-4.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-6 4 14 3-8 2 4h4"/></svg>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+    <div class="opt-reveal opt-lift opt-card bg-white rounded-2xl p-6">
+      <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-6 4 14 3-8 2 4h4"/></svg>
       </div>
       <h3 class="font-semibold text-neutral-900 text-sm mb-1.5">What we are</h3>
       <p class="text-xs text-neutral-500 leading-relaxed">A small, opinionated lead generation studio that only takes installer-side clients. We do not run e-commerce, we do not run B2B SaaS, and we do not promise things we have not shipped before.</p>
     </div>
-    <div class="bg-white opt-card rounded-xl p-5">
-      <div class="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center mb-3">
-        <svg class="w-4.5 h-4.5 text-sky-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <div class="opt-reveal opt-lift opt-card bg-white rounded-2xl p-6" data-delay="80">
+      <div class="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </div>
       <h3 class="font-semibold text-neutral-900 text-sm mb-1.5">What we sell</h3>
       <p class="text-xs text-neutral-500 leading-relaxed">Productised lead generation services and the toolkits behind them: ad creative vaults, sales scripts, CRM templates and quarterly market reports. Everything is digital download.</p>
     </div>
   </div>
 
-  <h2 class="text-lg font-bold text-neutral-900 mb-4">How a typical engagement looks</h2>
-  <div class="space-y-2 mb-10">
-    ${[
-      { title: 'Diagnostic week', desc: 'We audit current ad accounts, CRM hygiene, follow-up speed and offer-market fit. Output is a short brief, not a deck.' },
-      { title: 'Pipeline rebuild', desc: 'We rebuild the CRM stages, sales scripts and reporting view so leads are tracked the same way every rep handles them.' },
-      { title: 'Creative production', desc: 'We ship three to five tested ad concepts per month, including copy, design and landing pages tuned to installer offers.' },
-      { title: 'Quarterly review', desc: 'Every quarter we cut what is not working, share an updated market briefing and re-set targets with leadership.' }
-    ].map(item => '<div class="flex items-start gap-2.5 p-3 bg-neutral-50 rounded-lg">' +
-      '<svg class="w-4 h-4 text-primary mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 011.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>' +
-      '<div><p class="font-semibold text-neutral-900 text-xs">' + item.title + '</p><p class="text-[11px] text-neutral-400">' + item.desc + '</p></div>' +
-    '</div>').join('')}
+  <h2 class="text-lg font-bold text-neutral-900 mb-5 opt-reveal">How a typical engagement looks</h2>
+  <div class="relative pl-6 mb-12">
+    <div class="absolute left-[7px] top-2 bottom-2 w-px bg-neutral-200"></div>
+    <div class="space-y-4">
+      ${[
+        { title: 'Diagnostic week', desc: 'We audit current ad accounts, CRM hygiene, follow-up speed and offer-market fit. Output is a short brief, not a deck.' },
+        { title: 'Pipeline rebuild', desc: 'We rebuild the CRM stages, sales scripts and reporting view so leads are tracked the same way every rep handles them.' },
+        { title: 'Creative production', desc: 'We ship three to five tested ad concepts per month, including copy, design and landing pages tuned to installer offers.' },
+        { title: 'Quarterly review', desc: 'Every quarter we cut what is not working, share an updated market briefing and re-set targets with leadership.' }
+      ].map((item, i) => '<div class="opt-reveal relative" data-delay="' + (i * 70) + '">' +
+        '<div class="absolute -left-6 top-1 w-3.5 h-3.5 rounded-full bg-primary ring-4 ring-white"></div>' +
+        '<div class="opt-card bg-white rounded-xl p-4"><p class="font-semibold text-neutral-900 text-sm mb-0.5">' + item.title + '</p><p class="text-xs text-neutral-500 leading-relaxed">' + item.desc + '</p></div>' +
+      '</div>').join('')}
+    </div>
   </div>
 
-  <div class="bg-neutral-50 rounded-xl p-6 text-center">
-    <h3 class="text-base font-bold text-neutral-900 mb-2">Want to see the toolkits before you commit?</h3>
-    <p class="text-xs text-neutral-400 mb-4">Most installer brands start with one or two downloadable assets before booking a retainer.</p>
-    <a href="/products" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Browse the toolkit catalogue</a>
+  <h2 class="text-lg font-bold text-neutral-900 mb-5 opt-reveal">How we work</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
+    ${[
+      { t: 'Ship, then refine', d: 'We would rather launch a tested concept this week than polish a perfect one next quarter.' },
+      { t: 'Numbers over opinions', d: 'Every recommendation ties back to CAC, booked surveys and signed installs &mdash; not vanity reach.' },
+      { t: 'Installer-only focus', d: 'We say no to other verticals so the playbook keeps getting sharper for one market.' }
+    ].map((v, i) => '<div class="opt-reveal opt-card bg-neutral-50 rounded-xl p-5" data-delay="' + (i * 70) + '">' +
+      '<div class="w-8 h-8 rounded-lg bg-white border border-neutral-100 flex items-center justify-center mb-3 text-primary font-bold text-xs">' + (i + 1) + '</div>' +
+      '<h3 class="font-semibold text-neutral-900 text-sm mb-1">' + v.t + '</h3>' +
+      '<p class="text-xs text-neutral-500 leading-relaxed">' + v.d + '</p></div>').join('')}
+  </div>
+
+  <div class="opt-reveal relative overflow-hidden rounded-2xl bg-neutral-950 p-8 text-center">
+    <div class="opt-mesh absolute inset-0 opacity-60"></div>
+    <div class="relative">
+      <h3 class="text-lg font-bold text-white mb-2">Want to see the toolkits before you commit?</h3>
+      <p class="text-xs text-neutral-400 mb-5 max-w-md mx-auto">Most installer brands start with one or two downloadable assets before booking a retainer.</p>
+      <a href="/products" class="btn-primary inline-flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm">Browse the catalogue
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
   </div>
 </div>
 `, store }) %>

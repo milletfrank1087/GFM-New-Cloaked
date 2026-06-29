@@ -1,23 +1,44 @@
-<header class="<%= store.fingerprint.headerClass %>">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-2 shrink-0">
-      <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
-        <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+<script>document.documentElement.classList.add('opt-js');</script>
+
+<div class="bg-neutral-950 text-neutral-300 text-[11px]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-8 flex items-center justify-between">
+    <p class="flex items-center gap-1.5">
+      <svg class="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>
+      Instant download &bull; Commercial licence &bull; Built for EU + UK installers
+    </p>
+    <a href="/contact" class="hidden sm:inline-flex items-center gap-1 text-neutral-400 hover:text-white transition">
+      Book a strategy call
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+    </a>
+  </div>
+</div>
+
+<header id="opt-header" class="<%= store.fingerprint.headerClass %> transition-shadow">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2.5 shrink-0 group">
+      <div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+        <svg class="w-4.5 h-4.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-6 4 14 3-8 2 4h4"/>
         </svg>
       </div>
-      <span class="text-base font-bold text-neutral-900"><%= store.name %></span>
+      <span class="flex flex-col leading-none">
+        <span class="text-base font-bold text-neutral-900 tracking-tight"><%= store.name %></span>
+        <span class="text-[10px] text-neutral-400 font-medium mt-0.5">Solar lead generation studio</span>
+      </span>
     </a>
 
-    <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-500">
-      <a href="/#playbook" class="hover:text-neutral-900 transition">Playbook</a>
-      <a href="/products" class="hover:text-neutral-900 transition">Toolkits</a>
-      <a href="/about" class="hover:text-neutral-900 transition">Studio</a>
-      <a href="/faq" class="hover:text-neutral-900 transition">Answers</a>
-      <a href="/contact" class="hover:text-neutral-900 transition">Talk to us</a>
+    <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-500">
+      <a href="/products" data-path="/products" class="opt-link nav-top hover:text-neutral-900 transition">Toolkits</a>
+      <a href="/#playbook" class="opt-link nav-top hover:text-neutral-900 transition">Playbook</a>
+      <a href="/about" data-path="/about" class="opt-link nav-top hover:text-neutral-900 transition">Studio</a>
+      <a href="/faq" data-path="/faq" class="opt-link nav-top hover:text-neutral-900 transition">Answers</a>
+      <a href="/contact" data-path="/contact" class="opt-link nav-top hover:text-neutral-900 transition">Talk to us</a>
     </nav>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a href="/products" class="hidden md:inline-flex items-center gap-1.5 bg-primary-50 text-primary text-xs font-semibold px-3.5 py-2 rounded-lg hover:bg-primary-100 transition">
+        Browse toolkits
+      </a>
       <a href="/cart" class="relative p-2 text-neutral-500 hover:text-neutral-900 transition" aria-label="Cart">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6h16.5l-1.5 11.25A2.25 2.25 0 0116.5 19.5h-9a2.25 2.25 0 01-2.25-2.25L3.75 6zM7.5 6V4.5A3.75 3.75 0 0111.25 .75h1.5A3.75 3.75 0 0116.5 4.5V6"/>
@@ -31,22 +52,25 @@
   </div>
 </header>
 
-<div id="<%= store.fingerprint.overlayId %>" class="<%= store.fingerprint.overlayClass %> fixed inset-0 bg-neutral-900/35 z-50 md:hidden"></div>
-<div id="<%= store.fingerprint.navId %>" class="<%= store.fingerprint.navClass %> fixed top-0 right-0 bottom-0 w-72 bg-white z-50 md:hidden shadow-2xl">
+<div id="<%= store.fingerprint.overlayId %>" class="<%= store.fingerprint.overlayClass %> fixed inset-0 bg-neutral-900/40 z-50 md:hidden"></div>
+<div id="<%= store.fingerprint.navId %>" class="<%= store.fingerprint.navClass %> fixed top-0 right-0 bottom-0 w-72 bg-white z-50 md:hidden shadow-2xl flex flex-col">
   <div class="flex items-center justify-between px-5 h-14 border-b border-neutral-100">
     <span class="font-bold text-neutral-900"><%= store.name %></span>
     <button id="menu-close" class="p-2 -mr-2 text-neutral-400 hover:text-neutral-900 transition" aria-label="Close">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
   </div>
-  <div class="px-3 py-4 space-y-1">
+  <div class="px-3 py-4 space-y-1 flex-1 overflow-y-auto">
     <a href="/" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Home</a>
-    <a href="/#playbook" class="nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Playbook</a>
     <a href="/products" class="nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Toolkits</a>
+    <a href="/#playbook" class="nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Playbook</a>
     <a href="/about" class="nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Studio</a>
     <a href="/faq" class="nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Answers</a>
     <a href="/contact" class="nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Talk to us</a>
-    <a href="/cart" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Cart</a>
+    <a href="/cart" class="nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Cart</a>
+  </div>
+  <div class="px-5 py-4 border-t border-neutral-100">
+    <a href="/products" class="btn-primary block text-center text-white py-2.5 rounded-xl font-semibold text-sm">Browse toolkits</a>
   </div>
 </div>
 
@@ -62,5 +86,10 @@
   if(close)close.addEventListener('click',shut);
   if(overlay)overlay.addEventListener('click',shut);
   document.querySelectorAll('.nav-link').forEach(function(a){a.addEventListener('click',shut);});
+  var path=location.pathname.replace(/\/$/,'')||'/';
+  document.querySelectorAll('.nav-top[data-path]').forEach(function(a){
+    var p=a.getAttribute('data-path');
+    if(p===path||(p!=='/'&&path.indexOf(p)===0)){a.classList.add('is-active','text-neutral-900');}
+  });
 })();
 </script>

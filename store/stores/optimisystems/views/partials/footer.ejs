@@ -1,46 +1,176 @@
-<footer class="bg-neutral-950 text-neutral-400 mt-auto">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-8">
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
-      <div class="col-span-2 sm:col-span-1">
-        <div class="flex items-center gap-2 mb-3">
-          <div class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center">
-            <svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-6 4 14 3-8 2 4h4"/></svg>
-          </div>
-          <span class="text-white font-semibold text-sm"><%= store.name %></span>
-        </div>
-        <p class="text-xs leading-relaxed text-neutral-500 mb-4"><%= store.tagline %></p>
-      </div>
+<section class="relative overflow-hidden bg-neutral-950">
+  <div class="opt-mesh absolute inset-0 opacity-60"></div>
+  <div class="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-14">
+    <div class="opt-reveal opt-card rounded-2xl bg-white/[0.03] opt-glass border-white/10 p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center" style="background:rgba(255,255,255,0.04)">
       <div>
+        <h3 class="text-white font-bold text-lg sm:text-xl mb-1.5">The installer growth brief</h3>
+        <p class="text-neutral-400 text-xs leading-relaxed max-w-sm">One short email a month: a new ad angle, a tariff change worth knowing, and the toolkit we shipped. No fluff, unsubscribe anytime.</p>
+      </div>
+      <form class="flex flex-col sm:flex-row gap-2.5" onsubmit="event.preventDefault(); var b=this.querySelector('button'); var i=this.querySelector('input'); i.value=''; i.placeholder='You are on the list ✓'; b.textContent='Subscribed'; b.disabled=true;">
+        <input type="email" required placeholder="you@installer-brand.com" aria-label="Work email"
+          class="flex-1 bg-white/5 border border-white/10 text-white placeholder-neutral-500 rounded-xl px-4 py-3 text-sm focus:outline-none">
+        <button type="submit" class="btn-primary text-white px-5 py-3 rounded-xl font-semibold text-sm whitespace-nowrap">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-neutral-950 text-neutral-400 mt-auto border-t border-white/5">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-8">
+    <div class="grid grid-cols-2 md:grid-cols-12 gap-8 mb-10">
+      <div class="col-span-2 md:col-span-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+            <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-6 4 14 3-8 2 4h4"/></svg>
+          </div>
+          <span class="text-white font-bold text-sm"><%= store.name %></span>
+        </div>
+        <p class="text-xs leading-relaxed text-neutral-500 mb-5 max-w-xs"><%= store.tagline %></p>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-neutral-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> EU + UK focused
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-neutral-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">Since 2015</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="/contact" aria-label="LinkedIn" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11 21 14.1V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2.02 0-2.33 1.57-2.33 3.2V21H9z"/></svg>
+          </a>
+          <a href="/contact" aria-label="X" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2H21.5l-7.5 8.57L22.5 22h-6.9l-5.4-7.06L3.9 22H.64l8.02-9.17L1.5 2h7.07l4.88 6.45zM17.1 20.13h1.8L7.04 3.77H5.1z"/></svg>
+          </a>
+          <a href="mailto:<%= store.contact_email %>" aria-label="Email" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 011.5 17.25V6.75M21 6.75A2.25 2.25 0 0018.75 4.5h-15A2.25 2.25 0 001.5 6.75M21 6.75l-9 6.75-9-6.75"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
         <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Toolkits</h4>
         <ul class="space-y-2 text-xs">
           <li><a href="/products" class="hover:text-white transition">All toolkits</a></li>
-          <li><a href="/products" class="hover:text-white transition">Ad creative</a></li>
-          <li><a href="/products" class="hover:text-white transition">Sales scripts</a></li>
-          <li><a href="/products" class="hover:text-white transition">Service bundles</a></li>
+          <li><a href="/search?q=Ad%20Creative" class="hover:text-white transition">Ad creative</a></li>
+          <li><a href="/search?q=Sales%20Scripts" class="hover:text-white transition">Sales scripts</a></li>
+          <li><a href="/search?q=CRM%20Tools" class="hover:text-white transition">CRM tools</a></li>
+          <li><a href="/search?q=Service%20Bundles" class="hover:text-white transition">Service bundles</a></li>
         </ul>
       </div>
-      <div>
+      <div class="md:col-span-2">
         <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Studio</h4>
         <ul class="space-y-2 text-xs">
           <li><a href="/about" class="hover:text-white transition">About</a></li>
+          <li><a href="/#playbook" class="hover:text-white transition">The playbook</a></li>
           <li><a href="/contact" class="hover:text-white transition">Talk to us</a></li>
           <li><a href="/faq" class="hover:text-white transition">Answers</a></li>
         </ul>
       </div>
-      <div>
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Support</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/faq" class="hover:text-white transition">Help centre</a></li>
+          <li><a href="/contact" class="hover:text-white transition">Contact</a></li>
+          <li><a href="mailto:<%= store.contact_email %>" class="hover:text-white transition">Email us</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
         <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Legal</h4>
         <ul class="space-y-2 text-xs">
-          <li><a href="/terms" class="hover:text-white transition">Terms</a></li>
-          <li><a href="/privacy" class="hover:text-white transition">Privacy</a></li>
+          <li><a href="/terms" class="hover:text-white transition">Terms of service</a></li>
+          <li><a href="/terms#refunds" class="hover:text-white transition">Refund policy</a></li>
+          <li><a href="/privacy" class="hover:text-white transition">Privacy policy</a></li>
+          <li><a href="/privacy#cookies" class="hover:text-white transition">Cookie policy</a></li>
+          <li><a href="/terms#licence" class="hover:text-white transition">Licence</a></li>
         </ul>
       </div>
     </div>
-    <div class="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <p class="text-xs text-neutral-600">&copy; <%= new Date().getFullYear() %> <%= store.name %>. All rights reserved.</p>
-      <div class="flex items-center gap-3 opacity-40">
-        <svg class="h-5" viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="#1A1F71"/><path d="M15.6 16.3l2.4-9h2.9l-2.4 9h-2.9zm11.8-9l-2.7 6.2-.3-1.5-1-5.1s-.1-.6-.8-.6h-4.1l-.1.3s.8.2 1.8.5l2 7.2h3l4.6-7h-2.4zm-16.2 0h-4.5l-.1.3s.9.2 1.7.5c1 .4 1.1.6 1.3 1.3l2.3 7h3l4.7-9.1h-3l-3 6.2-1.2-5.3s-.2-.9-.9-.9z" fill="white"/></svg>
-        <svg class="h-5" viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="#000"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7.3a7 7 0 010 9.4 7 7 0 000-9.4z" fill="#FF5F00"/></svg>
+
+    <div class="border-t border-white/5 pt-6 flex flex-col gap-5">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3 text-[11px] text-neutral-500">
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Secure checkout
+          </span>
+          <span class="text-white/10">|</span>
+          <span>256-bit SSL</span>
+          <span class="text-white/10">|</span>
+          <span>PCI-DSS Level 1</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="Visa"><rect width="38" height="24" rx="4" fill="#1A1F71"/><path d="M15.6 16.3l2.4-9h2.9l-2.4 9h-2.9zm11.8-9l-2.7 6.2-.3-1.5-1-5.1s-.1-.6-.8-.6h-4.1l-.1.3s.8.2 1.8.5l2 7.2h3l4.6-7h-2.4zm-16.2 0h-4.5l-.1.3s.9.2 1.7.5c1 .4 1.1.6 1.3 1.3l2.3 7h3l4.7-9.1h-3l-3 6.2-1.2-5.3s-.2-.9-.9-.9z" fill="white"/></svg>
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="Mastercard"><rect width="38" height="24" rx="4" fill="#0b0b0b"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7.3a7 7 0 010 9.4 7 7 0 000-9.4z" fill="#FF5F00"/></svg>
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="American Express"><rect width="38" height="24" rx="4" fill="#2E77BC"/><path d="M7 9h24v6H7z" fill="#2E77BC"/><text x="19" y="15.4" font-family="Arial, sans-serif" font-size="6.5" font-weight="700" fill="#fff" text-anchor="middle">AMEX</text></svg>
+          <span class="h-6 px-2 rounded bg-white/[0.06] border border-white/10 flex items-center gap-1 text-[10px] font-semibold text-neutral-200"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6-.1 0-2.5-1-2.5-3.7zM14.2 6c.7-.8 1.1-1.9 1-3-1 .1-2.1.7-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg>Pay</span>
+          <span class="h-6 px-2 rounded bg-white/[0.06] border border-white/10 flex items-center text-[10px] font-semibold text-neutral-200">G&nbsp;Pay</span>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-600">
+        <p>&copy; <%= new Date().getFullYear() %> <%= store.name %>. All rights reserved. Charges appear as <%= store.statementDescriptor || store.name %>.</p>
+        <div class="flex items-center gap-4">
+          <a href="/terms" class="hover:text-neutral-300 transition">Terms</a>
+          <a href="/privacy" class="hover:text-neutral-300 transition">Privacy</a>
+          <span>Made in the EU</span>
+        </div>
       </div>
     </div>
   </div>
 </footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  root.classList.add('opt-js');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var reveals = [].slice.call(document.querySelectorAll('.opt-reveal'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    reveals.forEach(function(el){ el.classList.add('opt-in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          var d = e.target.getAttribute('data-delay');
+          if (d) e.target.style.transitionDelay = d + 'ms';
+          e.target.classList.add('opt-in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  function countUp(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    if (isNaN(target)) return;
+    var suffix = el.getAttribute('data-suffix') || '';
+    var prefix = el.getAttribute('data-prefix') || '';
+    var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    if (reduce) { el.textContent = prefix + target.toFixed(dec) + suffix; return; }
+    var dur = 1200, start = null;
+    function step(ts){
+      if (!start) start = ts;
+      var prog = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - prog, 3);
+      el.textContent = prefix + (target * eased).toFixed(dec) + suffix;
+      if (prog < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var counters = [].slice.call(document.querySelectorAll('[data-count]'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    counters.forEach(countUp);
+  } else {
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    counters.forEach(function(el){ cio.observe(el); });
+  }
+
+  var head = document.getElementById('opt-header');
+  if (head) {
+    var onScroll = function(){ head.classList.toggle('opt-head-scrolled', window.scrollY > 8); };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+})();
+</script>

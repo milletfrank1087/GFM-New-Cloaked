@@ -1,61 +1,86 @@
-<% const pageTitle = 'Privacy Policy'; const extraHead = ''; %>
+<%
+  const pageTitle = 'Privacy Policy';
+  const extraHead = '';
+  const email = store.contact_email || ('support@' + store.domain);
+  const updated = new Date().toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' });
+%>
 <%- include('../layouts/store', { body: `
-<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-  <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-1">Privacy Policy</h1>
-  <p class="text-xs text-neutral-400 mb-8">Last updated: ${new Date().toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+<section class="relative overflow-hidden opt-mesh border-b border-neutral-100">
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-14 opt-reveal">
+    <span class="inline-flex items-center gap-1.5 bg-white/70 opt-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4">Legal</span>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight mb-2">Privacy Policy</h1>
+    <p class="text-xs text-neutral-400">Last updated: ${updated}</p>
+  </div>
+</section>
 
-  <div class="bg-white opt-card rounded-xl p-6 space-y-6 text-neutral-500 text-xs leading-relaxed">
-    <p>${store.name} respects your privacy. This policy explains what information we collect when you visit our website or buy a toolkit, how we use it, and the choices you have. We act as a data controller for the data described below.</p>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <aside class="lg:col-span-4 lg:sticky lg:top-28 opt-reveal">
+      <div class="opt-card bg-white rounded-2xl p-5">
+        <p class="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-3">On this page</p>
+        <nav class="space-y-1 text-xs">
+          ${[
+            ['collect', 'Information we collect'],
+            ['use', 'How we use it'],
+            ['security', 'Security'],
+            ['processors', 'Third-party processors'],
+            ['cookies', 'Cookies'],
+            ['rights', 'Your rights'],
+            ['contact', 'Contact']
+          ].map(s => '<a href="#' + s[0] + '" class="block px-3 py-1.5 rounded-lg text-neutral-500 hover:bg-neutral-50 hover:text-primary transition">' + s[1] + '</a>').join('')}
+        </nav>
+      </div>
+    </aside>
 
-    <div>
-      <h2 class="text-sm font-bold text-neutral-900 mb-2">Information we collect</h2>
-      <ul class="list-disc pl-4 space-y-1">
-        <li><strong class="text-neutral-700">Order details:</strong> the name, business email and billing address you provide at checkout.</li>
-        <li><strong class="text-neutral-700">Payment data:</strong> handled directly by Stripe. We receive only metadata such as card brand, last four digits and country &mdash; never full card numbers.</li>
-        <li><strong class="text-neutral-700">Support communications:</strong> messages you send us and our replies, retained for support and audit purposes.</li>
-        <li><strong class="text-neutral-700">Usage data:</strong> anonymised analytics about pages viewed and toolkits downloaded, used to improve the catalogue.</li>
-      </ul>
-    </div>
+    <div class="lg:col-span-8 opt-reveal" data-delay="80">
+      <div class="opt-card bg-white rounded-2xl p-6 sm:p-8 space-y-7 text-neutral-500 text-sm leading-relaxed">
+        <p class="text-neutral-600">${store.name} respects your privacy. This policy explains what information we collect when you visit our website or buy a toolkit, how we use it, and the choices you have. We act as a data controller for the data described below.</p>
 
-    <div>
-      <h2 class="text-sm font-bold text-neutral-900 mb-2">How we use it</h2>
-      <ul class="list-disc pl-4 space-y-1">
-        <li>To fulfil and deliver your orders.</li>
-        <li>To send order confirmations and download links.</li>
-        <li>To provide customer support.</li>
-        <li>To improve the toolkits, dashboards and managed services we sell.</li>
-        <li>To meet our legal and tax obligations.</li>
-      </ul>
-    </div>
-
-    <div>
-      <h2 class="text-sm font-bold text-neutral-900 mb-2">Security</h2>
-      <p>All transactions are encrypted with 256-bit TLS. Payments are processed by Stripe under their PCI-DSS Level 1 certification. Order metadata is stored in EU-region databases with role-based access controls.</p>
-    </div>
-
-    <div>
-      <h2 class="text-sm font-bold text-neutral-900 mb-2">Third-party processors</h2>
-      <ul class="list-disc pl-4 space-y-1">
-        <li><strong class="text-neutral-700">Stripe:</strong> payment processing (<a href="https://stripe.com/privacy" target="_blank" rel="noopener" class="text-primary hover:underline">privacy policy</a>).</li>
-        <li><strong class="text-neutral-700">Email delivery:</strong> Resend, for transactional emails (order confirmations, support).</li>
-        <li><strong class="text-neutral-700">Analytics:</strong> privacy-friendly, IP-anonymised analytics for site improvement.</li>
-      </ul>
-      <p class="mt-2">We do not sell or rent personal information. We share data with third parties only as necessary to deliver the product you purchased.</p>
-    </div>
-
-    <div>
-      <h2 class="text-sm font-bold text-neutral-900 mb-2">Cookies</h2>
-      <p>We use essential cookies for session management and checkout. Optional analytics cookies are limited to first-party, IP-anonymised page-view counting.</p>
-    </div>
-
-    <div>
-      <h2 class="text-sm font-bold text-neutral-900 mb-2">Your rights</h2>
-      <p>Under UK GDPR and EU GDPR you have the right to access, correct, delete, restrict or port your personal data, and to object to processing. To exercise these rights, contact us at the email below.</p>
-    </div>
-
-    <div>
-      <h2 class="text-sm font-bold text-neutral-900 mb-2">Contact</h2>
-      <p>For privacy enquiries: <a href="mailto:${store.contact_email || 'support@' + store.domain}" class="text-primary hover:underline">${store.contact_email || 'support@' + store.domain}</a>.</p>
+        <div id="collect" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-neutral-900 mb-2">Information we collect</h2>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong class="text-neutral-700">Order details:</strong> the name, business email and billing address you provide at checkout.</li>
+            <li><strong class="text-neutral-700">Payment data:</strong> handled directly by Stripe. We receive only metadata such as card brand, last four digits and country &mdash; never full card numbers.</li>
+            <li><strong class="text-neutral-700">Support communications:</strong> messages you send us and our replies, retained for support and audit purposes.</li>
+            <li><strong class="text-neutral-700">Usage data:</strong> anonymised analytics about pages viewed and toolkits downloaded, used to improve the catalogue.</li>
+          </ul>
+        </div>
+        <div id="use" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-neutral-900 mb-2">How we use it</h2>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>To fulfil and deliver your orders.</li>
+            <li>To send order confirmations and download links.</li>
+            <li>To provide customer support.</li>
+            <li>To improve the toolkits, dashboards and managed services we sell.</li>
+            <li>To meet our legal and tax obligations.</li>
+          </ul>
+        </div>
+        <div id="security" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-neutral-900 mb-2">Security</h2>
+          <p>All transactions are encrypted with 256-bit TLS. Payments are processed by Stripe under their PCI-DSS Level 1 certification. Order metadata is stored in EU-region databases with role-based access controls.</p>
+        </div>
+        <div id="processors" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-neutral-900 mb-2">Third-party processors</h2>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong class="text-neutral-700">Stripe:</strong> payment processing (<a href="https://stripe.com/privacy" target="_blank" rel="noopener" class="text-primary hover:underline">privacy policy</a>).</li>
+            <li><strong class="text-neutral-700">Email delivery:</strong> Resend, for transactional emails (order confirmations, support).</li>
+            <li><strong class="text-neutral-700">Analytics:</strong> privacy-friendly, IP-anonymised analytics for site improvement.</li>
+          </ul>
+          <p class="mt-2">We do not sell or rent personal information. We share data with third parties only as necessary to deliver the product you purchased.</p>
+        </div>
+        <div id="cookies" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-neutral-900 mb-2">Cookies</h2>
+          <p>We use essential cookies for session management and checkout. Optional analytics cookies are limited to first-party, IP-anonymised page-view counting. You can clear or block cookies in your browser settings; essential cookies are required for checkout to function.</p>
+        </div>
+        <div id="rights" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-neutral-900 mb-2">Your rights</h2>
+          <p>Under UK GDPR and EU GDPR you have the right to access, correct, delete, restrict or port your personal data, and to object to processing. To exercise these rights, contact us at the email below.</p>
+        </div>
+        <div id="contact" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-neutral-900 mb-2">Contact</h2>
+          <p>For privacy enquiries: <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

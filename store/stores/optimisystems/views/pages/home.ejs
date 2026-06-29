@@ -1,58 +1,178 @@
-<% const pageTitle = 'Home'; const extraHead = ''; %>
+<%
+  const pageTitle = 'Home';
+  const extraHead = '';
+  const cats = [...new Set((store.products || (typeof products !== 'undefined' ? products : []) || []).map(p => p.category).filter(Boolean))];
+  const catBlurb = {
+    'Quoting Tools': 'Turn roof size and tariffs into a clean one-page quote.',
+    'Email Sequences': 'Outreach cadences and nurture flows that get replies.',
+    'Sales Scripts': 'Discovery calls and surveys that book installs.',
+    'Ad Creative': 'Tested hooks, swipe files and landing wireframes.',
+    'Market Reports': 'Tariffs, incentives and pricing intelligence.',
+    'CRM Tools': 'Pipelines, automations and reporting dashboards.',
+    'Lead Templates': 'Upsell playbooks and reusable lead assets.',
+    'Service Bundles': 'Managed engagements and full growth partnerships.'
+  };
+  const catCount = (c) => (store.products || []).filter(p => p.category === c).length;
+%>
 <%- include('../layouts/store', { body: `
 
-<section class="py-12 md:py-20">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="max-w-2xl">
-      <div class="inline-flex items-center gap-1.5 bg-primary-50 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-5">
-        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>
-        Used by 320+ installer brands across the EU
+<section class="relative overflow-hidden opt-mesh">
+  <div class="opt-grid-bg absolute inset-0 pointer-events-none opacity-70"></div>
+  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-6 opt-reveal">
+        <div class="inline-flex items-center gap-1.5 bg-white/70 opt-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-5 shadow-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-primary opt-ring"></span>
+          Used by <span data-count="320" data-suffix="+" data-decimals="0">320+</span> installer brands across the EU
+        </div>
+        <h1 class="text-3xl sm:text-4xl md:text-[3.25rem] font-extrabold text-neutral-900 leading-[1.1] tracking-tight mb-5">
+          Lead generation tooling, built for <span class="opt-grad-text">solar installers</span>
+        </h1>
+        <p class="text-base sm:text-lg text-neutral-500 leading-relaxed mb-7 max-w-lg">
+          Off-the-shelf ad creative, sales scripts, CRM blueprints and quarterly market reports we use to run paid acquisition for residential and commercial installer brands. Download once, use across every campaign.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="/products" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-xl font-semibold text-sm">
+            Browse toolkits
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </a>
+          <a href="#playbook" class="inline-flex items-center justify-center gap-2 text-neutral-700 bg-white border border-neutral-200 px-6 py-3.5 rounded-xl font-semibold text-sm transition hover:border-neutral-300 hover:shadow-sm">
+            See how it fits together
+          </a>
+        </div>
+        <div class="flex items-center gap-5 mt-8">
+          <div class="flex -space-x-2">
+            ${['HR','TK','AP','SM'].map((it, i) => '<div class="w-8 h-8 rounded-full ring-2 ring-white flex items-center justify-center text-[10px] font-bold text-white ' + ['bg-emerald-500','bg-sky-500','bg-amber-500','bg-violet-500'][i] + '">' + it + '</div>').join('')}
+          </div>
+          <div>
+            <div class="flex items-center gap-0.5 text-amber-400">${Array(5).fill('<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.07 3.29a1 1 0 00.95.69h3.46c.97 0 1.37 1.24.59 1.81l-2.8 2.03a1 1 0 00-.37 1.12l1.07 3.29c.3.92-.75 1.69-1.54 1.12l-2.8-2.03a1 1 0 00-1.17 0l-2.8 2.03c-.78.57-1.84-.2-1.54-1.12l1.07-3.29a1 1 0 00-.37-1.12L2.98 8.72c-.78-.57-.38-1.81.59-1.81h3.46a1 1 0 00.95-.69L9.05 2.93z"/></svg>').join('')}</div>
+            <p class="text-[11px] text-neutral-400 mt-0.5">Rated 4.8/5 by installer marketing leads</p>
+          </div>
+        </div>
       </div>
-      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-neutral-900 leading-[1.15] mb-4">
-        Lead generation tooling, built specifically for solar installers
-      </h1>
-      <p class="text-base sm:text-lg text-neutral-500 leading-relaxed mb-7 max-w-lg">
-        Off-the-shelf ad creative, sales scripts, CRM blueprints and quarterly market reports we use to run lead generation programmes for residential and commercial installer brands. Download once, use across every campaign.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-3">
-        <a href="/products" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm transition hover:shadow-lg hover:shadow-primary/20">
-          Browse toolkits
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
-        </a>
-        <a href="#playbook" class="inline-flex items-center justify-center gap-2 text-neutral-600 bg-white border border-neutral-200 px-6 py-3 rounded-xl font-semibold text-sm transition hover:border-neutral-300">
-          See how it fits together
-        </a>
+
+      <div class="lg:col-span-6 opt-reveal" data-delay="120">
+        <div class="relative">
+          <div class="opt-card opt-glass rounded-2xl p-5 shadow-xl shadow-emerald-900/5 bg-white/80">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <p class="text-[11px] text-neutral-400 font-medium">Installer pipeline · this quarter</p>
+                <p class="text-lg font-bold text-neutral-900">Acquisition snapshot</p>
+              </div>
+              <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 7-7"/></svg>
+                +38%
+              </span>
+            </div>
+            <div class="grid grid-cols-3 gap-2.5 mb-5">
+              ${[
+                { l: 'Leads', v: '1,284', c: 'text-neutral-900' },
+                { l: 'Surveys booked', v: '372', c: 'text-neutral-900' },
+                { l: 'Signed', v: '96', c: 'text-emerald-600' }
+              ].map(m => '<div class="rounded-xl bg-neutral-50 border border-neutral-100 p-3">' +
+                '<p class="text-[10px] text-neutral-400 mb-1">' + m.l + '</p>' +
+                '<p class="text-base font-bold ' + m.c + '">' + m.v + '</p>' +
+              '</div>').join('')}
+            </div>
+            <div class="rounded-xl bg-neutral-50 border border-neutral-100 p-4">
+              <div class="flex items-center justify-between mb-3">
+                <p class="text-[11px] font-semibold text-neutral-600">Signed installs / month</p>
+                <p class="text-[10px] text-neutral-400">last 6 mo</p>
+              </div>
+              <div class="flex items-end gap-2 h-24">
+                ${[42, 58, 51, 73, 66, 94].map((h, i) => '<div class="flex-1 flex flex-col items-center gap-1">' +
+                  '<div class="w-full rounded-t-md ' + (i === 5 ? 'bg-primary' : 'bg-primary/30') + ' opt-bar" style="height:' + h + '%;animation-delay:' + (i * 90) + 'ms"></div>' +
+                  '<span class="text-[9px] text-neutral-400">' + ['M','A','M','J','J','A'][i] + '</span>' +
+                '</div>').join('')}
+              </div>
+            </div>
+          </div>
+          <div class="absolute -top-4 -right-3 opt-float opt-card bg-white rounded-xl shadow-lg p-3 hidden sm:flex items-center gap-2.5" style="animation-delay:.4s">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.63 8.5m5.96 5.87a14.93 14.93 0 01-5.96-5.87m0 0a14.93 14.93 0 00-5.84 7.38v0a6 6 0 005.84 7.38"/></svg>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-neutral-900 leading-none">New survey booked</p>
+              <p class="text-[10px] text-neutral-400 mt-0.5">Bavaria · 6.4 kW</p>
+            </div>
+          </div>
+          <div class="absolute -bottom-4 -left-3 opt-float opt-card bg-white rounded-xl shadow-lg p-3 hidden sm:block" style="animation-delay:1.1s">
+            <p class="text-[10px] text-neutral-400 leading-none mb-1">Blended CAC</p>
+            <p class="text-sm font-bold text-neutral-900">&euro;214 <span class="text-[10px] font-semibold text-emerald-600">&darr; 19%</span></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="border-y border-neutral-100 bg-neutral-50/60">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-      <div>
-        <p class="text-xl sm:text-2xl font-bold text-neutral-900">320+</p>
-        <p class="text-xs text-neutral-400 mt-0.5">Installer brands</p>
-      </div>
-      <div>
-        <p class="text-xl sm:text-2xl font-bold text-neutral-900">11 yrs</p>
-        <p class="text-xs text-neutral-400 mt-0.5">Running paid media</p>
-      </div>
-      <div>
-        <p class="text-xl sm:text-2xl font-bold text-neutral-900">24</p>
-        <p class="text-xs text-neutral-400 mt-0.5">Production toolkits</p>
-      </div>
-      <div>
-        <p class="text-xl sm:text-2xl font-bold text-neutral-900">EU + UK</p>
-        <p class="text-xs text-neutral-400 mt-0.5">Coverage focus</p>
+<section class="border-y border-neutral-100 bg-white/60 overflow-hidden">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5">
+    <div class="opt-marquee relative">
+      <div class="opt-marquee-track gap-10 text-xs font-semibold text-neutral-300 whitespace-nowrap">
+        ${Array(2).fill(['SOLARIS EPC','NordVolt','BrightRoof','HelioWorks','VoltHome','EcoFit Energy','SunPath','GridPoint Solar'].map(b => '<span class="inline-flex items-center gap-2">' + b + '<span class="w-1 h-1 rounded-full bg-neutral-200"></span></span>').join('')).join('')}
       </div>
     </div>
   </div>
 </section>
 
-<section id="playbook" class="py-12 md:py-16 scroll-mt-16">
+<section class="bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      ${[
+        { v: '320', suf: '+', l: 'Installer brands served', d: '0' },
+        { v: '11', suf: ' yrs', l: 'Running paid media', d: '80' },
+        { v: '24', suf: '', l: 'Production toolkits', d: '160' },
+        { v: '38', suf: '%', l: 'Avg. pipeline lift', d: '240' }
+      ].map(s => '<div class="opt-reveal text-center rounded-2xl border border-neutral-100 bg-neutral-50/60 p-5" data-delay="' + s.d + '">' +
+        '<p class="text-2xl sm:text-3xl font-extrabold text-neutral-900"><span data-count="' + s.v + '" data-suffix="' + s.suf + '" data-decimals="0">' + s.v + s.suf + '</span></p>' +
+        '<p class="text-xs text-neutral-400 mt-1">' + s.l + '</p>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section class="bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+    <div class="flex items-end justify-between flex-wrap gap-3 mb-8 opt-reveal">
+      <div class="max-w-xl">
+        <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">Browse by category</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-neutral-900">Everything an installer funnel needs</h2>
+      </div>
+      <a href="/products" class="text-sm text-primary font-semibold opt-link">All ${cats.length} categories</a>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      ${cats.map((c, i) => {
+        const accents = ['bg-emerald-50 text-emerald-600','bg-sky-50 text-sky-600','bg-amber-50 text-amber-600','bg-violet-50 text-violet-600','bg-rose-50 text-rose-600','bg-teal-50 text-teal-600','bg-indigo-50 text-indigo-600','bg-lime-50 text-lime-600'];
+        const icons = [
+          'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z',
+          'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75',
+          'M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.76 9.76 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z',
+          'M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z',
+          'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z',
+          'M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z',
+          'M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z',
+          'M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z'
+        ];
+        const q = encodeURIComponent(c);
+        return '<a href="/search?q=' + q + '" class="opt-reveal opt-lift group block opt-card rounded-2xl bg-white p-5" data-delay="' + (i * 60) + '">' +
+          '<div class="w-11 h-11 rounded-xl ' + accents[i % accents.length] + ' flex items-center justify-center mb-4">' +
+            '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="' + icons[i % icons.length] + '"/></svg>' +
+          '</div>' +
+          '<div class="flex items-center justify-between mb-1">' +
+            '<h3 class="font-semibold text-neutral-900 text-sm group-hover:text-primary transition">' + c + '</h3>' +
+            '<span class="text-[10px] text-neutral-400">' + catCount(c) + '</span>' +
+          '</div>' +
+          '<p class="text-xs text-neutral-500 leading-relaxed">' + (catBlurb[c] || 'Production-ready assets for installer marketing teams.') + '</p>' +
+        '</a>';
+      }).join('')}
+    </div>
+  </div>
+</section>
+
+<section id="playbook" class="py-12 md:py-16 scroll-mt-20 bg-neutral-50/60 border-y border-neutral-100">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <div class="max-w-2xl mb-10">
+    <div class="max-w-2xl mb-10 opt-reveal">
       <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">The playbook</span>
       <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 mb-3">Four assets that move installer pipelines</h2>
       <p class="text-sm text-neutral-500 leading-relaxed">Every installer agency we work with eventually rebuilds the same four pieces from scratch. We packaged the production-ready versions so your team can skip the rebuild and start generating qualified appointments in week one.</p>
@@ -63,68 +183,113 @@
         { num: '02', t: 'A discovery call structure your reps will use', d: 'A twenty-minute first call script that qualifies on roof age, electricity bill, ownership and decision timing without sounding scripted.' },
         { num: '03', t: 'A CRM pipeline that mirrors how the deal really moves', d: 'Stages, automations and forecasting that reflect surveys, design approval, finance application and install scheduling. Compatible with HubSpot, Pipedrive and Close.' },
         { num: '04', t: 'A dashboard your leadership team trusts', d: 'A weekly Looker Studio view that ties ad spend to signed contracts and net new MWp installed. Surfaces channel-level CAC inside a single page.' }
-      ].map(s => '<div class="opt-card bg-white rounded-xl p-5">' +
-        '<span class="inline-block text-[10px] font-bold text-primary tracking-widest mb-3">' + s.num + '</span>' +
-        '<h3 class="font-semibold text-neutral-900 text-sm mb-2">' + s.t + '</h3>' +
+      ].map((s, i) => '<div class="opt-reveal opt-lift bg-white opt-card rounded-2xl p-6 relative overflow-hidden" data-delay="' + (i * 80) + '">' +
+        '<span class="absolute -top-4 -right-2 text-7xl font-black text-neutral-50 select-none">' + s.num + '</span>' +
+        '<span class="relative inline-flex items-center justify-center w-9 h-9 rounded-lg bg-primary-50 text-primary text-xs font-bold mb-3">' + s.num + '</span>' +
+        '<h3 class="relative font-semibold text-neutral-900 text-sm mb-2">' + s.t + '</h3>' +
+        '<p class="relative text-xs text-neutral-500 leading-relaxed">' + s.d + '</p>' +
+      '</div>').join('')}
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-16 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="flex items-end justify-between flex-wrap gap-3 mb-8 opt-reveal">
+      <div>
+        <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">Most downloaded</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-neutral-900">Featured toolkits</h2>
+        <p class="text-sm text-neutral-400 mt-1">${(store.products || []).length} downloadable assets, sorted by depth.</p>
+      </div>
+      <a href="/products" class="text-sm text-primary font-semibold opt-link">View full catalogue</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      ${(store.products || []).slice(0, 6).map((p, i) => {
+        const accents = ['from-emerald-500/15 to-emerald-500/5 text-emerald-600','from-sky-500/15 to-sky-500/5 text-sky-600','from-amber-500/15 to-amber-500/5 text-amber-600','from-violet-500/15 to-violet-500/5 text-violet-600','from-rose-500/15 to-rose-500/5 text-rose-600','from-teal-500/15 to-teal-500/5 text-teal-600'];
+        return '<a href="/products/' + (p.slug || '') + '" class="opt-reveal opt-lift group flex flex-col bg-white opt-card rounded-2xl overflow-hidden" data-delay="' + (i * 70) + '">' +
+          '<div class="relative h-28 bg-gradient-to-br ' + accents[i % 6] + ' flex items-center justify-center">' +
+            '<svg class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5-3v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3l2-2h4l2 2h3a2 2 0 012 2z"/></svg>' +
+            '<span class="absolute top-3 left-3 text-[10px] font-semibold text-neutral-700 bg-white/85 opt-glass px-2 py-0.5 rounded-full">' + (p.category || 'Toolkit') + '</span>' +
+          '</div>' +
+          '<div class="p-4 flex flex-col flex-1">' +
+            '<h3 class="font-semibold text-neutral-900 text-sm mb-1 group-hover:text-primary transition">' + p.name + '</h3>' +
+            '<p class="text-xs text-neutral-400 leading-relaxed line-clamp-2 mb-4 flex-1">' + (p.description || '') + '</p>' +
+            '<div class="flex items-center justify-between">' +
+              '<span class="text-base font-bold text-neutral-900">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+              '<span class="inline-flex items-center gap-1 text-xs font-semibold text-primary">View<svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></span>' +
+            '</div>' +
+          '</div>' +
+        '</a>';
+      }).join('')}
+    </div>
+    <div class="mt-8 text-center opt-reveal">
+      <a href="/products" class="btn-primary inline-flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm">See all ${(store.products || []).length} toolkits
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-16 bg-neutral-50/60 border-y border-neutral-100">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl mb-10 opt-reveal">
+      <span class="inline-block text-[10px] font-semibold text-primary uppercase tracking-wider mb-2">How a managed engagement runs</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-neutral-900">From diagnostic to dashboard in four steps</h2>
+    </div>
+    <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      ${[
+        { n: '1', t: 'Diagnostic week', d: 'We audit ad accounts, CRM hygiene, follow-up speed and offer-market fit. Output is a short brief, not a deck.' },
+        { n: '2', t: 'Pipeline rebuild', d: 'We rebuild CRM stages, sales scripts and reporting so every rep tracks leads the same way.' },
+        { n: '3', t: 'Creative production', d: 'Three to five tested ad concepts a month, including copy, design and landing pages tuned to installer offers.' },
+        { n: '4', t: 'Quarterly review', d: 'We cut what is not working, share an updated market briefing and re-set targets with leadership.' }
+      ].map((s, i) => '<div class="opt-reveal relative bg-white opt-card rounded-2xl p-5" data-delay="' + (i * 90) + '">' +
+        '<div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm mb-3">' + s.n + '</div>' +
+        '<h3 class="font-semibold text-neutral-900 text-sm mb-1.5">' + s.t + '</h3>' +
         '<p class="text-xs text-neutral-500 leading-relaxed">' + s.d + '</p>' +
       '</div>').join('')}
     </div>
   </div>
 </section>
 
-<section class="py-12 md:py-16">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="mb-8">
-      <h2 class="text-xl sm:text-2xl font-bold text-neutral-900">Featured toolkits</h2>
-      <p class="text-sm text-neutral-400 mt-1">${(products || []).length} downloadable assets, sorted by depth.</p>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      ${(products || []).slice(0, 12).map((p, i) => {
-        const accents = ['bg-emerald-50 text-emerald-600','bg-sky-50 text-sky-600','bg-amber-50 text-amber-600','bg-violet-50 text-violet-600','bg-rose-50 text-rose-600','bg-teal-50 text-teal-600'];
-        return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white opt-card rounded-xl p-4 hover:shadow-sm transition-all">' +
-          '<div class="w-10 h-10 rounded-lg ' + accents[i % 6] + ' flex items-center justify-center shrink-0">' +
-            '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5-3v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3l2-2h4l2 2h3a2 2 0 012 2z"/></svg>' +
-          '</div>' +
-          '<div class="flex-1 min-w-0">' +
-            '<h3 class="font-semibold text-neutral-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
-            '<p class="text-xs text-neutral-400 mt-0.5">' + (p.category || 'Toolkit') + '</p>' +
-          '</div>' +
-          '<span class="text-sm font-bold text-neutral-900 shrink-0">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
-        '</a>';
-      }).join('')}
-    </div>
-    <div class="mt-6 text-center">
-      <a href="/products" class="text-sm text-primary font-semibold hover:underline">See all ${(products || []).length} toolkits &rarr;</a>
-    </div>
-  </div>
-</section>
-
-<section class="bg-neutral-50 py-12 md:py-16">
+<section class="py-12 md:py-16 bg-white">
   <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 text-center mb-3">What installer founders actually say</h2>
-    <p class="text-sm text-neutral-400 text-center mb-10 max-w-lg mx-auto">Pulled from quarterly debriefs with installer leadership using these toolkits in live campaigns.</p>
+    <div class="text-center max-w-xl mx-auto mb-10 opt-reveal">
+      <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 mb-3">What installer founders actually say</h2>
+      <p class="text-sm text-neutral-400">Pulled from quarterly debriefs with installer leadership running these toolkits in live campaigns.</p>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       ${[
         { name: 'Helena R.', role: 'MD, residential installer (DE)', text: 'We replaced our retainer agency with two of these toolkits and a part-time strategist. Pipeline coverage went up about 40 percent in the first quarter.' },
         { name: 'Tomasz K.', role: 'CMO, commercial EPC (PL)', text: 'The CRM pipeline template was honestly worth the entire annual partnership. It finally surfaces where our deals stall.' },
-        { name: 'Aurélien P.', role: 'Founder, regional installer (FR)', text: 'I have downloaded a lot of templates over the years. This is the first set that was written by someone who has actually run installer ads.' }
-      ].map(t => '<div class="bg-white opt-card rounded-xl p-5">' +
-        '<div class="flex items-center gap-0.5 mb-3">' + Array(5).fill('<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.07 3.29a1 1 0 00.95.69h3.46c.97 0 1.37 1.24.59 1.81l-2.8 2.03a1 1 0 00-.37 1.12l1.07 3.29c.3.92-.75 1.69-1.54 1.12l-2.8-2.03a1 1 0 00-1.17 0l-2.8 2.03c-.78.57-1.84-.2-1.54-1.12l1.07-3.29a1 1 0 00-.37-1.12L2.98 8.72c-.78-.57-.38-1.81.59-1.81h3.46a1 1 0 00.95-.69L9.05 2.93z"/></svg>').join('') + '</div>' +
-        '<p class="text-neutral-600 text-xs leading-relaxed mb-4">"' + t.text + '"</p>' +
-        '<div class="flex items-center gap-2.5">' +
-          '<div class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-xs font-semibold text-neutral-500">' + t.name.split(' ').map(w => w[0]).join('') + '</div>' +
+        { name: 'Aur\u00e9lien P.', role: 'Founder, regional installer (FR)', text: 'I have downloaded a lot of templates over the years. This is the first set written by someone who has actually run installer ads.' }
+      ].map((t, i) => '<figure class="opt-reveal opt-lift bg-white opt-card rounded-2xl p-6 flex flex-col" data-delay="' + (i * 80) + '">' +
+        '<div class="flex items-center gap-0.5 mb-3 text-amber-400">' + Array(5).fill('<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.07 3.29a1 1 0 00.95.69h3.46c.97 0 1.37 1.24.59 1.81l-2.8 2.03a1 1 0 00-.37 1.12l1.07 3.29c.3.92-.75 1.69-1.54 1.12l-2.8-2.03a1 1 0 00-1.17 0l-2.8 2.03c-.78.57-1.84-.2-1.54-1.12l1.07-3.29a1 1 0 00-.37-1.12L2.98 8.72c-.78-.57-.38-1.81.59-1.81h3.46a1 1 0 00.95-.69L9.05 2.93z"/></svg>').join('') + '</div>' +
+        '<blockquote class="text-neutral-600 text-xs leading-relaxed mb-5 flex-1">&ldquo;' + t.text + '&rdquo;</blockquote>' +
+        '<figcaption class="flex items-center gap-2.5">' +
+          '<div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-[11px] font-bold text-white">' + t.name.split(' ').map(w => w[0]).join('') + '</div>' +
           '<div><p class="text-xs font-semibold text-neutral-900">' + t.name + '</p><p class="text-[10px] text-neutral-400">' + t.role + '</p></div>' +
-        '</div>' +
-      '</div>').join('')}
+        '</figcaption>' +
+      '</figure>').join('')}
     </div>
   </div>
 </section>
 
-<section class="py-12 md:py-16 scroll-mt-16">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-    <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 mb-3">Want a private walkthrough?</h2>
-    <p class="text-sm text-neutral-500 leading-relaxed mb-6">Book a 30-minute call with our team. We will share the toolkits that map to your current funnel gaps and answer whatever you ask. No pitch deck, no slides.</p>
-    <a href="/contact" class="btn-primary inline-flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:shadow-lg">Talk to us &rarr;</a>
+<section class="py-12 md:py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="opt-reveal relative overflow-hidden rounded-3xl bg-neutral-950 px-6 sm:px-12 py-12 md:py-16 text-center">
+      <div class="opt-mesh absolute inset-0 opacity-70"></div>
+      <div class="opt-grid-bg absolute inset-0 opacity-40"></div>
+      <div class="relative">
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-3 max-w-2xl mx-auto">Want a private walkthrough of your funnel?</h2>
+        <p class="text-sm text-neutral-400 leading-relaxed mb-7 max-w-lg mx-auto">Book a 30-minute call. We will share the toolkits that map to your current funnel gaps and answer whatever you ask. No pitch deck, no slides.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/contact" class="btn-primary inline-flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-xl font-semibold text-sm">Talk to us
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </a>
+          <a href="/products" class="inline-flex items-center justify-center gap-2 text-white bg-white/10 border border-white/15 px-6 py-3.5 rounded-xl font-semibold text-sm transition hover:bg-white/15">Browse toolkits</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

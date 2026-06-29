@@ -1,31 +1,66 @@
-<% const pageTitle = typeof searchQuery !== 'undefined' && searchQuery ? 'Search: ' + searchQuery : 'Toolkits'; const extraHead = ''; %>
+<%
+  const pageTitle = typeof searchQuery !== 'undefined' && searchQuery ? 'Search: ' + searchQuery : 'Toolkits';
+  const extraHead = '';
+  const allCats = [...new Set((store.products || []).map(p => p.category).filter(Boolean))];
+  const activeQ = (typeof searchQuery !== 'undefined' ? searchQuery : '') || '';
+%>
 <%- include('../layouts/store', { body: `
-<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-12">
-  <div class="mb-8">
-    <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-1">${typeof searchQuery !== 'undefined' && searchQuery ? 'Results for "' + searchQuery + '"' : 'Toolkit catalogue'}</h1>
-    <p class="text-sm text-neutral-400">${(products || []).length} downloadable toolkits and managed bundles.</p>
-  </div>
-
-  <div class="sm:hidden mb-6">
-    <form action="/search" method="GET">
-      <input type="text" name="q" placeholder="Search toolkits..." value="${typeof searchQuery !== 'undefined' ? searchQuery : ''}" class="w-full border border-neutral-200 rounded-lg px-3.5 py-2.5 text-sm bg-neutral-50">
+<section class="relative overflow-hidden opt-mesh border-b border-neutral-100">
+  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+    <nav class="flex items-center gap-1.5 text-xs text-neutral-400 mb-4 opt-reveal">
+      <a href="/" class="hover:text-neutral-600 transition">Home</a>
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+      <span class="text-neutral-600">${activeQ ? 'Search' : 'Toolkits'}</span>
+    </nav>
+    <div class="max-w-2xl opt-reveal">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-2">${activeQ ? 'Results for &ldquo;' + activeQ + '&rdquo;' : 'Toolkit catalogue'}</h1>
+      <p class="text-sm text-neutral-500">${(products || []).length} downloadable toolkit${(products || []).length === 1 ? '' : 's'} and managed bundles, written and field-tested by our studio.</p>
+    </div>
+    <form action="/search" method="GET" class="mt-6 max-w-md opt-reveal" data-delay="60">
+      <div class="relative">
+        <svg class="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.3-4.3m1.8-4.45a6.25 6.25 0 11-12.5 0 6.25 6.25 0 0112.5 0z"/></svg>
+        <input type="text" name="q" placeholder="Search toolkits, scripts, reports..." value="${activeQ}" class="w-full bg-white border border-neutral-200 rounded-xl pl-10 pr-4 py-3 text-sm shadow-sm focus:outline-none">
+      </div>
     </form>
   </div>
+</section>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-    ${(products || []).map((p, i) => {
-      const accents = ['bg-emerald-50 text-emerald-600','bg-sky-50 text-sky-600','bg-amber-50 text-amber-600','bg-violet-50 text-violet-600','bg-rose-50 text-rose-600','bg-teal-50 text-teal-600'];
-      return '<a href="/products/' + (p.slug || '') + '" class="group flex items-center gap-4 bg-white opt-card rounded-xl p-4 hover:shadow-sm transition-all">' +
-        '<div class="w-10 h-10 rounded-lg ' + accents[i % 6] + ' flex items-center justify-center shrink-0">' +
-          '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5-3v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3l2-2h4l2 2h3a2 2 0 012 2z"/></svg>' +
-        '</div>' +
-        '<div class="flex-1 min-w-0">' +
-          '<h3 class="font-semibold text-neutral-900 text-sm truncate group-hover:text-primary transition">' + p.name + '</h3>' +
-          '<p class="text-xs text-neutral-400 mt-0.5 truncate">' + (p.description || p.category || 'Toolkit') + '</p>' +
-        '</div>' +
-        '<span class="font-bold text-neutral-900 text-sm shrink-0">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
-      '</a>';
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-10">
+  <div class="flex flex-wrap items-center gap-2 mb-8 opt-reveal">
+    <a href="/products" class="opt-chip text-xs font-semibold px-3.5 py-2 rounded-full border ${activeQ ? 'border-neutral-200 text-neutral-500 bg-white hover:border-neutral-300' : 'border-primary bg-primary text-white'}">All toolkits</a>
+    ${allCats.map(c => {
+      const on = activeQ.toLowerCase() === c.toLowerCase();
+      return '<a href="/search?q=' + encodeURIComponent(c) + '" class="opt-chip text-xs font-semibold px-3.5 py-2 rounded-full border ' + (on ? 'border-primary bg-primary text-white' : 'border-neutral-200 text-neutral-500 bg-white hover:border-neutral-300 hover:text-neutral-700') + '">' + c + '</a>';
     }).join('')}
   </div>
+
+  ${(products || []).length === 0 ? (
+    '<div class="text-center py-16 opt-reveal">' +
+      '<div class="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7 text-neutral-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.3-4.3m1.8-4.45a6.25 6.25 0 11-12.5 0 6.25 6.25 0 0112.5 0z"/></svg></div>' +
+      '<h2 class="text-lg font-bold text-neutral-900 mb-2">No toolkits match that search</h2>' +
+      '<p class="text-sm text-neutral-400 mb-6">Try a broader term, or browse the full catalogue.</p>' +
+      '<a href="/products" class="btn-primary inline-block text-white px-6 py-2.5 rounded-xl font-semibold text-sm">View all toolkits</a>' +
+    '</div>'
+  ) : (
+  '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">' +
+    (products || []).map((p, i) => {
+      const accents = ['from-emerald-500/15 to-emerald-500/5 text-emerald-600','from-sky-500/15 to-sky-500/5 text-sky-600','from-amber-500/15 to-amber-500/5 text-amber-600','from-violet-500/15 to-violet-500/5 text-violet-600','from-rose-500/15 to-rose-500/5 text-rose-600','from-teal-500/15 to-teal-500/5 text-teal-600'];
+      return '<a href="/products/' + (p.slug || '') + '" class="opt-reveal opt-lift group flex flex-col bg-white opt-card rounded-2xl overflow-hidden" data-delay="' + ((i % 3) * 60) + '">' +
+        '<div class="relative h-24 bg-gradient-to-br ' + accents[i % 6] + ' flex items-center justify-center">' +
+          '<svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5-3v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3l2-2h4l2 2h3a2 2 0 012 2z"/></svg>' +
+          '<span class="absolute top-2.5 left-2.5 text-[10px] font-semibold text-neutral-700 bg-white/85 opt-glass px-2 py-0.5 rounded-full">' + (p.category || 'Toolkit') + '</span>' +
+        '</div>' +
+        '<div class="p-4 flex flex-col flex-1">' +
+          '<h3 class="font-semibold text-neutral-900 text-sm mb-1 group-hover:text-primary transition">' + p.name + '</h3>' +
+          '<p class="text-xs text-neutral-400 leading-relaxed line-clamp-2 mb-4 flex-1">' + (p.description || '') + '</p>' +
+          '<div class="flex items-center justify-between">' +
+            '<span class="text-base font-bold text-neutral-900">\u20ac' + (p.price?.toFixed(2) || '0.00') + '</span>' +
+            '<span class="inline-flex items-center gap-1 text-xs font-semibold text-primary">View<svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></span>' +
+          '</div>' +
+        '</div>' +
+      '</a>';
+    }).join('') +
+  '</div>'
+  )}
 </div>
 `, store, products, searchQuery: typeof searchQuery !== 'undefined' ? searchQuery : '' }) %>

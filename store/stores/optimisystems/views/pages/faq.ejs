@@ -1,36 +1,66 @@
-<% const pageTitle = 'Answers'; const extraHead = ''; %>
+<%
+  const pageTitle = 'Answers';
+  const extraHead = '';
+  const email = store.contact_email || ('support@' + store.domain);
+%>
 <%- include('../layouts/store', { body: `
-<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-  <div class="mb-8">
-    <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">Answers</h1>
-    <p class="text-sm text-neutral-400">Common questions installer founders and marketing leads ask before they buy.</p>
+<section class="relative overflow-hidden opt-mesh border-b border-neutral-100">
+  <div class="relative max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-16 text-center opt-reveal">
+    <span class="inline-flex items-center gap-1.5 bg-white/70 opt-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4">Help centre</span>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight mb-3">Answers</h1>
+    <p class="text-sm sm:text-base text-neutral-500 leading-relaxed max-w-xl mx-auto">Common questions installer founders and marketing leads ask before they buy. Still stuck? <a href="/contact" class="text-primary font-semibold hover:underline">Talk to us</a>.</p>
   </div>
+</section>
 
-  <div class="space-y-2">
-    ${[
-      { q: 'Who is this actually for?', a: 'Residential and small-commercial solar installer brands operating in Europe and the UK. If you are a homeowner looking for an installation, this is not the right place &mdash; please contact a local installer instead.' },
-      { q: 'How are the toolkits delivered?', a: 'Every toolkit is a digital download. After payment you receive a confirmation email with the download links and any accompanying spreadsheets, Figma files or PDFs. Delivery is immediate.' },
-      { q: 'What payment methods do you accept?', a: 'We accept all major credit and debit cards (Visa, Mastercard, American Express) through Stripe. Apple Pay and Google Pay are supported where available. For larger service bundles we can also issue an invoice on request.' },
-      { q: 'Can I get a refund?', a: 'Because the assets are delivered instantly and cannot be returned, we operate a 14-day issue-resolution policy: if a download fails, a file is corrupt or a service deliverable was not produced as described, we either fix it or issue a refund. Email ${store.contact_email || "support@" + store.domain} within 14 days of purchase.' },
-      { q: 'Is the data and payment process secure?', a: 'All payments are processed through Stripe, a PCI-DSS Level 1 certified processor. Cards are encrypted with 256-bit SSL and never touch our servers.' },
-      { q: 'Can I use the toolkits with my clients?', a: 'Yes &mdash; the standard licence covers internal use and use with your installer clients. Reselling the original files as a competing product is not allowed.' },
-      { q: 'Do you offer custom work?', a: 'Yes. The Lead Generation Quarterly Retainer and Annual Growth Partnership are managed engagements. Reach out via the contact page if you want a scope-of-work proposal.' },
-      { q: 'What languages are the materials in?', a: 'Toolkits ship in English by default. Ad creative variations and sales scripts are available in German, French, Italian, Polish and Spanish on request &mdash; mention it at checkout or email us afterwards.' },
-      { q: 'Do you replace our existing agency?', a: 'Sometimes. Many installer brands keep an in-house marketing manager and buy individual toolkits. Others move from a generalist agency onto our quarterly retainer. Both work.' },
-      { q: 'How long does setup take?', a: 'Most downloadable toolkits are usable the same day. For managed services we book a kickoff within seven business days of payment.' }
-    ].map(item => '<details class="group bg-white opt-card rounded-xl overflow-hidden">' +
-      '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-neutral-900 text-sm hover:text-primary transition">' +
-        '<span class="pr-4">' + item.q + '</span>' +
-        '<svg class="w-4 h-4 text-neutral-400 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
-      '</summary>' +
-      '<div class="px-4 pb-3.5 text-neutral-500 text-xs leading-relaxed border-t border-neutral-100 pt-3">' + item.a + '</div>' +
-    '</details>').join('')}
-  </div>
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14 space-y-10">
+  ${[
+    {
+      group: 'Buying & delivery',
+      items: [
+        { q: 'Who is this actually for?', a: 'Residential and small-commercial solar installer brands operating in Europe and the UK. If you are a homeowner looking for an installation, this is not the right place &mdash; please contact a local installer instead.' },
+        { q: 'How are the toolkits delivered?', a: 'Every toolkit is a digital download. After payment you receive a confirmation email with the download links and any accompanying spreadsheets, Figma files or PDFs. Delivery is immediate.' },
+        { q: 'How long does setup take?', a: 'Most downloadable toolkits are usable the same day. For managed services we book a kickoff within seven business days of payment.' },
+        { q: 'What languages are the materials in?', a: 'Toolkits ship in English by default. Ad creative variations and sales scripts are available in German, French, Italian, Polish and Spanish on request &mdash; mention it at checkout or email us afterwards.' }
+      ]
+    },
+    {
+      group: 'Payments & security',
+      items: [
+        { q: 'What payment methods do you accept?', a: 'We accept all major credit and debit cards (Visa, Mastercard, American Express) through Stripe. Apple Pay and Google Pay are supported where available. For larger service bundles we can also issue an invoice on request.' },
+        { q: 'Is the data and payment process secure?', a: 'All payments are processed through Stripe, a PCI-DSS Level 1 certified processor. Cards are encrypted with 256-bit SSL and never touch our servers.' },
+        { q: 'Can I get a refund?', a: 'Because the assets are delivered instantly and cannot be returned, we operate a 14-day issue-resolution policy: if a download fails, a file is corrupt or a service deliverable was not produced as described, we either fix it or issue a refund. Email ' + email + ' within 14 days of purchase.' }
+      ]
+    },
+    {
+      group: 'Licensing & services',
+      items: [
+        { q: 'Can I use the toolkits with my clients?', a: 'Yes &mdash; the standard licence covers internal use and use with your installer clients. Reselling the original files as a competing product is not allowed.' },
+        { q: 'Do you offer custom work?', a: 'Yes. The Lead Generation Quarterly Retainer and Annual Growth Partnership are managed engagements. Reach out via the contact page if you want a scope-of-work proposal.' },
+        { q: 'Do you replace our existing agency?', a: 'Sometimes. Many installer brands keep an in-house marketing manager and buy individual toolkits. Others move from a generalist agency onto our quarterly retainer. Both work.' }
+      ]
+    }
+  ].map(section => '<div class="opt-reveal">' +
+    '<h2 class="text-xs font-semibold text-primary uppercase tracking-wider mb-3 pl-1">' + section.group + '</h2>' +
+    '<div class="space-y-2">' +
+      section.items.map(item => '<details class="group opt-card bg-white rounded-xl overflow-hidden">' +
+        '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-neutral-900 text-sm hover:text-primary transition">' +
+          '<span class="pr-4">' + item.q + '</span>' +
+          '<svg class="w-4 h-4 text-neutral-400 group-open:rotate-180 group-open:text-primary transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+        '</summary>' +
+        '<div class="px-4 pb-4 text-neutral-500 text-xs leading-relaxed border-t border-neutral-100 pt-3">' + item.a + '</div>' +
+      '</details>').join('') +
+    '</div>' +
+  '</div>').join('')}
 
-  <div class="bg-neutral-50 rounded-xl p-6 text-center mt-10">
-    <h3 class="text-base font-bold text-neutral-900 mb-2">Still have questions?</h3>
-    <p class="text-xs text-neutral-400 mb-4">We answer most enquiries within one working day.</p>
-    <a href="/contact" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition hover:shadow-lg">Send us a message</a>
+  <div class="opt-reveal relative overflow-hidden rounded-2xl bg-neutral-950 p-8 text-center">
+    <div class="opt-mesh absolute inset-0 opacity-60"></div>
+    <div class="relative">
+      <h3 class="text-lg font-bold text-white mb-2">Still have questions?</h3>
+      <p class="text-xs text-neutral-400 mb-5">We answer most enquiries within one working day.</p>
+      <a href="/contact" class="btn-primary inline-flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold text-sm">Send us a message
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
   </div>
 </div>
 `, store }) %>
