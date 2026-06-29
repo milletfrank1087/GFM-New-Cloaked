@@ -116,7 +116,31 @@ function renderRecentDonors(data) {
   }).join('');
 }
 
+var __refreshDepth = 0;
+function setRefreshLoading(loading) {
+  var btn = document.getElementById('refresh-btn');
+  var icon = document.getElementById('refresh-icon');
+  var label = document.getElementById('refresh-label');
+  if (btn) btn.disabled = loading;
+  if (icon) icon.classList.toggle('animate-spin', loading);
+  if (label) label.textContent = loading ? 'Refreshing\u2026' : 'Refresh';
+}
+
 async function loadDashboard() {
+  __refreshDepth++;
+  setRefreshLoading(true);
+  try {
+    await loadDashboardInner();
+  } finally {
+    __refreshDepth--;
+    if (__refreshDepth <= 0) {
+      __refreshDepth = 0;
+      setRefreshLoading(false);
+    }
+  }
+}
+
+async function loadDashboardInner() {
   var data = await window.__dashboardData.fetchDashboardData();
   if (!data) return;
 

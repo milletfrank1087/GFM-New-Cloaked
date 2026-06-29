@@ -54,8 +54,8 @@ module.exports = function createAdminRouter(ctx) {
   router.post('/api/admin/login', (req, res) => {
     const { password } = req.body;
     if (password === ADMIN_PASSWORD) {
-      const token = jwt.sign({ admin: true }, JWT_SECRET, { expiresIn: '24h' });
-      res.cookie('admin_token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+      const token = jwt.sign({ admin: true }, JWT_SECRET);
+      res.cookie('admin_token', token, { httpOnly: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 });
       res.json({ success: true });
     } else {
       res.status(401).json({ error: 'Invalid password' });
