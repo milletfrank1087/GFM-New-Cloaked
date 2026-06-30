@@ -19,33 +19,33 @@
       --color-primary: <%= store.colors?.primary || '#0f9d58' %>;
       --color-accent: <%= store.colors?.accent || '#0b7a44' %>;
     }
-    body { background-color: #f7faf8; }
+    body { background-color: #f7f4ee; }
     .btn-primary { background-color: var(--color-primary); transition: filter .16s linear, transform .16s ease, box-shadow .18s ease; }
     .btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); box-shadow: 0 12px 26px -14px color-mix(in srgb, var(--color-primary) 70%, transparent); }
     .text-primary { color: var(--color-primary); }
     .bg-primary { background-color: var(--color-primary); }
     ::selection { background-color: var(--color-primary); color: white; }
     input:focus, select:focus { border-color: var(--color-primary) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent); outline: none; }
-    .ck-mesh { background-image: radial-gradient(60% 80% at 90% -10%, color-mix(in srgb, var(--color-primary) 12%, transparent) 0%, transparent 60%), radial-gradient(50% 60% at 0% 0%, color-mix(in srgb, #38bdf8 10%, transparent) 0%, transparent 55%); }
+    .ck-mesh { background-image: radial-gradient(60% 80% at 90% -10%, color-mix(in srgb, var(--color-primary) 12%, transparent) 0%, transparent 60%), radial-gradient(50% 60% at 0% 0%, color-mix(in srgb, #cf9b56 12%, transparent) 0%, transparent 55%); }
   </style>
 </head>
-<body class="font-inter min-h-screen antialiased text-neutral-700">
-  <div class="bg-neutral-950 text-neutral-300 text-[11px]">
+<body class="font-inter min-h-screen antialiased text-stone-700">
+  <div class="bg-stone-950 text-stone-300 text-[11px]">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 h-8 flex items-center justify-center gap-2">
-      <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       256-bit SSL encryption &bull; PCI-DSS Level 1 &bull; Instant download
     </div>
   </div>
 
-  <header class="bg-white/90 backdrop-blur border-b border-neutral-100 sticky top-0 z-30">
+  <header class="bg-white/90 backdrop-blur border-b border-stone-100 sticky top-0 z-30">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2">
         <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
           <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-6 4 14 3-8 2 4h4"/></svg>
         </div>
-        <span class="text-sm font-bold text-neutral-900"><%= store.name %></span>
+        <span class="text-sm font-bold text-stone-900"><%= store.name %></span>
       </a>
-      <a href="/cart" class="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-700 transition">
+      <a href="/cart" class="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-700 transition">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
         Back to cart
       </a>
@@ -55,43 +55,43 @@
   <main class="ck-mesh">
    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 md:py-12">
     <div id="empty-cart" class="hidden text-center py-16">
-      <div class="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-neutral-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6h16.5l-1.5 11.25A2.25 2.25 0 0116.5 19.5h-9a2.25 2.25 0 01-2.25-2.25L3.75 6z"/></svg>
+      <div class="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-stone-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6h16.5l-1.5 11.25A2.25 2.25 0 0116.5 19.5h-9a2.25 2.25 0 01-2.25-2.25L3.75 6z"/></svg>
       </div>
-      <h2 class="text-lg font-bold text-neutral-900 mb-2">Your cart is empty</h2>
-      <p class="text-sm text-neutral-400 mb-6">Browse our installer-grade toolkits to find what you need.</p>
+      <h2 class="text-lg font-bold text-stone-900 mb-2">Your cart is empty</h2>
+      <p class="text-sm text-stone-400 mb-6">Browse our installer-grade toolkits to find what you need.</p>
       <a href="/products" class="btn-primary inline-block text-white px-6 py-2.5 rounded-lg font-semibold text-sm">Browse toolkits</a>
     </div>
 
     <div id="checkout-content" class="grid grid-cols-1 md:grid-cols-12 gap-6">
       <div class="md:col-span-7">
-        <h1 class="text-lg font-bold text-neutral-900 mb-1">Complete your order</h1>
-        <p class="text-xs text-neutral-400 mb-6">Enter your business details and payment information.</p>
+        <h1 class="text-lg font-bold text-stone-900 mb-1">Complete your order</h1>
+        <p class="text-xs text-stone-400 mb-6">Enter your business details and payment information.</p>
 
-        <div class="bg-white rounded-2xl border border-neutral-200 p-5 mb-4 shadow-sm">
+        <div class="bg-white rounded-2xl border border-stone-200 p-5 mb-4 shadow-sm">
           <div class="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <label for="store-email" class="block text-xs font-medium text-neutral-600 mb-1">Work email</label>
+              <label for="store-email" class="block text-xs font-medium text-stone-600 mb-1">Work email</label>
               <input type="email" id="store-email" placeholder="helena@installer-brand.com" autocomplete="email"
-                class="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none transition-all">
+                class="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none transition-all">
             </div>
             <div>
-              <label for="store-name" class="block text-xs font-medium text-neutral-600 mb-1">Full name</label>
+              <label for="store-name" class="block text-xs font-medium text-stone-600 mb-1">Full name</label>
               <input type="text" id="store-name" placeholder="Helena Renz" autocomplete="name"
-                class="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none transition-all">
+                class="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none transition-all">
             </div>
           </div>
 
           <div class="flex items-center gap-2 mb-3">
-            <div class="flex-1 h-px bg-neutral-100"></div>
-            <span class="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Payment method</span>
-            <div class="flex-1 h-px bg-neutral-100"></div>
+            <div class="flex-1 h-px bg-stone-100"></div>
+            <span class="text-[10px] font-semibold text-stone-400 uppercase tracking-wider">Payment method</span>
+            <div class="flex-1 h-px bg-stone-100"></div>
           </div>
 
           <div id="payment-loading" class="flex items-center justify-center py-8">
             <div class="flex flex-col items-center gap-2">
-              <div class="w-8 h-8 rounded-full border-2 border-neutral-200 border-t-emerald-500 animate-spin"></div>
-              <p class="text-[11px] text-neutral-400">Loading secure payment...</p>
+              <div class="w-8 h-8 rounded-full border-2 border-stone-200 border-t-primary animate-spin"></div>
+              <p class="text-[11px] text-stone-400">Loading secure payment...</p>
             </div>
           </div>
           <% if (paymentProcessor === 'stripe') { %>
@@ -99,9 +99,9 @@
           <% } else { %>
           <div id="paypal-button-container" class="mb-3"></div>
           <div class="flex items-center gap-2 my-3">
-            <div class="flex-1 h-px bg-neutral-100"></div>
-            <span class="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">or pay with card</span>
-            <div class="flex-1 h-px bg-neutral-100"></div>
+            <div class="flex-1 h-px bg-stone-100"></div>
+            <span class="text-[10px] font-semibold text-stone-400 uppercase tracking-wider">or pay with card</span>
+            <div class="flex-1 h-px bg-stone-100"></div>
           </div>
           <div class="space-y-2.5">
             <div id="card-name-field" class="w-full min-h-[42px] rounded-lg"></div>
@@ -116,7 +116,7 @@
           <div id="payment-error" class="hidden text-red-600 text-xs mb-3 p-2.5 bg-red-50 rounded-lg border border-red-100 mt-3"></div>
 
           <button id="submit-payment" disabled
-            class="btn-primary w-full text-white py-3 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
+            class="btn-primary w-full text-white py-3 rounded-full font-semibold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
             data-paytext="Complete Order" data-processing="Processing...">
             <svg id="payment-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -126,13 +126,13 @@
           </button>
         </div>
 
-        <div class="flex flex-wrap items-center justify-center gap-4 text-[10px] text-neutral-400">
+        <div class="flex flex-wrap items-center justify-center gap-4 text-[10px] text-stone-400">
           <div class="flex items-center gap-1">
-            <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             256-bit SSL
           </div>
           <div class="flex items-center gap-1">
-            <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             PCI Compliant
           </div>
           <div class="flex items-center gap-1">Powered by <%= paymentProcessor === 'paypal' ? 'PayPal' : 'Stripe' %></div>
@@ -140,34 +140,34 @@
       </div>
 
       <div class="md:col-span-5">
-        <div class="bg-white rounded-2xl border border-neutral-200 p-5 sticky top-20 shadow-sm">
-          <h2 class="text-sm font-bold text-neutral-900 mb-4">Order summary</h2>
+        <div class="bg-white rounded-2xl border border-stone-200 p-5 sticky top-20 shadow-sm">
+          <h2 class="text-sm font-bold text-stone-900 mb-4">Order summary</h2>
           <div id="order-items" class="space-y-2.5 mb-4"></div>
-          <div class="border-t border-neutral-100 pt-3">
+          <div class="border-t border-stone-100 pt-3">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-neutral-900">Total</span>
+              <span class="text-xs font-bold text-stone-900">Total</span>
               <span id="order-total" class="text-base font-bold text-primary"><%= store.currencySymbol || '€' %>0.00</span>
             </div>
           </div>
         </div>
 
-        <div class="mt-3 bg-white rounded-2xl border border-neutral-200 p-4 shadow-sm">
+        <div class="mt-3 bg-white rounded-2xl border border-stone-200 p-4 shadow-sm">
           <div class="flex items-center gap-2.5 mb-2.5">
-            <div class="w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+            <div class="w-7 h-7 rounded-full bg-primary-50 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
             </div>
             <div>
-              <p class="text-xs font-semibold text-neutral-900">Instant download</p>
-              <p class="text-[10px] text-neutral-400">Access toolkit files right after payment</p>
+              <p class="text-xs font-semibold text-stone-900">Instant download</p>
+              <p class="text-[10px] text-stone-400">Access toolkit files right after payment</p>
             </div>
           </div>
           <div class="flex items-center gap-2.5 mb-2.5">
-            <div class="w-7 h-7 rounded-full bg-sky-50 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+            <div class="w-7 h-7 rounded-full bg-primary-50 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
             </div>
             <div>
-              <p class="text-xs font-semibold text-neutral-900">Lifetime updates</p>
-              <p class="text-[10px] text-neutral-400">Free revisions for the toolkit lifecycle</p>
+              <p class="text-xs font-semibold text-stone-900">Lifetime updates</p>
+              <p class="text-[10px] text-stone-400">Free revisions for the toolkit lifecycle</p>
             </div>
           </div>
           <div class="flex items-center gap-2.5">
@@ -175,14 +175,14 @@
               <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div>
-              <p class="text-xs font-semibold text-neutral-900">14-day guarantee</p>
-              <p class="text-[10px] text-neutral-400">Fix-or-refund on any download fault</p>
+              <p class="text-xs font-semibold text-stone-900">14-day guarantee</p>
+              <p class="text-[10px] text-stone-400">Fix-or-refund on any download fault</p>
             </div>
           </div>
-          <div class="flex items-center gap-1.5 mt-4 pt-3 border-t border-neutral-100">
+          <div class="flex items-center gap-1.5 mt-4 pt-3 border-t border-stone-100">
             <svg class="h-5 rounded" viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="#1A1F71"/><path d="M15.6 16.3l2.4-9h2.9l-2.4 9h-2.9zm11.8-9l-2.7 6.2-.3-1.5-1-5.1s-.1-.6-.8-.6h-4.1l-.1.3s.8.2 1.8.5l2 7.2h3l4.6-7h-2.4zm-16.2 0h-4.5l-.1.3s.9.2 1.7.5c1 .4 1.1.6 1.3 1.3l2.3 7h3l4.7-9.1h-3l-3 6.2-1.2-5.3s-.2-.9-.9-.9z" fill="white"/></svg>
             <svg class="h-5 rounded" viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="#0b0b0b"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7.3a7 7 0 010 9.4 7 7 0 000-9.4z" fill="#FF5F00"/></svg>
-            <span class="text-[10px] text-neutral-400 ml-1">+ Apple Pay &amp; Google Pay</span>
+            <span class="text-[10px] text-stone-400 ml-1">+ Apple Pay &amp; Google Pay</span>
           </div>
         </div>
       </div>

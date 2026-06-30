@@ -5,11 +5,11 @@
   const updated = new Date().toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' });
 %>
 <%- include('../layouts/store', { body: `
-<section class="relative overflow-hidden opt-mesh border-b border-neutral-100">
+<section class="relative overflow-hidden opt-mesh border-b border-stone-100">
   <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-14 opt-reveal">
     <span class="inline-flex items-center gap-1.5 bg-white/70 opt-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4">Legal</span>
-    <h1 class="text-2xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight mb-2">Terms of Service</h1>
-    <p class="text-xs text-neutral-400">Last updated: ${updated}</p>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-stone-900 tracking-tight mb-2">Terms of Service</h1>
+    <p class="text-xs text-stone-400">Last updated: ${updated}</p>
   </div>
 </section>
 
@@ -17,7 +17,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <aside class="lg:col-span-4 lg:sticky lg:top-28 opt-reveal">
       <div class="opt-card bg-white rounded-2xl p-5">
-        <p class="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-3">On this page</p>
+        <p class="text-[10px] font-semibold text-stone-400 uppercase tracking-wider mb-3">On this page</p>
         <nav class="space-y-1 text-xs">
           ${[
             ['what-we-sell', '1. What we sell'],
@@ -30,38 +30,38 @@
             ['liability', '8. Liability'],
             ['changes', '9. Changes'],
             ['contact', '10. Contact']
-          ].map(s => '<a href="#' + s[0] + '" class="block px-3 py-1.5 rounded-lg text-neutral-500 hover:bg-neutral-50 hover:text-primary transition">' + s[1] + '</a>').join('')}
+          ].map(s => '<a href="#' + s[0] + '" class="block px-3 py-1.5 rounded-lg text-stone-500 hover:bg-stone-50 hover:text-primary transition">' + s[1] + '</a>').join('')}
         </nav>
       </div>
     </aside>
 
     <div class="lg:col-span-8 opt-reveal" data-delay="80">
-      <div class="opt-card bg-white rounded-2xl p-6 sm:p-8 space-y-7 text-neutral-500 text-sm leading-relaxed">
-        <p class="text-neutral-600">These Terms govern your access to and use of the ${store.name} website and the digital toolkits and managed services we sell through it. By placing an order you accept these Terms.</p>
+      <div class="opt-card bg-white rounded-2xl p-6 sm:p-8 space-y-7 text-stone-500 text-sm leading-relaxed">
+        <p class="text-stone-600">These Terms govern your access to and use of the ${store.name} website and the digital toolkits and managed services we sell through it. By placing an order you accept these Terms.</p>
 
         <div id="what-we-sell" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">1. What we sell</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">1. What we sell</h2>
           <p>${store.name} sells digital lead generation toolkits (ad creative libraries, sales scripts, CRM templates, dashboards and quarterly market reports) and optional managed services for solar installer brands operating in the European Union and the United Kingdom. All items are delivered electronically.</p>
         </div>
         <div id="eligibility" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">2. Eligibility</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">2. Eligibility</h2>
           <p>The materials are intended for use by businesses and professionals in the solar installation, EPC and energy services sectors. By purchasing you confirm that you are buying in the course of a business and are not a consumer for the purposes of UK or EU consumer protection law.</p>
         </div>
         <div id="payment" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">3. Payment</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">3. Payment</h2>
           <p class="mb-2">All payments are processed by Stripe Payments Europe Limited or Stripe Payments UK Limited, both of which are PCI-DSS Level 1 certified. Prices are displayed in the applicable currency and may exclude VAT depending on your jurisdiction.</p>
           <p>Card statements will show the charge under &ldquo;${store.statementDescriptor || store.name}&rdquo;. Please contact us before raising a chargeback if anything looks unfamiliar &mdash; we resolve most issues within one working day.</p>
         </div>
         <div id="delivery" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">4. Delivery</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">4. Delivery</h2>
           <p>Digital toolkits are delivered to the email address provided at checkout, typically within minutes. Managed services begin with a kickoff scheduled within seven business days of payment.</p>
         </div>
         <div id="refunds" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">5. Refunds</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">5. Refunds</h2>
           <p>Because the toolkits are delivered immediately and cannot be returned, we operate a 14-day issue-resolution policy. If a download fails, a file is corrupt, or a service deliverable is not produced as described, contact ${email} within 14 days and we will either fix the issue or issue a refund.</p>
         </div>
         <div id="licence" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">6. Licence</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">6. Licence</h2>
           <p class="mb-2">You receive a non-exclusive, non-transferable, perpetual licence to use each purchased toolkit:</p>
           <ul class="list-disc pl-5 space-y-1">
             <li>internally within your business;</li>
@@ -71,19 +71,19 @@
           <p class="mt-2">You may not resell, sublicense or otherwise distribute the original files as a competing product, training course or template marketplace listing.</p>
         </div>
         <div id="ip" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">7. Intellectual property</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">7. Intellectual property</h2>
           <p>All copy, design, ad creative, code and methodology delivered as part of the toolkits and services remain the intellectual property of ${store.name}, subject to the licence granted above.</p>
         </div>
         <div id="liability" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">8. Liability</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">8. Liability</h2>
           <p>${store.name} provides the toolkits and services &ldquo;as is&rdquo;, without warranties as to commercial results. Our aggregate liability arising out of any order is limited to the amount paid for that order. Nothing in these Terms excludes liability that cannot lawfully be excluded.</p>
         </div>
         <div id="changes" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">9. Changes</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">9. Changes</h2>
           <p>We may update these Terms from time to time. Updates apply to orders placed after the revised version is published. Material changes will be communicated by email to existing customers.</p>
         </div>
         <div id="contact" class="scroll-mt-28">
-          <h2 class="text-sm font-bold text-neutral-900 mb-2">10. Contact</h2>
+          <h2 class="text-sm font-bold text-stone-900 mb-2">10. Contact</h2>
           <p>Questions about these terms? Email <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>.</p>
         </div>
       </div>

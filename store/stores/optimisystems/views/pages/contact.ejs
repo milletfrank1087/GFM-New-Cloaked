@@ -1,11 +1,11 @@
 <% const pageTitle = 'Talk to us'; const extraHead = ''; %>
 <%- include('../layouts/store', { body: `
-<section class="relative overflow-hidden opt-mesh border-b border-neutral-100">
+<section class="relative overflow-hidden opt-mesh border-b border-stone-100">
   <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
     <div class="max-w-2xl opt-reveal">
       <span class="inline-flex items-center gap-1.5 bg-white/70 opt-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4">Talk to us</span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight mb-3">Tell us what you are building</h1>
-      <p class="text-sm sm:text-base text-neutral-500 leading-relaxed">Whether you want a single toolkit recommendation or a managed lead generation engagement, send us a few lines. We respond within one working day.</p>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-stone-900 tracking-tight mb-3">Tell us what you are building</h1>
+      <p class="text-sm sm:text-base text-stone-500 leading-relaxed">Whether you want a single toolkit recommendation or a managed lead generation engagement, send us a few lines. We respond within one working day.</p>
     </div>
   </div>
 </section>
@@ -14,14 +14,14 @@
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     <div class="lg:col-span-5 space-y-3">
       ${[
-        { i: 'M21 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 011.5 17.25V6.75M21 6.75A2.25 2.25 0 0018.75 4.5h-15A2.25 2.25 0 001.5 6.75M21 6.75l-9 6.75-9-6.75', a: 'bg-emerald-50 text-emerald-600', t: 'Email us', d: store.contact_email || ('support@' + store.domain) },
-        { i: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z', a: 'bg-sky-50 text-sky-600', t: 'Reply window', d: 'Within one working day' },
+        { i: 'M21 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 011.5 17.25V6.75M21 6.75A2.25 2.25 0 0018.75 4.5h-15A2.25 2.25 0 001.5 6.75M21 6.75l-9 6.75-9-6.75', a: 'bg-primary-50 text-primary', t: 'Email us', d: store.contact_email || ('support@' + store.domain) },
+        { i: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z', a: 'bg-primary-50 text-primary', t: 'Reply window', d: 'Within one working day' },
         { i: 'M3 12a9 9 0 1118 0 9 9 0 01-18 0zM3 12h18M12 3a13.5 13.5 0 010 18M12 3a13.5 13.5 0 000 18', a: 'bg-amber-50 text-amber-600', t: 'Coverage', d: 'EU + UK installer brands' }
       ].map((c, idx) => '<div class="opt-reveal opt-card bg-white rounded-2xl p-4 flex items-center gap-3.5" data-delay="' + (idx * 60) + '">' +
         '<div class="w-10 h-10 rounded-xl ' + c.a + ' flex items-center justify-center shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="' + c.i + '"/></svg></div>' +
-        '<div class="min-w-0"><p class="text-xs font-semibold text-neutral-900">' + c.t + '</p><p class="text-[11px] text-neutral-400 truncate">' + c.d + '</p></div></div>').join('')}
+        '<div class="min-w-0"><p class="text-xs font-semibold text-stone-900">' + c.t + '</p><p class="text-[11px] text-stone-400 truncate">' + c.d + '</p></div></div>').join('')}
 
-      <div class="opt-reveal opt-card bg-neutral-950 rounded-2xl p-5 relative overflow-hidden" data-delay="180">
+      <div class="opt-reveal opt-card bg-stone-950 rounded-2xl p-5 relative overflow-hidden" data-delay="180">
         <div class="opt-mesh absolute inset-0 opacity-50"></div>
         <div class="relative">
           <h3 class="text-white font-semibold text-sm mb-2">What happens next</h3>
@@ -30,32 +30,32 @@
               'We read your note and reply with a short, specific answer',
               'If it is a fit, we suggest the toolkit or scope that maps to your gap',
               'No pitch deck, no slides, no pressure'
-            ].map(s => '<li class="flex items-start gap-2 text-[11px] text-neutral-400"><svg class="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 011.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg><span>' + s + '</span></li>').join('')}
+            ].map(s => '<li class="flex items-start gap-2 text-[11px] text-stone-400"><svg class="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 011.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg><span>' + s + '</span></li>').join('')}
           </ul>
         </div>
       </div>
     </div>
 
     <div class="lg:col-span-7 opt-reveal" data-delay="100">
-      <div class="opt-card bg-white rounded-2xl p-6 sm:p-7 shadow-lg shadow-emerald-900/5">
+      <div class="opt-card bg-white rounded-2xl p-6 sm:p-7 shadow-lg shadow-stone-900/5">
         <form class="space-y-4" onsubmit="event.preventDefault(); var b=this.querySelector('button'); b.textContent='Message sent — we will be in touch'; b.disabled=true; b.classList.add('opacity-60');">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-medium text-neutral-600 mb-1.5">First name</label>
-              <input type="text" class="w-full border border-neutral-200 rounded-lg px-3.5 py-2.5 text-sm" placeholder="Helena" required>
+              <label class="block text-xs font-medium text-stone-600 mb-1.5">First name</label>
+              <input type="text" class="w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm" placeholder="Helena" required>
             </div>
             <div>
-              <label class="block text-xs font-medium text-neutral-600 mb-1.5">Last name</label>
-              <input type="text" class="w-full border border-neutral-200 rounded-lg px-3.5 py-2.5 text-sm" placeholder="Renz" required>
+              <label class="block text-xs font-medium text-stone-600 mb-1.5">Last name</label>
+              <input type="text" class="w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm" placeholder="Renz" required>
             </div>
           </div>
           <div>
-            <label class="block text-xs font-medium text-neutral-600 mb-1.5">Work email</label>
-            <input type="email" class="w-full border border-neutral-200 rounded-lg px-3.5 py-2.5 text-sm" placeholder="helena@your-installer-brand.com" required>
+            <label class="block text-xs font-medium text-stone-600 mb-1.5">Work email</label>
+            <input type="email" class="w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm" placeholder="helena@your-installer-brand.com" required>
           </div>
           <div>
-            <label class="block text-xs font-medium text-neutral-600 mb-1.5">What are you trying to solve?</label>
-            <select class="w-full border border-neutral-200 rounded-lg px-3.5 py-2.5 text-sm text-neutral-700 bg-white">
+            <label class="block text-xs font-medium text-stone-600 mb-1.5">What are you trying to solve?</label>
+            <select class="w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm text-stone-700 bg-white">
               <option>I want a specific toolkit recommendation</option>
               <option>I want a managed lead generation engagement</option>
               <option>I have a billing or download question</option>
@@ -63,15 +63,15 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs font-medium text-neutral-600 mb-1.5">Brief context</label>
-            <textarea rows="4" class="w-full border border-neutral-200 rounded-lg px-3.5 py-2.5 text-sm resize-none" placeholder="A few sentences about your market, current monthly install volume and what you have tried so far." required></textarea>
+            <label class="block text-xs font-medium text-stone-600 mb-1.5">Brief context</label>
+            <textarea rows="4" class="w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm resize-none" placeholder="A few sentences about your market, current monthly install volume and what you have tried so far." required></textarea>
           </div>
-          <button type="submit" class="btn-primary w-full text-white py-3 rounded-xl font-semibold text-sm transition-all">Send message</button>
-          <p class="text-[11px] text-neutral-400 text-center">By sending you agree to our <a href="/privacy" class="text-primary hover:underline">privacy policy</a>.</p>
+          <button type="submit" class="btn-primary w-full text-white py-3 rounded-full font-semibold text-sm transition-all">Send message</button>
+          <p class="text-[11px] text-stone-400 text-center">By sending you agree to our <a href="/privacy" class="text-primary hover:underline">privacy policy</a>.</p>
         </form>
       </div>
       <div class="mt-4 text-center">
-        <p class="text-xs text-neutral-400">Looking for a quick answer? Most questions are covered in our <a href="/faq" class="text-primary hover:underline">answers</a> section.</p>
+        <p class="text-xs text-stone-400">Looking for a quick answer? Most questions are covered in our <a href="/faq" class="text-primary hover:underline">answers</a> section.</p>
       </div>
     </div>
   </div>

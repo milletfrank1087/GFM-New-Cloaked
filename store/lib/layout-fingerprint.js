@@ -252,6 +252,7 @@ function variantF(colors) {
     .text-accent { color: var(--opt-mark); }
     .bg-primary { background-color: var(--opt-key); }
     .bg-accent { background-color: var(--opt-mark); }
+    .bg-grad-primary { background-image: linear-gradient(135deg, var(--opt-key), var(--opt-mark)); }
     .bg-primary-50 { background-color: var(--opt-rest); }
     .bg-primary-100 { background-color: color-mix(in srgb, var(--opt-key) 16%, white); }
     .border-primary { border-color: var(--opt-key); }
