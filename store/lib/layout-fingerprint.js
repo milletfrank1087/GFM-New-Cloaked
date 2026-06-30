@@ -57,8 +57,8 @@ const VARIANTS = {
     style: variantE,
   },
   'optimisystems': {
-    bodyClass: 'font-inter min-h-screen flex flex-col text-neutral-700 selection:bg-emerald-100',
-    headerClass: 'bg-white/92 border-b border-neutral-100 sticky top-0 z-40 backdrop-blur',
+    bodyClass: 'font-inter min-h-screen flex flex-col text-stone-700',
+    headerClass: 'bg-white/92 border-b border-stone-100 sticky top-0 z-40 backdrop-blur',
     navClass: 'opt-menu-pane',
     navId: 'opt-menu-pane',
     overlayClass: 'opt-menu-veil',
@@ -245,7 +245,7 @@ function variantF(colors) {
     @keyframes opt-sheen { 0% { background-position: -160% 0; } 100% { background-position: 260% 0; } }
     @keyframes opt-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     input:focus, textarea:focus, select:focus { border-color: ${p} !important; box-shadow: 0 0 0 4px color-mix(in srgb, ${p} 11%, transparent); outline: 0; }
-    :root { --opt-key: ${p}; --opt-mark: ${a}; --opt-canvas: ${b}; --opt-rest: color-mix(in srgb, ${p} 9%, white); --opt-line: color-mix(in srgb, ${p} 18%, #e5e5e5); --opt-ink: #0a0f0d; --opt-sky: #38bdf8; }
+    :root { --opt-key: ${p}; --opt-mark: ${a}; --opt-canvas: ${b}; --opt-rest: color-mix(in srgb, ${p} 9%, white); --opt-line: color-mix(in srgb, ${p} 18%, #e7e1d6); --opt-ink: #20160c; --opt-sky: #cf9b56; }
     body { background-color: var(--opt-canvas); }
     ::selection { background-color: var(--opt-key); color: #fff; }
     .text-primary { color: var(--opt-key); }

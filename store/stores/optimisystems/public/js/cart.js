@@ -131,3 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
   Cart.updateBadge();
   Cart.renderCartPage();
 });
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-add-to-cart]');
+  if (!btn) return;
+  e.preventDefault();
+  Cart.add(btn.dataset.name, btn.dataset.slug, parseFloat(btn.dataset.price));
+});

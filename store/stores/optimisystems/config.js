@@ -5,7 +5,7 @@ module.exports = {
   contact_email: 'support@optimisystems.store',
   currency: 'EUR',
   currencySymbol: '\u20ac',
-  colors: { primary: '#0f9d58', accent: '#0b7a44', bg: '#fafafa', light: '#ecfdf3' },
+  colors: { primary: '#3f7a5a', accent: '#2e5d42', bg: '#f7f4ee', light: '#eaf1ea' },
   metadataKeys: {
     storeId: 'opt_outlet_id',
     storeDomain: 'opt_source_host',
