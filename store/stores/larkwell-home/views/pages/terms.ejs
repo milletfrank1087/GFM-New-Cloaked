@@ -2,6 +2,7 @@
   const pageTitle = 'Terms of Service';
   const extraHead = '';
   const email = store.contact_email || ('support@' + store.domain);
+  const phone = store.contact_phone || '';
   const sym = store.currencySymbol || '\u20ac';
   const updated = new Date().toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' });
 %>
@@ -81,7 +82,7 @@
         </div>
         <div id="contact" class="scroll-mt-28">
           <h2 class="text-sm font-bold text-stone-900 mb-2">10. Contact</h2>
-          <p>Questions about these terms? Email <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>.</p>
+          <p>Questions about these terms? Email <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>${phone ? (' or call <a href="tel:' + phone + '" class="text-primary hover:underline">' + phone + '</a>') : ''}.</p>
         </div>
       </div>
     </div>

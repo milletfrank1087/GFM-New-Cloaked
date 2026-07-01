@@ -9,7 +9,7 @@ Two-service architecture for processing donor payments through an e-commerce fro
 - `campaign/` — Node/Express, port 3000. Per-language landing pages. Generates signed tokens, redirects donors to the rotating store domain. Never touches Stripe.
 - `store/` — Node/Express, port 4000. Multi-tenant store server. One Railway deployment per `STORE_ID`. Loads its store-specific config from `store/stores/<id>/config.js` and serves both a public e-commerce storefront (cookie-less, for Stripebot / LLM review / direct visitors) and a donor checkout (cookie-authenticated).
 
-Storefronts that exist behind the campaign: `digitelon`, `haven-prints`, `nova-essentials`, `zenflow-tools`, `alzworks-digital`, `optimisystems`, `precious-couture`. Roster status is authoritative in the Supabase `stores` table (`status`, `weight_pct`), not here. As of 2026-06: `optimisystems` and `precious-couture` are the active pair (50/50); `alzworks-digital` deactivated 2026-05 (see `docs/CLUSTERING-AUDIT-2026-05.md`). `precious-couture` (variant G, USD, MCC clothing/accessories with a digital-fashion catalog) is the only USD storefront — all others are EUR.
+Storefronts that exist behind the campaign: `digitelon`, `haven-prints`, `nova-essentials`, `zenflow-tools`, `alzworks-digital`, `optimisystems`, `precious-couture`, `larkwell-home`. Roster status is authoritative in the Supabase `stores` table (`status`, `weight_pct`), not here. As of 2026-07: `optimisystems` is active at 100%; `precious-couture` active at 0% weight (paused routing); `larkwell-home` staged at 0% (`paused`, `www.larkwellhome.online`, awaiting Stripe keys + warm-up).
 
 ## Turn-key end-to-end recipes
 
@@ -67,6 +67,14 @@ npm run sterility-check        # restricted-term scan; runs automatically before
 npm start                      # admin dashboard at /admin (ADMIN_PASSWORD env)
 ```
 
+From `operator/` (infra provisioning — not runtime):
+
+```powershell
+.\operator\connect-store-dns.ps1 -ServiceName "Larkwell Home Shop" -ApexDomain larkwellhome.online -StoreSlug larkwell-home
+```
+
+See `operator/README.md` and `docs/ROTATION-PLAYBOOK.md` § Domain Setup. GoDaddy credentials: `secrets/godaddy.env` (gitignored).
+
 ## Things that are NOT obvious from the code
 
 - The five storefronts must NEVER look like they share an operator. Per-store divergence is enforced via `store/lib/layout-fingerprint.js` (CSS / nav classes / fonts), per-store unique 24-price vectors (`store/scripts/generate-prices.js`), and per-store unique `metadataKeys` (in each `config.js`). If you add a store without adding a `VARIANTS` entry to `layout-fingerprint.js`, boot will throw.
@@ -77,7 +85,7 @@ npm start                      # admin dashboard at /admin (ADMIN_PASSWORD env)
 - "Donation" / "Donate" / "Donor" terminology IS allowed inside the donor checkout flow (`store/lib/locale.js`, `store/lib/stripe-errors.js`, `store/routes/*`, `views/pages/checkout-donor.ejs`) — this is intentional and donor-facing only. Do not "fix" it. The donor checkout is hidden behind a session cookie that Stripebot cannot obtain.
 - The `<title>` tag on the donor checkout is the ONLY visible DOM element Stripe.js telemetry transmits, so it must remain a generic "Complete Payment" string (see `store/lib/locale.js`). All other donor-facing text is invisible to Stripe's automated systems.
 - Active stores' `weight_pct` sums must equal 100. The admin dashboard warns on save if they don't, but the `get_next_store` RPC self-corrects.
-- `CALLBACK_SECRET` (env var) must be a generic random string — no restricted or project-identifying words. Sterility check will flag it.
+- `CALLBACK_SECRET` (env var) is **shared across all campaigns and stores** (copy from a live store — do NOT generate per deploy). Must be a generic random string with no restricted words; sterility check will flag bad literals.
 
 ## When you find something missing from this map
 

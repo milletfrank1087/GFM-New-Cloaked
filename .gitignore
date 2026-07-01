@@ -16,3 +16,8 @@ tools/
 apple-developer-merchantid-domain-association
 apple-developer-merchantid-domain-association*
 **/.well-known/apple-developer-merchantid-domain-association
+
+# Operator secrets (registrar API keys, etc.) MUST NEVER be committed.
+# Read by operator/* scripts. Never share across operators without rotation.
+secrets/
+secrets/**

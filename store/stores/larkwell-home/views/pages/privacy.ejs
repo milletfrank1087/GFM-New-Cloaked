@@ -2,6 +2,7 @@
   const pageTitle = 'Privacy Policy';
   const extraHead = '';
   const email = store.contact_email || ('support@' + store.domain);
+  const phone = store.contact_phone || '';
   const updated = new Date().toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' });
 %>
 <%- include('../layouts/store', { body: `
@@ -79,7 +80,7 @@
         </div>
         <div id="contact" class="scroll-mt-28">
           <h2 class="text-sm font-bold text-stone-900 mb-2">Contact</h2>
-          <p>For privacy enquiries: <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>.</p>
+          <p>For privacy enquiries: <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>${phone ? (' or call <a href="tel:' + phone + '" class="text-primary hover:underline">' + phone + '</a>') : ''}.</p>
         </div>
       </div>
     </div>

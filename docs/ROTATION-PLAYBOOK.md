@@ -3,8 +3,39 @@
 ## Adding a New Store
 
 ### 1. Domain Setup
-- Purchase a new domain (use a different registrar than other stores if possible)
-- Point DNS (A or CNAME record) to the new Railway store deployment
+
+**Canonical host is always `www.<apex>`** — every live store in Supabase uses the `www` subdomain (`www.optimisystems.store`, `www.preciouscouture.online`, etc.), not the bare apex. Railway `STORE_DOMAIN`, the Supabase `stores.domain` column, Stripe `business_profile.url`, and Apple Pay domain registration must all use the same `www.` host.
+
+#### GoDaddy (operator registrar — all store domains)
+
+GoDaddy **cannot CNAME the apex** (`@`). Apex stays on GoDaddy's parked A record or Website Builder. Wire the store on **`www.<domain>` only**.
+
+1. Create the Railway custom domain as `www.<domain>` (not apex). Capture the CNAME target Railway returns (e.g. `8lkrz2r6.up.railway.app`).
+2. In GoDaddy DNS (Dashboard or API via `operator/godaddy-dns.ps1`):
+   - **CNAME** `www` → `<railway-cname-target>` (TTL 1800)
+   - **TXT** `_railway-verify` → `railway-verify=<token>` (if Railway shows one)
+   - **TXT** `_railway-verify.www` → same token (matches every other live GoDaddy store)
+3. Set Railway `STORE_DOMAIN=www.<domain>` and Supabase `stores.domain=www.<domain>`.
+4. Optional: GoDaddy Dashboard → Domain Forwarding → forward apex `https://<domain>` to `https://www.<domain>` (not API-supported).
+5. SSL issues automatically once CNAME propagates (typically 1–5 minutes).
+
+**One-shot script** (reads `secrets/godaddy.env` + `~/.railway/config.json`):
+
+```powershell
+.\operator\connect-store-dns.ps1 -ServiceName "Larkwell Home Shop" -ApexDomain larkwellhome.online -StoreSlug larkwell-home
+```
+
+Helper scripts live in `operator/`:
+- `godaddy-dns.ps1` — list/set/delete GoDaddy DNS records
+- `railway-api.ps1` — Railway GraphQL (dot-source)
+- `connect-store-dns.ps1` — Railway custom domain + GoDaddy CNAME + `STORE_DOMAIN`
+
+GoDaddy API credentials: `secrets/godaddy.env` (gitignored). Never commit.
+
+#### Other registrars
+
+- Point DNS (CNAME at `www`, or ALIAS/ANAME at apex if the provider supports CNAME flattening) to the Railway store deployment.
+- Purchase from a different registrar than other stores when possible (bonus isolation, not required).
 
 ### 2a. Stripe Account
 - When renting an aged account, first check its MCC (see MCC Compatibility below)
@@ -101,7 +132,7 @@ The store starts `paused` with `weight_pct = 0` so the rotation never picks it. 
 - Create a NEW Railway service for this store.
 - Set environment variables (`STORE_ID`, `STORE_DOMAIN`, Stripe / PayPal credentials, `CALLBACK_SECRET`, Supabase keys, `APPLE_PAY_DOMAIN_ASSOCIATION`).
 - `APPLE_PAY_DOMAIN_ASSOCIATION` MUST be the file Stripe issued for THIS store's account. Never reuse another store's file. The repo `.gitignore` prevents accidental check-ins.
-CRITICAL: `CALLBACK_SECRET` MUST be a generic random string (no restricted terms, or shared suffix patterns across deployments).
+CRITICAL: `CALLBACK_SECRET` MUST match the value on every live campaign and store (shared HMAC — copy from OptimiSystems, do NOT generate a new one per store; see LESSONS.md 2026-07-01).
 - Deploy from the `store/` directory. The Railway boot runs `prestart` → `node scripts/sterility-check.js` → fails the boot if the check fails.
 
 ### 7. What MUST Differ Per Store
@@ -122,7 +153,7 @@ CRITICAL: `CALLBACK_SECRET` MUST be a generic random string (no restricted terms
 - **Layout fingerprint** — new `VARIANTS` entry in `store/lib/layout-fingerprint.js`. Drives CSS variable names, nav class names, body class, header class, transition timing, font stack.
 - **24-product price vector** — run `node store/scripts/generate-prices.js --store=<id>`. Deterministic per-store unique vector.
 - **Apple Pay merchant-domain-association file** — per-deploy `APPLE_PAY_DOMAIN_ASSOCIATION` env var, issued by THIS store's Stripe account.
-- **`CALLBACK_SECRET`** — unique random string per deploy; never share a suffix pattern across deploys.
+- **`CALLBACK_SECRET`** — shared random string across all campaigns and stores (copy from a live store; see LESSONS.md 2026-07-01). Do NOT generate a unique value per store.
 
 ### 8. What CAN Be Shared (Safe Within Defense Strategy)
 - Tailwind CDN, Inter font, Google Fonts preconnect — universal across the web.
