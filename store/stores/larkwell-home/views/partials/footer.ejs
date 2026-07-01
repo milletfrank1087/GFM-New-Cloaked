@@ -1,0 +1,147 @@
+<section class="relative overflow-hidden bg-stone-900">
+  <div class="lk-mesh absolute inset-0 opacity-40"></div>
+  <div class="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-14">
+    <div class="lk-reveal lk-card rounded-2xl bg-white/[0.03] lk-glass border-white/10 p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center" style="background:rgba(255,255,255,0.04)">
+      <div>
+        <h3 class="text-white font-bold text-lg sm:text-xl mb-1.5">Join the Larkwell letter</h3>
+        <p class="text-stone-400 text-xs leading-relaxed max-w-sm">One short email a month: new arrivals, a small styling idea for the home, and the occasional subscriber-only offer. No clutter, unsubscribe anytime.</p>
+      </div>
+      <form class="flex flex-col sm:flex-row gap-2.5" onsubmit="event.preventDefault(); var b=this.querySelector('button'); var i=this.querySelector('input'); i.value=''; i.placeholder='You are on the list ✓'; b.textContent='Subscribed'; b.disabled=true;">
+        <input type="email" required placeholder="you@example.com" aria-label="Email address"
+          class="flex-1 bg-white/5 border border-white/10 text-white placeholder-stone-500 rounded-xl px-4 py-3 text-sm focus:outline-none">
+        <button type="submit" class="btn-primary text-white px-5 py-3 rounded-full font-semibold text-sm whitespace-nowrap">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-stone-900 text-stone-400 mt-auto border-t border-white/5">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-8">
+    <div class="grid grid-cols-2 md:grid-cols-12 gap-8 mb-10">
+      <div class="col-span-2 md:col-span-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-7 h-7 rounded-xl bg-primary flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L12 3l9 7.5M5.25 9.75V19.5a.75.75 0 00.75.75h3.75v-5.25a1.5 1.5 0 011.5-1.5h1.5a1.5 1.5 0 011.5 1.5v5.25H18a.75.75 0 00.75-.75V9.75"/></svg>
+          </div>
+          <span class="text-white font-bold text-sm"><%= store.name %></span>
+        </div>
+        <p class="text-xs leading-relaxed text-stone-500 mb-5 max-w-xs"><%= store.tagline %></p>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-stone-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> EU + UK delivery
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-stone-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">Family-run</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="/contact" aria-label="Instagram" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-stone-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.2 15.58 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.2 8.8 2.2 12 2.2zm0 1.8c-3.14 0-3.5 0-4.74.07-.9.04-1.38.19-1.7.32-.43.16-.74.36-1.06.68-.32.32-.52.63-.68 1.06-.13.32-.28.8-.32 1.7C3.2 9.05 3.2 9.4 3.2 12s0 2.95.07 4.19c.04.9.19 1.38.32 1.7.16.43.36.74.68 1.06.32.32.63.52 1.06.68.32.13.8.28 1.7.32 1.24.07 1.6.07 4.74.07s3.5 0 4.74-.07c.9-.04 1.38-.19 1.7-.32.43-.16.74-.36 1.06-.68.32-.32.52-.63.68-1.06.13-.32.28-.8.32-1.7.07-1.24.07-1.6.07-4.19s0-2.95-.07-4.19c-.04-.9-.19-1.38-.32-1.7a2.85 2.85 0 00-.68-1.06 2.85 2.85 0 00-1.06-.68c-.32-.13-.8-.28-1.7-.32C15.5 4 15.14 4 12 4zm0 3.06A4.94 4.94 0 1016.94 12 4.94 4.94 0 0012 7.06zm0 8.14A3.2 3.2 0 1115.2 12 3.2 3.2 0 0112 15.2zm5.14-8.34a1.15 1.15 0 11-1.15-1.15 1.15 1.15 0 011.15 1.15z"/></svg>
+          </a>
+          <a href="/contact" aria-label="Pinterest" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-stone-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2C6.9 2 4 5.35 4 8.99c0 1.69.95 3.79 2.47 4.46.23.1.35.06.4-.16.04-.16.24-.98.33-1.36a.36.36 0 00-.08-.35c-.5-.6-.9-1.7-.9-2.73 0-2.64 2-5.2 5.4-5.2 2.94 0 5 2 5 4.87 0 3.23-1.63 5.47-3.76 5.47-1.17 0-2.05-.97-1.77-2.16.34-1.42 1-2.95 1-3.98 0-.92-.5-1.68-1.52-1.68-1.2 0-2.17 1.25-2.17 2.92 0 1.06.36 1.78.36 1.78l-1.45 6.16c-.43 1.82-.06 4.05-.03 4.28.02.13.19.16.26.06.11-.14 1.5-1.86 1.97-3.58.13-.48.77-3 .77-3 .38.73 1.5 1.37 2.69 1.37 3.54 0 5.94-3.23 5.94-7.55C20.02 5.35 16.6 2 12.04 2z"/></svg>
+          </a>
+          <a href="mailto:<%= store.contact_email %>" aria-label="Email" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-stone-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 011.5 17.25V6.75M21 6.75A2.25 2.25 0 0018.75 4.5h-15A2.25 2.25 0 001.5 6.75M21 6.75l-9 6.75-9-6.75"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Shop</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/products" class="hover:text-white transition">All products</a></li>
+          <li><a href="/search?q=Kitchen%20Storage" class="hover:text-white transition">Kitchen storage</a></li>
+          <li><a href="/search?q=Home%20Organization" class="hover:text-white transition">Home organisation</a></li>
+          <li><a href="/search?q=Tableware" class="hover:text-white transition">Tableware</a></li>
+          <li><a href="/search?q=Decor%20%26%20Furniture" class="hover:text-white transition">Decor &amp; furniture</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Company</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/about" class="hover:text-white transition">Our story</a></li>
+          <li><a href="/contact" class="hover:text-white transition">Contact us</a></li>
+          <li><a href="/faq" class="hover:text-white transition">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Support</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/faq" class="hover:text-white transition">Help centre</a></li>
+          <li><a href="/contact" class="hover:text-white transition">Contact</a></li>
+          <li><a href="mailto:<%= store.contact_email %>" class="hover:text-white transition">Email us</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Legal</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/terms" class="hover:text-white transition">Terms of service</a></li>
+          <li><a href="/terms#shipping" class="hover:text-white transition">Shipping &amp; returns</a></li>
+          <li><a href="/privacy" class="hover:text-white transition">Privacy policy</a></li>
+          <li><a href="/privacy#cookies" class="hover:text-white transition">Cookie policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/5 pt-6 flex flex-col gap-5">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3 text-[11px] text-stone-500">
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Secure checkout
+          </span>
+          <span class="text-white/10">|</span>
+          <span>256-bit SSL</span>
+          <span class="text-white/10">|</span>
+          <span>PCI-DSS Level 1</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="Visa"><rect width="38" height="24" rx="4" fill="#1A1F71"/><path d="M15.6 16.3l2.4-9h2.9l-2.4 9h-2.9zm11.8-9l-2.7 6.2-.3-1.5-1-5.1s-.1-.6-.8-.6h-4.1l-.1.3s.8.2 1.8.5l2 7.2h3l4.6-7h-2.4zm-16.2 0h-4.5l-.1.3s.9.2 1.7.5c1 .4 1.1.6 1.3 1.3l2.3 7h3l4.7-9.1h-3l-3 6.2-1.2-5.3s-.2-.9-.9-.9z" fill="white"/></svg>
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="Mastercard"><rect width="38" height="24" rx="4" fill="#0b0b0b"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7.3a7 7 0 010 9.4 7 7 0 000-9.4z" fill="#FF5F00"/></svg>
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="American Express"><rect width="38" height="24" rx="4" fill="#2E77BC"/><path d="M7 9h24v6H7z" fill="#2E77BC"/><text x="19" y="15.4" font-family="Arial, sans-serif" font-size="6.5" font-weight="700" fill="#fff" text-anchor="middle">AMEX</text></svg>
+          <span class="h-6 px-2 rounded bg-white/[0.06] border border-white/10 flex items-center gap-1 text-[10px] font-semibold text-stone-200"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6-.1 0-2.5-1-2.5-3.7zM14.2 6c.7-.8 1.1-1.9 1-3-1 .1-2.1.7-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg>Pay</span>
+          <span class="h-6 px-2 rounded bg-white/[0.06] border border-white/10 flex items-center text-[10px] font-semibold text-stone-200">G&nbsp;Pay</span>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-600">
+        <p>&copy; <%= new Date().getFullYear() %> <%= store.name %>. All rights reserved. Charges appear as <%= store.statementDescriptor || store.name %>.</p>
+        <div class="flex items-center gap-4">
+          <a href="/terms" class="hover:text-stone-300 transition">Terms</a>
+          <a href="/privacy" class="hover:text-stone-300 transition">Privacy</a>
+          <span>Made in the EU</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  root.classList.add('lk-js');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var reveals = [].slice.call(document.querySelectorAll('.lk-reveal'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    reveals.forEach(function(el){ el.classList.add('lk-in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          var d = e.target.getAttribute('data-delay');
+          if (d) e.target.style.transitionDelay = d + 'ms';
+          e.target.classList.add('lk-in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  var head = document.getElementById('lk-header');
+  if (head) {
+    var onScroll = function(){ head.classList.toggle('lk-head-scrolled', window.scrollY > 8); };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+})();
+</script>

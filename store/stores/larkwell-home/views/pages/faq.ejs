@@ -1,0 +1,67 @@
+<%
+  const pageTitle = 'FAQ';
+  const extraHead = '';
+  const email = store.contact_email || ('support@' + store.domain);
+  const sym = store.currencySymbol || '\u20ac';
+%>
+<%- include('../layouts/store', { body: `
+<section class="relative overflow-hidden lk-mesh border-b border-stone-100">
+  <div class="relative max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-16 text-center lk-reveal">
+    <span class="inline-flex items-center gap-1.5 bg-white/70 lk-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4">Help centre</span>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-stone-900 tracking-tight mb-3">Frequently asked questions</h1>
+    <p class="text-sm sm:text-base text-stone-500 leading-relaxed max-w-xl mx-auto">Everything about ordering, delivery and returns. Still stuck? <a href="/contact" class="text-primary font-semibold hover:underline">Talk to us</a>.</p>
+  </div>
+</section>
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-10 md:py-14 space-y-10">
+  ${[
+    {
+      group: 'Ordering & delivery',
+      items: [
+        { q: 'Where do you ship?', a: 'We ship across the European Union and the United Kingdom with a tracked courier. If you are outside these regions, email us and we will let you know whether we can help.' },
+        { q: 'How much is delivery?', a: 'Delivery is free on all EU orders over ' + sym + '50. For smaller orders a flat tracked-shipping fee is shown clearly at checkout before you pay.' },
+        { q: 'How long will my order take?', a: 'Orders are dispatched within one working day. Most parcels arrive in two to four working days, depending on your country. You will receive tracking by email as soon as it ships.' },
+        { q: 'Can I track my order?', a: 'Yes. Once your order is dispatched we email you a tracking link so you can follow it to your door.' }
+      ]
+    },
+    {
+      group: 'Payments & security',
+      items: [
+        { q: 'What payment methods do you accept?', a: 'We accept all major credit and debit cards (Visa, Mastercard, American Express) through Stripe. Apple Pay and Google Pay are supported where available.' },
+        { q: 'Is my payment secure?', a: 'All payments are processed through Stripe, a PCI-DSS Level 1 certified processor. Card details are encrypted with 256-bit SSL and never touch our servers.' },
+        { q: 'Do your prices include VAT?', a: 'Prices shown include VAT where applicable. Any duties for orders outside the EU are the responsibility of the recipient.' }
+      ]
+    },
+    {
+      group: 'Returns & care',
+      items: [
+        { q: 'What is your returns policy?', a: 'You can return any unused item in its original packaging within 30 days of delivery for a refund. Contact ' + email + ' and we will send simple return instructions.' },
+        { q: 'My item arrived damaged — what now?', a: 'We are sorry! Email us within 14 days with a photo and your order number and we will arrange a replacement or a full refund straight away.' },
+        { q: 'How do I care for my pieces?', a: 'Each product lists its care notes on the product page. As a rule: bamboo and wood prefer a wipe rather than a soak, and most stoneware and glass is dishwasher safe.' }
+      ]
+    }
+  ].map(section => '<div class="lk-reveal">' +
+    '<h2 class="text-xs font-semibold text-primary uppercase tracking-wider mb-3 pl-1">' + section.group + '</h2>' +
+    '<div class="space-y-2">' +
+      section.items.map(item => '<details class="group lk-card bg-white rounded-xl overflow-hidden">' +
+        '<summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none font-semibold text-stone-900 text-sm hover:text-primary transition">' +
+          '<span class="pr-4">' + item.q + '</span>' +
+          '<svg class="w-4 h-4 text-stone-400 group-open:rotate-180 group-open:text-primary transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+        '</summary>' +
+        '<div class="px-4 pb-4 text-stone-500 text-xs leading-relaxed border-t border-stone-100 pt-3">' + item.a + '</div>' +
+      '</details>').join('') +
+    '</div>' +
+  '</div>').join('')}
+
+  <div class="lk-reveal relative overflow-hidden rounded-3xl bg-grad-primary p-8 sm:p-10 text-center">
+    <div class="lk-grid-bg absolute inset-0 opacity-20"></div>
+    <div class="relative">
+      <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Still have questions?</h3>
+      <p class="text-sm text-white/80 mb-6 max-w-md mx-auto">We answer most enquiries within one working day.</p>
+      <a href="/contact" class="inline-flex items-center justify-center gap-2 text-primary bg-white px-6 py-3.5 rounded-full font-semibold text-sm transition hover:shadow-lg">Send us a message
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+`, store }) %>

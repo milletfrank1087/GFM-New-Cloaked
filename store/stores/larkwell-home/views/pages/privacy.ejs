@@ -1,0 +1,88 @@
+<%
+  const pageTitle = 'Privacy Policy';
+  const extraHead = '';
+  const email = store.contact_email || ('support@' + store.domain);
+  const updated = new Date().toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' });
+%>
+<%- include('../layouts/store', { body: `
+<section class="relative overflow-hidden lk-mesh border-b border-stone-100">
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-14 lk-reveal">
+    <span class="inline-flex items-center gap-1.5 bg-white/70 lk-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4">Legal</span>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-stone-900 tracking-tight mb-2">Privacy Policy</h1>
+    <p class="text-xs text-stone-400">Last updated: ${updated}</p>
+  </div>
+</section>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <aside class="lg:col-span-4 lg:sticky lg:top-28 lk-reveal">
+      <div class="lk-card bg-white rounded-2xl p-5">
+        <p class="text-[10px] font-semibold text-stone-400 uppercase tracking-wider mb-3">On this page</p>
+        <nav class="space-y-1 text-xs">
+          ${[
+            ['collect', 'Information we collect'],
+            ['use', 'How we use it'],
+            ['security', 'Security'],
+            ['processors', 'Third-party processors'],
+            ['cookies', 'Cookies'],
+            ['rights', 'Your rights'],
+            ['contact', 'Contact']
+          ].map(s => '<a href="#' + s[0] + '" class="block px-3 py-1.5 rounded-lg text-stone-500 hover:bg-stone-50 hover:text-primary transition">' + s[1] + '</a>').join('')}
+        </nav>
+      </div>
+    </aside>
+
+    <div class="lg:col-span-8 lk-reveal" data-delay="80">
+      <div class="lk-card bg-white rounded-2xl p-6 sm:p-8 space-y-7 text-stone-500 text-sm leading-relaxed">
+        <p class="text-stone-600">${store.name} respects your privacy. This policy explains what information we collect when you visit our website or place an order, how we use it, and the choices you have. We act as a data controller for the data described below.</p>
+
+        <div id="collect" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">Information we collect</h2>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong class="text-stone-700">Order & delivery details:</strong> the name, email, billing address and shipping address you provide at checkout.</li>
+            <li><strong class="text-stone-700">Payment data:</strong> handled directly by Stripe. We receive only metadata such as card brand, last four digits and country &mdash; never full card numbers.</li>
+            <li><strong class="text-stone-700">Support communications:</strong> messages you send us and our replies, retained for support and audit purposes.</li>
+            <li><strong class="text-stone-700">Usage data:</strong> anonymised analytics about pages and products viewed, used to improve the shop.</li>
+          </ul>
+        </div>
+        <div id="use" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">How we use it</h2>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>To process, pack and ship your orders.</li>
+            <li>To send order confirmations, dispatch notices and tracking.</li>
+            <li>To handle returns, refunds and customer support.</li>
+            <li>To improve our products, range and website.</li>
+            <li>To meet our legal, accounting and tax obligations.</li>
+          </ul>
+        </div>
+        <div id="security" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">Security</h2>
+          <p>All transactions are encrypted with 256-bit TLS. Payments are processed by Stripe under their PCI-DSS Level 1 certification. Order data is stored in EU-region databases with role-based access controls.</p>
+        </div>
+        <div id="processors" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">Third-party processors</h2>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong class="text-stone-700">Stripe:</strong> payment processing (<a href="https://stripe.com/privacy" target="_blank" rel="noopener" class="text-primary hover:underline">privacy policy</a>).</li>
+            <li><strong class="text-stone-700">Delivery couriers:</strong> we share your name and shipping address with our carriers solely to deliver your order.</li>
+            <li><strong class="text-stone-700">Email delivery:</strong> a transactional email provider for order confirmations and support.</li>
+            <li><strong class="text-stone-700">Analytics:</strong> privacy-friendly, IP-anonymised analytics for site improvement.</li>
+          </ul>
+          <p class="mt-2">We do not sell or rent personal information. We share data with third parties only as necessary to deliver the products you purchase.</p>
+        </div>
+        <div id="cookies" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">Cookies</h2>
+          <p>We use essential cookies for session management and checkout. Optional analytics cookies are limited to first-party, IP-anonymised page-view counting. You can clear or block cookies in your browser settings; essential cookies are required for checkout to function.</p>
+        </div>
+        <div id="rights" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">Your rights</h2>
+          <p>Under UK GDPR and EU GDPR you have the right to access, correct, delete, restrict or port your personal data, and to object to processing. To exercise these rights, contact us at the email below.</p>
+        </div>
+        <div id="contact" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">Contact</h2>
+          <p>For privacy enquiries: <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`, store }) %>

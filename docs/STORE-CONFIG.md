@@ -115,6 +115,20 @@ Three additional metadata keys are updated AFTER a successful payment to record 
 
 These MUST be aliased per store, just like all other metadata keys. The server reads them from `storeConfig.metadataKeys` with fallbacks to the default names. Choose alias names that match the store's MCC and product context.
 
+### Fulfillment Values (Digital vs Physical Goods)
+
+The metadata *values* written post-payment are configurable per store via an optional `fulfillment` block in `config.js`. When absent, the store behaves as a **digital** store (backward compatible with the original hardcoded behavior):
+
+```javascript
+// Optional. Omit for digital stores (defaults below are applied).
+fulfillment: {
+  statusValue: 'delivered',        // digital default; physical stores use 'fulfilled' or 'shipped'
+  method: 'digital_download',      // digital default; physical stores use 'shipping' / 'standard_shipping'
+}
+```
+
+The server (`store/routes/stripe.js`) reads `storeConfig.fulfillment` and falls back to `{ statusValue: 'delivered', method: 'digital_download' }`. A **physical-goods** store sets, e.g., `fulfillment: { statusValue: 'fulfilled', method: 'shipping' }` so the post-payment PaymentIntent fulfillment evidence matches its MCC and business model (required so Stripe's site-vs-fulfillment consistency check passes). The metadata *key names* are still aliased via `metadataKeys.fulfillmentStatus` / `fulfilledAt` / `deliveryMethod`.
+
 When adding a new store, choose entirely new key names. Examples for a new store:
 
 | Field | Possible Keys |

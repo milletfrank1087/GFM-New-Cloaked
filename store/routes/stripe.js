@@ -406,12 +406,15 @@ module.exports = function createStripeRouter(ctx) {
         });
       }
 
+      const fulfillment = storeConfig.fulfillment || {};
+      const fulfillmentStatusValue = fulfillment.statusValue || 'delivered';
+      const deliveryMethodValue = fulfillment.method || 'digital_download';
       await stripe.paymentIntents.update(paymentIntent.id, {
         metadata: {
           ...paymentIntent.metadata,
-          [fmk.fulfillmentStatus || 'fulfillment_status']: 'delivered',
+          [fmk.fulfillmentStatus || 'fulfillment_status']: fulfillmentStatusValue,
           [fmk.fulfilledAt || 'fulfilled_at']: new Date().toISOString(),
-          [fmk.deliveryMethod || 'delivery_method']: 'digital_download'
+          [fmk.deliveryMethod || 'delivery_method']: deliveryMethodValue
         }
       });
 

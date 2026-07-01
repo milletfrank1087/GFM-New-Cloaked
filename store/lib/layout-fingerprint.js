@@ -78,6 +78,17 @@ const VARIANTS = {
     descriptionFallback: 'Sewing patterns, styling guides and lookbooks for the modern women\u2019s wardrobe.',
     style: variantG,
   },
+  'larkwell-home': {
+    bodyClass: 'font-inter min-h-screen flex flex-col text-neutral-700 antialiased tracking-[-0.01em]',
+    headerClass: 'bg-[#f7f4ee]/85 border-b border-stone-200/60 sticky top-0 z-40 backdrop-blur-md',
+    navClass: 'lk-menu-pane',
+    navId: 'lk-menu-pane',
+    overlayClass: 'lk-menu-veil',
+    overlayId: 'lk-menu-veil',
+    fontStack: ['Inter', '"Corbel"', '"Gill Sans"', '"Trebuchet MS"', 'sans-serif'],
+    descriptionFallback: 'Kitchen, storage and home organisation pieces designed for calm, clutter-free living.',
+    style: variantH,
+  },
 };
 
 function variantA(colors) {
@@ -327,6 +338,60 @@ function variantG(colors) {
     .pc-menu-veil.open { opacity: 1; pointer-events: auto; }
     html { scroll-behavior: smooth; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn-primary { transition: none; } .pc-fade { animation: none; } }`;
+}
+
+function variantH(colors) {
+  const p = colors.primary || '#a15a41';
+  const a = colors.accent || '#7d4531';
+  const b = colors.bg || '#faf6f0';
+  return `@keyframes lk-rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes lk-slidein { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes lk-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes lk-pulse-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, ${p} 42%, transparent); } 70% { box-shadow: 0 0 0 13px color-mix(in srgb, ${p} 0%, transparent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+    input:focus, textarea:focus, select:focus { border-color: ${p} !important; box-shadow: 0 0 0 4px color-mix(in srgb, ${p} 12%, transparent); outline: 0; }
+    :root { --lk-clay: ${p}; --lk-cocoa: ${a}; --lk-cream: ${b}; --lk-rest: color-mix(in srgb, ${p} 10%, white); --lk-line: color-mix(in srgb, ${p} 20%, #e7e2d6); --lk-ink: #2a2620; --lk-sand: #c9a56d; }
+    body { background-color: var(--lk-cream); }
+    ::selection { background-color: var(--lk-clay); color: #fff; }
+    .text-primary { color: var(--lk-clay); }
+    .text-accent { color: var(--lk-cocoa); }
+    .bg-primary { background-color: var(--lk-clay); }
+    .bg-accent { background-color: var(--lk-cocoa); }
+    .bg-grad-primary { background-image: linear-gradient(135deg, var(--lk-clay), var(--lk-cocoa)); }
+    .bg-primary-50 { background-color: var(--lk-rest); }
+    .bg-primary-100 { background-color: color-mix(in srgb, var(--lk-clay) 16%, white); }
+    .border-primary { border-color: var(--lk-clay); }
+    .ring-primary { --tw-ring-color: var(--lk-clay); }
+    .btn-primary { background-color: var(--lk-clay); transition: filter 0.18s linear, transform 0.18s ease-out, box-shadow 0.2s ease; }
+    .btn-primary:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 12px 26px -14px color-mix(in srgb, ${p} 70%, transparent); }
+    .lk-fade { animation: lk-rise 0.34s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .lk-card { border: 1px solid var(--lk-line); }
+    .lk-lift { transition: transform 0.24s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.24s ease, border-color 0.24s ease; }
+    .lk-lift:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -26px color-mix(in srgb, var(--lk-ink) 55%, transparent); border-color: color-mix(in srgb, var(--lk-clay) 45%, var(--lk-line)); }
+    .lk-grad-text { background: linear-gradient(118deg, var(--lk-clay), color-mix(in srgb, var(--lk-clay) 45%, var(--lk-sand))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lk-mesh { background-image: radial-gradient(58% 60% at 86% 6%, color-mix(in srgb, var(--lk-clay) 15%, transparent) 0%, transparent 60%), radial-gradient(48% 52% at 8% 0%, color-mix(in srgb, var(--lk-sand) 14%, transparent) 0%, transparent 58%), radial-gradient(46% 60% at 50% 108%, color-mix(in srgb, var(--lk-cocoa) 12%, transparent) 0%, transparent 62%); }
+    .lk-grid-bg { background-image: linear-gradient(color-mix(in srgb, var(--lk-clay) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--lk-clay) 8%, transparent) 1px, transparent 1px); background-size: 30px 30px; -webkit-mask-image: radial-gradient(72% 60% at 50% 28%, #000 0%, transparent 76%); mask-image: radial-gradient(72% 60% at 50% 28%, #000 0%, transparent 76%); }
+    .lk-glass { background: color-mix(in srgb, #ffffff 82%, transparent); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); }
+    .lk-float { animation: lk-float 6.5s ease-in-out infinite; }
+    .lk-ring { animation: lk-pulse-ring 2.6s ease-out infinite; }
+    .lk-link { position: relative; }
+    .lk-link::after { content: ''; position: absolute; left: 0; bottom: -3px; height: 2px; width: 100%; background: var(--lk-clay); border-radius: 2px; transform: scaleX(0); transform-origin: right; transition: transform 0.26s ease; }
+    .lk-link:hover::after, .lk-link.is-active::after { transform: scaleX(1); transform-origin: left; }
+    .lk-chip { transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease; }
+    .lk-chip:hover { transform: translateY(-1px); }
+    .lk-head-scrolled { box-shadow: 0 8px 30px -22px color-mix(in srgb, var(--lk-ink) 65%, transparent); }
+    .lk-menu-pane { transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .lk-menu-pane.open { transform: translateX(0); }
+    .lk-menu-veil { opacity: 0; pointer-events: none; transition: opacity 0.3s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .lk-menu-veil.open { opacity: 1; pointer-events: auto; }
+    .lk-js .lk-reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.62s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.62s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .lk-js .lk-reveal.lk-in { opacity: 1; transform: none; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn-primary, .lk-lift, .lk-chip { transition: none; }
+      .lk-fade, .lk-float, .lk-ring { animation: none; }
+      .lk-js .lk-reveal { opacity: 1; transform: none; transition: none; }
+    }`;
 }
 
 function buildStyleBlock(variant, store) {

@@ -1,0 +1,90 @@
+<%
+  const pageTitle = 'Terms of Service';
+  const extraHead = '';
+  const email = store.contact_email || ('support@' + store.domain);
+  const sym = store.currencySymbol || '\u20ac';
+  const updated = new Date().toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' });
+%>
+<%- include('../layouts/store', { body: `
+<section class="relative overflow-hidden lk-mesh border-b border-stone-100">
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-14 lk-reveal">
+    <span class="inline-flex items-center gap-1.5 bg-white/70 lk-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4">Legal</span>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-stone-900 tracking-tight mb-2">Terms of Service</h1>
+    <p class="text-xs text-stone-400">Last updated: ${updated}</p>
+  </div>
+</section>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <aside class="lg:col-span-4 lg:sticky lg:top-28 lk-reveal">
+      <div class="lk-card bg-white rounded-2xl p-5">
+        <p class="text-[10px] font-semibold text-stone-400 uppercase tracking-wider mb-3">On this page</p>
+        <nav class="space-y-1 text-xs">
+          ${[
+            ['what-we-sell', '1. What we sell'],
+            ['orders', '2. Orders & pricing'],
+            ['payment', '3. Payment'],
+            ['shipping', '4. Shipping & delivery'],
+            ['returns', '5. Returns & refunds'],
+            ['warranty', '6. Warranty & faults'],
+            ['ip', '7. Intellectual property'],
+            ['liability', '8. Liability'],
+            ['changes', '9. Changes'],
+            ['contact', '10. Contact']
+          ].map(s => '<a href="#' + s[0] + '" class="block px-3 py-1.5 rounded-lg text-stone-500 hover:bg-stone-50 hover:text-primary transition">' + s[1] + '</a>').join('')}
+        </nav>
+      </div>
+    </aside>
+
+    <div class="lg:col-span-8 lk-reveal" data-delay="80">
+      <div class="lk-card bg-white rounded-2xl p-6 sm:p-8 space-y-7 text-stone-500 text-sm leading-relaxed">
+        <p class="text-stone-600">These Terms govern your access to and use of the ${store.name} website and the physical homeware products we sell through it. By placing an order you accept these Terms.</p>
+
+        <div id="what-we-sell" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">1. What we sell</h2>
+          <p>${store.name} sells physical homeware &mdash; kitchen storage, home organisation, tableware, cleaning and decor products &mdash; shipped to customers across the European Union and the United Kingdom. Product images are illustrative; natural materials such as wood, bamboo and stoneware will vary slightly in grain, tone and finish.</p>
+        </div>
+        <div id="orders" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">2. Orders & pricing</h2>
+          <p>A contract is formed when we send you an order confirmation email. Prices are shown in ${store.currency || 'EUR'} and include VAT where applicable. We take care to price accurately, but if an obvious error is found we will contact you before dispatch and offer to proceed at the correct price or cancel for a full refund.</p>
+        </div>
+        <div id="payment" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">3. Payment</h2>
+          <p class="mb-2">All payments are processed by Stripe Payments Europe Limited or Stripe Payments UK Limited, both PCI-DSS Level 1 certified. Card details are encrypted and never touch our servers.</p>
+          <p>Card statements will show the charge under &ldquo;${store.statementDescriptor || store.name}&rdquo;. Please contact us before raising a chargeback if anything looks unfamiliar &mdash; we resolve most issues within one working day.</p>
+        </div>
+        <div id="shipping" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">4. Shipping & delivery</h2>
+          <p class="mb-2">We dispatch orders within one working day and ship with a tracked courier across the EU and UK. Most parcels arrive within two to four working days, though remote regions may take longer.</p>
+          <p>Delivery is free on orders over ${sym}50. For smaller orders a flat tracked-shipping fee is shown at checkout before payment. Risk in the goods passes to you on delivery. If a parcel is lost in transit, contact us and we will investigate with the courier and replace or refund it.</p>
+        </div>
+        <div id="returns" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">5. Returns & refunds</h2>
+          <p class="mb-2">You may return any unused item in its original packaging within 30 days of delivery for a refund of the item price. This is in addition to your statutory right of withdrawal under EU and UK consumer law. To start a return, email ${email} with your order number and we will send instructions.</p>
+          <p>Refunds are issued to the original payment method within 14 days of us receiving the returned goods. Return shipping is paid by the customer unless the item was faulty or sent in error.</p>
+        </div>
+        <div id="warranty" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">6. Warranty & faults</h2>
+          <p>All goods are sold in line with your statutory rights: they must be as described, of satisfactory quality and fit for purpose. If an item arrives damaged or develops a fault, contact ${email} within a reasonable time and we will arrange a repair, replacement or refund as appropriate.</p>
+        </div>
+        <div id="ip" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">7. Intellectual property</h2>
+          <p>All copy, photography, design and code on this website remain the intellectual property of ${store.name} and may not be copied or reused without permission.</p>
+        </div>
+        <div id="liability" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">8. Liability</h2>
+          <p>Our aggregate liability arising out of any order is limited to the amount paid for that order. Nothing in these Terms excludes or limits liability that cannot lawfully be excluded, including liability for death or personal injury caused by negligence.</p>
+        </div>
+        <div id="changes" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">9. Changes</h2>
+          <p>We may update these Terms from time to time. Updates apply to orders placed after the revised version is published.</p>
+        </div>
+        <div id="contact" class="scroll-mt-28">
+          <h2 class="text-sm font-bold text-stone-900 mb-2">10. Contact</h2>
+          <p>Questions about these terms? Email <a href="mailto:${email}" class="text-primary hover:underline">${email}</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`, store }) %>
