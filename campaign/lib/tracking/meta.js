@@ -51,6 +51,12 @@ function buildMetaUserData(userData, clientInfo, { hashSHA256 }) {
   return result;
 }
 
+function resolveSourceUrl(originalUrl) {
+  const capiDomain = process.env.CAPI_SOURCE_DOMAIN;
+  if (!capiDomain) return originalUrl;
+  return `https://${capiDomain}/`;
+}
+
 async function sendMetaEvent(eventName, eventData, userData, clientInfo, { getConfig, hashSHA256 }) {
   const { FB_PIXEL_ID, FB_ACCESS_TOKEN } = getConfig();
   
@@ -77,7 +83,7 @@ async function sendMetaEvent(eventName, eventData, userData, clientInfo, { getCo
         event_name: eventName,
         event_time: eventTime,
         event_id: eventData.eventId,
-        event_source_url: eventData.sourceUrl,
+        event_source_url: resolveSourceUrl(eventData.sourceUrl),
         action_source: 'website',
         user_data: metaUserData
       }]
