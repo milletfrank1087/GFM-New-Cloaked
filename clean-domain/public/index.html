@@ -3,21 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Impact Metrics - Community Engagement Analytics</title>
-  <meta name="description" content="Impact Metrics provides analytics and engagement tracking for community organizations and nonprofits.">
+  <title>Impact Metrics - Event Analytics Platform</title>
+  <meta name="description" content="Impact Metrics helps businesses track and measure engagement across digital channels with server-side event processing.">
   <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #334155; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .container { text-align: center; max-width: 480px; padding: 2rem; }
-    h1 { font-size: 1.5rem; font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; }
-    p { font-size: 0.95rem; color: #64748b; line-height: 1.6; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #334155; min-height: 100vh; }
+    .hero { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .container { text-align: center; max-width: 560px; }
+    .logo { font-size: 2.5rem; margin-bottom: 1rem; }
+    h1 { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; }
+    .subtitle { font-size: 1.05rem; color: #475569; line-height: 1.7; margin-bottom: 2rem; }
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; margin-bottom: 2rem; }
+    .feature { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; }
+    .feature h3 { font-size: 0.85rem; font-weight: 600; color: #1e293b; margin-bottom: 0.25rem; }
+    .feature p { font-size: 0.8rem; color: #64748b; line-height: 1.5; }
+    .footer { font-size: 0.75rem; color: #94a3b8; }
+    @media (max-width: 480px) { .features { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Impact Metrics</h1>
-    <p>Community engagement analytics platform. This service processes event data for partner organizations.</p>
-  </div>
+  <section class="hero">
+    <div class="container">
+      <div class="logo">📊</div>
+      <h1>Impact Metrics</h1>
+      <p class="subtitle">Server-side event analytics for modern businesses. Track conversions, measure engagement, and optimize performance across all your digital channels.</p>
+      <div class="features">
+        <div class="feature">
+          <h3>Real-Time Processing</h3>
+          <p>Events processed server-side with sub-second latency.</p>
+        </div>
+        <div class="feature">
+          <h3>Cross-Channel Attribution</h3>
+          <p>Unified measurement across paid and organic sources.</p>
+        </div>
+        <div class="feature">
+          <h3>Privacy-First</h3>
+          <p>Compliant data handling with automatic PII hashing.</p>
+        </div>
+        <div class="feature">
+          <h3>API-Driven</h3>
+          <p>Connect your stack with our RESTful event ingestion API.</p>
+        </div>
+      </div>
+      <p class="footer">&copy; 2026 Impact Metrics. All rights reserved.</p>
+    </div>
+  </section>
 </body>
 </html>
