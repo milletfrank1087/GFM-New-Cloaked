@@ -1,0 +1,179 @@
+<section class="relative overflow-hidden bg-slate-900">
+  <div class="lb-mesh absolute inset-0 opacity-60"></div>
+  <div class="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-14">
+    <div class="lb-reveal lb-card rounded-2xl bg-white/[0.03] lb-glass border-white/10 p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center" style="background:rgba(255,255,255,0.04)">
+      <div>
+        <h3 class="text-white font-bold text-lg sm:text-xl mb-1.5">The brand builder brief</h3>
+        <p class="text-slate-400 text-xs leading-relaxed max-w-sm">One short email a month: a new template drop, a positioning tip worth stealing, and what we shipped. No fluff, unsubscribe anytime.</p>
+      </div>
+      <form class="flex flex-col sm:flex-row gap-2.5" onsubmit="event.preventDefault(); var b=this.querySelector('button'); var i=this.querySelector('input'); i.value=''; i.placeholder='You are on the list \u2713'; b.textContent='Subscribed'; b.disabled=true;">
+        <input type="email" required placeholder="you@studio.com" aria-label="Work email"
+          class="flex-1 bg-white/5 border border-white/10 text-white placeholder-slate-500 rounded-xl px-4 py-3 text-sm focus:outline-none">
+        <button type="submit" class="btn-primary text-white px-5 py-3 rounded-full font-semibold text-sm whitespace-nowrap">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-slate-900 text-slate-400 mt-auto border-t border-white/5">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-8">
+    <div class="grid grid-cols-2 md:grid-cols-12 gap-8 mb-10">
+      <div class="col-span-2 md:col-span-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+            <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.12a9 9 0 01-1.2-.73l-.22-.16a9 9 0 01-2.06-2.06l-.16-.22a9 9 0 01-.73-1.2M12 3v1m6.36 1.64l-.7.7M21 12h-1M18.36 18.36l-.7-.7M12 21v-1m-4.66-2.64l-.7.7M3 12h1m2.64-6.36l.7.7"/></svg>
+          </div>
+          <span class="text-white font-bold text-sm"><%= store.name %></span>
+        </div>
+        <p class="text-xs leading-relaxed text-slate-500 mb-5 max-w-xs"><%= store.tagline %></p>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-slate-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> UK based
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-slate-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">Since 2019</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="/contact" aria-label="LinkedIn" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.4 8.65 21 11 21 14.1V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2.02 0-2.33 1.57-2.33 3.2V21H9z"/></svg>
+          </a>
+          <a href="/contact" aria-label="Instagram" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="mailto:<%= store.contact_email %>" aria-label="Email" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-white/25 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 011.5 17.25V6.75M21 6.75A2.25 2.25 0 0018.75 4.5h-15A2.25 2.25 0 001.5 6.75M21 6.75l-9 6.75-9-6.75"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Resources</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/products" class="hover:text-white transition">All resources</a></li>
+          <li><a href="/search?q=Brand%20Kits" class="hover:text-white transition">Brand kits</a></li>
+          <li><a href="/search?q=Web%20Templates" class="hover:text-white transition">Web templates</a></li>
+          <li><a href="/search?q=Consulting%20Tools" class="hover:text-white transition">Consulting tools</a></li>
+          <li><a href="/search?q=Bundles" class="hover:text-white transition">Bundles</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Studio</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/about" class="hover:text-white transition">About</a></li>
+          <li><a href="/#method" class="hover:text-white transition">Our method</a></li>
+          <li><a href="/contact" class="hover:text-white transition">Get in touch</a></li>
+          <li><a href="/faq" class="hover:text-white transition">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Support</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/faq" class="hover:text-white transition">Help centre</a></li>
+          <li><a href="/contact" class="hover:text-white transition">Contact</a></li>
+          <li><a href="mailto:<%= store.contact_email %>" class="hover:text-white transition">Email us</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <h4 class="text-white font-semibold text-xs mb-3 uppercase tracking-wider">Legal</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/terms" class="hover:text-white transition">Terms of service</a></li>
+          <li><a href="/terms#refunds" class="hover:text-white transition">Refund policy</a></li>
+          <li><a href="/privacy" class="hover:text-white transition">Privacy policy</a></li>
+          <li><a href="/privacy#cookies" class="hover:text-white transition">Cookie policy</a></li>
+          <li><a href="/terms#licence" class="hover:text-white transition">Licence</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/5 pt-6 flex flex-col gap-5">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3 text-[11px] text-slate-500">
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Secure checkout
+          </span>
+          <span class="text-white/10">|</span>
+          <span>256-bit SSL</span>
+          <span class="text-white/10">|</span>
+          <span>PCI-DSS Level 1</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="Visa"><rect width="38" height="24" rx="4" fill="#1A1F71"/><path d="M15.6 16.3l2.4-9h2.9l-2.4 9h-2.9zm11.8-9l-2.7 6.2-.3-1.5-1-5.1s-.1-.6-.8-.6h-4.1l-.1.3s.8.2 1.8.5l2 7.2h3l4.6-7h-2.4zm-16.2 0h-4.5l-.1.3s.9.2 1.7.5c1 .4 1.1.6 1.3 1.3l2.3 7h3l4.7-9.1h-3l-3 6.2-1.2-5.3s-.2-.9-.9-.9z" fill="white"/></svg>
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="Mastercard"><rect width="38" height="24" rx="4" fill="#0b0b0b"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7.3a7 7 0 010 9.4 7 7 0 000-9.4z" fill="#FF5F00"/></svg>
+          <svg class="h-6 rounded" viewBox="0 0 38 24" fill="none" aria-label="American Express"><rect width="38" height="24" rx="4" fill="#2E77BC"/><path d="M7 9h24v6H7z" fill="#2E77BC"/><text x="19" y="15.4" font-family="Arial, sans-serif" font-size="6.5" font-weight="700" fill="#fff" text-anchor="middle">AMEX</text></svg>
+          <span class="h-6 px-2 rounded bg-white/[0.06] border border-white/10 flex items-center gap-1 text-[10px] font-semibold text-slate-200"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6-.1 0-2.5-1-2.5-3.7zM14.2 6c.7-.8 1.1-1.9 1-3-1 .1-2.1.7-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg>Pay</span>
+          <span class="h-6 px-2 rounded bg-white/[0.06] border border-white/10 flex items-center text-[10px] font-semibold text-slate-200">G&nbsp;Pay</span>
+        </div>
+      </div>
+      <div class="border-t border-white/5 pt-5 mb-5">
+        <p class="text-[11px] text-slate-500 leading-relaxed">ECOMJJ LIMITED &middot; Reg. 80789959 &middot; Unit 903A, 9/F., Cameron Comm Centre, 458&ndash;468 Hennessy Road, Causeway Bay, Hong Kong</p>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+        <p>&copy; <%= new Date().getFullYear() %> <%= store.name %>. All rights reserved. Charges appear as <%= store.statementDescriptor || store.name %>.</p>
+        <div class="flex items-center gap-4">
+          <a href="/terms" class="hover:text-slate-300 transition">Terms</a>
+          <a href="/privacy" class="hover:text-slate-300 transition">Privacy</a>
+          <span>Made in the UK</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  root.classList.add('lb-js');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var reveals = [].slice.call(document.querySelectorAll('.lb-reveal'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    reveals.forEach(function(el){ el.classList.add('lb-in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          var d = e.target.getAttribute('data-delay');
+          if (d) e.target.style.transitionDelay = d + 'ms';
+          e.target.classList.add('lb-in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  function countUp(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    if (isNaN(target)) return;
+    var suffix = el.getAttribute('data-suffix') || '';
+    var prefix = el.getAttribute('data-prefix') || '';
+    var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    if (reduce) { el.textContent = prefix + target.toFixed(dec) + suffix; return; }
+    var dur = 1200, start = null;
+    function step(ts){
+      if (!start) start = ts;
+      var prog = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - prog, 3);
+      el.textContent = prefix + (target * eased).toFixed(dec) + suffix;
+      if (prog < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var counters = [].slice.call(document.querySelectorAll('[data-count]'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    counters.forEach(countUp);
+  } else {
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    counters.forEach(function(el){ cio.observe(el); });
+  }
+
+  var head = document.getElementById('lb-header');
+  if (head) {
+    var onScroll = function(){ head.classList.toggle('lb-head-scrolled', window.scrollY > 8); };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+})();
+</script>

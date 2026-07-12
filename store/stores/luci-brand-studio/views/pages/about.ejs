@@ -1,0 +1,92 @@
+<% const pageTitle = 'Studio'; const extraHead = ''; %>
+<%- include('../layouts/store', { body: `
+<section class="relative overflow-hidden lb-mesh border-b border-slate-100">
+  <div class="lb-grid-bg absolute inset-0 opacity-60 pointer-events-none"></div>
+  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-7 lb-reveal">
+        <span class="inline-flex items-center gap-1.5 bg-white/70 lb-glass border border-primary/15 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-5">About the studio</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-[1.12] mb-4">We build brand systems for consultants &mdash; and sell the templates behind them</h1>
+        <p class="text-sm sm:text-base text-slate-500 leading-relaxed max-w-xl">${store.name} is a brand design studio based in the UK. We work with independent consultants and small creative teams on positioning, identity and web presence, and we package every system, template and framework we build into downloadable resources anyone can use.</p>
+      </div>
+      <div class="lg:col-span-5 lb-reveal" data-delay="120">
+        <div class="lb-card lb-glass bg-white/80 rounded-2xl p-6 shadow-xl shadow-slate-900/5">
+          <div class="grid grid-cols-2 gap-4">
+            ${[
+              { v: '2019', s: '', l: 'Founded in London' },
+              { v: '180', s: '+', l: 'Creative professionals served' },
+              { v: '6', s: ' yrs', l: 'Building brand systems' },
+              { v: '24', s: '', l: 'Downloadable resources' }
+            ].map(m => '<div class="rounded-xl bg-slate-50 border border-slate-100 p-4">' +
+              '<p class="text-xl font-extrabold text-slate-900">' + m.v + m.s + '</p>' +
+              '<p class="text-[11px] text-slate-400 mt-0.5">' + m.l + '</p></div>').join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+  <div class="lb-reveal lb-card bg-white rounded-2xl p-6 sm:p-8 mb-8">
+    <p class="text-sm text-slate-600 leading-relaxed mb-4">We started in 2019 designing brand identities for independent consultants and coaches in London. Six years and a few hundred client projects later, the process has barely changed &mdash; discovery, positioning, visual identity and a system that keeps everything consistent.</p>
+    <p class="text-sm text-slate-600 leading-relaxed">We sell two things. The first is bespoke brand strategy and design for consultants who want a partner. The second is the underlying template library, packaged so any creative professional can buy it and apply it independently. Both come from the same client work.</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+    <div class="lb-reveal lb-lift lb-card bg-white rounded-2xl p-6">
+      <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h3l2-6 4 14 3-8 2 4h4"/></svg>
+      </div>
+      <h3 class="font-semibold text-slate-900 text-sm mb-1.5">What we are</h3>
+      <p class="text-xs text-slate-500 leading-relaxed">A small brand design studio that works exclusively with independent consultants, coaches and service providers. We do not take product companies or startups, and we do not promise things we have not shipped before.</p>
+    </div>
+    <div class="lb-reveal lb-lift lb-card bg-white rounded-2xl p-6" data-delay="80">
+      <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <h3 class="font-semibold text-slate-900 text-sm mb-1.5">What we sell</h3>
+      <p class="text-xs text-slate-500 leading-relaxed">Downloadable brand kits, web templates, consulting tools and creative strategy playbooks. Everything is a digital resource you can start using the same day.</p>
+    </div>
+  </div>
+
+  <h2 class="text-lg font-bold text-slate-900 mb-5 lb-reveal">How a typical engagement looks</h2>
+  <div class="relative pl-6 mb-12">
+    <div class="absolute left-[7px] top-2 bottom-2 w-px bg-slate-200"></div>
+    <div class="space-y-4">
+      ${[
+        { title: 'Discovery call', desc: 'We learn about your practice, audience and goals. Output is a positioning brief, not a slide deck.' },
+        { title: 'Identity design', desc: 'We design your logo, colour system, typography and brand voice &mdash; delivered as a complete guidelines document.' },
+        { title: 'Template build', desc: 'We create your website wireframes, social templates and client-facing documents, all on-brand and editable.' },
+        { title: 'Handover & support', desc: 'You receive all source files plus a 30-day support window for revisions and questions.' }
+      ].map((item, i) => '<div class="lb-reveal relative" data-delay="' + (i * 70) + '">' +
+        '<div class="absolute -left-6 top-1 w-3.5 h-3.5 rounded-full bg-primary ring-4 ring-white"></div>' +
+        '<div class="lb-card bg-white rounded-xl p-4"><p class="font-semibold text-slate-900 text-sm mb-0.5">' + item.title + '</p><p class="text-xs text-slate-500 leading-relaxed">' + item.desc + '</p></div>' +
+      '</div>').join('')}
+    </div>
+  </div>
+
+  <h2 class="text-lg font-bold text-slate-900 mb-5 lb-reveal">How we work</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
+    ${[
+      { t: 'Ship, then refine', d: 'We would rather launch a clean first version this week than polish a perfect one next quarter.' },
+      { t: 'Clarity over trends', d: 'Every design decision ties back to your positioning and your audience &mdash; not what is trending on Dribbble.' },
+      { t: 'Consultant-only focus', d: 'We say no to other niches so the resources keep getting sharper for service providers.' }
+    ].map((v, i) => '<div class="lb-reveal lb-card bg-slate-50 rounded-xl p-5" data-delay="' + (i * 70) + '">' +
+      '<div class="w-8 h-8 rounded-lg bg-white border border-slate-100 flex items-center justify-center mb-3 text-primary font-bold text-xs">' + (i + 1) + '</div>' +
+      '<h3 class="font-semibold text-slate-900 text-sm mb-1">' + v.t + '</h3>' +
+      '<p class="text-xs text-slate-500 leading-relaxed">' + v.d + '</p></div>').join('')}
+  </div>
+
+  <div class="lb-reveal relative overflow-hidden rounded-3xl bg-grad-primary p-8 sm:p-10 text-center">
+    <div class="lb-grid-bg absolute inset-0 opacity-20"></div>
+    <div class="relative">
+      <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Want to see the resources before you commit?</h3>
+      <p class="text-sm text-white/80 mb-6 max-w-md mx-auto">Most consultants start with one or two downloadable resources before booking a bespoke engagement.</p>
+      <a href="/products" class="inline-flex items-center justify-center gap-2 text-primary bg-white px-6 py-3.5 rounded-full font-semibold text-sm transition hover:shadow-lg">Browse the catalogue
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+`, store }) %>

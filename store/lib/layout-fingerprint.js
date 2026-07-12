@@ -89,6 +89,17 @@ const VARIANTS = {
     descriptionFallback: 'Kitchen, storage and home organisation pieces designed for calm, clutter-free living.',
     style: variantH,
   },
+  'luci-brand-studio': {
+    bodyClass: 'font-inter min-h-screen flex flex-col text-slate-700 antialiased tracking-[0.01em]',
+    headerClass: 'bg-white/88 border-b border-violet-100/50 sticky top-0 z-40 backdrop-blur-lg',
+    navClass: 'lb-slide-pane',
+    navId: 'lb-slide-pane',
+    overlayClass: 'lb-slide-veil',
+    overlayId: 'lb-slide-veil',
+    fontStack: ['Inter', '"DM Sans"', '"Poppins"', 'system-ui', 'sans-serif'],
+    descriptionFallback: 'Brand identity kits, web design templates and creative strategy resources for consultants.',
+    style: variantI,
+  },
 };
 
 function variantA(colors) {
@@ -391,6 +402,59 @@ function variantH(colors) {
       .btn-primary, .lk-lift, .lk-chip { transition: none; }
       .lk-fade, .lk-float, .lk-ring { animation: none; }
       .lk-js .lk-reveal { opacity: 1; transform: none; transition: none; }
+    }`;
+}
+
+function variantI(colors) {
+  const p = colors.primary || '#6446a6';
+  const a = colors.accent || '#503a82';
+  const b = colors.bg || '#faf9fc';
+  return `@keyframes lb-entrance { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes lb-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+    @keyframes lb-ring-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, ${p} 40%, transparent); } 70% { box-shadow: 0 0 0 12px color-mix(in srgb, ${p} 0%, transparent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+    input:focus, textarea:focus, select:focus { border-color: ${p} !important; box-shadow: 0 0 0 4px color-mix(in srgb, ${p} 10%, transparent); outline: 0; }
+    :root { --lb-brand: ${p}; --lb-deep: ${a}; --lb-page: ${b}; --lb-wash: color-mix(in srgb, ${p} 8%, white); --lb-rule: color-mix(in srgb, ${p} 16%, #e5e0eb); --lb-ink: #1e1a2b; --lb-glow: #c9a0f0; }
+    body { background-color: var(--lb-page); }
+    ::selection { background-color: var(--lb-brand); color: #fff; }
+    .text-primary { color: var(--lb-brand); }
+    .text-accent { color: var(--lb-deep); }
+    .bg-primary { background-color: var(--lb-brand); }
+    .bg-accent { background-color: var(--lb-deep); }
+    .bg-grad-primary { background-image: linear-gradient(135deg, var(--lb-brand), var(--lb-deep)); }
+    .bg-primary-50 { background-color: var(--lb-wash); }
+    .bg-primary-100 { background-color: color-mix(in srgb, var(--lb-brand) 15%, white); }
+    .border-primary { border-color: var(--lb-brand); }
+    .ring-primary { --tw-ring-color: var(--lb-brand); }
+    .btn-primary { background-color: var(--lb-brand); transition: filter 0.14s linear, transform 0.14s ease-out, box-shadow 0.16s ease; }
+    .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 10px 24px -12px color-mix(in srgb, ${p} 65%, transparent); }
+    .lb-fade { animation: lb-entrance 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .lb-card { border: 1px solid var(--lb-rule); }
+    .lb-lift { transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s ease, border-color 0.2s ease; }
+    .lb-lift:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -24px color-mix(in srgb, var(--lb-ink) 50%, transparent); border-color: color-mix(in srgb, var(--lb-brand) 40%, var(--lb-rule)); }
+    .lb-grad-text { background: linear-gradient(120deg, var(--lb-brand), color-mix(in srgb, var(--lb-brand) 50%, var(--lb-glow))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lb-mesh { background-image: radial-gradient(55% 58% at 85% 8%, color-mix(in srgb, var(--lb-brand) 14%, transparent) 0%, transparent 60%), radial-gradient(48% 50% at 10% 2%, color-mix(in srgb, var(--lb-glow) 12%, transparent) 0%, transparent 55%), radial-gradient(44% 58% at 50% 106%, color-mix(in srgb, var(--lb-deep) 10%, transparent) 0%, transparent 60%); }
+    .lb-grid-bg { background-image: linear-gradient(color-mix(in srgb, var(--lb-brand) 7%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--lb-brand) 7%, transparent) 1px, transparent 1px); background-size: 28px 28px; -webkit-mask-image: radial-gradient(70% 58% at 50% 30%, #000 0%, transparent 74%); mask-image: radial-gradient(70% 58% at 50% 30%, #000 0%, transparent 74%); }
+    .lb-glass { background: color-mix(in srgb, #ffffff 84%, transparent); backdrop-filter: blur(14px) saturate(130%); -webkit-backdrop-filter: blur(14px) saturate(130%); }
+    .lb-float { animation: lb-float 5.8s ease-in-out infinite; }
+    .lb-ring { animation: lb-ring-pulse 2.4s ease-out infinite; }
+    .lb-link { position: relative; }
+    .lb-link::after { content: ''; position: absolute; left: 0; bottom: -3px; height: 2px; width: 100%; background: var(--lb-brand); border-radius: 2px; transform: scaleX(0); transform-origin: right; transition: transform 0.24s ease; }
+    .lb-link:hover::after, .lb-link.is-active::after { transform: scaleX(1); transform-origin: left; }
+    .lb-chip { transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease; }
+    .lb-chip:hover { transform: translateY(-1px); }
+    .lb-head-scrolled { box-shadow: 0 6px 28px -20px color-mix(in srgb, var(--lb-ink) 60%, transparent); }
+    .lb-slide-pane { transform: translateX(100%); transition: transform 0.24s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .lb-slide-pane.open { transform: translateX(0); }
+    .lb-slide-veil { opacity: 0; pointer-events: none; transition: opacity 0.24s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .lb-slide-veil.open { opacity: 1; pointer-events: auto; }
+    .lb-js .lb-reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.58s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.58s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .lb-js .lb-reveal.lb-in { opacity: 1; transform: none; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn-primary, .lb-lift, .lb-chip { transition: none; }
+      .lb-fade, .lb-float, .lb-ring { animation: none; }
+      .lb-js .lb-reveal { opacity: 1; transform: none; transition: none; }
     }`;
 }
 
