@@ -89,19 +89,19 @@ Rules:
 
 Each store MUST use different metadata key names to prevent cross-store pattern detection:
 
-| Field | ZenFlow Keys | Nova Keys | Haven Prints Keys |
-|-------|-------------|-----------|-------------------|
-| Store ID | `shop_id` | `vendor_id` | `store_ref` |
-| Domain | `shop_url` | `origin` | `shop_domain` |
-| Reference | `order_ref` | `txn_ref` | `ref_code` |
-| Session | `checkout_id` | `session_id` | `session_ref` |
-| Subtotal | `item_total` | `base_amount` | `order_total` |
-| Fee | `processing_fee` | `platform_fee` | `handling_fee` |
-| Guest | `express_checkout` | `quick_pay` | `guest_mode` |
-| Summary | `items` | `line_items` | `cart_items` |
-| Fulfillment Status | `order_state` | `delivery_state` | `file_status` |
-| Fulfilled At | `completed_at` | `dispatched_at` | `access_granted` |
-| Delivery Method | `send_method` | `access_type` | `file_delivery` |
+| Field | ZenFlow | Nova | Haven Prints | OptimiSystems | Precious Couture | Luci Brand Studio |
+|-------|---------|------|-------------|---------------|-----------------|-------------------|
+| Store ID | `shop_id` | `vendor_id` | `store_ref` | `opt_outlet_id` | `boutique_ref` | `brand_ref` |
+| Domain | `shop_url` | `origin` | `shop_domain` | `opt_source_host` | `atelier_host` | `merchant_host` |
+| Reference | `order_ref` | `txn_ref` | `ref_code` | `opt_purchase_ref` | `order_slip` | `purchase_id` |
+| Session | `checkout_id` | `session_id` | `session_ref` | `opt_basket_token` | `fitting_token` | `checkout_token` |
+| Subtotal | `item_total` | `base_amount` | `order_total` | `opt_goods_sum` | `garment_sum` | `product_total` |
+| Fee | `processing_fee` | `platform_fee` | `handling_fee` | `opt_service_charge` | `styling_fee` | `platform_surcharge` |
+| Guest | `express_checkout` | `quick_pay` | `guest_mode` | `opt_fast_buy` | `express_fit` | `anon_checkout` |
+| Summary | `items` | `line_items` | `cart_items` | `opt_item_manifest` | `wardrobe_manifest` | `purchase_lines` |
+| Fulfillment Status | `order_state` | `delivery_state` | `file_status` | `opt_provision_state` | `atelier_state` | `delivery_flag` |
+| Fulfilled At | `completed_at` | `dispatched_at` | `access_granted` | `opt_provisioned_at` | `delivered_on` | `completed_ts` |
+| Delivery Method | `send_method` | `access_type` | `file_delivery` | `opt_provision_mode` | `delivery_mode` | `access_channel` |
 
 ### Fulfillment Keys (Post-Payment)
 
@@ -147,19 +147,21 @@ When adding a new store, choose entirely new key names. Examples for a new store
 
 ## Color Scheme
 
-All stores use the same color scheme as the campaign for seamless redirect UX. This is safe because Stripe compares semantic content, not CSS colors (see docs/RESEARCH.md > Template Sharing Analysis).
+Each store MUST use a distinct primary color palette in `config.js` — this is a clustering defense (per-store visual divergence). Colors are safe from Stripe's perspective (Stripe's LLM evaluates content, not CSS colors), but identical palettes would be an additional cluster signal alongside any other shared attribute.
 
-| Property | Value | Usage |
-|----------|-------|-------|
-| Primary | `#00b964` | Buttons, accents, links, focus states |
-| Dark | `#02a95c` | Button hover, gradients |
-| Light | `#e8f8f0` | Light backgrounds, badges |
-| Text | `#333333` | Body text |
-| Muted | `#6b7280` | Secondary text |
-| Background | `#ffffff` | Page background |
-| Font | Inter | All text |
+| Store | Primary | Accent | Background |
+|-------|---------|--------|------------|
+| digitelon | `#00b964` | `#02a95c` | `#ffffff` |
+| haven-prints | `#00b964` | `#02a95c` | `#ffffff` |
+| nova-essentials | `#00b964` | `#02a95c` | `#ffffff` |
+| zenflow-tools | `#00b964` | `#02a95c` | `#ffffff` |
+| alzworks-digital | `#00b964` | `#02a95c` | `#ffffff` |
+| optimisystems | warm cream/sage (variant F custom) | — | — |
+| precious-couture | rose/blush (variant G custom) | — | — |
+| larkwell-home | warm neutral (variant H custom) | — | — |
+| luci-brand-studio | `#6446a6` | `#503a82` | `#faf9fc` |
 
-Future stores should use the same colors for consistency.
+New stores should pick a primary color that doesn't match any existing store. Font stack is controlled by `layout-fingerprint.js` (each variant has its own).
 
 ## Environment Variables (per store `.env`)
 

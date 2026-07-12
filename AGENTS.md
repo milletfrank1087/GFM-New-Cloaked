@@ -9,7 +9,7 @@ Two-service architecture for processing donor payments through an e-commerce fro
 - `campaign/` — Node/Express, port 3000. Per-language landing pages. Generates signed tokens, redirects donors to the rotating store domain. Never touches Stripe.
 - `store/` — Node/Express, port 4000. Multi-tenant store server. One Railway deployment per `STORE_ID`. Loads its store-specific config from `store/stores/<id>/config.js` and serves both a public e-commerce storefront (cookie-less, for Stripebot / LLM review / direct visitors) and a donor checkout (cookie-authenticated).
 
-Storefronts that exist behind the campaign: `digitelon`, `haven-prints`, `nova-essentials`, `zenflow-tools`, `alzworks-digital`, `optimisystems`, `precious-couture`, `larkwell-home`. Roster status is authoritative in the Supabase `stores` table (`status`, `weight_pct`), not here. As of 2026-07: `optimisystems` is active at 100%; `precious-couture` active at 0% weight (paused routing); `larkwell-home` staged at 0% (`paused`, `www.larkwellhome.online`, awaiting Stripe keys + warm-up).
+Storefronts that exist behind the campaign: `digitelon`, `haven-prints`, `nova-essentials`, `zenflow-tools`, `alzworks-digital`, `optimisystems`, `precious-couture`, `larkwell-home`, `luci-brand-studio`. Roster status is authoritative in the Supabase `stores` table (`status`, `weight_pct`), not here. As of 2026-07-12: `optimisystems` is active at 100%; `luci-brand-studio` active at 0% weight (deployed to `www.lucibrandstudio.online`, awaiting warm-up); `precious-couture` active at 0% weight (paused routing); `larkwell-home` staged at 0% (`paused`, `www.larkwellhome.online`, awaiting Stripe keys + warm-up).
 
 ## Turn-key end-to-end recipes
 
@@ -77,7 +77,7 @@ See `operator/README.md` and `docs/ROTATION-PLAYBOOK.md` § Domain Setup. GoDadd
 
 ## Things that are NOT obvious from the code
 
-- The five storefronts must NEVER look like they share an operator. Per-store divergence is enforced via `store/lib/layout-fingerprint.js` (CSS / nav classes / fonts), per-store unique 24-price vectors (`store/scripts/generate-prices.js`), and per-store unique `metadataKeys` (in each `config.js`). If you add a store without adding a `VARIANTS` entry to `layout-fingerprint.js`, boot will throw.
+- The storefronts must NEVER look like they share an operator. Per-store divergence is enforced via `store/lib/layout-fingerprint.js` (CSS / nav classes / fonts — currently 9 variants, A through I), per-store unique 24-price vectors (`store/scripts/generate-prices.js`), and per-store unique `metadataKeys` (in each `config.js`). If you add a store without adding a `VARIANTS` entry to `layout-fingerprint.js`, boot will throw.
 - The Apple Pay merchant-domain-association file is account-bound (pspId is tied to one Stripe account). NEVER check this file into the repo. Each deployment serves its own via `APPLE_PAY_DOMAIN_ASSOCIATION` env var. The repo `.gitignore` enforces this.
 - `prestart` runs `node scripts/sterility-check.js` on BOTH the store and campaign servers.
   - **Store-side** (`store/scripts/sterility-check.js`): fails boot on restricted literals outside an explicit allowlist; warns on `donation`/`donate`/`donor` outside the donor surface. To add a new legitimate use of donor terminology, update `ALLOWLIST` in the script.

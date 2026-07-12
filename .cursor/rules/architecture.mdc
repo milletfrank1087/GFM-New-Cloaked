@@ -16,6 +16,7 @@ Two-domain system. Campaign servers (per language) drive donor traffic, multi-te
 - Never use `payment_method_types`. Always use `automatic_payment_methods: { enabled: true, allow_redirects: 'never' }`.
 - Never use `?donated=true` or any donation-revealing query parameters. Use `?status=complete`.
 - Never add micro-variance to decomposed line-item prices — Stripe drops all L2/L3 data when line sum ≠ total.
+- Donor checkout (`checkout-donor.ejs`) MUST always use the campaign's color palette (`#00b964` / `#02a95c` / `#e8f8f0`), NEVER the store's own `store.colors`. The donor came from the campaign and expects visual continuity.
 
 ## Stripe metadata discipline (per PaymentIntent)
 
@@ -36,7 +37,7 @@ Stripe's similarity clustering (2020), Payments Foundation Model (2025), and Fra
 
 Mitigations enforced in this repo:
 
-- Per-store layout variants in `store/lib/layout-fingerprint.js` (one of 5 variants per store, controls CSS variable names, nav class names, body class, header class, transition, font stack). Adding a new store REQUIRES adding a `VARIANTS` entry.
+- Per-store layout variants in `store/lib/layout-fingerprint.js` (one of 9 variants per store A–I, controls CSS variable names, nav class names, body class, header class, transition, font stack). Adding a new store REQUIRES adding a `VARIANTS` entry.
 - Per-store price vectors generated with `store/scripts/generate-prices.js` (24 unique irregular prices per store, deterministic seed = store ID).
 - Apple Pay file served ONLY via `APPLE_PAY_DOMAIN_ASSOCIATION` env var per deploy. The file is `.gitignored`. Never check in.
 - `store/scripts/sterility-check.js` AND `campaign/scripts/sterility-check.js` both run at `prestart` and fail the boot on `gfm`/`cloaked`/`fundrais` literals (store side) / `gfm`/`cloaked` + `KNOWN_BAD_LITERALS` (campaign side). The campaign-side check is intentionally narrower because the campaign is donor-facing fundraising content where donor terminology is legitimate.

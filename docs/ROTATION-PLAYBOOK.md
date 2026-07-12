@@ -1,5 +1,28 @@
 # Store Rotation Playbook
 
+## Quick Reference — End-to-End New Store Checklist
+
+For agents: this is the execution order. Each step references the detailed section below.
+
+1. **Pick store identity** — slug, display name, niche, domain (buy last)
+2. **Layout fingerprint** — add variant to `store/lib/layout-fingerprint.js` (§3 step 2)
+3. **Generate prices** — `node store/scripts/generate-prices.js --store=<slug>` (§3 step 3)
+4. **Write config.js** — unique metadataKeys, colors, products, currency (§3 step 4)
+5. **Scaffold views** — copy from newest store, adapt ALL content + CSS classes (§3 step 5-6)
+6. **Sterility check** — `cd store && npm run sterility-check` — must PASS (§3 step 9)
+7. **Build artifact cleanup** — delete + regenerate `package-lock.json`, verify clean name (§5)
+8. **Supabase row** — insert `paused`, `weight_pct=0` (§4)
+9. **Git push** — commit all new files, push to `main`
+10. **Railway service** — create via GraphQL API, set all env vars, deploy (§6)
+11. **Domain + DNS** — buy domain, run `connect-store-dns.ps1`, update Supabase `domain` (§1 + §6 step 6)
+12. **Stripe setup** — webhook, Apple Pay domain, statement descriptor, business URL (§2a)
+13. **Warm-up** — 3-7 days test transactions at 0% weight (§9)
+14. **Go live** — set `weight_pct > 0`, rebalance active stores to sum 100 (§4)
+
+Railway project ID: `7bb4befa-cbe4-4763-a782-43f1550857cd`, env: `14944148-a284-4f59-a2cc-0b7447138f84`.
+
+---
+
 ## Adding a New Store
 
 ### 1. Domain Setup
@@ -90,25 +113,78 @@ Use when the store’s `paymentProcessor` is `paypal`.
 If any of the above escalate, treat the store like a **Stripe deactivation**: set status to `paused` and `weight_pct = 0` in Supabase, stop routing traffic, and rotate identity + infrastructure per **docs/ACCOUNT-ISOLATION.md**.
 
 ### 3. Store Files
-1. Create `store/stores/{new-store-id}/` directory.
-2. Add a `VARIANTS` entry to `store/lib/layout-fingerprint.js` for the new store ID. Pick distinct CSS variable names, nav class names, body class, header class, transition timing/easing, and font stack — must not match any existing variant. **If you skip this step, the server boot will throw "No layout fingerprint defined for store ..."** This is the per-store HTML/CSS fingerprint defense identified in `CLUSTERING-AUDIT-2026-05.md`.
-3. Generate a per-store unique 24-price vector:
+
+**Directory scaffold:**
+
+```
+store/stores/{new-store-id}/
+├── config.js
+├── public/
+│   └── js/
+│       └── cart.js
+└── views/
+    ├── layouts/
+    │   └── store.ejs
+    ├── partials/
+    │   ├── header.ejs
+    │   └── footer.ejs
+    └── pages/
+        ├── home.ejs
+        ├── about.ejs
+        ├── catalog.ejs
+        ├── product.ejs
+        ├── cart.ejs
+        ├── checkout-donor.ejs
+        ├── checkout-store.ejs
+        ├── faq.ejs
+        ├── contact.ejs
+        ├── terms.ejs
+        └── privacy.ejs
+```
+
+**Step-by-step:**
+
+1. **Create the directory** and copy the entire `views/` tree + `public/js/cart.js` from the most recent store (as of 2026-07: `luci-brand-studio` or `optimisystems`).
+
+2. **Add a `VARIANTS` entry** to `store/lib/layout-fingerprint.js` for the new store ID:
+   - Pick a unique 2-3 letter CSS variable prefix (existing: `color-`, `ds-`, `ux-`, `nv-`, `alz-`, `opt-`, `pc-`, `lk-`, `lb-`).
+   - Define unique `bodyClass`, `headerClass`, `navClass`, `navId`, `overlayClass`, `overlayId`, `fontStack`, and a `variantX` function with unique CSS custom properties, animation keyframes, and class selectors.
+   - **If you skip this step, the server boot will throw "No layout fingerprint defined for store ..."**
+
+3. **Generate a per-store unique 24-price vector:**
    ```powershell
    node store/scripts/generate-prices.js --store={new-store-id} --dry-run
    node store/scripts/generate-prices.js --store={new-store-id}
    ```
-   The vector is deterministic (seed = store ID) so the same store ID always reproduces the same vector. NEVER copy prices from another store.
-4. Copy `views/` from an existing store, then customize:
-   - `config.js`: unique name, statement descriptor, **unique metadata keys** (including fulfillment keys), `currency`, `currencySymbol`.
-   - Logo SVG + nav labels in `views/partials/header.ejs` — these are intentional content differentiators.
-   - All EJS page content: unique product descriptions, about text, reviews, FAQ answers — write new content; do NOT find-and-replace from another store.
-5. `cart.js` and `checkout.js` can remain identical (standard Stripe integration code).
-6. Fulfillment keys in `config.js` `metadataKeys`:
-   - `fulfillmentStatus` — aliased name for delivery status (e.g., `file_status`, `order_state`)
-   - `fulfilledAt` — aliased name for fulfillment timestamp (e.g., `access_granted`, `completed_at`)
-   - `deliveryMethod` — aliased name for delivery type (e.g., `file_delivery`, `send_method`)
-   - Each alias MUST be unique across all stores.
-7. Run the sterility check and confirm PASS:
+   The vector is deterministic (seed = store ID). NEVER copy prices from another store.
+
+4. **Write `config.js`** with:
+   - Unique `name`, `statementDescriptor`, `tagline`
+   - `contact_email` and `contact_phone` (unique per store)
+   - `currency` and `currencySymbol` (match the Stripe account's country — GBP for UK, EUR for EU, USD for US)
+   - Unique `colors` (primary, accent, background — must not match any other store)
+   - **Unique `metadataKeys`** — every key name must differ from all other stores:
+     - `referenceCode` (e.g., `brand_ref`, `vendor_id`, `outlet_ref`)
+     - `storeDomain` (e.g., `merchant_host`, `shop_domain`, `origin_url`)
+     - `transactionId` (e.g., `purchase_id`, `order_id`, `txn_ref`)
+     - `productName` / `productSlug` / `productPrice` (unique aliases)
+     - Fulfillment keys: `fulfillmentStatus`, `fulfilledAt`, `deliveryMethod` (unique aliases per store)
+   - 24 products with names/descriptions aligned to the Stripe account's MCC
+
+5. **Adapt all EJS templates.** This is the most labor-intensive step. For EACH file:
+   - Replace the source store's CSS class prefix with the new variant's prefix (e.g., `opt-` → `lb-`)
+   - Replace Tailwind color classes to match the new store's palette (e.g., `stone-` → `slate-`)
+   - **Rewrite ALL text content** — product descriptions, about narrative, testimonials, FAQ answers, taglines. Do NOT keep another store's copy verbatim (Stripe's text similarity detection compares content across accounts)
+   - Update logo SVG in `header.ejs` to a unique icon
+   - Update footer content, social links, newsletter copy
+
+6. **Adapt `cart.js`:** update `CURRENCY_SYMBOL`, notification background color, and product description text.
+
+7. **`checkout-donor.ejs` MUST use campaign colors, NOT store colors.** The donor checkout palette must always match site A (the campaign). Hardcode: `brandPrimary = '#00b964'`, `brandDark = '#02a95c'`, `brandLight = '#e8f8f0'`. NEVER use `store.colors` in checkout-donor — the donor came from the campaign and expects visual continuity.
+
+8. **`checkout.js` can remain identical** (standard Stripe integration code, server-side only).
+
+9. **Run sterility check** and confirm PASS:
    ```powershell
    cd store; npm run sterility-check
    ```
@@ -117,9 +193,21 @@ If any of the above escalate, treat the store like a **Stripe deactivation**: se
 ### 4. Supabase Entry
 ```sql
 INSERT INTO stores (domain, slug, name, status, weight_pct, max_monthly_volume)
-VALUES ('new-store.com', 'new-store-id', 'New Store Name', 'paused', 0, 5000);
+VALUES ('www.newstore.online', 'new-store-id', 'New Store Name', 'paused', 0, 5000);
 ```
-The store starts `paused` with `weight_pct = 0` so the rotation never picks it. Flip to `active` and rebalance weights (must sum to 100 across active stores) once warm-up is complete.
+
+**Critical:** `domain` must use `www.` prefix (matches Railway `STORE_DOMAIN`, Stripe `business_profile.url`). The store starts `paused` with `weight_pct = 0` so the rotation never picks it.
+
+**Activation sequence** (after warm-up):
+1. Set `status = 'active'` and assign initial `weight_pct` (e.g., 50)
+2. Rebalance other active stores so weights sum to 100
+3. Example: `optimisystems` 50% + `luci-brand-studio` 50%
+4. To temporarily route zero traffic while keeping a store active: set `weight_pct = 0` (store stays `active` but `get_next_store` deficit-fill skips it)
+
+```sql
+UPDATE stores SET status = 'active', weight_pct = 50 WHERE slug = 'new-store-id';
+UPDATE stores SET weight_pct = 50 WHERE slug = 'optimisystems';
+```
 
 ### 5. Build Artifact Cleanup
 1. Verify `store/package.json` `name` is clean and generic (e.g., `store-server`).
@@ -129,11 +217,63 @@ The store starts `paused` with `weight_pct = 0` so the rotation never picks it. 
 5. Run `cd store; npm run sterility-check` and verify PASS. This replaces the older manual restricted-term check — the script is now the source of truth.
 
 ### 6. Railway Deployment
-- Create a NEW Railway service for this store.
-- Set environment variables (`STORE_ID`, `STORE_DOMAIN`, Stripe / PayPal credentials, `CALLBACK_SECRET`, Supabase keys, `APPLE_PAY_DOMAIN_ASSOCIATION`).
-- `APPLE_PAY_DOMAIN_ASSOCIATION` MUST be the file Stripe issued for THIS store's account. Never reuse another store's file. The repo `.gitignore` prevents accidental check-ins.
-CRITICAL: `CALLBACK_SECRET` MUST match the value on every live campaign and store (shared HMAC — copy from OptimiSystems, do NOT generate a new one per store; see LESSONS.md 2026-07-01).
-- Deploy from the `store/` directory. The Railway boot runs `prestart` → `node scripts/sterility-check.js` → fails the boot if the check fails.
+
+All store services live in the **GFM Cloaked** project (`7bb4befa-cbe4-4763-a782-43f1550857cd`), production environment `14944148-a284-4f59-a2cc-0b7447138f84`. The Railway CLI has known issues with workspace-scoped projects, so prefer the GraphQL API at `https://backboard.railway.com/graphql/v2`.
+
+**Step-by-step (PowerShell, using `~/.railway/config.json` for token):**
+
+1. **Create the service:**
+```powershell
+# mutation { serviceCreate(input: { name: "Store Name Shop", projectId: "7bb4befa-..." }) { id name } }
+```
+
+2. **Connect the GitHub repo:**
+```powershell
+# mutation { serviceConnect(id: "<serviceId>", input: { repo: "personalprojectsgr/GFM-New-Cloaked", branch: "main" }) { id } }
+```
+
+3. **Set root directory and start command:**
+```powershell
+# mutation { serviceInstanceUpdate(serviceId: "<serviceId>", environmentId: "<envId>", input: { rootDirectory: "store", startCommand: "npm start" }) }
+```
+
+4. **Set environment variables via `variableCollectionUpsert`:**
+
+| Variable | Value | Notes |
+|----------|-------|-------|
+| `STORE_ID` | `<store-slug>` | Must match the directory name in `store/stores/` |
+| `STORE_DOMAIN` | `www.<domain>` | Updated by `connect-store-dns.ps1` |
+| `STRIPE_PUBLISHABLE_KEY` | `pk_live_...` | From the Stripe account |
+| `STRIPE_SECRET_KEY` | `sk_live_...` | From the Stripe account |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_...` | Set after creating webhook in Stripe Dashboard |
+| `CALLBACK_SECRET` | (copy from OptimiSystems) | **SHARED** across all campaigns and stores — do NOT generate per store |
+| `NODE_ENV` | `production` | |
+| `PORT` | `4000` | |
+| `PAYMENT_PROCESSOR` | `stripe` | |
+| `SUPABASE_URL` | (copy from any live store) | Shared Supabase project |
+| `SUPABASE_SERVICE_ROLE_KEY` | (copy from any live store) | Shared Supabase project |
+| `RESEND_API_KEY` | (copy from any live store) | Shared Resend account |
+| `RESEND_BRAND` | `<Store Name>` | |
+| `RESEND_FROM` | `<Store Name> <orders@domain>` | |
+| `RESEND_REPLY_TO` | `hello@domain` | |
+| `CAMPAIGN_CALLBACK_URLS` | (copy from any live store) | Same campaign server list |
+| `APPLE_PAY_DOMAIN_ASSOCIATION` | (Stripe-issued file content) | Per-account; NEVER reuse another store's file |
+
+Copy shared values (`CALLBACK_SECRET`, `SUPABASE_*`, `RESEND_API_KEY`, `CAMPAIGN_CALLBACK_URLS`) from any existing live store service using the `variables` GraphQL query.
+
+5. **Trigger deployment:**
+```powershell
+# mutation { serviceInstanceRedeploy(serviceId: "<serviceId>", environmentId: "<envId>") }
+```
+
+6. **Wire DNS** (see § Domain Setup above):
+```powershell
+.\operator\connect-store-dns.ps1 -ServiceName "Store Name Shop" -ApexDomain domain.online -StoreSlug store-slug
+```
+
+The `connect-store-dns.ps1` script creates the Railway custom domain, sets the GoDaddy CNAME + TXT records, and updates `STORE_DOMAIN` on Railway. Update Supabase `stores.domain` separately.
+
+Railway boot runs `prestart` → `node scripts/sterility-check.js` → fails the boot if the check fails.
 
 ### 7. What MUST Differ Per Store
 **Content (operator-curated):**
@@ -166,7 +306,7 @@ CRITICAL: `CALLBACK_SECRET` MUST match the value on every live campaign and stor
 - Page structure skeleton (`<main>` + header + footer) — every storefront on the internet has this.
 - `store/server.js`, `store/routes/*`, `store/lib/*` — server-side, invisible to Stripe.
 
-### 8. Warm-up Period
+### 9. Warm-up Period
 - Keep status `paused` (default) while warming
 - Process 3-5 small test transactions over 3-7 days
 - Use real cards (friends/family or test purchases)
@@ -175,7 +315,7 @@ CRITICAL: `CALLBACK_SECRET` MUST match the value on every live campaign and stor
 - Run $5/day in ads pointing to the store's homepage (creates genuine Stripe.js browsing sessions)
 - After 1-2 weeks, set status to `active` and assign a `weight_pct`, then rebalance the other active stores' weights so the sum is 100
 
-### 9. Volume Management
+### 10. Volume Management
 - Respect `max_monthly_volume` per store (hard cap; the rotation skips a store once it hits this in the current month even if its weight says it should get more)
 - `get_next_store` picks the active store whose current month-to-date share of revenue is furthest below its target `weight_pct` (deficit-fill)
 - Active store weights should sum to 100; the algorithm self-corrects if they don't, but the admin UI warns on save
