@@ -2,7 +2,7 @@ module.exports = {
   name: 'Luci Brand Studio',
   statementDescriptor: 'LUCI BRAND STUDIO',
   tagline: 'Brand identity kits, web design templates and creative strategy resources for independent consultants.',
-  contact_email: 'hello@lucibrandstudio.com',
+  contact_email: 'hello@lucibrandstudio.online',
   contact_phone: '+44 7966 664744',
   currency: 'GBP',
   currencySymbol: '\u00a3',
