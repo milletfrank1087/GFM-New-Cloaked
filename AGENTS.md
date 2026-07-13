@@ -36,6 +36,7 @@ If the user's request matches one of these, FAVOR the recipe over piecing it tog
 | Stripe clustering audit + per-store divergence requirements | `docs/CLUSTERING-AUDIT-2026-05.md` |
 | Stripe-radar / risk-decision research | `docs/RESEARCH.md`, `docs/CPA-ANALYSIS.md` |
 | Traffic routing competitive landscape (ad + payment vendors) | `docs/ROUTING-LANDSCAPE.md`, `docs/ROUTING-RESEARCH.md` |
+| FB Ads data fetch (proxy, Graph API, insights) | `docs/FB-ADS-DATA.md` |
 | Past bug fixes worth knowing about | `docs/ISSUES-AND-FIXES.md` |
 | Approaches that were evaluated and rejected | `docs/DECISION-LOG.md` |
 | Operational gotchas + lessons learned | `LESSONS.md` |
