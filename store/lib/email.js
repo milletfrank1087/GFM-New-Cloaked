@@ -2,7 +2,7 @@ const { Resend } = require('resend');
 const { StoreLog } = require('./logger');
 const { formatAmount } = require('./currency');
 
-const BRAND_NAME = process.env.RESEND_BRAND || 'OPERATION';
+const BRAND_NAME = process.env.RESEND_BRAND || 'RiseHope';
 const FROM_ADDRESS = process.env.RESEND_FROM || `${BRAND_NAME} <receipts@risehope.online>`;
 const REPLY_TO = process.env.RESEND_REPLY_TO || '';
 

@@ -253,9 +253,9 @@ All store services live in the **GFM Cloaked** project (`7bb4befa-cbe4-4763-a782
 | `SUPABASE_URL` | (copy from any live store) | Shared Supabase project |
 | `SUPABASE_SERVICE_ROLE_KEY` | (copy from any live store) | Shared Supabase project |
 | `RESEND_API_KEY` | (copy from any live store) | Shared Resend account |
-| `RESEND_BRAND` | `<Store Name>` | |
-| `RESEND_FROM` | `<Store Name> <orders@domain>` | |
-| `RESEND_REPLY_TO` | `hello@domain` | |
+| `RESEND_BRAND` | `RiseHope` | ALWAYS use `RiseHope` — donor recognizes the campaign brand |
+| `RESEND_FROM` | `RiseHope <receipts@risehope.online>` | MUST use `risehope.online` — the ONLY verified Resend domain |
+| `RESEND_REPLY_TO` | `hello@<store-domain>` | Store-specific reply address |
 | `CAMPAIGN_CALLBACK_URLS` | (copy from any live store) | Same campaign server list |
 | `APPLE_PAY_DOMAIN_ASSOCIATION` | (Stripe-issued file content) | Per-account; NEVER reuse another store's file |
 
