@@ -20,7 +20,7 @@ When the user says "create a `<language>` campaign end to end", or "add a new st
 | "Create a `<lang>` campaign end to end" | **`docs/NEW-CAMPAIGN-PLAYBOOK.md`** |
 | "Add / rotate a new storefront" | **`docs/ROTATION-PLAYBOOK.md`** |
 | "Replace an inactive Stripe account" | **`docs/ROTATION-PLAYBOOK.md`** (§ "Decommissioning a Store" + § "Account / identity layers to rotate") |
-| "Refresh the campaign dates so the page doesn't look stale" | `campaign/scripts/refresh-dates-2026-05.js` (copy → rename → edit constants → dry-run → apply) |
+| "Refresh the campaign dates so the page doesn't look stale" | **`docs/CAMPAIGN-REFRESH-PLAYBOOK.md`** |
 
 If the user's request matches one of these, FAVOR the recipe over piecing it together from individual reference docs.
 
@@ -37,6 +37,7 @@ If the user's request matches one of these, FAVOR the recipe over piecing it tog
 | Stripe-radar / risk-decision research | `docs/RESEARCH.md`, `docs/CPA-ANALYSIS.md` |
 | Traffic routing competitive landscape (ad + payment vendors) | `docs/ROUTING-LANDSCAPE.md`, `docs/ROUTING-RESEARCH.md` |
 | FB Ads data fetch (proxy, Graph API, insights) | `docs/FB-ADS-DATA.md` |
+| Campaign content refresh (dates, raised, updates) | `docs/CAMPAIGN-REFRESH-PLAYBOOK.md` |
 | Past bug fixes worth knowing about | `docs/ISSUES-AND-FIXES.md` |
 | Approaches that were evaluated and rejected | `docs/DECISION-LOG.md` |
 | Operational gotchas + lessons learned | `LESSONS.md` |

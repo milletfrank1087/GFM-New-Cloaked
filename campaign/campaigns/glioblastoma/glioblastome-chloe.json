@@ -7,12 +7,12 @@
     "initials": "IM",
     "location": "Lyon, France",
     "verified": true,
-    "createdDate": "10 Avr 2026"
+    "createdDate": "1 Juin 2026"
   },
   "goal": 90000,
-  "raised": 33470,
-  "donorCount": 881,
-  "daysLeft": 35,
+  "raised": 30270,
+  "donorCount": 1121,
+  "daysLeft": 28,
   "images": [
     {
       "url": "/images/campaigns/glioblastome-chloe/1.jpg",
@@ -41,12 +41,12 @@
       {
         "title": "Le Diagnostic",
         "icon": "diagnosis",
-        "content": "Tout a commencé en décembre 2025, lorsque Chloé a commencé à souffrir de céphalées persistantes, surtout matinales, accompagnées de nausées et d'une vision trouble de l'œil gauche. Le 24 décembre, après un épisode de convulsions pendant un cours à la Faculté de Médecine de l'Université Lyon 1, elle a été transférée en urgence au Service de Neurochirurgie des Hospices Civils de Lyon (HCL).\\n\\nL'IRM a révélé une masse de 4,2 cm dans le lobe frontal droit, avec une prise de contraste en anneau caractéristique et un œdème périlésionnel. La biopsie stéréotaxique et l'analyse moléculaire ont confirmé le diagnostic : Glioblastome Multiforme, IDH-wildtype, grade IV selon l'OMS, avec un promoteur MGMT non méthylé — le sous-type moléculaire le plus défavorable, signifiant une réponse réduite à la chimiothérapie."
+        "content": "Tout a commencé en février 2026, lorsque Chloé a commencé à souffrir de céphalées persistantes, surtout matinales, accompagnées de nausées et d'une vision trouble de l'œil gauche. Le 22 février, après un épisode de convulsions pendant un cours à la Faculté de Médecine de l'Université Lyon 1, elle a été transférée en urgence au Service de Neurochirurgie des Hospices Civils de Lyon (HCL).\\n\\nL'IRM a révélé une masse de 4,2 cm dans le lobe frontal droit, avec une prise de contraste en anneau caractéristique et un œdème périlésionnel. La biopsie stéréotaxique et l'analyse moléculaire ont confirmé le diagnostic : Glioblastome Multiforme, IDH-wildtype, grade IV selon l'OMS, avec un promoteur MGMT non méthylé — le sous-type moléculaire le plus défavorable, signifiant une réponse réduite à la chimiothérapie."
       },
       {
         "title": "Le Traitement Standard et ses Limites",
         "icon": "treatment",
-        "content": "Chloé a subi une résection chirurgicale partielle de la tumeur (exérèse subtotale) le 10 janvier 2026 aux HCL — une résection complète n'était pas possible en raison de la proximité de la tumeur avec les zones fonctionnelles du langage. Elle a ensuite suivi le protocole Stupp : radiothérapie concomitante (30 séances sur 6 semaines) avec témozolomide quotidien, suivie de cycles d'entretien de témozolomide.\\n\\nLes médecins ont été honnêtes : avec le MGMT non méthylé, la réponse au témozolomide est attendue comme limitée. La survie médiane avec le traitement standard est de 12 à 15 mois. L'IRM de contrôle de mars 2026 a montré une tumeur résiduelle stable en taille, mais les médecins ont prévenu que la récidive est quasi certaine."
+        "content": "Chloé a subi une résection chirurgicale partielle de la tumeur (exérèse subtotale) le 10 mars 2026 aux HCL — une résection complète n'était pas possible en raison de la proximité de la tumeur avec les zones fonctionnelles du langage. Elle a ensuite suivi le protocole Stupp : radiothérapie concomitante (30 séances sur 6 semaines) avec témozolomide quotidien, suivie de cycles d'entretien de témozolomide.\\n\\nLes médecins ont été honnêtes : avec le MGMT non méthylé, la réponse au témozolomide est attendue comme limitée. La survie médiane avec le traitement standard est de 12 à 15 mois. L'IRM de contrôle de mai 2026 a montré une tumeur résiduelle stable en taille, mais les médecins ont prévenu que la récidive est quasi certaine."
       },
       {
         "title": "L'Espoir : Immunothérapie par Cellules Dendritiques",
@@ -108,25 +108,25 @@
   },
   "updates": [
     {
-      "date": "14 Mai 2026",
+      "date": "12 Juil 2026",
       "title": "Résultats de l'IRM de contrôle 📋",
       "content": "L'IRM de contrôle après la fin de la radiothérapie montre une tumeur résiduelle stable sans nouvelle lésion. Les médecins aux HCL disent que c'est le meilleur résultat possible avec le traitement standard, mais la récidive reste très probable. La clinique en Allemagne nous a confirmé qu'ils peuvent commencer l'immunothérapie par cellules dendritiques en avril, si nous obtenons le financement.",
       "isNew": true
     },
     {
-      "date": "9 Mai 2026",
+      "date": "7 Juil 2026",
       "title": "Nous avons dépassé les 600 donateurs ! 🙏",
       "content": "Votre soutien nous bouleverse. Chloé a terminé les cycles d'entretien de témozolomide et se sent forte. Elle lit chacun de vos messages et dit que vous lui donnez la force de continuer. Chaque euro nous rapproche de l'Allemagne.",
       "isNew": false
     },
     {
-      "date": "25 Avr 2026",
+      "date": "20 Juin 2026",
       "title": "Nouvelles de l'hôpital",
       "content": "Chloé a terminé la radiochimiothérapie concomitante aux HCL. Elle a ressenti de la fatigue et des nausées, mais sa force mentale est incroyable. Son oncologue nous a expliqué qu'avec le MGMT non méthylé, le témozolomide seul ne suffit pas — c'est pourquoi l'immunothérapie est cruciale.",
       "isNew": false
     },
     {
-      "date": "10 Avr 2026",
+      "date": "1 Juin 2026",
       "title": "La campagne est lancée",
       "content": "Le cœur lourd mais avec détermination, nous lançons cet appel. Après trois mois de traitement intensif dans le système public, les médecins nous ont dit clairement : le traitement standard donne du temps, mais l'immunothérapie peut donner la vie. Malheureusement, elle n'est couverte nulle part en Europe. Nous croyons en la solidarité.",
       "isNew": false

@@ -7,12 +7,12 @@
     "initials": "IM",
     "location": "Lyon, France",
     "verified": true,
-    "createdDate": "10 Avr 2026"
+    "createdDate": "1 Juin 2026"
   },
   "goal": 85000,
-  "raised": 37540,
-  "donorCount": 1016,
-  "daysLeft": 35,
+  "raised": 29710,
+  "donorCount": 825,
+  "daysLeft": 31,
   "images": [
     {
       "url": "/images/campaigns/leucemie-chloe/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "Le Diagnostic",
-        "content": "Tout a commencé en janvier 2026, lorsque Chloé a commencé à ressentir une fatigue intense, à présenter des pétéchies sur les jambes et à avoir des épisodes fébriles fréquents. Le 20 janvier, après un hémogramme révélant une pancytopénie et des cellules blastiques suspectes, elle a été transférée en urgence au Service d'Hématologie des Hospices Civils de Lyon (HCL).\n\nLa biopsie de moelle osseuse et l'analyse moléculaire ont confirmé le diagnostic : Leucémie Lymphoblastique Aiguë à cellules B (LLA-B), avec présence du gène de fusion BCR-ABL1 (chromosome Philadelphie positif). Il s'agit d'une forme agressive de leucémie qui nécessite un traitement intensif et une greffe pour une survie à long terme.",
+        "content": "Tout a commencé en mars 2026, lorsque Chloé a commencé à ressentir une fatigue intense, à présenter des pétéchies sur les jambes et à avoir des épisodes fébriles fréquents. Le 20 mars, après un hémogramme révélant une pancytopénie et des cellules blastiques suspectes, elle a été transférée en urgence au Service d'Hématologie des Hospices Civils de Lyon (HCL).\n\nLa biopsie de moelle osseuse et l'analyse moléculaire ont confirmé le diagnostic : Leucémie Lymphoblastique Aiguë à cellules B (LLA-B), avec présence du gène de fusion BCR-ABL1 (chromosome Philadelphie positif). Il s'agit d'une forme agressive de leucémie qui nécessite un traitement intensif et une greffe pour une survie à long terme.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "12 Mai 2026",
+      "date": "10 Juil 2026",
       "title": "Nouvelles positives du contrôle moléculaire ! 💪",
-      "content": "Les résultats du dernier RT-PCR sont encourageants — les niveaux de BCR-ABL sont en dessous de 0,01 % ! Les médecins sont très satisfaits de la réponse au traitement. La greffe est programmée pour fin juin. Sa sœur Manon effectue déjà les examens préliminaires en tant que donneuse.",
+      "content": "Les résultats du dernier RT-PCR sont encourageants — les niveaux de BCR-ABL sont en dessous de 0,01 % ! Les médecins sont très satisfaits de la réponse au traitement. La greffe est programmée pour fin août. Sa sœur Manon effectue déjà les examens préliminaires en tant que donneuse.",
       "isNew": true
     },
     {
-      "date": "5 Mai 2026",
+      "date": "5 Juil 2026",
       "title": "Nous avons dépassé les 700 donateurs ! 🙏",
       "content": "Nous n'avons pas de mots pour exprimer notre gratitude. Chloé a terminé le deuxième cycle de chimiothérapie et les médecins ont confirmé une rémission hématologique complète. Chaque euro nous rapproche de la greffe.",
       "isNew": false
     },
     {
-      "date": "25 Avr 2026",
+      "date": "20 Juin 2026",
       "title": "Nouvelles de l'hôpital",
       "content": "Chloé a terminé le premier cycle de chimiothérapie aux HCL de Lyon. Elle a eu une neutropénie après le traitement, mais elle souriait en lisant vos messages. Les infirmières lui ont organisé une petite fête dans sa chambre. Votre soutien nous touche profondément.",
       "isNew": false
     },
     {
-      "date": "10 Avr 2026",
+      "date": "1 Juin 2026",
       "title": "La campagne est lancée",
       "content": "Le cœur lourd mais rempli d'espoir, nous lançons cet appel à l'aide. Après deux mois de thérapie intensive, les médecins ont confirmé que la greffe est la seule option pour une guérison à long terme. Nous croyons en la solidarité.",
       "isNew": false

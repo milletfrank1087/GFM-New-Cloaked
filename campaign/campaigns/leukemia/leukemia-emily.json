@@ -7,12 +7,12 @@
     "initials": "SM",
     "location": "Boston, MA",
     "verified": true,
-    "createdDate": "10 Apr 2026"
+    "createdDate": "1 Jun 2026"
   },
   "goal": 125000,
-  "raised": 56160,
-  "donorCount": 1072,
-  "daysLeft": 35,
+  "raised": 41240,
+  "donorCount": 1031,
+  "daysLeft": 30,
   "images": [
     {
       "url": "/images/campaigns/leukemia-emily/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "The Diagnosis",
-        "content": "It all started in January 2026, when Emily began experiencing intense weakness, petechiae on her legs, and frequent febrile episodes. On January 20th, after a blood panel showed pancytopenia and suspicious blast cells, she was rushed to the Hematology Department at Dana-Farber Cancer Institute in Boston.\n\nBone marrow biopsy and molecular analysis confirmed the diagnosis: B-cell Acute Lymphoblastic Leukemia (B-ALL), with the BCR-ABL1 fusion gene (Philadelphia chromosome positive). This is an aggressive form of leukemia that requires intensive therapy and transplant for long-term survival.",
+        "content": "It all started in March 2026, when Emily began experiencing intense weakness, petechiae on her legs, and frequent febrile episodes. On March 20th, after a blood panel showed pancytopenia and suspicious blast cells, she was rushed to the Hematology Department at Dana-Farber Cancer Institute in Boston.\n\nBone marrow biopsy and molecular analysis confirmed the diagnosis: B-cell Acute Lymphoblastic Leukemia (B-ALL), with the BCR-ABL1 fusion gene (Philadelphia chromosome positive). This is an aggressive form of leukemia that requires intensive therapy and transplant for long-term survival.",
         "icon": "diagnosis"
       },
       {
@@ -109,25 +109,25 @@
   },
   "updates": [
     {
-      "date": "12 May 2026",
+      "date": "10 Jul 2026",
       "title": "Positive news from molecular testing! 💪",
-      "content": "The latest RT-PCR results are encouraging — BCR-ABL levels are below 0.01%! Her doctors at Dana-Farber are very pleased with the treatment response. The transplant is scheduled for late June. Her sister Kate is already completing preliminary donor testing.",
+      "content": "The latest RT-PCR results are encouraging — BCR-ABL levels are below 0.01%! Her doctors at Dana-Farber are very pleased with the treatment response. The transplant is scheduled for late August. Her sister Kate is already completing preliminary donor testing.",
       "isNew": true
     },
     {
-      "date": "5 May 2026",
+      "date": "5 Jul 2026",
       "title": "We've passed 700 donors! 🙏",
       "content": "We have no words to express our gratitude. Emily has completed the second cycle of chemotherapy and her doctors have confirmed complete hematologic remission. Every dollar brings us closer to the transplant.",
       "isNew": false
     },
     {
-      "date": "25 Apr 2026",
+      "date": "20 Jun 2026",
       "title": "Update from the hospital",
       "content": "Emily has completed the first cycle of chemotherapy at Dana-Farber. She had neutropenia after treatment, but she was smiling while reading your messages. The nurses brought her a small celebration in her room. Your response has moved us deeply.",
       "isNew": false
     },
     {
-      "date": "10 Apr 2026",
+      "date": "1 Jun 2026",
       "title": "The campaign has launched",
       "content": "With heavy hearts but also with hope, we're launching this appeal for help. After two months of intensive therapy, her doctors have confirmed that the transplant is the only option for long-term cure. Even with insurance, the financial toll on our family has been devastating. We believe in the power of community.",
       "isNew": false

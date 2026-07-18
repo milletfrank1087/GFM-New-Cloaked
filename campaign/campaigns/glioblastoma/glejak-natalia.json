@@ -7,12 +7,12 @@
     "initials": "AK",
     "location": "Kraków, Polska",
     "verified": true,
-    "createdDate": "10 Kwi 2026"
+    "createdDate": "1 Cze 2026"
   },
   "goal": 380000,
-  "raised": 141360,
-  "donorCount": 916,
-  "daysLeft": 35,
+  "raised": 122430,
+  "donorCount": 3139,
+  "daysLeft": 37,
   "images": [
     {
       "url": "/images/campaigns/glejak-natalia/1.jpg",
@@ -41,12 +41,12 @@
       {
         "title": "Diagnoza",
         "icon": "diagnosis",
-        "content": "Wszystko zaczęło się w grudniu 2025, gdy Natalia zaczęła odczuwać uporczywe bóle głowy, szczególnie poranne, którym towarzyszyły nudności i zamazane widzenie w lewym oku. 24 grudnia, po napadzie drgawek podczas wykładu na Wydziale Lekarskim Uniwersytetu Jagiellońskiego, została pilnie przetransportowana do Kliniki Neurochirurgii Szpitala Uniwersyteckiego w Krakowie.\n\nRezonans magnetyczny (MRI) ujawnił masę o średnicy 4,2 cm w prawym płacie czołowym z charakterystycznym pierścieniowatym wzmocnieniem kontrastowym i obrzękiem okołoogniskowym. Biopsja stereotaktyczna i analiza molekularna potwierdziły diagnozę: Glejak Wielopostaciowy, IDH-wildtype, IV stopień wg WHO, z niemetylowanym promotorem MGMT — najniekorzystniejszy podtyp molekularny, oznaczający ograniczoną odpowiedź na chemioterapię."
+        "content": "Wszystko zaczęło się w lutym 2026, gdy Natalia zaczęła odczuwać uporczywe bóle głowy, szczególnie poranne, którym towarzyszyły nudności i zamazane widzenie w lewym oku. 22 lutego, po napadzie drgawek podczas wykładu na Wydziale Lekarskim Uniwersytetu Jagiellońskiego, została pilnie przetransportowana do Kliniki Neurochirurgii Szpitala Uniwersyteckiego w Krakowie.\n\nRezonans magnetyczny (MRI) ujawnił masę o średnicy 4,2 cm w prawym płacie czołowym z charakterystycznym pierścieniowatym wzmocnieniem kontrastowym i obrzękiem okołoogniskowym. Biopsja stereotaktyczna i analiza molekularna potwierdziły diagnozę: Glejak Wielopostaciowy, IDH-wildtype, IV stopień wg WHO, z niemetylowanym promotorem MGMT — najniekorzystniejszy podtyp molekularny, oznaczający ograniczoną odpowiedź na chemioterapię."
       },
       {
         "title": "Leczenie Standardowe i Jego Ograniczenia",
         "icon": "treatment",
-        "content": "Natalia przeszła częściową resekcję chirurgiczną guza (subtotalna resekcja) 10 stycznia 2026 w Szpitalu Uniwersyteckim w Krakowie — całkowita resekcja nie była możliwa ze względu na bliskość guza do funkcjonalnych obszarów mowy. Następnie zastosowano protokół Stuppa: jednoczesna radioterapia (30 sesji w 6 tygodni) z codziennym temozolomidem, a następnie cykle podtrzymujące temozolomidem.\n\nLekarze byli szczerzy: przy niemetylowanym MGMT odpowiedź na temozolomid jest spodziewana jako ograniczona. Mediana przeżycia przy standardowym leczeniu wynosi 12-15 miesięcy. Kontrolny MRI z marca 2026 wykazał stabilny guz resztkowy, ale lekarze ostrzegli, że nawrót jest niemal pewny."
+        "content": "Natalia przeszła częściową resekcję chirurgiczną guza (subtotalna resekcja) 10 marca 2026 w Szpitalu Uniwersyteckim w Krakowie — całkowita resekcja nie była możliwa ze względu na bliskość guza do funkcjonalnych obszarów mowy. Następnie zastosowano protokół Stuppa: jednoczesna radioterapia (30 sesji w 6 tygodni) z codziennym temozolomidem, a następnie cykle podtrzymujące temozolomidem.\n\nLekarze byli szczerzy: przy niemetylowanym MGMT odpowiedź na temozolomid jest spodziewana jako ograniczona. Mediana przeżycia przy standardowym leczeniu wynosi 12-15 miesięcy. Kontrolny MRI z maja 2026 wykazał stabilny guz resztkowy, ale lekarze ostrzegli, że nawrót jest niemal pewny."
       },
       {
         "title": "Nadzieja: Immunoterapia Komórkami Dendrytycznymi",
@@ -108,25 +108,25 @@
   },
   "updates": [
     {
-      "date": "14 Maj 2026",
+      "date": "12 Lip 2026",
       "title": "Wyniki kontrolnego MRI 📋",
       "content": "Kontrolny MRI po zakończeniu radioterapii wykazuje stabilny guz resztkowy bez nowych ognisk. Lekarze w Szpitalu Uniwersyteckim mówią, że to najlepszy możliwy wynik przy standardowym leczeniu, ale nawrót pozostaje bardzo prawdopodobny. Klinika w Niemczech potwierdziła, że mogą rozpocząć immunoterapię komórkami dendrytycznymi w kwietniu, jeśli uda się zebrać fundusze.",
       "isNew": true
     },
     {
-      "date": "9 Maj 2026",
+      "date": "7 Lip 2026",
       "title": "Przekroczyliśmy 600 darczyńców! 🙏",
       "content": "Wasze wsparcie nas głęboko porusza. Natalia ukończyła cykle podtrzymujące temozolomidem i czuje się silna. Czyta każdą waszą wiadomość i mówi, że dajecie jej siłę do walki. Każda złotówka przybliża nas do Niemiec.",
       "isNew": false
     },
     {
-      "date": "25 Kwi 2026",
+      "date": "20 Cze 2026",
       "title": "Wiadomości ze szpitala",
       "content": "Natalia ukończyła jednoczesną radiochemioterapię w Szpitalu Uniwersyteckim. Odczuwała zmęczenie i nudności, ale jej siła psychiczna jest niesamowita. Jej onkolog wyjaśniła nam, że przy niemetylowanym MGMT sam temozolomid nie wystarczy — dlatego immunoterapia jest kluczowa.",
       "isNew": false
     },
     {
-      "date": "10 Kwi 2026",
+      "date": "1 Cze 2026",
       "title": "Kampania wystartowała",
       "content": "Z ciężkim sercem, ale z determinacją, rozpoczynamy ten apel. Po trzech miesiącach intensywnego leczenia w publicznym systemie zdrowia lekarze powiedzieli nam jasno: standardowe leczenie daje czas, ale immunoterapia może dać życie. Niestety, nie jest refundowana w żadnym kraju Europy. Wierzymy w solidarność.",
       "isNew": false

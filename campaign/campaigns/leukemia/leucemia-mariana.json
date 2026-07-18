@@ -7,12 +7,12 @@
     "initials": "CF",
     "location": "Porto, Portugal",
     "verified": true,
-    "createdDate": "10 Abr 2026"
+    "createdDate": "1 Jun 2026"
   },
   "goal": 85000,
-  "raised": 37540,
-  "donorCount": 1016,
-  "daysLeft": 35,
+  "raised": 28590,
+  "donorCount": 681,
+  "daysLeft": 27,
   "images": [
     {
       "url": "/images/campaigns/leucemia-mariana/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "O Diagnóstico",
-        "content": "Tudo começou em janeiro de 2026, quando a Mariana começou a sentir uma fraqueza intensa, a apresentar petéquias nas pernas e a ter episódios frequentes de febre. A 20 de janeiro, após um hemograma que revelou pancitopenia e células blásticas suspeitas, foi transferida de urgência para o Serviço de Hematologia do IPO do Porto.\n\nA biópsia da medula óssea e a análise molecular confirmaram o diagnóstico: Leucemia Linfoblástica Aguda de células B (LLA-B), com presença do gene de fusão BCR-ABL1 (cromossoma Philadelphia positivo). Trata-se de uma forma agressiva de leucemia que exige terapia intensiva e transplante para a sobrevivência a longo prazo.",
+        "content": "Tudo começou em março de 2026, quando a Mariana começou a sentir uma fraqueza intensa, a apresentar petéquias nas pernas e a ter episódios frequentes de febre. A 20 de março, após um hemograma que revelou pancitopenia e células blásticas suspeitas, foi transferida de urgência para o Serviço de Hematologia do IPO do Porto.\n\nA biópsia da medula óssea e a análise molecular confirmaram o diagnóstico: Leucemia Linfoblástica Aguda de células B (LLA-B), com presença do gene de fusão BCR-ABL1 (cromossoma Philadelphia positivo). Trata-se de uma forma agressiva de leucemia que exige terapia intensiva e transplante para a sobrevivência a longo prazo.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "12 Mai 2026",
+      "date": "10 Jul 2026",
       "title": "Notícias positivas do controlo molecular! 💪",
-      "content": "Os resultados do último RT-PCR são animadores — os níveis de BCR-ABL estão abaixo de 0,01%! Os médicos estão muito satisfeitos com a resposta ao tratamento. O transplante está programado para o final de junho. A irmã dela, a Beatriz, já está a fazer os exames preliminares como dadora.",
+      "content": "Os resultados do último RT-PCR são animadores — os níveis de BCR-ABL estão abaixo de 0,01%! Os médicos estão muito satisfeitos com a resposta ao tratamento. O transplante está programado para o final de agosto. A irmã dela, a Beatriz, já está a fazer os exames preliminares como dadora.",
       "isNew": true
     },
     {
-      "date": "5 Mai 2026",
+      "date": "5 Jul 2026",
       "title": "Ultrapassámos os 700 doadores! 🙏",
       "content": "Não temos palavras para expressar a nossa gratidão. A Mariana completou o segundo ciclo de quimioterapia e os médicos confirmaram remissão hematológica completa. Cada euro aproxima-nos do transplante.",
       "isNew": false
     },
     {
-      "date": "25 Abr 2026",
+      "date": "20 Jun 2026",
       "title": "Atualização do hospital",
       "content": "A Mariana completou o primeiro ciclo de quimioterapia no IPO do Porto. Tinha neutropenia após o tratamento, mas sorria ao ler as vossas mensagens. As enfermeiras trouxeram-lhe uma pequena festa ao quarto. A vossa resposta emociona-nos profundamente.",
       "isNew": false
     },
     {
-      "date": "10 Abr 2026",
+      "date": "1 Jun 2026",
       "title": "A campanha começou",
       "content": "Com o coração pesado mas também com esperança, iniciamos este apelo por ajuda. Após dois meses de terapia intensiva, os médicos confirmaram que o transplante é a única opção para a cura a longo prazo. Acreditamos na solidariedade.",
       "isNew": false
