@@ -1,6 +1,6 @@
 module.exports = {
   name: 'Luci Brand Studio',
-  statementDescriptor: 'LUCI BRAND STUDIO',
+  statementDescriptor: 'TRAININGGROUP',
   tagline: 'Brand identity kits, web design templates and creative strategy resources for independent consultants.',
   contact_email: 'hello@lucibrandstudio.online',
   contact_phone: '+44 7966 664744',
