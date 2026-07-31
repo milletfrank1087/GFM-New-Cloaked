@@ -1,6 +1,6 @@
 module.exports = {
   name: 'Larkwell Home',
-  statementDescriptor: 'LARKWELL HOME',
+  statementDescriptor: 'HOPERISE',
   tagline: 'Kitchen, storage and home organisation pieces designed for calm, clutter-free living.',
   contact_email: 'ecomjjsupport@gmail.com',
   contact_phone: '+19295315752',
