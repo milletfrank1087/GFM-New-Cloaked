@@ -16,11 +16,18 @@ function initDonation() {
 
 function handleDonatedReturn() {
   const params = new URLSearchParams(window.location.search);
-  if (params.get('status') === 'complete') {
-    const urlEid = params.get('eid');
-    const urlAmt = parseFloat(params.get('amt') || '0');
-    const urlCur = params.get('cur');
-    window.history.replaceState({}, '', window.location.pathname);
+  const trackedReturn = typeof Tracking !== 'undefined' && typeof Tracking.getCompletedReturn === 'function'
+    ? Tracking.getCompletedReturn()
+    : null;
+  if (params.get('status') === 'complete' || trackedReturn) {
+    const urlEid = trackedReturn?.eventId || params.get('eid');
+    const urlAmt = trackedReturn?.amount || parseFloat(params.get('amt') || '0');
+    const urlCur = trackedReturn?.currency || params.get('cur');
+    const cleanUrl = new URL(window.location.href);
+    ['status', 'eid', 'amt', 'cur'].forEach((key) => {
+      cleanUrl.searchParams.delete(key);
+    });
+    window.history.replaceState({}, '', `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
 
     if (typeof Tracking !== 'undefined') {
       try {

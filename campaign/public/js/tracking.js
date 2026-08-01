@@ -10,6 +10,7 @@ const Tracking = (function() {
   let serverFbp = null;
 
   let cachedEmailHash = null;
+  let completedReturn = null;
 
   function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -117,6 +118,22 @@ const Tracking = (function() {
         setCookie('_utm_data', JSON.stringify(utmParams), 90);
       }
     }
+  }
+
+  function scrubCompletionQuery() {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('status') !== 'complete') return;
+
+    completedReturn = {
+      eventId: url.searchParams.get('eid'),
+      amount: parseFloat(url.searchParams.get('amt') || '0'),
+      currency: url.searchParams.get('cur')
+    };
+
+    ['status', 'eid', 'amt', 'cur'].forEach((key) => {
+      url.searchParams.delete(key);
+    });
+    window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
   }
 
   let locationPromise = null;
@@ -485,6 +502,8 @@ const Tracking = (function() {
   async function init() {
     if (initialized) return;
 
+    scrubCompletionQuery();
+
     try {
       const response = await fetch('/api/tracking/config');
       if (response.ok) {
@@ -506,6 +525,7 @@ const Tracking = (function() {
     setCookie: setCookie,
     generateEventId: generateEventId,
     getTrackingData: getTrackingData,
+    getCompletedReturn: () => completedReturn,
     getClientLocation: getClientLocation,
     track: track,
     trackPageView: trackPageView,

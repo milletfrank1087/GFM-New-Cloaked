@@ -3,19 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | HopeRise Admin</title>
+  <title>Overview | HopeRise Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: { gfm: { green: '#00b964', 'green-dark': '#02a95c', 'green-light': '#e8f8f0', dark: '#333333', gray: '#767676' } },
-          fontFamily: { outfit: ['Inter', 'sans-serif'] }
+          fontFamily: { outfit: ['DM Sans', 'sans-serif'], mono: ['Space Mono', 'monospace'] }
         }
       }
     }
   </script>
+  </script>
+  <style>
+    :root { --ink: #14231f; --muted: #66736f; --line: #dce8e3; --paper: #f4f8f6; --accent: #0b8f62; }
+    body { background: var(--paper); color: var(--ink); }
+    .dashboard-card { background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 8px 24px rgba(20,35,31,.045); }
+    .eyebrow { color: var(--muted); font-size: .68rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .metric-number { font-family: 'Space Mono', monospace; letter-spacing: -.06em; }
+    .data-table th { color: var(--muted); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; }
+    .data-table td, .data-table th { border-bottom: 1px solid #edf3f0; padding: .8rem .7rem; }
+    .section-label { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+    .section-label h2 { font-size: 1rem; font-weight: 700; letter-spacing: -.02em; }
+    .soft-grid { background-image: linear-gradient(rgba(11,143,98,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(11,143,98,.055) 1px, transparent 1px); background-size: 24px 24px; }
+  </style>
 </head>
 <body class="font-outfit bg-gray-50 min-h-screen">
   <!-- Mobile Header -->
