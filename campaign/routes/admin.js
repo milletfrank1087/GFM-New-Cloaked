@@ -16,7 +16,9 @@ module.exports = function createAdminRouter(ctx) {
     getDashboardOverview,
     getAllPayments,
     getPaymentDetails,
-    getRecentFailures
+    getRecentFailures,
+    getProfitOverview,
+    triggerAdSync
   } = ctx;
 
   function adminAuth(req, res, next) {
@@ -80,7 +82,8 @@ module.exports = function createAdminRouter(ctx) {
         : recentPayments;
       return filtered.slice(0, 10).map(p => ({
         id: p.id, name: p.name, displayName: p.displayName,
-        amount: p.amount, currency: p.currency, time: p.date,
+        amount: p.amount, tip: p.tipAmount, total: p.totalAmount, net: p.netAmount,
+        currency: p.currency, time: p.date,
         initials: p.initials, color: p.color,
         transactionId: p.stripeChargeId, cardBrand: p.cardBrand,
         cardLastDigits: p.cardLastDigits, donationType: p.donationType,
@@ -183,6 +186,28 @@ module.exports = function createAdminRouter(ctx) {
     } catch (error) {
       console.error('[admin/failures] error:', error);
       res.status(500).json({ error: 'Failed to load failures' });
+    }
+  });
+
+  router.get('/api/admin/profit', adminAuth, async (req, res) => {
+    try {
+      const { campaignSlug, dateRange } = parseDashboardFilters(req);
+      const includeAd = req.query.include_ads !== '0';
+      const rangeKey = req.query.range || 'last30days';
+      const overview = await getProfitOverview(campaignSlug, dateRange, { withAdSpend: includeAd, rangeKey });
+      res.json(overview);
+    } catch (error) {
+      console.error('[admin/profit] error:', error);
+      res.status(500).json({ error: 'Failed to load profit data' });
+    }
+  });
+
+  router.post('/api/admin/profit/ads-sync', adminAuth, async (req, res) => {
+    try {
+      res.json(await triggerAdSync());
+    } catch (error) {
+      console.error('[admin/profit/ads-sync] error:', error);
+      res.status(500).json({ error: 'Failed to sync ad spend' });
     }
   });
 

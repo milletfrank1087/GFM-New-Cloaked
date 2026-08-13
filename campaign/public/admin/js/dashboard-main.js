@@ -101,11 +101,16 @@ function renderRecentDonors(data) {
     var curBadge = d.currency && d.currency !== dashboardBaseCurrency
       ? '<span class="ml-1 text-xs px-1.5 py-0.5 bg-blue-100 text-blue-600 rounded font-medium">' + d.currency + '</span>' : '';
     var recurringHtml = d.vaultId ? '<p class="text-xs text-purple-500">\uD83D\uDD04 Recurring</p>' : '';
+    var tipHtml = (d.tip && d.tip > 0)
+      ? '<p class="text-xs text-blue-600">+ ' + formatCurrency(d.tip, d.currency) + ' tip</p>' : '';
+    var netHtml = (d.net && d.net > 0)
+      ? '<p class="text-xs text-gfm-green font-medium">Net ' + formatCurrency(d.net, d.currency) + '</p>' : '';
     return '<div class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50 -mx-2 px-2 rounded-lg transition-colors" onclick="showTransactionDetail(\'' + d.id + '\')">' +
       '<div class="w-10 h-10 rounded-full bg-gradient-to-br ' + d.color + ' flex items-center justify-center text-white text-sm font-bold">' + d.initials + '</div>' +
       '<div class="flex-1 min-w-0">' +
       '<p class="font-medium text-gfm-dark truncate">' + d.name + anonHtml + campHtml + '</p>' +
       '<p class="text-sm text-gfm-gray">' + d.time + cardHtml + monthlyHtml + '</p>' +
+      tipHtml + netHtml +
       '</div>' +
       '<div class="text-right">' +
       '<span class="font-bold text-gfm-green">' + formatCurrency(d.amount, d.currency) + '</span>' +

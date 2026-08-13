@@ -16,8 +16,8 @@ function transformPaymentRow(p) {
     tipAmount: parseFloat(p.service_fee || 0),
     totalAmount: parseFloat(p.total_amount),
     stripeFee: parseFloat(p.stripe_fee || 0),
-    paypalFee: parseFloat(p.stripe_fee || 0),
-    netAmount: parseFloat(p.net_amount || p.total_amount),
+    paypalFee: parseFloat(p.paypal_fee || 0),
+    netAmount: parseFloat(p.net_amount ?? p.total_amount),
     currency: p.currency || 'EUR',
     status: p.status,
     date: formatTimeAgo(p.created_at),
@@ -61,9 +61,9 @@ function buildPaymentDetail(p) {
       donation: parseFloat(p.amount || 0),
       tip: parseFloat(p.service_fee || 0),
       total: parseFloat(p.total_amount || 0),
-      paypalFee: parseFloat(p.stripe_fee || 0),
+      paypalFee: parseFloat(p.paypal_fee || 0),
       stripeFee: parseFloat(p.stripe_fee || 0),
-      net: parseFloat(p.net_amount || p.total_amount || 0),
+      net: parseFloat(p.net_amount ?? p.total_amount ?? 0),
       currency: p.currency || 'EUR'
     },
     card: {

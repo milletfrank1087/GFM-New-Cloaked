@@ -6,8 +6,15 @@ const { getRecentRealDonations, getCampaignRealStats } = require('./db/campaigns
 const { getAllCustomers, getCustomerDetails, deleteCustomer, toggleCustomerStatus, updateCustomerNotes } = require('./db/customers');
 const { getAllPayments, getPaymentDetails, getRecentFailures } = require('./db/payments');
 const { getAdminDashboardStats, getTimeBasedAnalytics, getDeviceBrowserAnalytics, getDashboardOverview } = require('./db/analytics');
+const { getProfitOverview, triggerAdSync } = require('./profit');
+const { syncAll, syncCampaigns, syncSpend } = require('./ads-manager');
 
 module.exports = {
+  getProfitOverview,
+  triggerAdSync,
+  syncAll,
+  syncCampaigns,
+  syncSpend,
   getRecentRealDonations,
   getCampaignRealStats,
   getAllCustomers,

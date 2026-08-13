@@ -21,3 +21,6 @@ apple-developer-merchantid-domain-association*
 # Read by operator/* scripts. Never share across operators without rotation.
 secrets/
 secrets/**
+
+# Local timed agent session state
+.agent-session/
