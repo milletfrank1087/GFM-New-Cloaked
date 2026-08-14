@@ -85,9 +85,32 @@
     setHtml('wf-fees', '−' + fmt(t.fees) + feesFxMarkup);
     setText('wf-fee-pct', t.gross > 0 ? ((t.fees / t.gross) * 100).toFixed(1) + '%' : '0.0%');
 
+    /* Status & Freshness */
+    var fetchedAt = data.adSync?.fetchedAt ? new Date(data.adSync.fetchedAt) : null;
+    var ttlMs = data.adSync?.ttlMs || (5 * 60 * 1000);
+    var isRefreshing = Boolean(data.adSync?.refreshing);
+    var ageMs = fetchedAt ? (Date.now() - fetchedAt.getTime()) : null;
+    var isStale = typeof data.adSync?.isStale === 'boolean' ? data.adSync.isStale : (ageMs === null || ageMs > ttlMs);
+    var dot = document.getElementById('fresh-dot');
+    if (dot) {
+      dot.classList.toggle('warn', isStale && !isRefreshing);
+      dot.classList.toggle('pulse', isRefreshing);
+    }
+    var ageMinutes = fetchedAt ? Math.max(0, Math.round(ageMs / 60000)) : null;
+    var presetName = data.adSync?.preset || 'filter';
+
+    var metaSyncText = isRefreshing
+      ? 'Meta ads syncing…'
+      : (fetchedAt
+          ? 'Meta ads polled ' + (ageMinutes === 0 ? 'just now' : ageMinutes + 'm ago') + ' (' + presetName + ')'
+          : 'Meta sync pending');
+
+    setText('freshness-label', 'Real-Time Payments');
+    setText('last-updated-label', metaSyncText);
+
     setHtml('wf-spend', fmt(t.spend) + spendFxMarkup);
     setText('wf-spend-native-badge', fmtNative(t.spendNative, data.totals?.spendCurrency || 'USD'));
-    setText('wf-spend-preset', data.adSync?.preset || 'auto');
+    setText('wf-spend-preset', fetchedAt ? (ageMinutes === 0 ? 'polled just now' : 'polled ' + ageMinutes + 'm ago') + ' · ' + presetName : 'syncing…');
 
     setHtml('wf-net', fmtSigned(t.profit) + (hasFx ? fxMarkupHero(data) : ''));
     setText('wf-margin-badge', t.gross > 0 ? ((t.profit / t.gross) * 100).toFixed(1) + '%' : '0%');
@@ -102,20 +125,6 @@
     setHtml('signal-fee-drag', (t.gross > 0 ? ((t.fees / t.gross) * 100).toFixed(1) + '%' : '0.0%') + feesFxMarkup);
     setHtml('signal-fx', currencies.length + ' Currencies' + (nonBaseCurrencies.length > 0 ? fxMarkupAggregate('Multi-Currency Portfolio', grossBreakdown) : ''));
 
-    /* Status & Freshness */
-    var fetchedAt = data.adSync?.fetchedAt ? new Date(data.adSync.fetchedAt) : null;
-    var ttlMs = data.adSync?.ttlMs || (5 * 60 * 1000);
-    var isRefreshing = Boolean(data.adSync?.refreshing);
-    var ageMs = fetchedAt ? (Date.now() - fetchedAt.getTime()) : null;
-    var isStale = typeof data.adSync?.isStale === 'boolean' ? data.adSync.isStale : (ageMs === null || ageMs > ttlMs);
-    var dot = document.getElementById('fresh-dot');
-    if (dot) {
-      dot.classList.toggle('warn', isStale && !isRefreshing);
-      dot.classList.toggle('pulse', isRefreshing);
-    }
-    var ageMinutes = fetchedAt ? Math.max(0, Math.round(ageMs / 60000)) : null;
-    setText('freshness-label', isRefreshing ? 'Syncing Meta Spend…' : (isStale ? 'Meta data sync pending' : 'Live Data Synchronized'));
-    setText('last-updated-label', fetchedAt ? 'Snapshot ' + (ageMinutes === 0 ? 'just now' : ageMinutes + 'm ago') : (isRefreshing ? 'Fetching from Meta…' : 'Sync pending'));
     setText('timezone-note', 'Txns: ' + window.userTimeZone + ' · Ads: Meta tz');
   }
 
