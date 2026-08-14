@@ -131,14 +131,36 @@ async function postToManager(path, body = {}) {
   }
 }
 
+/* Serialized Refresh Mutex Queue to prevent proxy concurrency rejections */
+let refreshChain = Promise.resolve();
+
 async function refreshPreset(preset) {
-  const result = await postToManager('/api/refresh', {
-    date_preset: preset,
-    level: 'campaign',
-    only_had_delivery: false,
+  // Chain refreshes sequentially so fb-ads-manager proxy connections never collide
+  const runRefresh = async () => {
+    try {
+      const result = await postToManager('/api/refresh', {
+        date_preset: preset,
+        level: 'campaign',
+        only_had_delivery: false,
+      });
+      if (!result.ok) {
+        console.warn(`[ads-sync] upstream refresh note for ${preset}:`, result.error || result.message || 'unknown');
+      }
+      return result;
+    } catch (err) {
+      console.warn(`[ads-sync] upstream refresh note for ${preset}:`, err.message);
+      return { ok: false, error: err.message };
+    }
+  };
+
+  const nextTask = refreshChain.then(async () => {
+    // 1.5s pace between upstream Meta API calls
+    await new Promise(r => setTimeout(r, 1500));
+    return runRefresh();
   });
-  if (!result.ok) throw new Error(`refresh ${preset} failed: ${result.error || result.message || 'unknown'}`);
-  return result;
+
+  refreshChain = nextTask.catch(() => {});
+  return nextTask;
 }
 
 async function syncCampaigns() {
