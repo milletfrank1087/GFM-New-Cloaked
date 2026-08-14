@@ -75,6 +75,8 @@ function normalizeSpendRow(campaignId, accountId, preset, row) {
   const cost_per_purchase = extractNumeric(row.cost_per_purchase || row.cost_per_action_type || row.cpa) || (purchases_total > 0 ? spend / purchases_total : null);
   const clicks = extractNumeric(row.link_clicks || row.inline_link_clicks || row.clicks);
 
+  const fetchedAtTimestamp = row.insights_fetched_at || row.last_synced_at || new Date().toISOString();
+
   return {
     campaign_id: String(campaignId),
     account_id: String(accountId || ''),
@@ -90,7 +92,7 @@ function normalizeSpendRow(campaignId, accountId, preset, row) {
     cpc: extractNumeric(row.cpc || row.cost_per_inline_link_click) || null,
     cpm: extractNumeric(row.cpm) || null,
     clicks,
-    fetched_at: new Date().toISOString(),
+    fetched_at: fetchedAtTimestamp,
   };
 }
 
