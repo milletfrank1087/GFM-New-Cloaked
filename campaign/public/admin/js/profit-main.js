@@ -146,7 +146,7 @@
   function scheduleRefreshPoll(data) {
     if (refreshPoll) clearTimeout(refreshPoll);
     if (!data.adSync?.refreshing) return;
-    refreshPoll = setTimeout(loadProfit, 10000);
+    refreshPoll = setTimeout(loadProfit, 2500);
   }
 
   var __refreshDepth = 0;

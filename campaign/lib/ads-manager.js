@@ -259,17 +259,37 @@ async function syncAll() {
 /* Background Synchronizer Daemon */
 function startBackgroundSyncWorker() {
   if (backgroundWorkerTimer) return;
-  console.log('[ads-sync] Background sync worker started (5m today / 30m last_7d).');
+  console.log('[ads-sync] Background sync worker started (auto-seeding all presets).');
 
-  // Initial non-blocking warmup after 3 seconds
+  // Initial non-blocking staggered warmup
   setTimeout(async () => {
     try {
+      console.log('[ads-sync] Warming up today & yesterday presets…');
       await syncPreset('today', { refresh: true });
-      await syncPreset('last_7d', { refresh: false });
+      await syncPreset('yesterday', { refresh: false });
     } catch (err) {
-      console.warn('[ads-sync] Initial background warmup note:', err.message);
+      console.warn('[ads-sync] Initial warmup note (today/yesterday):', err.message);
     }
-  }, 3000);
+  }, 2000);
+
+  setTimeout(async () => {
+    try {
+      console.log('[ads-sync] Warming up last_7d & last_30d presets…');
+      await syncPreset('last_7d', { refresh: false });
+      await syncPreset('last_30d', { refresh: false });
+    } catch (err) {
+      console.warn('[ads-sync] Initial warmup note (last_7d/last_30d):', err.message);
+    }
+  }, 5000);
+
+  setTimeout(async () => {
+    try {
+      console.log('[ads-sync] Warming up last_90d preset…');
+      await syncPreset('last_90d', { refresh: false });
+    } catch (err) {
+      console.warn('[ads-sync] Initial warmup note (last_90d):', err.message);
+    }
+  }, 8000);
 
   // Periodic interval (every 5 minutes)
   let ticks = 0;
@@ -279,9 +299,19 @@ function startBackgroundSyncWorker() {
       // Sync today every 5 minutes
       await syncPreset('today', { refresh: true });
 
+      // Sync yesterday every 20 minutes (every 4 ticks)
+      if (ticks % 4 === 0) {
+        await syncPreset('yesterday', { refresh: true });
+      }
+
       // Sync last_7d every 30 minutes (every 6 ticks)
       if (ticks % 6 === 0) {
         await syncPreset('last_7d', { refresh: true });
+      }
+
+      // Sync last_30d every 2 hours (every 24 ticks)
+      if (ticks % 24 === 0) {
+        await syncPreset('last_30d', { refresh: true });
       }
     } catch (err) {
       console.warn('[ads-sync] Periodic background sync note:', err.message);

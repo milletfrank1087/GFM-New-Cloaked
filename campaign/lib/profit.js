@@ -271,6 +271,8 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
   let spendFreshAt = null;
   let adRefreshScheduled = false;
   let spendToBaseRate = 1;
+  const ttl = getPresetTtl(preset);
+  let isStale = false;
 
   if (withAdSpend) {
     if (latestRatesResult && latestRatesResult[AD_SPEND_CURRENCY]) {
@@ -301,8 +303,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     }
 
     spendFreshAt = latestFetchedAt || null;
-    const ttl = getPresetTtl(preset);
-    const isStale = !latestFetchedAt || (Date.now() - latestFetchedAt > ttl);
+    isStale = !latestFetchedAt || (Date.now() - latestFetchedAt > ttl);
     if ((spendRows || []).length === 0 || isStale) {
       adRefreshScheduled = scheduleAdRefresh(preset);
     }
@@ -421,6 +422,8 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
       preset,
       presetDays: presetDaySpan(preset),
       currency: AD_SPEND_CURRENCY,
+      ttlMs: ttl,
+      isStale,
       fx: {
         baseCurrency: BASE_CURRENCY,
         nativePerBase: spendToBaseRate ? 1 / spendToBaseRate : null,
