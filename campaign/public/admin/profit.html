@@ -2,286 +2,620 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profit | HopeRise Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Profit Cockpit | HopeRise Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            gfm: { green: '#00b964', 'green-dark': '#02a95c', 'green-light': '#e8f8f0', dark: '#333333', gray: '#767676' }
-          },
-          fontFamily: { outfit: ['DM Sans', 'sans-serif'], mono: ['Space Mono', 'monospace'] }
-        }
-      }
-    }
-  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #12251f;
-      --ink-soft: #38534b;
-      --muted: #718780;
-      --line: #d9e8e1;
-      --paper: #f2f7f4;
-      --surface: rgba(255,255,255,.9);
-      --accent: #087f59;
-      --accent-bright: #08b978;
-      --blue: #4169e1;
-      --shadow: 0 18px 55px rgba(18,37,31,.07);
+      --stripe-canvas: #f8fafd;
+      --stripe-surface: #ffffff;
+      --stripe-border: #e5edf5;
+      --stripe-border-strong: #d0ddec;
+      --stripe-navy: #061b31;
+      --stripe-slate: #64748d;
+      --stripe-purple: #635bff;
+      --stripe-purple-light: #533afd;
+      --stripe-green: #00875a;
+      --stripe-green-subtle: #edf9f3;
+      --stripe-red: #df1b41;
+      --stripe-red-subtle: #fef2f4;
+      --stripe-indigo: #6366f1;
+      --stripe-shadow: 0px 2px 5px rgba(50, 50, 93, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.04);
+      --stripe-shadow-lg: 0 13px 27px -5px rgba(50,50,93,.1), 0 8px 16px -8px rgba(0,0,0,.15);
     }
+
     * { box-sizing: border-box; }
-    body { background: radial-gradient(circle at 85% -5%, #e1f7ec 0, transparent 31rem), var(--paper); color: var(--ink); }
-    .shell { max-width: 1560px; margin: 0 auto; }
-    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); backdrop-filter: blur(14px); }
-    .eyebrow { color: var(--muted); font-size: .64rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
-    .metric-number { font-family: 'Space Mono', monospace; letter-spacing: -.07em; font-variant-numeric: tabular-nums; }
-    .data-table { border-collapse: separate; border-spacing: 0; }
-    .data-table th { color: var(--muted); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
-    .data-table td, .data-table th { border-bottom: 1px solid #edf3f0; padding: .78rem .7rem; }
-    .data-table tbody tr { transition: background .18s ease, transform .18s ease; }
-    .data-table tbody tr:hover { background: #f5fbf8; }
-    .soft-grid { background-image: linear-gradient(rgba(8,127,89,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(8,127,89,.055) 1px, transparent 1px); background-size: 24px 24px; }
-    .waterfall-arrow { color: #91a59e; }
-    .signal-card { min-height: 104px; transition: transform .2s ease, box-shadow .2s ease; }
-    .signal-card:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(18,37,31,.09); }
-    .status-dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; background: var(--accent-bright); box-shadow: 0 0 0 4px #dff8eb; }
-    .status-dot.warn { background: #e6a21a; box-shadow: 0 0 0 4px #fff2cf; }
-    .fx-anchor { position: relative; cursor: help; border-bottom: 1px dashed currentColor; }
-    .fx-popover { position: fixed; z-index: 80; width: 270px; pointer-events: auto; opacity: 0; transform: translateY(5px); transition: opacity .15s ease, transform .15s ease; }
-    .fx-popover.open { opacity: 1; transform: translateY(0); }
-    .fx-popover-inner { background: #10251f; color: #e8f8f0; border: 1px solid #2c5b4d; border-radius: 14px; padding: 13px 15px; box-shadow: 0 16px 35px rgba(0,0,0,.22); font-size: .75rem; }
-    .fx-popover-inner strong { color: white; display: block; font-size: .82rem; margin-bottom: 5px; }
-    .mobile-scroll { overflow-x: auto; overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
-    .mobile-table-hint { display: none; color: var(--muted); font-size: .68rem; padding: .2rem .7rem .55rem; }
-    .transaction-row { min-height: 56px; }
-    .modal-open { overflow: hidden; }
-    button, select, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-    .pulse { animation: pulse 1.4s ease-in-out infinite; }
-    @keyframes pulse { 50% { opacity: .55; } }
-    @media (max-width: 767px) {
-      body { padding-bottom: env(safe-area-inset-bottom); }
-      header { height: calc(65px + env(safe-area-inset-top)); padding-top: max(.75rem, env(safe-area-inset-top)) !important; }
-      main { padding-top: calc(4rem + env(safe-area-inset-top)) !important; }
-      #mobile-menu-btn, header > button, select { min-width: 44px; min-height: 44px; }
-      #detail-close { min-width: 44px; min-height: 44px; }
-      #ads-sync-btn { min-height: 48px; justify-content: center; }
-      #sidebar { padding-bottom: env(safe-area-inset-bottom); }
-      .data-table td, .data-table th { padding: .78rem .62rem; }
-      .data-table th { position: sticky; top: 0; background: #fff; z-index: 1; }
-      .mobile-table-hint { display: block; }
-      .fx-anchor { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border-bottom: 0; vertical-align: middle; }
-      .fx-popover { width: min(270px, calc(100vw - 24px)); }
-      .metric-number { letter-spacing: -.08em; }
-      .card { border-radius: 18px; }
-      .signal-card { min-height: 92px; }
+    body {
+      background-color: var(--stripe-canvas);
+      color: var(--stripe-slate);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-feature-settings: "ss01" on, "tnum" on;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
     }
+
+    .tabular-numbers {
+      font-family: 'JetBrains Mono', 'Inter', monospace;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+    }
+
+    .stripe-card {
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
+      box-shadow: var(--stripe-shadow);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .stripe-card:hover {
+      border-color: var(--stripe-border-strong);
+    }
+
+    .stripe-pill {
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      color: var(--stripe-slate);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .stripe-pill.active {
+      background: #ffffff;
+      color: var(--stripe-navy);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid #d6d9fc;
+    }
+    .stripe-pill.inactive {
+      background: transparent;
+      color: var(--stripe-slate);
+    }
+    .stripe-pill.inactive:hover {
+      color: var(--stripe-navy);
+      background: rgba(0,0,0,0.03);
+    }
+
+    .chart-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 5px;
+      transition: all 0.15s ease;
+      color: var(--stripe-slate);
+      cursor: pointer;
+    }
+    .chart-pill.active {
+      background: #ffffff;
+      color: var(--stripe-navy);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      border: 1px solid #d6d9fc;
+    }
+    .chart-pill.inactive:hover {
+      color: var(--stripe-navy);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--stripe-green);
+      box-shadow: 0 0 0 3px rgba(0, 135, 90, 0.2);
+    }
+    .pulse-dot.pulse { animation: pulseAnim 1.5s infinite; }
+    .pulse-dot.warn { background: #d97706; box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2); }
+    @keyframes pulseAnim {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    .stripe-table th {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #8898aa;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--stripe-border);
+      background: #fafcfe;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .stripe-table td {
+      font-size: 13px;
+      padding: 11px 12px;
+      border-bottom: 1px solid #edf2f7;
+      color: var(--stripe-navy);
+      transition: background 0.1s ease;
+    }
+    .stripe-table tbody tr:hover td { background: #f8fbff; }
+
+    .scroll-smooth-x {
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+
+    .touch-target { min-height: 44px; min-width: 44px; }
+
+    .fx-info-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 17px;
+      height: 17px;
+      border-radius: 4px;
+      background: #eff2fe;
+      color: #635bff;
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 4px;
+      cursor: pointer;
+      vertical-align: middle;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .fx-info-trigger:hover, .fx-info-trigger:focus {
+      background: #635bff;
+      color: #ffffff;
+      transform: scale(1.1);
+    }
+
+    .popover-card {
+      position: fixed;
+      z-index: 100;
+      min-width: 260px;
+      max-width: 340px;
+      background: rgba(6, 27, 49, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      font-size: 12px;
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+      transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .popover-card.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    .copy-pill {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #f1f5f9;
+      transition: background 0.15s ease;
+    }
+    .copy-pill:hover { background: #e2e8f0; }
   </style>
 </head>
-<body class="font-outfit bg-gray-50 min-h-screen">
-  <header class="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 px-4 py-3 flex items-center justify-between">
-    <button id="mobile-menu-btn" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false" class="p-2 hover:bg-gray-100 rounded-lg">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-    <span class="font-bold text-gfm-dark">HopeRise Admin</span>
-    <button onclick="logout()" class="p-2 hover:bg-gray-100 rounded-lg text-gfm-gray">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-    </button>
+<body class="min-h-screen text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
+
+  <!-- Mobile Top App Header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 px-4 py-3 flex items-center justify-between" style="padding-top: max(0.75rem, env(safe-area-inset-top));">
+    <div class="flex items-center gap-3">
+      <button id="mobile-menu-btn" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" class="p-2 -ml-2 text-slate-700 hover:bg-slate-100 active:bg-slate-200 rounded-lg touch-target flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-[#635bff] rounded-md flex items-center justify-center text-white shadow-sm font-bold text-xs">HR</div>
+        <span class="font-bold text-base text-[#061b31] tracking-tight">Profit Cockpit</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="syncAds()" id="mobile-sync-btn" aria-label="Sync Ads" class="p-2 text-slate-600 hover:bg-slate-100 active:bg-slate-200 rounded-lg touch-target flex items-center justify-center">
+        <svg id="mobile-sync-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </button>
+      <button onclick="logout()" aria-label="Logout" class="p-2 -mr-2 text-slate-400 hover:text-slate-600 rounded-lg touch-target flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </button>
+    </div>
   </header>
 
-  <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 transform -translate-x-full lg:translate-x-0 transition-transform"></aside>
-  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+  <!-- Sidebar (injected by admin-common.js) -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out"></aside>
+  <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 hidden lg:hidden transition-opacity" onclick="closeSidebar()"></div>
 
+  <!-- Main Workspace -->
   <main class="lg:ml-64 pt-16 lg:pt-0 min-h-screen">
-    <div class="shell p-4 lg:p-8">
-      <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
+    <div class="max-w-[1560px] mx-auto p-4 sm:p-6 lg:p-8 space-y-5">
+
+      <!-- Top Operations Bar -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-gray-200">
         <div>
-          <div class="flex items-center gap-2 mb-2"><span class="status-dot" id="fresh-dot"></span><span class="eyebrow" id="freshness-label" aria-live="polite">Live financial cockpit</span></div>
-          <h1 class="text-3xl lg:text-4xl font-bold tracking-tight text-gfm-dark">Profit cockpit</h1>
-          <p class="text-sm text-gfm-gray mt-1">Your operating truth: collected revenue, processor fees, Meta spend, and normalized profit.</p>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="pulse-dot" id="fresh-dot"></span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="freshness-label" aria-live="polite">Live Operating Cockpit</span>
+            <span class="text-xs text-slate-300">·</span>
+            <span class="text-xs text-slate-400 font-mono" id="last-updated-label">Syncing data…</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#061b31]">Financial Overview &amp; Net Profit</h1>
         </div>
-        <div class="flex items-center gap-3">
-          <span class="text-xs text-gfm-gray hidden sm:block" id="last-updated-label">Waiting for data…</span>
-          <button id="ads-sync-btn" onclick="syncAds()" class="px-4 py-2.5 bg-gfm-dark text-white rounded-xl hover:bg-black text-sm font-medium flex items-center gap-2 shadow-sm">
-            <svg id="ads-sync-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span id="ads-sync-label">Sync Ads</span>
+        
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button onclick="exportProfitCSV()" class="px-3.5 py-2 rounded-md bg-white border border-gray-200 hover:border-gray-300 text-xs font-medium text-slate-700 shadow-sm flex items-center gap-1.5 transition-all">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>Export CSV</span>
+          </button>
+
+          <button id="ads-sync-btn" onclick="syncAds()" class="px-4 py-2 rounded-md bg-[#635bff] hover:bg-[#533afd] text-white text-xs font-medium shadow-sm flex items-center gap-1.5 transition-all">
+            <svg id="ads-sync-icon" class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span id="ads-sync-label">Sync Meta Spend</span>
           </button>
         </div>
       </div>
 
-      <!-- Filters -->
-      <div class="card p-3 mb-5">
-        <div class="flex flex-wrap items-end gap-3">
-          <div class="flex-1 min-w-[200px]">
-            <label class="eyebrow mb-1.5 block">Revenue scope</label>
-            <select id="filter-campaign" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gfm-green focus:border-transparent">
-              <option value="all">All Campaigns</option>
-            </select>
+      <!-- Control Deck: Filter Pills & Range Switcher -->
+      <div class="stripe-card p-3 sm:p-3.5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          
+          <!-- Quick Date Range Segmented Control -->
+          <div class="flex items-center bg-[#eef3f8] p-1 rounded-lg overflow-x-auto scroll-smooth-x no-scrollbar" id="range-pills">
+            <button onclick="selectRange('today')" class="stripe-pill active" data-range="today">Today</button>
+            <button onclick="selectRange('yesterday')" class="stripe-pill inactive" data-range="yesterday">Yesterday</button>
+            <button onclick="selectRange('last7days')" class="stripe-pill inactive" data-range="last7days">Last 7D</button>
+            <button onclick="selectRange('last30days')" class="stripe-pill inactive" data-range="last30days">Last 30D</button>
+            <button onclick="selectRange('thisMonth')" class="stripe-pill inactive" data-range="thisMonth">This Month</button>
+            <button onclick="selectRange('lastMonth')" class="stripe-pill inactive" data-range="lastMonth">Last Month</button>
+            <button onclick="selectRange('allTime')" class="stripe-pill inactive" data-range="allTime">All Time</button>
           </div>
-          <div class="flex-1 min-w-[200px]">
-            <label class="eyebrow mb-1.5 block">Reporting window</label>
-            <select id="filter-daterange" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gfm-green focus:border-transparent">
-              <option value="allTime">All Time</option>
-              <option value="today">Today</option>
-              <option value="yesterday">Yesterday</option>
-              <option value="last7days">Last 7 Days</option>
-              <option value="last30days" selected>Last 30 Days</option>
-              <option value="thisMonth">This Month</option>
-              <option value="lastMonth">Last Month</option>
-              <option value="thisYear">This Year</option>
-            </select>
+
+          <!-- Campaign Select Dropdown & Timezone Note -->
+          <div class="flex items-center gap-3">
+            <div class="relative min-w-[200px] flex-1 sm:flex-none">
+              <select id="filter-campaign" onchange="loadProfit()" class="w-full bg-white border border-gray-200 text-[#061b31] text-xs sm:text-sm font-medium rounded-md py-1.5 px-3 pr-8 focus:ring-1 focus:ring-[#635bff] focus:outline-none transition-all cursor-pointer">
+                <option value="all">All Campaigns</option>
+              </select>
+            </div>
+            <div class="hidden sm:block text-right">
+              <p class="text-[11px] text-slate-400 font-medium" id="timezone-note">Local Timezone</p>
+            </div>
           </div>
-          <div class="text-xs text-gfm-gray pb-2 sm:max-w-md sm:text-right" id="ads-preset-note"></div>
+
         </div>
       </div>
-      <div id="profit-error" class="hidden mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3" role="alert">
+
+      <!-- Alerts / Notification Banners -->
+      <div id="profit-error" class="hidden rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 flex items-center justify-between gap-3" role="alert">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <span id="profit-error-text" aria-live="assertive">Profit data could not be loaded.</span>
-        <button type="button" class="shrink-0 rounded-lg bg-red-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-800" onclick="loadProfit()">Retry</button>
+        </div>
+        <button type="button" class="shrink-0 rounded bg-red-700 px-3 py-1 text-xs font-semibold text-white hover:bg-red-800 transition-colors" onclick="loadProfit()">Retry</button>
       </div>
-      <div id="profit-quality" class="hidden mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800" role="status" aria-live="polite"></div>
 
-      <!-- Hero: True Net Profit -->
-      <div class="card p-5 lg:p-7 mb-5 soft-grid border-l-4 border-gfm-green">
-        <div class="flex flex-wrap items-start justify-between gap-5">
+      <div id="profit-quality" class="hidden rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 flex items-center gap-2" role="status" aria-live="polite">
+        <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span id="profit-quality-text"></span>
+      </div>
+
+      <!-- HERO: True Net Withdrawable Profit -->
+      <div class="stripe-card p-6 sm:p-8 bg-gradient-to-r from-white to-[#fbfcff]">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
-            <div class="flex items-center gap-2 mb-2"><p class="eyebrow">Withdrawable operating profit</p><span class="fx-anchor text-blue-600 text-xs" data-fx-kind="base">EUR</span></div>
-            <p class="text-5xl lg:text-7xl font-bold text-gfm-green metric-number" id="hero-profit">€0.00</p>
-            <p class="text-sm text-gfm-gray mt-2" id="hero-sub">Collected gross − Stripe fees − Meta ad spend</p>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-[#00875a] uppercase tracking-wider border border-emerald-100">Operating Net Profit</span>
+              <span class="text-xs font-mono font-bold text-slate-500" id="hero-currency-badge">EUR (€)</span>
+              <span class="text-xs text-slate-300">·</span>
+              <span class="text-xs text-slate-400 font-medium" id="hero-window">Selected Window</span>
+            </div>
+            
+            <div class="flex items-baseline gap-3 flex-wrap">
+              <p class="text-4xl sm:text-6xl font-bold text-[#061b31] tracking-tight tabular-numbers" id="hero-profit">€0.00</p>
+            </div>
+            
+            <p class="text-xs text-slate-500 mt-2 font-medium flex items-center gap-1.5">
+              <span class="inline-block w-2 h-2 rounded-full bg-[#00875a]"></span>
+              Gross Collected − Stripe Processing Fees − Meta Ad Spend = Real Liquid Profit
+            </p>
           </div>
-          <div class="text-left sm:text-right">
-            <p class="eyebrow mb-1">Profit margin</p>
-            <p class="text-2xl font-bold text-gfm-dark metric-number" id="hero-margin">—</p>
-            <p class="text-xs text-gfm-gray mt-1" id="hero-window">Selected reporting window</p>
+
+          <div class="flex items-center gap-6 border-t lg:border-t-0 lg:border-l border-slate-100 pt-4 lg:pt-0 lg:pl-8">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-0.5">Net Profit Margin</p>
+              <p class="text-3xl font-bold text-[#00875a] tabular-numbers" id="hero-margin">—</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 font-medium" id="hero-margin-sub">of gross collected</p>
+            </div>
+            <div class="h-10 w-[1px] bg-slate-200"></div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-0.5">Settled Payments</p>
+              <p class="text-3xl font-bold text-[#061b31] tabular-numbers" id="hero-txns">0</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 font-medium" id="hero-txns-sub">completed transactions</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Waterfall -->
-      <div class="card p-3 lg:p-4 mb-5">
-        <div class="flex flex-col md:flex-row items-stretch gap-2">
-          <!-- Gross -->
-          <div class="flex-1 bg-gray-50 rounded-2xl p-4 flex flex-col justify-between min-w-0">
-            <p class="eyebrow mb-1">Gross Revenue</p>
-            <p class="text-2xl font-bold text-gfm-dark metric-number" id="wf-gross">€0.00</p>
-            <p class="text-xs text-gfm-gray mt-1" id="wf-gross-sub"></p>
+      <!-- Financial Waterfall Pipeline -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+        <!-- Gross Card -->
+        <div class="stripe-card p-4 space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>1. Gross Revenue</span>
+            <span class="text-[11px] font-mono text-slate-400 font-normal" id="wf-gross-count">0 txns</span>
           </div>
-          <div class="hidden md:flex items-center waterfall-arrow px-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
-          <!-- Stripe Fees -->
-          <div class="flex-1 bg-red-50 rounded-2xl p-4 flex flex-col justify-between min-w-0">
-            <p class="eyebrow mb-1 text-red-500">Stripe Fees</p>
-            <p class="text-2xl font-bold text-red-500 metric-number" id="wf-fees">−€0.00</p>
-            <p class="text-xs text-red-400 mt-1" id="wf-fee-pct"></p>
+          <p class="text-2xl sm:text-3xl font-bold text-[#061b31] tabular-numbers" id="wf-gross">€0.00</p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Tips included:</span>
+            <span class="font-semibold text-blue-600 font-mono" id="wf-tips">€0.00</span>
           </div>
-          <div class="hidden md:flex items-center waterfall-arrow px-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
-          <!-- Ad Spend -->
-          <div class="flex-1 bg-indigo-50 rounded-2xl p-4 flex flex-col justify-between min-w-0">
-            <p class="eyebrow mb-1 text-indigo-500">Ad Spend</p>
-            <p class="text-2xl font-bold text-indigo-600 metric-number" id="wf-spend">€0.00</p>
-            <p class="text-xs text-indigo-400 mt-1" id="wf-spend-sub"></p>
+        </div>
+
+        <!-- Stripe Fees Card -->
+        <div class="stripe-card p-4 space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span class="text-[#df1b41]">2. Processor Fees</span>
+            <span class="text-[11px] font-mono font-semibold text-[#df1b41]" id="wf-fee-pct">0.0%</span>
           </div>
-          <div class="hidden md:flex items-center waterfall-arrow px-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
-          <!-- Net Profit -->
-          <div class="flex-1 bg-gfm-green-light rounded-2xl p-4 flex flex-col justify-between min-w-0">
-            <p class="eyebrow mb-1 text-gfm-green">Net Profit</p>
-            <p class="text-2xl font-bold text-gfm-green metric-number" id="wf-net">€0.00</p>
-            <p class="text-xs text-gfm-green mt-1" id="wf-net-sub"></p>
+          <p class="text-2xl sm:text-3xl font-bold text-[#df1b41] tabular-numbers" id="wf-fees">−€0.00</p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Stripe &amp; processing:</span>
+            <span class="text-slate-600">Interchange + FX</span>
+          </div>
+        </div>
+
+        <!-- Ad Spend Card -->
+        <div class="stripe-card p-4 space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span class="text-indigo-600">3. Meta Ad Spend</span>
+            <span class="text-[11px] font-mono font-semibold text-indigo-600" id="wf-spend-native-badge">$0.00 USD</span>
+          </div>
+          <p class="text-2xl sm:text-3xl font-bold text-indigo-600 tabular-numbers" id="wf-spend">€0.00</p>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Preset sync:</span>
+            <span class="font-mono text-indigo-500" id="wf-spend-preset">last_30d</span>
+          </div>
+        </div>
+
+        <!-- Net Operating Profit Card -->
+        <div class="stripe-card p-4 space-y-1.5 bg-[#edf9f3] border-[#c2ecd7]">
+          <div class="flex items-center justify-between text-xs font-semibold text-[#00875a] uppercase tracking-wider">
+            <span>4. True Net Profit</span>
+            <span class="text-[11px] font-mono font-bold text-[#00875a]" id="wf-margin-badge">0.0% margin</span>
+          </div>
+          <p class="text-2xl sm:text-3xl font-bold text-[#00875a] tabular-numbers" id="wf-net">€0.00</p>
+          <div class="pt-2 border-t border-[#d5f3e4] flex items-center justify-between text-xs text-[#00875a]">
+            <span>Available for payout:</span>
+            <span class="font-semibold">100% Normalized</span>
           </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 xl:grid-cols-5 gap-3 mb-5" id="signal-grid">
-        <div class="card signal-card p-4"><p class="eyebrow">Transactions</p><p class="text-2xl font-bold metric-number mt-2" id="signal-count">—</p><p class="text-xs text-gfm-gray mt-1" id="signal-count-sub">selected window</p></div>
-        <div class="card signal-card p-4"><p class="eyebrow">Avg. order</p><p class="text-2xl font-bold metric-number mt-2" id="signal-aov">—</p><p class="text-xs text-gfm-gray mt-1">gross / transaction</p></div>
-        <div class="card signal-card p-4"><p class="eyebrow">Meta ROAS</p><p class="text-2xl font-bold metric-number mt-2 text-blue-700" id="signal-roas">—</p><p class="text-xs text-gfm-gray mt-1" id="signal-roas-sub">purchase value / spend</p></div>
-        <div class="card signal-card p-4"><p class="eyebrow">Meta CPA</p><p class="text-2xl font-bold metric-number mt-2 text-blue-700" id="signal-cpa">—</p><p class="text-xs text-gfm-gray mt-1" id="signal-cpa-sub">cost / Meta purchase</p></div>
-        <div class="card signal-card p-4 col-span-2 xl:col-span-1"><p class="eyebrow">FX exposure</p><p class="text-2xl font-bold metric-number mt-2" id="signal-fx">—</p><p class="text-xs text-gfm-gray mt-1">currencies in revenue</p></div>
+      <!-- Signals Deck (KPI Intelligence Grid) -->
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+        <div class="stripe-card p-3.5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Avg. Order (AOV)</p>
+          <p class="text-xl font-bold text-[#061b31] tabular-numbers mt-1" id="signal-aov">€0.00</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">gross / payment</p>
+        </div>
+
+        <div class="stripe-card p-3.5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-indigo-600">Meta ROAS</p>
+          <p class="text-xl font-bold text-indigo-600 tabular-numbers mt-1" id="signal-roas">—</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">purchases / spend</p>
+        </div>
+
+        <div class="stripe-card p-3.5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-indigo-600">Meta CPA</p>
+          <p class="text-xl font-bold text-indigo-600 tabular-numbers mt-1" id="signal-cpa">—</p>
+          <p class="text-[11px] text-slate-400 mt-0.5" id="signal-cpa-sub">cost per purchase</p>
+        </div>
+
+        <div class="stripe-card p-3.5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-blue-600">Tips Captured</p>
+          <p class="text-xl font-bold text-blue-600 tabular-numbers mt-1" id="signal-tips">€0.00</p>
+          <p class="text-[11px] text-slate-400 mt-0.5" id="signal-tips-pct">0% of gross</p>
+        </div>
+
+        <div class="stripe-card p-3.5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Fee Drag</p>
+          <p class="text-xl font-bold text-[#df1b41] tabular-numbers mt-1" id="signal-fee-drag">0.0%</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">effective fee rate</p>
+        </div>
+
+        <div class="stripe-card p-3.5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">FX Exposure</p>
+          <p class="text-xl font-bold text-slate-800 tabular-numbers mt-1" id="signal-fx">0 Currencies</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">ECB converted</p>
+        </div>
       </div>
 
-      <!-- Per-Campaign Table -->
-      <div class="card p-6 mb-6">
-        <h2 class="font-bold text-gfm-dark mb-4">Campaign Profit &amp; Ad Spend</h2>
-        <div class="mobile-scroll">
-          <p class="mobile-table-hint">Swipe horizontally to see all campaign metrics</p>
-          <table class="w-full text-sm data-table">
+      <!-- Settlement Trajectory Chart (Synchronized with Main Date Range) -->
+      <div class="stripe-card p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-sm font-bold text-[#061b31]">Settlement Trajectory Matrix</h2>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200" id="chart-type-badge">24H Hourly Velocity</span>
+            </div>
+            <p class="text-xs text-slate-400" id="chart-subtitle">Gross revenue volume vs net profit per settlement interval (aligned with selected filter)</p>
+          </div>
+
+          <!-- Dynamic Legend & Status -->
+          <div class="flex items-center gap-4 text-xs font-medium text-slate-600">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#635bff]"></span> Gross Collected</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#00875a]"></span> Net Profit</span>
+          </div>
+        </div>
+
+        <div class="h-44 flex items-end gap-1 sm:gap-2 pt-4 pb-1 border-b border-slate-100 overflow-x-auto scroll-smooth-x" id="chart-bars-container">
+          <!-- Rendered via JS -->
+        </div>
+        <div id="chart-tooltip" class="text-center text-xs text-slate-500 font-mono h-5 flex items-center justify-center transition-all">Hover over any bar to inspect interval settlement &amp; FX</div>
+      </div>
+
+      <!-- Main Data Sections: Campaigns & Stores Grid -->
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+        
+        <!-- Campaign Performance Matrix (2 cols on xl) -->
+        <div class="xl:col-span-2 stripe-card p-5 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-sm font-bold text-[#061b31]">Campaign Attribution Matrix</h2>
+              <p class="text-xs text-slate-400">Unit economics, Meta ad spend attribution, and campaign-level net ROI</p>
+            </div>
+
+            <!-- Campaign Filter Tabs -->
+            <div class="flex items-center gap-1 bg-[#eef3f8] p-0.5 rounded-md text-xs font-semibold">
+              <button onclick="filterCampaignTable('active')" id="tab-camp-active" class="camp-tab px-2.5 py-1 rounded bg-white shadow-sm text-[#061b31]" data-filter="active">Active <span id="badge-active-count" class="ml-1 text-[10px] font-bold px-1 rounded-full bg-emerald-100 text-[#00875a]">0</span></button>
+              <button onclick="filterCampaignTable('ads')" id="tab-camp-ads" class="camp-tab px-2.5 py-1 rounded text-slate-500 hover:text-[#061b31]" data-filter="ads">Ads Only <span id="badge-ads-count" class="ml-1 text-[10px] font-bold px-1 rounded-full bg-indigo-100 text-indigo-700">0</span></button>
+              <button onclick="filterCampaignTable('all')" id="tab-camp-all" class="camp-tab px-2.5 py-1 rounded text-slate-500 hover:text-[#061b31]" data-filter="all">All <span id="badge-all-count" class="ml-1 text-[10px] font-bold px-1 rounded-full bg-slate-200 text-slate-700">0</span></button>
+            </div>
+          </div>
+
+          <!-- Matrix Search Box -->
+          <div>
+            <input type="text" id="campaign-search" placeholder="Search campaign name, UTM, or ID..." oninput="searchCampaigns(this.value)" class="w-full bg-[#f8fafd] border border-gray-200 text-xs rounded-md py-1.5 px-3 text-[#061b31] placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#635bff]">
+          </div>
+
+          <div class="scroll-smooth-x rounded border border-slate-200 max-h-[480px] overflow-y-auto">
+            <table class="w-full stripe-table text-left">
+              <thead>
+                <tr>
+                  <th>Campaign</th>
+                  <th class="text-right">Revenue</th>
+                  <th class="text-right">Tips</th>
+                  <th class="text-right">Fees</th>
+                  <th class="text-right">Net</th>
+                  <th class="text-right">Ad Spend</th>
+                  <th class="text-right">Profit</th>
+                  <th class="text-right">ROAS</th>
+                  <th class="text-right">CPA</th>
+                </tr>
+              </thead>
+              <tbody id="campaign-table-body" class="font-mono text-xs">
+                <tr><td colspan="9" class="text-center py-6 text-slate-400">Loading campaign intelligence…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Store Distribution & Currency Breakdown (1 col on xl) -->
+        <div class="space-y-5">
+          
+          <!-- Store Volume Share Card -->
+          <div class="stripe-card p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-bold text-[#061b31]">Store Processing Matrix</h2>
+              <span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-mono font-bold" id="store-count-badge">0 Stores</span>
+            </div>
+            <p class="text-xs text-slate-400">Volume distribution across rotating merchant fronts</p>
+            
+            <div class="space-y-2.5" id="stores-breakdown-list">
+              <p class="text-xs text-slate-400 py-3 text-center">Loading store statistics…</p>
+            </div>
+          </div>
+
+          <!-- Currency Distribution Card -->
+          <div class="stripe-card p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-bold text-[#061b31]">Currency Breakdown</h2>
+              <span class="text-xs text-slate-400 font-mono">ECB Rates</span>
+            </div>
+            <p class="text-xs text-slate-400">Historical daily FX conversions normalized to base EUR</p>
+            
+            <div class="space-y-2" id="currency-breakdown-container">
+              <p class="text-xs text-slate-400 py-3 text-center">Loading currency stats…</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Completed Transactions Feed (All Records for Selected Range) -->
+      <div class="stripe-card p-5 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-sm font-bold text-[#061b31]">Completed Transactions</h2>
+              <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-50 text-[#00875a] border border-emerald-100" id="txns-count-badge">0 Transactions</span>
+            </div>
+            <p class="text-xs text-slate-400">Live feed of all processed payments with full fee, tip, and FX provenance</p>
+          </div>
+          
+          <div>
+            <input type="text" id="txn-search" placeholder="Search donor, ID, campaign..." oninput="searchTransactions(this.value)" class="bg-[#f8fafd] border border-gray-200 text-xs rounded-md py-1.5 px-3 text-[#061b31] placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#635bff]">
+          </div>
+        </div>
+
+        <div class="scroll-smooth-x rounded border border-slate-200 max-h-[480px] overflow-y-auto">
+          <table class="w-full stripe-table text-left">
             <thead>
-              <tr class="text-left">
+              <tr>
+                <th>Donor / Customer</th>
                 <th>Campaign</th>
-                <th class="text-right">Revenue</th>
-                <th class="text-right">Tips</th>
-                <th class="text-right">Fees</th>
-                <th class="text-right">Net</th>
-                <th class="text-right">Ad Spend</th>
-                <th class="text-right">Profit</th>
-                <th class="text-right">Purchases</th>
-                <th class="text-right">ROAS</th>
-                <th class="text-right">CPA</th>
-              </tr>
-            </thead>
-            <tbody id="campaign-table">
-              <tr><td colspan="10" class="text-center text-gfm-gray py-4">Loading...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Currency Breakdown -->
-      <div class="card p-6 mb-6">
-        <h2 class="font-bold text-gfm-dark mb-4">Currency Breakdown <span class="text-xs font-normal text-gfm-gray">(converted to EUR at each payment date)</span></h2>
-        <div id="currency-breakdown" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
-      </div>
-
-      <!-- Recent Transactions -->
-      <div class="card p-6">
-        <h2 class="font-bold text-gfm-dark mb-4">Recent Transactions</h2>
-        <div class="mobile-scroll">
-          <p class="mobile-table-hint">Swipe horizontally to see transaction details</p>
-          <table class="w-full text-sm data-table">
-            <thead>
-              <tr class="text-left">
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Tip</th>
-                <th>Total</th>
-                <th>Net</th>
+                <th class="text-right">Donation</th>
+                <th class="text-right">Tip</th>
+                <th class="text-right">Gross Total</th>
+                <th class="text-right">Stripe Fee</th>
+                <th class="text-right">Net Revenue</th>
                 <th>Currency</th>
-                <th>Time</th>
+                <th class="text-right">Timestamp</th>
               </tr>
             </thead>
-            <tbody id="recent-table">
-              <tr><td colspan="7" class="text-center text-gfm-gray py-4">Loading...</td></tr>
+            <tbody id="recent-transactions-body" class="font-mono text-xs">
+              <tr><td colspan="9" class="text-center py-6 text-slate-400">Loading transactions…</td></tr>
             </tbody>
           </table>
         </div>
       </div>
+
     </div>
   </main>
 
-  <!-- Transaction Detail Modal -->
-  <div id="detail-modal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/50" onclick="closeDetail()"></div>
-    <div role="dialog" aria-modal="true" aria-labelledby="detail-title" class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-2xl bg-white rounded-2xl overflow-hidden max-h-[90vh] flex flex-col">
-      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-        <h3 id="detail-title" class="text-xl font-bold text-gfm-dark">Transaction Details</h3>
-        <button id="detail-close" aria-label="Close transaction details" onclick="closeDetail()" class="p-2 hover:bg-gray-100 rounded-lg">
+  <!-- Transaction Detail Modal (Drawer Style) -->
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" onclick="closeDetail()"></div>
+    <div class="absolute inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-xl bg-white rounded-t-2xl sm:rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-gray-200">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-slate-50/70">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-md bg-[#edf9f3] text-[#00875a] flex items-center justify-center font-bold text-xs">✓</div>
+          <div>
+            <h3 id="detail-title" class="text-base font-bold text-[#061b31]">Transaction Details</h3>
+            <p class="text-[11px] text-slate-400 font-mono" id="detail-id-label">Payment ID</p>
+          </div>
+        </div>
+        <button id="detail-close" aria-label="Close transaction details" onclick="closeDetail()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-100 touch-target flex items-center justify-center">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="p-6 overflow-y-auto flex-1" id="detail-content">
-        <p class="text-gfm-gray">Loading...</p>
+
+      <div class="p-5 overflow-y-auto flex-1 space-y-3" id="detail-content">
+        <p class="text-slate-400 text-xs">Loading transaction metadata…</p>
       </div>
     </div>
   </div>
 
+  <!-- FX Lineage Popover Tooltip -->
+  <div id="fx-popover-card" class="popover-card" role="tooltip"></div>
+
   <script src="/admin/js/admin-common.js"></script>
   <script>
     var baseCurrency = 'EUR';
-    var presetMap = {
-      today: 'today', yesterday: 'yesterday', last7days: 'last_7d', last30days: 'last_30d',
-      thisMonth: 'last_30d', lastMonth: 'last_30d', thisYear: 'last_90d', allTime: 'last_90d'
-    };
+    var currentRange = 'today';
+    var activeCampaignsData = [];
+    var allTransactionsData = [];
+    var campaignFilterMode = 'active';
     var userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local time';
-    function fmt(v) { return '€' + parseFloat(v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    var latestAdFx = null;
+
+    function fmt(v) {
+      return '€' + parseFloat(v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
     function fmtNative(v, currency) {
       try {
         return new Intl.NumberFormat(undefined, { style: 'currency', currency: currency || 'EUR' }).format(parseFloat(v || 0));
@@ -289,14 +623,42 @@
         return parseFloat(v || 0).toFixed(2) + ' ' + (currency || '');
       }
     }
-    function fmtSigned(v) { var x = parseFloat(v || 0); return (x < 0 ? '−' : '') + fmt(Math.abs(x)); }
-    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-    function setText(id, t) { var el = document.getElementById(id); if (el) el.textContent = t; }
-    function setHtml(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
+
+    function fmtSigned(v) {
+      var x = parseFloat(v || 0);
+      return (x < 0 ? '−' : '') + fmt(Math.abs(x));
+    }
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function setText(id, text) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function setHtml(id, html) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = html;
+    }
+
+    function copyToClipboard(text, pillEl) {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(text).then(function() {
+        if (pillEl) {
+          var original = pillEl.innerHTML;
+          pillEl.innerHTML = '<span class="text-[#00875a] font-bold text-xs">Copied!</span>';
+          setTimeout(function() { pillEl.innerHTML = original; }, 1500);
+        }
+      });
+    }
 
     function getDateRanges() {
-      var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      var endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      var now = new Date();
+      var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       var startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       var startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       return {
@@ -310,109 +672,377 @@
       };
     }
 
+    function selectRange(rangeKey) {
+      currentRange = rangeKey;
+      document.querySelectorAll('#range-pills .stripe-pill').forEach(function(btn) {
+        var isSelected = btn.dataset.range === rangeKey;
+        btn.classList.toggle('active', isSelected);
+        btn.classList.toggle('inactive', !isSelected);
+      });
+      loadProfit();
+    }
+
     function currentQuery() {
       var params = new URLSearchParams();
       var campaign = document.getElementById('filter-campaign').value;
-      var range = document.getElementById('filter-daterange').value;
-      if (campaign !== 'all') params.set('campaign', campaign);
-      params.set('range', range);
-      var r = getDateRanges()[range];
-      if (range !== 'allTime' && r) {
+      if (campaign && campaign !== 'all') params.set('campaign', campaign);
+      params.set('range', currentRange);
+      params.set('tzOffset', new Date().getTimezoneOffset());
+      var ranges = getDateRanges();
+      var r = ranges[currentRange];
+      if (currentRange !== 'allTime' && r) {
         params.set('startDate', r.startDate);
         params.set('endDate', r.endDate);
       }
       return params.toString();
     }
 
-    var fxPopover = null;
-    function showFxPopover(anchor, content) {
-      if (!fxPopover) {
-        fxPopover = document.createElement('div');
-        fxPopover.className = 'fx-popover';
-        document.body.appendChild(fxPopover);
-        fxPopover.addEventListener('mouseenter', function () { clearTimeout(fxPopover.hideTimer); });
-        fxPopover.addEventListener('mouseleave', hideFxPopover);
+    /* FX Popover Tooltip Engine */
+    var fxPopover = document.getElementById('fx-popover-card');
+    var popoverTimer = null;
+
+    function showFx(anchor) {
+      clearTimeout(popoverTimer);
+      var type = anchor.dataset.fxType || 'single';
+      var html = '';
+
+      if (type === 'aggregate') {
+        var title = anchor.dataset.fxTitle || 'Multi-Currency FX Breakdown';
+        var items = [];
+        try { items = JSON.parse(anchor.dataset.breakdown || '[]'); } catch (e) { items = []; }
+
+        html = '<div class="font-bold text-white mb-2 flex items-center justify-between">' +
+          '<span>' + esc(title) + '</span>' +
+          '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">ECB Daily</span>' +
+        '</div>' +
+        '<div class="space-y-1.5 pt-1 border-t border-slate-700/60">';
+
+        if (items.length) {
+          html += items.map(function(item) {
+            return '<div class="flex items-center justify-between text-xs font-mono">' +
+              '<span class="text-slate-300">' + esc(item.currency) + ': <b class="text-white">' + esc(item.native) + '</b></span>' +
+              '<span class="text-emerald-400 font-semibold">→ ' + esc(item.base) + '</span>' +
+            '</div>';
+          }).join('');
+        } else {
+          html += '<div class="text-xs text-slate-400">Single currency transactions</div>';
+        }
+
+        html += '</div>' +
+          '<div class="mt-2.5 text-[11px] text-slate-400 border-t border-slate-700/60 pt-1.5">' +
+            'Converted using European Central Bank rates at transaction dates' +
+          '</div>';
+
+      } else if (type === 'spend') {
+        var spendNative = anchor.dataset.spendNative || '$0.00 USD';
+        var spendBase = anchor.dataset.spendBase || '€0.00';
+        var rate = Number(anchor.dataset.spendRate || 1);
+        var source = anchor.dataset.spendSource || 'Frankfurter ECB';
+
+        html = '<div class="font-bold text-white mb-2 flex items-center justify-between">' +
+          '<span>Meta Ad Spend FX Conversion</span>' +
+          '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-900/70 text-indigo-200 border border-indigo-700/60">Meta Ads</span>' +
+        '</div>' +
+        '<div class="text-emerald-300 font-mono text-xs font-semibold mb-1.5">' + esc(spendNative) + ' → ' + esc(spendBase) + '</div>' +
+        '<div class="text-xs text-slate-300 space-y-0.5">' +
+          '<div>Rate: <b>1 EUR = ' + rate.toFixed(4) + ' USD</b></div>' +
+          '<div class="text-[11px] text-slate-400">(1 USD = ' + (rate > 0 ? (1 / rate).toFixed(4) : '0') + ' EUR)</div>' +
+        '</div>' +
+        '<div class="mt-2 text-[11px] text-slate-400 border-t border-slate-700/60 pt-1.5">' +
+          'Provider: ' + esc(source) +
+        '</div>';
+
+      } else if (type === 'hero') {
+        var grossNativeList = anchor.dataset.heroGrossList || '';
+        var spendNativeVal = anchor.dataset.heroSpendNative || '$0.00 USD';
+
+        html = '<div class="font-bold text-white mb-2 flex items-center justify-between">' +
+          '<span>True Net Profit FX Portfolio</span>' +
+          '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-900/60 text-emerald-300 border border-emerald-700/60">Normalized EUR</span>' +
+        '</div>' +
+        '<div class="text-xs text-slate-300 space-y-1">' +
+          '<div>Gross Revenues: <b class="text-white">' + esc(grossNativeList) + '</b></div>' +
+          '<div>Meta Ad Spend: <b class="text-indigo-300">' + esc(spendNativeVal) + '</b></div>' +
+        '</div>' +
+        '<div class="mt-2 text-[11px] text-slate-400 border-t border-slate-700/60 pt-1.5">' +
+          'All cross-border revenues and ad spends normalized to base EUR via ECB rates' +
+        '</div>';
+
+      } else {
+        var original = anchor.dataset.original || '';
+        var base = anchor.dataset.base || '';
+        var currency = anchor.dataset.currency || '';
+        var singleRate = Number(anchor.dataset.rate || 0);
+        var rateDate = anchor.dataset.rateDate || 'latest';
+        var singleSource = anchor.dataset.source || 'ECB';
+
+        var rateLine = rateDate === 'multiple dates'
+          ? 'Historical daily rates applied per payment'
+          : '1 EUR = ' + singleRate.toFixed(4) + ' ' + esc(currency) + (singleRate > 0 ? ' (1 ' + esc(currency) + ' = ' + (1 / singleRate).toFixed(4) + ' EUR)' : '');
+
+        html = '<div class="font-bold text-white mb-2 flex items-center justify-between">' +
+          '<span>FX Payment Provenance</span>' +
+          '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">' + esc(currency) + ' → EUR</span>' +
+        '</div>' +
+        '<div class="text-emerald-300 font-mono text-xs font-semibold mb-1.5">' + esc(original) + ' → ' + esc(base) + '</div>' +
+        '<div class="text-xs text-slate-200">' + rateLine + '</div>' +
+        '<div class="mt-2 text-[11px] text-slate-400 border-t border-slate-700/60 pt-1.5">' +
+          'Date: ' + esc(rateDate) + ' · Provider: ' + esc(singleSource) +
+        '</div>';
       }
-      fxPopover.innerHTML = '<div class="fx-popover-inner">' + content + '</div>';
+
+      fxPopover.innerHTML = html;
+
       var rect = anchor.getBoundingClientRect();
-      var left = Math.min(Math.max(12, rect.left), window.innerWidth - 282);
-      var top = rect.bottom + 10;
-      if (top + 150 > window.innerHeight) top = Math.max(12, rect.top - 165);
+      var left = Math.min(Math.max(12, rect.left - 100), window.innerWidth - 320);
+      var top = rect.bottom + 8;
+      if (top + 180 > window.innerHeight) top = Math.max(12, rect.top - 190);
+
       fxPopover.style.left = left + 'px';
       fxPopover.style.top = top + 'px';
       fxPopover.classList.add('open');
-      fxPopover.setAttribute('role', 'status');
     }
-    function hideFxPopover() {
-      if (!fxPopover) return;
-      clearTimeout(fxPopover.hideTimer);
-      fxPopover.hideTimer = setTimeout(function () { fxPopover.classList.remove('open'); }, 120);
+
+    function hideFx() {
+      popoverTimer = setTimeout(function() {
+        fxPopover.classList.remove('open');
+      }, 150);
     }
+
+    fxPopover.addEventListener('mouseenter', function() { clearTimeout(popoverTimer); });
+    fxPopover.addEventListener('mouseleave', hideFx);
+
     function fxMarkup(original, base, currency, fx) {
       if (!fx || !currency || currency === baseCurrency) return '';
-      return '<button type="button" aria-label="Show FX conversion details" class="fx-anchor ml-1 text-blue-600" onmouseenter="showFx(this)" onmouseleave="hideFxPopover()" onfocus="showFx(this)" onblur="hideFxPopover()" onclick="showFx(this); event.stopPropagation()" onkeydown="if(event.key===\'Escape\'){hideFxPopover(); this.blur();}" data-original="' + esc(original) + '" data-base="' + esc(base) + '" data-currency="' + esc(currency) + '" data-rate="' + Number(fx.rate || 0) + '" data-rate-date="' + esc(fx.rateDate || '') + '" data-source="' + esc(fx.source || '') + '">ⓘ</button>';
+      return '<span class="fx-info-trigger" onmouseenter="showFx(this)" onmouseleave="hideFx()" onfocus="showFx(this)" onblur="hideFx()" onclick="showFx(this); event.stopPropagation()" data-fx-type="single" data-original="' + esc(original) + '" data-base="' + esc(base) + '" data-currency="' + esc(currency) + '" data-rate="' + Number(fx.rate || 0) + '" data-rate-date="' + esc(fx.rateDate || '') + '" data-source="' + esc(fx.source || '') + '">ⓘ</span>';
     }
-    window.showFx = function (anchor) {
-      var rate = Number(anchor.dataset.rate || 0);
-      var rateLine = anchor.dataset.rateDate === 'multiple dates' ? 'Historical daily rates applied per payment' : '1 EUR = ' + rate.toFixed(4) + ' ' + esc(anchor.dataset.currency);
-      showFxPopover(anchor, '<strong>FX provenance</strong><div>' + esc(anchor.dataset.original) + ' → ' + esc(anchor.dataset.base) + '</div><div class="mt-1 text-emerald-200">' + rateLine + '</div><div class="mt-1 text-emerald-200/70">Rate date: ' + esc(anchor.dataset.rateDate || 'latest') + '<br>' + esc(anchor.dataset.source || 'FX source') + '</div>');
-    };
-    window.addEventListener('scroll', hideFxPopover, { passive: true });
-    window.addEventListener('resize', hideFxPopover);
 
-    function renderWaterfall(data) {
-      var t = data.totals;
-      setText('hero-profit', fmtSigned(t.profit));
-      setText('hero-margin', t.gross > 0 ? ((t.profit / t.gross) * 100).toFixed(1) + '%' : '—');
-      setText('hero-window', data.range?.start ? new Date(data.range.start).toLocaleDateString() + ' → ' + new Date(data.range.end).toLocaleDateString() : 'All available completed payments');
-      setText('wf-gross', fmt(t.gross));
-      setText('wf-gross-sub', t.count + ' transactions');
-      setText('wf-fees', '−' + fmt(t.fees));
-      setText('wf-fee-pct', t.gross > 0 ? ((t.fees / t.gross) * 100).toFixed(1) + '% of gross' : '');
-      setText('wf-spend', fmt(t.spend));
-      var spendFx = data.adSync?.fx;
-      var spendFxMarkup = spendFx && t.spendNative ? fxMarkup(fmtNative(t.spendNative, data.totals.spendCurrency), fmt(t.spend), data.totals.spendCurrency, { rate: spendFx.nativePerBase, rateDate: 'latest', source: spendFx.source }) : '';
-      setHtml('wf-spend-sub', data.adSync ? 'deducted · ' + fmtNative(t.spendNative, data.totals.spendCurrency) + spendFxMarkup + ' · Meta · ' + data.adSync.preset : '');
-      setText('wf-net', fmtSigned(t.profit));
-      setText('wf-net-sub', t.gross > 0 ? 'margin ' + ((t.profit / t.gross) * 100).toFixed(1) + '%' : '');
-      setText('hero-base-label', '(' + baseCurrency + ')');
-      setText('signal-count', t.count.toLocaleString());
-      setText('signal-aov', t.count ? fmt(t.gross / t.count) : '—');
-      setText('signal-roas', t.spend > 0 && t.metaPurchaseValue > 0 ? (t.metaPurchaseValue / t.spend).toFixed(2) : '—');
-      setText('signal-cpa', t.metaPurchases > 0 ? fmt(t.spend / t.metaPurchases) : '—');
+    function fxMarkupAggregate(title, items) {
+      if (!items || !items.length) return '';
+      return '<span class="fx-info-trigger" onmouseenter="showFx(this)" onmouseleave="hideFx()" onfocus="showFx(this)" onblur="hideFx()" onclick="showFx(this); event.stopPropagation()" data-fx-type="aggregate" data-fx-title="' + esc(title) + '" data-breakdown=\'' + JSON.stringify(items).replace(/'/g, '&#39;') + '\'>ⓘ</span>';
+    }
+
+    function fxMarkupSpend(nativeSpend, baseSpend, fx) {
+      if (!nativeSpend) return '';
+      var rate = fx && fx.nativePerBase ? Number(fx.nativePerBase) : (fx && fx.basePerNative ? 1 / Number(fx.basePerNative) : 1.15);
+      var source = (fx && fx.source) ? fx.source : 'Frankfurter ECB Latest';
+      return '<span class="fx-info-trigger" onmouseenter="showFx(this)" onmouseleave="hideFx()" onfocus="showFx(this)" onblur="hideFx()" onclick="showFx(this); event.stopPropagation()" data-fx-type="spend" data-spend-native="' + esc(fmtNative(nativeSpend, 'USD')) + '" data-spend-base="' + esc(fmt(baseSpend)) + '" data-spend-rate="' + rate + '" data-spend-source="' + esc(source) + '">ⓘ</span>';
+    }
+
+    function fxMarkupHero(data) {
+      var cb = data.currencyBreakdown || {};
+      var curKeys = Object.keys(cb);
+      var grossStr = curKeys.map(function(c) { return fmtNative(cb[c].nativeGross, c); }).join(' + ');
+      var spendStr = fmtNative(data.totals?.spendNative, data.totals?.spendCurrency || 'USD');
+      return '<span class="fx-info-trigger" onmouseenter="showFx(this)" onmouseleave="hideFx()" onfocus="showFx(this)" onblur="hideFx()" onclick="showFx(this); event.stopPropagation()" data-fx-type="hero" data-hero-gross-list="' + esc(grossStr) + '" data-hero-spend-native="' + esc(spendStr) + '">ⓘ</span>';
+    }
+
+    /* Timeline Chart Renderer (Driven by Main Date Range) */
+    function renderTimelineChart(chartRows, isHourly) {
+      var container = document.getElementById('chart-bars-container');
+      setText('chart-type-badge', isHourly ? '24H Hourly Velocity (' + userTimeZone + ')' : 'Daily Settlement (' + (chartRows ? chartRows.length : 0) + ' Days)');
+      setText('chart-subtitle', isHourly ? 'Hourly gross revenue volume and net profit trajectory' : 'Daily gross revenue volume vs net profit trajectory');
+
+      if (!chartRows || !chartRows.length) {
+        container.innerHTML = '<div class="w-full text-center text-xs text-slate-400 py-14">No transaction activity recorded for this period</div>';
+        return;
+      }
+
+      var maxGross = Math.max.apply(Math, chartRows.map(function(d) { return d.gross || 0; })) || 10;
+      var html = chartRows.map(function(d) {
+        var hGross = d.gross > 0 ? Math.max(8, Math.round(((d.gross || 0) / maxGross) * 100)) : 2;
+        var hNet = d.net > 0 ? Math.max(6, Math.round(((d.net || 0) / maxGross) * 100)) : 2;
+        var intervalLabel = isHourly ? d.date : new Date(d.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', weekday: 'short' });
+
+        var fxInfo = '';
+        if (d.byCurrency && Object.keys(d.byCurrency).length > 0) {
+          var nonEur = Object.keys(d.byCurrency).filter(function(k) { return k !== 'EUR' && d.byCurrency[k].nativeGross > 0; });
+          if (nonEur.length > 0) {
+            fxInfo = ' · Native: ' + nonEur.map(function(k) { return fmtNative(d.byCurrency[k].nativeGross, k); }).join(', ');
+          }
+        }
+
+        return '<div class="flex-1 flex flex-col items-center justify-end h-full min-w-[20px] max-w-[52px] group" ' +
+          'onmouseenter="document.getElementById(\'chart-tooltip\').innerHTML=\'<span class=\\\'font-bold text-[#061b31]\\\'>' + esc(intervalLabel) + '</span>: Gross ' + fmt(d.gross) + ' · Fees −' + fmt(d.fees) + ' · Net <b class=\\\'text-[#00875a]\\\'>' + fmt(d.net) + '</b> (' + d.count + ' txns' + esc(fxInfo) + ')\'" ' +
+          'onmouseleave="document.getElementById(\'chart-tooltip\').textContent=\'Hover over any bar to inspect interval settlement & FX\'">' +
+          '<div class="w-full flex items-end justify-center gap-0.5 sm:gap-1 h-full px-0.5">' +
+            '<div class="w-2 sm:w-3 bg-[#635bff] rounded-t-xs transition-all group-hover:bg-[#533afd]" style="height: ' + hGross + '%;"></div>' +
+            '<div class="w-2 sm:w-3 bg-[#00875a] rounded-t-xs transition-all group-hover:bg-[#029e55]" style="height: ' + hNet + '%;"></div>' +
+          '</div>' +
+          '<span class="text-[9px] font-mono text-slate-400 mt-1.5 whitespace-nowrap">' + (isHourly ? esc(d.date.slice(0, 2)) : esc(d.date.slice(8, 10))) + '</span>' +
+        '</div>';
+      }).join('');
+
+      container.innerHTML = html;
+    }
+
+    /* Waterfall & Hero Renderer */
+    function renderWaterfallAndHero(data) {
+      var t = data.totals || {};
+      baseCurrency = data.baseCurrency || 'EUR';
+      latestAdFx = data.adSync?.fx || null;
+
+      var cb = data.currencyBreakdown || {};
+      var currencies = Object.keys(cb);
+      var nonBaseCurrencies = currencies.filter(function(c) { return c !== baseCurrency; });
+      var hasFx = nonBaseCurrencies.length > 0 || t.spendNative > 0;
+
+      // Build aggregate breakdowns
+      var grossBreakdown = [];
+      var tipsBreakdown = [];
+      var feesBreakdown = [];
+      var netBreakdown = [];
+
+      currencies.forEach(function(cur) {
+        var b = cb[cur];
+        grossBreakdown.push({ currency: cur, native: fmtNative(b.nativeGross, cur), base: fmt(b.gross), count: b.count });
+        if (b.tips > 0 || b.nativeTips > 0) {
+          tipsBreakdown.push({ currency: cur, native: fmtNative(b.nativeTips || b.tips, cur), base: fmt(b.tips), count: b.count });
+        }
+        feesBreakdown.push({ currency: cur, native: '−' + fmtNative(b.nativeFees, cur), base: '−' + fmt(b.fees), count: b.count });
+        netBreakdown.push({ currency: cur, native: fmtNative(b.nativeNet, cur), base: fmt(b.net), count: b.count });
+      });
+
+      var grossFxMarkup = nonBaseCurrencies.length > 0 ? fxMarkupAggregate('Gross Revenue FX Breakdown', grossBreakdown) : '';
+      var tipsFxMarkup = nonBaseCurrencies.length > 0 && t.tips > 0 ? fxMarkupAggregate('Tips FX Breakdown', tipsBreakdown) : '';
+      var feesFxMarkup = nonBaseCurrencies.length > 0 ? fxMarkupAggregate('Processor Fees FX Breakdown', feesBreakdown) : '';
+      var netFxMarkup = nonBaseCurrencies.length > 0 ? fxMarkupAggregate('Net Revenue FX Breakdown', netBreakdown) : '';
+      var spendFxMarkup = t.spendNative > 0 ? fxMarkupSpend(t.spendNative, t.spend, data.adSync?.fx) : '';
+
+      setHtml('hero-profit', fmtSigned(t.profit) + (hasFx ? fxMarkupHero(data) : ''));
+      setText('hero-margin', t.gross > 0 ? ((t.profit / t.gross) * 100).toFixed(1) + '%' : '0.0%');
+      setText('hero-txns', (t.count || 0).toLocaleString());
+      setText('hero-currency-badge', baseCurrency + ' (€)');
+      setText('hero-window', data.range?.start ? new Date(data.range.start).toLocaleDateString() + ' → ' + new Date(data.range.end).toLocaleDateString() : 'All Settled Payments');
+
+      setHtml('wf-gross', fmt(t.gross) + grossFxMarkup);
+      setText('wf-gross-count', (t.count || 0) + ' payments');
+      setHtml('wf-tips', fmt(t.tips) + tipsFxMarkup);
+
+      setHtml('wf-fees', '−' + fmt(t.fees) + feesFxMarkup);
+      setText('wf-fee-pct', t.gross > 0 ? ((t.fees / t.gross) * 100).toFixed(1) + '%' : '0.0%');
+
+      setHtml('wf-spend', fmt(t.spend) + spendFxMarkup);
+      setText('wf-spend-native-badge', fmtNative(t.spendNative, data.totals?.spendCurrency || 'USD'));
+      setText('wf-spend-preset', data.adSync?.preset || 'auto');
+
+      setHtml('wf-net', fmtSigned(t.profit) + (hasFx ? fxMarkupHero(data) : ''));
+      setText('wf-margin-badge', t.gross > 0 ? ((t.profit / t.gross) * 100).toFixed(1) + '% margin' : '0% margin');
+
+      /* Signals */
+      setText('signal-aov', t.count ? fmt(t.gross / t.count) : '€0.00');
+      setText('signal-roas', t.spend > 0 && t.metaPurchaseValue > 0 ? (t.metaPurchaseValue / t.spend).toFixed(2) + 'x' : '—');
+      setHtml('signal-cpa', (t.metaPurchases > 0 ? fmt(t.spend / t.metaPurchases) : '—') + (t.metaPurchases > 0 && t.spendNative > 0 ? fxMarkupSpend(t.spendNative / t.metaPurchases, t.spend / t.metaPurchases, data.adSync?.fx) : ''));
       setText('signal-cpa-sub', t.metaPurchases ? t.metaPurchases + ' Meta purchases' : 'no Meta purchases');
-      setText('signal-fx', Object.keys(data.currencyBreakdown || {}).length + ' currencies');
+      setHtml('signal-tips', fmt(t.tips) + tipsFxMarkup);
+      setText('signal-tips-pct', t.gross > 0 ? ((t.tips / t.gross) * 100).toFixed(1) + '% of gross' : '0%');
+      setHtml('signal-fee-drag', (t.gross > 0 ? ((t.fees / t.gross) * 100).toFixed(1) + '%' : '0.0%') + feesFxMarkup);
+      setHtml('signal-fx', currencies.length + ' Currencies' + (nonBaseCurrencies.length > 0 ? fxMarkupAggregate('Multi-Currency Portfolio', grossBreakdown) : ''));
+
+      /* Status & Freshness */
       var fetchedAt = data.adSync?.fetchedAt ? new Date(data.adSync.fetchedAt) : null;
       var ageMinutes = fetchedAt ? Math.max(0, Math.round((Date.now() - fetchedAt.getTime()) / 60000)) : null;
-      var stale = ageMinutes === null || ageMinutes > 5;
+      var isStale = ageMinutes === null || ageMinutes > 5;
       var dot = document.getElementById('fresh-dot');
-      if (dot) dot.classList.toggle('warn', stale);
-      if (dot) dot.classList.toggle('pulse', Boolean(data.adSync?.refreshing));
-      setText('freshness-label', data.adSync?.refreshing ? 'Refreshing Meta data…' : (stale ? 'Meta data needs refresh' : 'Meta data is fresh'));
-      if (data.adSync?.refreshing) {
-        var refreshDot = document.getElementById('fresh-dot');
-        if (refreshDot) refreshDot.classList.add('pulse');
+      if (dot) {
+        dot.classList.toggle('warn', isStale);
+        dot.classList.toggle('pulse', Boolean(data.adSync?.refreshing));
       }
-      setText('last-updated-label', fetchedAt ? 'Meta snapshot ' + (ageMinutes === 0 ? 'just now' : ageMinutes + ' min ago') : 'Meta snapshot unavailable');
+      setText('freshness-label', data.adSync?.refreshing ? 'Refreshing Meta Sync…' : (isStale ? 'Meta data sync pending' : 'Live Data Synchronized'));
+      setText('last-updated-label', fetchedAt ? 'Snapshot ' + (ageMinutes === 0 ? 'just now' : ageMinutes + 'm ago') : 'Sync pending');
+      setText('timezone-note', 'Txns: ' + userTimeZone + ' · Ads: Meta tz');
     }
 
-    function renderCampaignTable(rows) {
-      var tbody = document.getElementById('campaign-table');
-      if (!rows || !rows.length) { tbody.innerHTML = '<tr><td colspan="10" class="text-center text-gfm-gray py-4">No data</td></tr>'; return; }
-      tbody.innerHTML = rows.map(function (c) {
-        var name = c.isAdCampaign ? esc(c.name || c.key) + ' <span class="text-xs text-indigo-500 font-medium">(ad)</span>' : esc(c.key);
+    /* Campaign Matrix Renderer */
+    function filterCampaignTable(mode) {
+      campaignFilterMode = mode;
+      document.querySelectorAll('.camp-tab').forEach(function(btn) {
+        var isSelected = btn.dataset.filter === mode;
+        btn.classList.toggle('bg-white', isSelected);
+        btn.classList.toggle('shadow-sm', isSelected);
+        btn.classList.toggle('text-[#061b31]', isSelected);
+        btn.classList.toggle('text-slate-500', !isSelected);
+      });
+      renderCampaignTableRows();
+    }
+
+    function searchCampaigns(q) {
+      renderCampaignTableRows(q.toLowerCase().trim());
+    }
+
+    function updateCampaignBadges(rows) {
+      var allCount = (rows || []).length;
+      var activeCount = (rows || []).filter(function(c) { return (c.gross > 0 || c.spend > 0); }).length;
+      var adsCount = (rows || []).filter(function(c) { return c.isAdCampaign; }).length;
+
+      setText('badge-all-count', allCount);
+      setText('badge-active-count', activeCount);
+      setText('badge-ads-count', adsCount);
+    }
+
+    function renderCampaignTableRows(searchQuery) {
+      var tbody = document.getElementById('campaign-table-body');
+      var rows = activeCampaignsData || [];
+
+      if (campaignFilterMode === 'active') {
+        rows = rows.filter(function(c) { return (c.gross > 0 || c.spend > 0); });
+      } else if (campaignFilterMode === 'ads') {
+        rows = rows.filter(function(c) { return c.isAdCampaign; });
+      }
+
+      if (searchQuery) {
+        rows = rows.filter(function(c) {
+          return (c.name || '').toLowerCase().indexOf(searchQuery) >= 0 ||
+                 (c.key || '').toLowerCase().indexOf(searchQuery) >= 0;
+        });
+      }
+
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400 text-xs">No matching campaign performance found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = rows.map(function(c) {
+        var isAd = c.isAdCampaign;
+        var displayName = esc(c.name || c.key);
+        var badge = isAd ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 ml-1.5 border border-indigo-100">AD</span>' : '';
+        var profitClass = c.profit < 0 ? 'text-[#df1b41] font-bold' : 'text-[#00875a] font-bold';
+
+        var byCur = c.byCurrency || {};
+        var curKeys = Object.keys(byCur);
+        var nonEur = curKeys.filter(function(k) { return k !== baseCurrency; });
+        var hasCampFx = nonEur.length > 0;
+
+        var campGrossBreakdown = curKeys.map(function(k) {
+          return { currency: k, native: fmtNative(byCur[k].nativeGross, k), base: fmt(byCur[k].gross) };
+        });
+        var campTipsBreakdown = curKeys.filter(function(k) { return byCur[k].tips > 0; }).map(function(k) {
+          return { currency: k, native: fmtNative(byCur[k].nativeTips, k), base: fmt(byCur[k].tips) };
+        });
+        var campFeesBreakdown = curKeys.map(function(k) {
+          return { currency: k, native: '−' + fmtNative(byCur[k].nativeFees, k), base: '−' + fmt(byCur[k].fees) };
+        });
+        var campNetBreakdown = curKeys.map(function(k) {
+          return { currency: k, native: fmtNative(byCur[k].nativeNet, k), base: fmt(byCur[k].net) };
+        });
+
+        var grossFx = hasCampFx ? fxMarkupAggregate('Campaign Revenue FX', campGrossBreakdown) : '';
+        var tipsFx = hasCampFx && c.tips > 0 ? fxMarkupAggregate('Campaign Tips FX', campTipsBreakdown) : '';
+        var feesFx = hasCampFx ? fxMarkupAggregate('Campaign Fees FX', campFeesBreakdown) : '';
+        var netFx = hasCampFx ? fxMarkupAggregate('Campaign Net FX', campNetBreakdown) : '';
+        var spendFx = c.spendNative > 0 ? fxMarkupSpend(c.spendNative, c.spend, latestAdFx) : '';
+
         return '<tr>' +
-          '<td class="font-medium text-gfm-dark">' + name + '</td>' +
-          '<td class="text-right">' + fmt(c.gross) + '</td>' +
-          '<td class="text-right">' + fmt(c.tips) + '</td>' +
-          '<td class="text-right text-red-500">−' + fmt(c.fees) + '</td>' +
-          '<td class="text-right">' + fmt(c.net) + '</td>' +
-          '<td class="text-right text-indigo-600">' + fmt(c.spend) + (c.spendNative ? '<div class="text-xs text-indigo-400">' + fmtNative(c.spendNative, 'USD') + '</div>' : '') + '</td>' +
-          '<td class="text-right font-bold ' + (c.profit < 0 ? 'text-red-500' : 'text-gfm-green') + '">' + fmtSigned(c.profit) + '</td>' +
-          '<td class="text-right">' + (c.purchases || 0) + '</td>' +
-          '<td class="text-right">' + (c.roas ? Number(c.roas).toFixed(2) : '—') + '</td>' +
-          '<td class="text-right">' + (c.cpa ? fmt(c.cpa) : '—') + '</td>' +
-          '</tr>';
+          '<td class="font-semibold text-[#061b31]">' + displayName + badge + '<div class="text-[10px] text-slate-400 font-mono">' + esc(c.key) + '</div></td>' +
+          '<td class="text-right font-medium">' + fmt(c.gross) + grossFx + '</td>' +
+          '<td class="text-right text-blue-600">' + fmt(c.tips) + tipsFx + '</td>' +
+          '<td class="text-right text-[#df1b41]">−' + fmt(c.fees) + feesFx + '</td>' +
+          '<td class="text-right font-medium">' + fmt(c.net) + netFx + '</td>' +
+          '<td class="text-right text-indigo-600">' + fmt(c.spend) + spendFx + (c.spendNative ? '<div class="text-[10px] text-slate-400 font-normal">' + fmtNative(c.spendNative, 'USD') + '</div>' : '') + '</td>' +
+          '<td class="text-right ' + profitClass + '">' + fmtSigned(c.profit) + '</td>' +
+          '<td class="text-right">' + (c.roas ? '<span class="px-1.5 py-0.5 rounded ' + (c.roas >= 2.5 ? 'bg-emerald-50 text-[#00875a] font-bold border border-emerald-100' : 'text-slate-700') + '">' + Number(c.roas).toFixed(2) + 'x</span>' : '—') + '</td>' +
+          '<td class="text-right text-slate-700">' + (c.cpa ? fmt(c.cpa) : '—') + '</td>' +
+        '</tr>';
       }).join('');
     }
 
@@ -421,153 +1051,313 @@
       var current = select.value;
       if (current !== 'all' && select.options.length > 2) return;
       var options = ['<option value="all">All Campaigns</option>'];
-      (rows || []).filter(function (c) { return c.key && c.key !== 'direct'; }).forEach(function (c) {
+      (rows || []).filter(function(c) { return c.key && c.key !== 'direct'; }).forEach(function(c) {
         options.push('<option value="' + esc(c.key) + '">' + esc(c.name || c.key) + '</option>');
       });
       select.innerHTML = options.join('');
-      select.value = options.some(function (o) { return o.indexOf('value="' + current + '"') >= 0; }) ? current : 'all';
+      select.value = options.some(function(o) { return o.indexOf('value="' + current + '"') >= 0; }) ? current : 'all';
     }
 
-    function renderCurrency(breakdown) {
-      var container = document.getElementById('currency-breakdown');
-      if (!breakdown || !Object.keys(breakdown).length) { container.innerHTML = '<p class="text-gfm-gray text-sm col-span-4">No data</p>'; return; }
-      container.innerHTML = Object.keys(breakdown).map(function (cur) {
+    /* Store Performance Renderer */
+    function renderStoreBreakdown(storeRows) {
+      var container = document.getElementById('stores-breakdown-list');
+      setText('store-count-badge', (storeRows ? storeRows.length : 0) + ' Stores');
+      if (!storeRows || !storeRows.length) {
+        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-3">No store routing data</p>';
+        return;
+      }
+
+      var totalVolume = storeRows.reduce(function(s, r) { return s + (r.gross || 0); }, 0) || 1;
+      container.innerHTML = storeRows.map(function(s) {
+        var pct = ((s.gross / totalVolume) * 100).toFixed(1);
+        var sByCur = s.byCurrency || {};
+        var sCurKeys = Object.keys(sByCur);
+        var sNonEur = sCurKeys.filter(function(k) { return k !== baseCurrency; });
+        var storeBreakdown = sCurKeys.map(function(k) {
+          return { currency: k, native: fmtNative(sByCur[k].nativeGross, k), base: fmt(sByCur[k].gross) };
+        });
+        var storeFx = sNonEur.length > 0 ? fxMarkupAggregate('Store Volume FX Breakdown', storeBreakdown) : '';
+
+        return '<div class="p-3 rounded bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors">' +
+          '<div class="flex items-center justify-between mb-1">' +
+            '<span class="font-semibold text-xs text-[#061b31] truncate font-mono">' + esc(s.domain) + '</span>' +
+            '<span class="font-bold text-xs font-mono text-[#061b31] flex items-center">' + fmt(s.gross) + storeFx + '</span>' +
+          '</div>' +
+          '<div class="w-full bg-slate-200 rounded-full h-1.5 mb-1.5 overflow-hidden">' +
+            '<div class="bg-[#00875a] h-1.5 rounded-full transition-all" style="width: ' + pct + '%"></div>' +
+          '</div>' +
+          '<div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">' +
+            '<span>' + s.count + ' txns · fees ' + fmt(s.fees) + '</span>' +
+            '<span class="font-semibold text-slate-500">' + pct + '% share</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    /* Currency Breakdown Renderer */
+    function renderCurrencyBreakdown(breakdown) {
+      var container = document.getElementById('currency-breakdown-container');
+      if (!breakdown || !Object.keys(breakdown).length) {
+        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-3">No currency data</p>';
+        return;
+      }
+
+      container.innerHTML = Object.keys(breakdown).map(function(cur) {
         var b = breakdown[cur];
-        return '<div class="bg-gray-50 rounded-xl p-4">' +
-          '<p class="eyebrow mb-1">' + cur + '</p>' +
-          '<p class="text-xl font-bold text-gfm-dark metric-number">' + fmt(b.gross) + '</p>' +
-          '<p class="text-xs text-gfm-gray mt-1">' + b.count + ' txns · fees ' + fmt(b.fees) + '</p>' +
-          '<p class="text-xs text-blue-600 mt-2">Native: ' + fmtNative(b.nativeGross, cur) + (cur !== baseCurrency ? fxMarkup(fmtNative(b.nativeGross, cur), fmt(b.gross), cur, { rate: b.rate, rateDate: b.rateDate, source: b.fxSource }) : '') + '</p>' +
-          '</div>';
+        var fxIcon = cur !== baseCurrency ? fxMarkup(fmtNative(b.nativeGross, cur), fmt(b.gross), cur, { rate: b.rate, rateDate: b.rateDate, source: b.fxSource }) : '';
+        return '<div class="p-3 rounded bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors flex items-center justify-between">' +
+          '<div>' +
+            '<div class="flex items-center gap-1"><span class="font-bold text-xs font-mono text-[#061b31]">' + esc(cur) + '</span>' + fxIcon + '</div>' +
+            '<p class="text-xs text-slate-400 mt-0.5">' + b.count + ' payments</p>' +
+          '</div>' +
+          '<div class="text-right font-mono">' +
+            '<p class="font-bold text-sm text-[#061b31]">' + fmt(b.gross) + '</p>' +
+            '<p class="text-[11px] text-slate-400">Native ' + fmtNative(b.nativeGross, cur) + '</p>' +
+          '</div>' +
+        '</div>';
       }).join('');
     }
 
-    function renderRecent(data) {
-      var tbody = document.getElementById('recent-table');
-      if (!data.recent || !data.recent.length) { tbody.innerHTML = '<tr><td colspan="7" class="text-center text-gfm-gray py-4">No data</td></tr>'; return; }
-      tbody.innerHTML = data.recent.map(function (p) {
-        return '<tr class="cursor-pointer hover:bg-gray-50 transaction-row" tabindex="0" role="button" aria-label="Open transaction details for ' + esc(p.name || 'Anonymous') + '" onclick="showDetail(\'' + p.id + '\', this)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();showDetail(\'' + p.id + '\', this)}">' +
-          '<td class="font-medium text-gfm-dark">' + esc(p.name || 'Anonymous') + '</td>' +
-          '<td class="text-right">' + fmt(p.amountBase) + fxMarkup(fmtNative(p.native?.amount, p.currency), fmt(p.amountBase), p.currency, p.fx) + '</td>' +
-          '<td class="text-right text-blue-600">' + fmt(p.tipBase) + '</td>' +
-          '<td class="text-right font-medium">' + fmt(p.grossBase) + '</td>' +
-          '<td class="text-right text-gfm-green">' + fmt(p.netBase) + '</td>' +
-          '<td class="text-right text-xs text-gfm-gray">' + esc(p.currency) + '</td>' +
-          '<td class="text-right text-gfm-gray">' + new Date(p.date).toLocaleDateString() + '</td>' +
-          '</tr>';
+    /* All Completed Transactions Renderer */
+    function searchTransactions(q) {
+      renderTransactionsFeed(q.toLowerCase().trim());
+    }
+
+    function renderTransactionsFeed(searchQuery) {
+      var tbody = document.getElementById('recent-transactions-body');
+      var list = allTransactionsData || [];
+
+      if (searchQuery) {
+        list = list.filter(function(p) {
+          return (p.name || '').toLowerCase().indexOf(searchQuery) >= 0 ||
+                 (p.id || '').toLowerCase().indexOf(searchQuery) >= 0 ||
+                 (p.campaign || '').toLowerCase().indexOf(searchQuery) >= 0;
+        });
+      }
+
+      setText('txns-count-badge', (list ? list.length : 0) + ' Transactions');
+
+      if (!list || !list.length) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400 text-xs">No completed payments for this timeframe</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(function(p) {
+        var isNonEur = p.currency !== baseCurrency;
+        var amountFx = isNonEur ? fxMarkup(fmtNative(p.native?.amount, p.currency), fmt(p.amountBase), p.currency, p.fx) : '';
+        var tipFx = (isNonEur && p.tipBase > 0) ? fxMarkup(fmtNative(p.native?.tip, p.currency), fmt(p.tipBase), p.currency, p.fx) : '';
+        var grossFx = isNonEur ? fxMarkup(fmtNative(p.native?.gross, p.currency), fmt(p.grossBase), p.currency, p.fx) : '';
+        var feeFx = isNonEur ? fxMarkup(fmtNative(p.native?.fee, p.currency), '−' + fmt(p.feeBase), p.currency, p.fx) : '';
+        var netFx = isNonEur ? fxMarkup(fmtNative(p.native?.net, p.currency), fmt(p.netBase), p.currency, p.fx) : '';
+
+        var timeLabel = new Date(p.date).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short', timeZone: userTimeZone });
+        var donorName = esc(p.name || 'Anonymous');
+
+        return '<tr class="cursor-pointer transition-colors" onclick="showDetail(\'' + p.id + '\', this)">' +
+          '<td class="font-semibold text-[#061b31] flex items-center gap-2">' +
+            '<div class="w-6 h-6 rounded-md bg-slate-100 text-slate-700 font-bold text-[10px] flex items-center justify-center shrink-0">' + donorName.charAt(0).toUpperCase() + '</div>' +
+            '<span>' + donorName + '</span>' +
+          '</td>' +
+          '<td class="text-left font-mono text-xs text-slate-600">' + esc(p.campaign) + '</td>' +
+          '<td class="text-right font-mono">' + fmt(p.amountBase) + amountFx + '</td>' +
+          '<td class="text-right font-mono text-blue-600">' + fmt(p.tipBase) + tipFx + '</td>' +
+          '<td class="text-right font-mono font-bold text-[#061b31]">' + fmt(p.grossBase) + grossFx + '</td>' +
+          '<td class="text-right font-mono text-[#df1b41]">−' + fmt(p.feeBase) + feeFx + '</td>' +
+          '<td class="text-right font-mono text-[#00875a] font-bold">' + fmt(p.netBase) + netFx + '</td>' +
+          '<td class="text-left font-mono text-xs text-slate-500">' + esc(p.currency) + '</td>' +
+          '<td class="text-right font-mono text-xs text-slate-400">' + esc(timeLabel) + '</td>' +
+        '</tr>';
       }).join('');
     }
 
+    /* Transaction Detail Modal */
     async function showDetail(id, trigger) {
       showDetail.lastTrigger = trigger || document.activeElement;
       document.getElementById('detail-modal').classList.remove('hidden');
-      document.body.classList.add('modal-open');
+      document.body.classList.add('overflow-hidden');
       document.getElementById('detail-close').focus();
-      document.getElementById('detail-content').innerHTML = '<p class="text-gfm-gray">Loading...</p>';
+      setText('detail-id-label', 'ID: ' + id);
+      setHtml('detail-content', '<p class="text-slate-400 text-xs">Loading transaction metadata…</p>');
+
       try {
         var res = await fetch('/api/admin/transactions/' + id);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         var d = await res.json();
         var a = d.amounts || {};
+
         var rows = [
-          ['Donor', esc(d.donor?.name || 'Anonymous')],
-          ['Email', esc(d.payer?.email || '—')],
-          ['Campaign', esc(d.campaign || '—')],
-          ['Store', esc(d.storeDomain || '—')],
-          ['Status', esc(d.status || '—')],
-          ['Card', esc((d.card?.brand || '') + (d.card?.lastDigits ? ' ****' + d.card.lastDigits : '') || '—')],
-          ['Donation', fmtNative(a.donation, a.currency)],
-          ['Tip', fmtNative(a.tip, a.currency)],
-          ['Total', fmtNative(a.total, a.currency)],
-          ['Stripe fee', '−' + fmtNative(a.stripeFee, a.currency)],
-          ['Net', fmtNative(a.net, a.currency)],
-          ['Date', new Date(d.timestamps?.created).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', timeZone: userTimeZone }) + ' (' + esc(userTimeZone) + ')'],
-          ['UTM campaign', esc(d.metadata?.utmCampaign || '—')],
-          ['Payment source', esc(d.processing?.source || '—')]
+          ['Donor Name', esc(d.donor?.name || 'Anonymous')],
+          ['Payer Email', d.payer?.email ? '<span class="copy-pill font-mono" onclick="copyToClipboard(\'' + esc(d.payer.email) + '\', this)">' + esc(d.payer.email) + ' 📋</span>' : '—'],
+          ['Campaign Target', esc(d.campaign || '—')],
+          ['Storefront Domain', esc(d.storeDomain || '—')],
+          ['Settlement Status', '<span class="px-2 py-0.5 rounded bg-emerald-100 text-[#00875a] text-xs font-bold font-mono uppercase">' + esc(d.status || 'completed') + '</span>'],
+          ['Payment Method', esc((d.card?.brand || '') + (d.card?.lastDigits ? ' •••• ' + d.card.lastDigits : '') || 'Card')],
+          ['Donation Amount', fmtNative(a.donation, a.currency)],
+          ['Platform Tip', fmtNative(a.tip, a.currency)],
+          ['Total Charged', fmtNative(a.total, a.currency)],
+          ['Stripe Processor Fee', '−' + fmtNative(a.stripeFee, a.currency)],
+          ['Net Payout', fmtNative(a.net, a.currency)],
+          ['Timestamp', new Date(d.timestamps?.created).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', timeZone: userTimeZone }) + ' (' + esc(userTimeZone) + ')'],
+          ['UTM Attribution', esc(d.metadata?.utmCampaign || '—')],
+          ['Charge ID', d.processing?.chargeId ? '<span class="copy-pill font-mono text-[11px]" onclick="copyToClipboard(\'' + esc(d.processing.chargeId) + '\', this)">' + esc(d.processing.chargeId) + ' 📋</span>' : '—']
         ];
-        document.getElementById('detail-content').innerHTML = rows.map(function (r) {
-          return '<div class="flex justify-between py-2 border-b border-gray-100 last:border-0"><span class="text-gfm-gray">' + r[0] + '</span><span class="font-medium text-gfm-dark text-right">' + r[1] + '</span></div>';
+
+        var html = rows.map(function(r) {
+          return '<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">' +
+            '<span class="text-xs font-medium text-slate-500">' + r[0] + '</span>' +
+            '<span class="text-xs sm:text-sm font-semibold text-[#061b31] text-right font-mono">' + r[1] + '</span>' +
+          '</div>';
         }).join('');
+
+        setHtml('detail-content', html);
       } catch (e) {
-        document.getElementById('detail-content').innerHTML = '<p class="text-red-500">Failed to load transaction</p>';
+        setHtml('detail-content', '<p class="text-red-500 text-xs">Failed to load transaction details.</p>');
       }
     }
 
     function closeDetail() {
       document.getElementById('detail-modal').classList.add('hidden');
-      document.body.classList.remove('modal-open');
-      if (showDetail.lastTrigger && typeof showDetail.lastTrigger.focus === 'function') showDetail.lastTrigger.focus();
+      document.body.classList.remove('overflow-hidden');
+      if (showDetail.lastTrigger && typeof showDetail.lastTrigger.focus === 'function') {
+        showDetail.lastTrigger.focus();
+      }
     }
     window.closeDetail = closeDetail;
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && !document.getElementById('detail-modal').classList.contains('hidden')) closeDetail();
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !document.getElementById('detail-modal').classList.contains('hidden')) {
+        closeDetail();
+      }
     });
 
+    /* Data Fetcher */
     async function loadProfit() {
       var requestId = ++loadProfit.requestId;
       if (loadProfit.controller) loadProfit.controller.abort();
       loadProfit.controller = new AbortController();
+
       var errorBox = document.getElementById('profit-error');
       if (errorBox) errorBox.classList.add('hidden');
+
       try {
         var res = await fetch('/api/admin/profit?' + currentQuery(), { signal: loadProfit.controller.signal });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         var data = await res.json();
         if (requestId !== loadProfit.requestId) return;
-        baseCurrency = data.baseCurrency || 'EUR';
-        setText('ads-preset-note', 'Transactions: ' + userTimeZone + ' · Ad spend: Meta account timezone');
-        renderWaterfall(data);
+
+        activeCampaignsData = data.perCampaign || [];
+        allTransactionsData = data.transactions || data.recent || [];
+
+        renderWaterfallAndHero(data);
+        renderTimelineChart(data.daily || [], data.timelineType === 'hourly');
         renderCampaignFilter(data.perCampaign);
-        renderCampaignTable(data.perCampaign);
-        renderCurrency(data.currencyBreakdown);
-        renderRecent(data);
-        scheduleRefreshPoll(data);
+        updateCampaignBadges(data.perCampaign);
+        renderCampaignTableRows();
+        renderStoreBreakdown(data.perStore);
+        renderCurrencyBreakdown(data.currencyBreakdown);
+        renderTransactionsFeed();
+
         var quality = document.getElementById('profit-quality');
         if (quality) {
           quality.classList.toggle('hidden', !data.dataQuality?.paymentsTruncated);
-          quality.textContent = data.dataQuality?.paymentsTruncated
-            ? 'This view includes more than ' + Number(data.dataQuality.maxPayments || 5000).toLocaleString() + ' completed payments. Narrow the date range for a complete total.'
-            : '';
+          setText('profit-quality-text', data.dataQuality?.paymentsTruncated
+            ? 'Volume exceeds ' + Number(data.dataQuality.maxPayments || 5000).toLocaleString() + ' records. Narrow date range for exact totals.'
+            : '');
         }
+
+        scheduleRefreshPoll(data);
       } catch (e) {
         if (e.name === 'AbortError') return;
         if (requestId !== loadProfit.requestId) return;
-        console.error('profit load failed', e);
+        console.error('Profit fetch error:', e);
         if (errorBox) {
-          setText('profit-error-text', 'Profit data could not be loaded (' + (e.message || 'network error') + ').');
+          setText('profit-error-text', 'Could not load profit intelligence (' + (e.message || 'network timeout') + ').');
           errorBox.classList.remove('hidden');
         }
       }
     }
     loadProfit.requestId = 0;
     loadProfit.controller = null;
+
     var refreshPoll = null;
     function scheduleRefreshPoll(data) {
       if (refreshPoll) clearTimeout(refreshPoll);
       if (!data.adSync?.refreshing) return;
-      refreshPoll = setTimeout(loadProfit, 12000);
+      refreshPoll = setTimeout(loadProfit, 10000);
     }
 
     async function syncAds() {
       var btn = document.getElementById('ads-sync-btn');
       var label = document.getElementById('ads-sync-label');
       var icon = document.getElementById('ads-sync-icon');
-      btn.disabled = true; label.textContent = 'Syncing…'; icon.classList.add('animate-spin');
+      var mobIcon = document.getElementById('mobile-sync-icon');
+
+      btn.disabled = true;
+      label.textContent = 'Syncing…';
+      icon.classList.add('animate-spin');
+      if (mobIcon) mobIcon.classList.add('animate-spin');
+
       try {
         var res = await fetch('/api/admin/profit/ads-sync', { method: 'POST' });
         var data = await res.json();
-        label.textContent = data.ok ? 'Synced ' + (data.spend?.spendRows || 0) + ' rows' : 'Failed';
-        setTimeout(function () { label.textContent = 'Sync Ads'; btn.disabled = false; icon.classList.remove('animate-spin'); }, 2500);
+        label.textContent = data.ok ? 'Synced (' + (data.spend?.spendRows || 0) + ')' : 'Sync Failed';
+        setTimeout(function() {
+          label.textContent = 'Sync Meta Spend';
+          btn.disabled = false;
+          icon.classList.remove('animate-spin');
+          if (mobIcon) mobIcon.classList.remove('animate-spin');
+        }, 2000);
         loadProfit();
       } catch (e) {
-        label.textContent = 'Error';
-        setTimeout(function () { label.textContent = 'Sync Ads'; btn.disabled = false; icon.classList.remove('animate-spin'); }, 2500);
+        label.textContent = 'Sync Error';
+        setTimeout(function() {
+          label.textContent = 'Sync Meta Spend';
+          btn.disabled = false;
+          icon.classList.remove('animate-spin');
+          if (mobIcon) mobIcon.classList.remove('animate-spin');
+        }, 2000);
       }
     }
 
-    document.getElementById('filter-campaign').addEventListener('change', loadProfit);
-    document.getElementById('filter-daterange').addEventListener('change', loadProfit);
+    function exportProfitCSV() {
+      if (!activeCampaignsData || !activeCampaignsData.length) return;
+      var headers = ['Campaign', 'Key', 'IsAd', 'Revenue_EUR', 'Tips_EUR', 'Fees_EUR', 'Net_EUR', 'Spend_EUR', 'Spend_Native_USD', 'Net_Profit_EUR', 'Purchases', 'ROAS', 'CPA_EUR'];
+      var rows = activeCampaignsData.map(function(c) {
+        return [
+          '"' + (c.name || c.key).replace(/"/g, '""') + '"',
+          c.key,
+          c.isAdCampaign ? 'YES' : 'NO',
+          (c.gross || 0).toFixed(2),
+          (c.tips || 0).toFixed(2),
+          (c.fees || 0).toFixed(2),
+          (c.net || 0).toFixed(2),
+          (c.spend || 0).toFixed(2),
+          (c.spendNative || 0).toFixed(2),
+          (c.profit || 0).toFixed(2),
+          c.purchases || 0,
+          c.roas || '',
+          (c.cpa || 0).toFixed(2)
+        ];
+      });
+
+      var csv = [headers.join(','), rows.map(function(r) { return r.join(','); }).join('\n')].join('\n');
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'profit-matrix-' + new Date().toISOString().slice(0, 10) + '.csv';
+      link.click();
+    }
+
     window.syncAds = syncAds;
+    window.selectRange = selectRange;
+    window.filterCampaignTable = filterCampaignTable;
+    window.searchCampaigns = searchCampaigns;
+    window.searchTransactions = searchTransactions;
+    window.showFx = showFx;
+    window.hideFx = hideFx;
+    window.exportProfitCSV = exportProfitCSV;
+    window.copyToClipboard = copyToClipboard;
+
     loadProfit();
   </script>
 </body>

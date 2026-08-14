@@ -18,6 +18,7 @@ module.exports = function createAdminRouter(ctx) {
     getPaymentDetails,
     getRecentFailures,
     getProfitOverview,
+    getChartTimeline,
     triggerAdSync
   } = ctx;
 
@@ -189,12 +190,26 @@ module.exports = function createAdminRouter(ctx) {
     }
   });
 
+  router.get('/api/admin/profit/timeline', adminAuth, async (req, res) => {
+    try {
+      const { campaignSlug } = parseDashboardFilters(req);
+      const chartRange = req.query.chartRange || 'today_hourly';
+      const tzOffset = req.query.tzOffset || 0;
+      const data = await getChartTimeline(campaignSlug, chartRange, tzOffset);
+      res.json(data);
+    } catch (error) {
+      console.error('[admin/profit/timeline] error:', error);
+      res.status(500).json({ error: 'Failed to load timeline data' });
+    }
+  });
+
   router.get('/api/admin/profit', adminAuth, async (req, res) => {
     try {
       const { campaignSlug, dateRange } = parseDashboardFilters(req);
       const includeAd = req.query.include_ads !== '0';
       const rangeKey = req.query.range || 'last30days';
-      const overview = await getProfitOverview(campaignSlug, dateRange, { withAdSpend: includeAd, rangeKey });
+      const tzOffset = req.query.tzOffset || 0;
+      const overview = await getProfitOverview(campaignSlug, dateRange, { withAdSpend: includeAd, rangeKey, tzOffset });
       res.json(overview);
     } catch (error) {
       console.error('[admin/profit] error:', error);

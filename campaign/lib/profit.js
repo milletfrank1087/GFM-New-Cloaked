@@ -3,10 +3,10 @@ const {
   BASE_CURRENCY,
   convertToBase,
   convertPaymentsToBase,
-  dayKey,
+  computePaymentAmounts,
   fetchLatestRates,
 } = require('./fx');
-const { syncAll, syncPreset } = require('./ads-manager');
+const { syncAll, syncPreset, getPresetTtl, MIN_SYNC_INTERVAL_MS } = require('./ads-manager');
 
 const PRESET_BY_RANGE = {
   today: 'today',
@@ -24,7 +24,7 @@ function presetForRange(rangeKey) {
 }
 
 function presetDaySpan(preset) {
-  const map = { today: 1, yesterday: 1, last_7d: 7, last_14d: 14, last_28d: 28, last_30d: 30, last_90d: 90, this_week_mon_today: 7, this_week_sun_today: 7 };
+  const map = { today: 1, yesterday: 1, last_7d: 7, last_14d: 14, last_28d: 28, last_30d: 30, last_90d: 90 };
   return map[preset] || 30;
 }
 
@@ -33,13 +33,12 @@ const PROFIT_FIELDS =
   'currency, store_id, store_domain, source_ref, utm_campaign, status, ' +
   'billing_name, customer_name';
 const MAX_PAYMENTS = 5000;
-const ADS_SYNC_TTL_MS = 5 * 60 * 1000;
 const adRefreshInFlight = new Map();
 
 function scheduleAdRefresh(preset) {
   if (adRefreshInFlight.has(preset)) return false;
   const task = syncPreset(preset)
-    .catch((err) => console.warn(`[profit] background ${preset} sync failed:`, err.message))
+    .catch((err) => console.warn(`[profit] background ${preset} sync note:`, err.message))
     .finally(() => adRefreshInFlight.delete(preset));
   adRefreshInFlight.set(preset, task);
   return true;
@@ -56,7 +55,7 @@ function toExclusiveEnd(endDate) {
 }
 
 async function fetchPayments(campaignSlug, dateRange) {
-  if (!supabase) return { rows: [], truncated: false };
+  if (!supabase) return { rows: [], truncated: false, count: 0 };
   let query = supabase
     .from('payments')
     .select(PROFIT_FIELDS, { count: 'exact' })
@@ -75,40 +74,92 @@ async function fetchPayments(campaignSlug, dateRange) {
   if (error) throw new Error(error.message);
   return {
     rows: data || [],
+    count: count || 0,
     truncated: Number.isFinite(count) ? count > MAX_PAYMENTS : false,
+  };
+}
+
+async function fetchAdSpendData(preset) {
+  if (!supabase) return { spendRows: [], campaignRows: [] };
+  const [spendRes, campRes] = await Promise.all([
+    supabase
+      .from('ad_spend')
+      .select('campaign_id, date, spend, purchases_total, purchase_value_total, purchase_roas_total, cost_per_purchase, fetched_at')
+      .eq('date_preset', preset),
+    supabase
+      .from('ad_campaigns')
+      .select('id, name, account_id')
+  ]);
+  if (spendRes.error) throw new Error(spendRes.error.message);
+  return {
+    spendRows: spendRes.data || [],
+    campaignRows: campRes.data || [],
   };
 }
 
 function emptyDaily() {
   const map = new Map();
   return {
-    add(date, p) {
-      if (!map.has(date)) {
-        map.set(date, {
-          date, count: 0, gross: 0, tips: 0, fees: 0, net: 0,
+    add(key, p) {
+      if (!map.has(key)) {
+        map.set(key, {
+          date: key, count: 0, gross: 0, tips: 0, fees: 0, net: 0,
           spend: 0, profit: 0, byCurrency: {},
         });
       }
-      const d = map.get(date);
+      const d = map.get(key);
       d.count += 1;
       d.gross += p.grossBase;
       d.tips += p.tipBase;
       d.fees += p.feeBase;
       d.net += p.netBase;
-      if (!d.byCurrency[p.currency]) d.byCurrency[p.currency] = 0;
-      d.byCurrency[p.currency] += p.grossBase;
+      const cur = p.currency || 'EUR';
+      if (!d.byCurrency[cur]) {
+        d.byCurrency[cur] = { count: 0, gross: 0, nativeGross: 0, fees: 0, nativeFees: 0, net: 0, nativeNet: 0 };
+      }
+      const { grossNative, feeNative, netNative } = computePaymentAmounts(p.raw);
+      d.byCurrency[cur].count += 1;
+      d.byCurrency[cur].gross += p.grossBase;
+      d.byCurrency[cur].nativeGross += grossNative;
+      d.byCurrency[cur].fees += p.feeBase;
+      d.byCurrency[cur].nativeFees += feeNative;
+      d.byCurrency[cur].net += p.netBase;
+      d.byCurrency[cur].nativeNet += netNative;
       return d;
     },
     get map() { return map; },
   };
 }
 
-async function getProfitOverview(campaignSlug = null, dateRange = null, { withAdSpend = true, rangeKey = 'last30days' } = {}) {
-  const paymentResult = await fetchPayments(campaignSlug, dateRange);
+function getLocalHourAndDate(isoString, tzOffsetMinutes = 0) {
+  if (!isoString) return { dateKey: 'unknown', hourKey: '00:00' };
+  const d = new Date(isoString);
+  if (Number.isNaN(d.getTime())) return { dateKey: 'unknown', hourKey: '00:00' };
+  // tzOffsetMinutes from client (e.g. -180 for UTC+3)
+  const localMs = d.getTime() - (tzOffsetMinutes * 60000);
+  const localDate = new Date(localMs);
+  const dateKey = localDate.toISOString().slice(0, 10);
+  const hourKey = String(localDate.getUTCHours()).padStart(2, '0') + ':00';
+  return { dateKey, hourKey };
+}
+
+async function getProfitOverview(campaignSlug = null, dateRange = null, { withAdSpend = true, rangeKey = 'last30days', tzOffset = 0 } = {}) {
+  const preset = process.env.ADS_DEFAULT_PRESET || presetForRange(rangeKey);
+  const AD_SPEND_CURRENCY = 'USD';
+  const tzOffsetMinutes = Number(tzOffset) || 0;
+
+  const [paymentResult, adDataResult, latestRatesResult] = await Promise.all([
+    fetchPayments(campaignSlug, dateRange),
+    withAdSpend ? fetchAdSpendData(preset) : Promise.resolve({ spendRows: [], campaignRows: [] }),
+    withAdSpend ? fetchLatestRates().catch(() => null) : Promise.resolve(null),
+  ]);
+
   const payments = paymentResult.rows;
   const convertedPayments = await convertPaymentsToBase(payments);
 
+  const isSingleDay = rangeKey === 'today' || rangeKey === 'yesterday';
   const daily = emptyDaily();
+  const hourly = emptyDaily();
   const perCampaign = new Map();
   const perStore = new Map();
   const currencyBreakdown = {};
@@ -118,7 +169,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
   };
 
   for (const p of convertedPayments) {
-    const dateKey = p.date;
+    const { dateKey, hourKey } = getLocalHourAndDate(p.raw.created_at, tzOffsetMinutes);
     total.count += 1;
     total.gross += p.grossBase;
     total.tips += p.tipBase;
@@ -126,13 +177,18 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     total.net += p.netBase;
 
     daily.add(dateKey, p);
+    hourly.add(hourKey, p);
 
     const raw = p.raw;
+    const cur = p.currency || BASE_CURRENCY;
+    const { donationNative, tipNative, grossNative, feeNative, netNative } = computePaymentAmounts(p.raw);
+
     const campaignKey = raw.utm_campaign || raw.source_ref || 'direct';
     if (!perCampaign.has(campaignKey)) {
       perCampaign.set(campaignKey, {
         key: campaignKey, name: null, count: 0, gross: 0, tips: 0, fees: 0, net: 0,
         spend: 0, spendNative: 0, profit: 0, purchases: 0, roas: null, cpa: null, isAdCampaign: false,
+        byCurrency: {},
       });
     }
     const c = perCampaign.get(campaignKey);
@@ -141,10 +197,22 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     c.tips += p.tipBase;
     c.fees += p.feeBase;
     c.net += p.netBase;
+    if (!c.byCurrency[cur]) {
+      c.byCurrency[cur] = { count: 0, gross: 0, tips: 0, fees: 0, net: 0, nativeGross: 0, nativeTips: 0, nativeFees: 0, nativeNet: 0 };
+    }
+    c.byCurrency[cur].count += 1;
+    c.byCurrency[cur].gross += p.grossBase;
+    c.byCurrency[cur].tips += p.tipBase;
+    c.byCurrency[cur].fees += p.feeBase;
+    c.byCurrency[cur].net += p.netBase;
+    c.byCurrency[cur].nativeGross += grossNative;
+    c.byCurrency[cur].nativeTips += tipNative;
+    c.byCurrency[cur].nativeFees += feeNative;
+    c.byCurrency[cur].nativeNet += netNative;
 
     const storeKey = raw.store_domain || 'unknown';
     if (!perStore.has(storeKey)) {
-      perStore.set(storeKey, { domain: storeKey, count: 0, gross: 0, tips: 0, fees: 0, net: 0 });
+      perStore.set(storeKey, { domain: storeKey, count: 0, gross: 0, tips: 0, fees: 0, net: 0, byCurrency: {} });
     }
     const s = perStore.get(storeKey);
     s.count += 1;
@@ -152,12 +220,23 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     s.tips += p.tipBase;
     s.fees += p.feeBase;
     s.net += p.netBase;
+    if (!s.byCurrency[cur]) {
+      s.byCurrency[cur] = { count: 0, gross: 0, tips: 0, fees: 0, net: 0, nativeGross: 0, nativeTips: 0, nativeFees: 0, nativeNet: 0 };
+    }
+    s.byCurrency[cur].count += 1;
+    s.byCurrency[cur].gross += p.grossBase;
+    s.byCurrency[cur].tips += p.tipBase;
+    s.byCurrency[cur].fees += p.feeBase;
+    s.byCurrency[cur].net += p.netBase;
+    s.byCurrency[cur].nativeGross += grossNative;
+    s.byCurrency[cur].nativeTips += tipNative;
+    s.byCurrency[cur].nativeFees += feeNative;
+    s.byCurrency[cur].nativeNet += netNative;
 
-    const cur = p.currency || BASE_CURRENCY;
     if (!currencyBreakdown[cur]) {
       currencyBreakdown[cur] = {
         count: 0, gross: 0, tips: 0, fees: 0, net: 0,
-        nativeGross: 0, nativeFees: 0, nativeNet: 0, rateDate: p.fx?.rateDate || null,
+        nativeGross: 0, nativeTips: 0, nativeFees: 0, nativeNet: 0, rateDate: p.fx?.rateDate || null,
         rate: p.fx?.rate || null, fxSource: p.fx?.source || null,
       };
     }
@@ -167,9 +246,10 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     cb.tips += p.tipBase;
     cb.fees += p.feeBase;
     cb.net += p.netBase;
-    cb.nativeGross += parseFloat(p.raw.total_amount || 0);
-    cb.nativeFees += parseFloat(p.raw.stripe_fee || 0);
-    cb.nativeNet += parseFloat(p.raw.net_amount ?? p.raw.total_amount ?? 0);
+    cb.nativeGross += grossNative;
+    cb.nativeTips += tipNative;
+    cb.nativeFees += feeNative;
+    cb.nativeNet += netNative;
     if (p.fx?.rateDate && cb.rateDate && cb.rateDate !== p.fx.rateDate) {
       cb.rateDate = 'multiple dates';
       cb.rate = null;
@@ -181,113 +261,87 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
   }
 
   const dailyRows = [...daily.map.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
+  const hourlyRows = Array.from({ length: 24 }, (_, i) => {
+    const hk = String(i).padStart(2, '0') + ':00';
+    return hourly.map.get(hk) || { date: hk, count: 0, gross: 0, tips: 0, fees: 0, net: 0, spend: 0, profit: 0, byCurrency: {} };
+  });
 
   let totalSpend = 0;
   let totalSpendNative = 0;
   let spendFreshAt = null;
   let adRefreshScheduled = false;
-  const preset = process.env.ADS_DEFAULT_PRESET || presetForRange(rangeKey);
-  const AD_SPEND_CURRENCY = 'USD';
   let spendToBaseRate = 1;
 
   if (withAdSpend) {
-    try {
-      const latest = await fetchLatestRates();
-      if (latest && latest[AD_SPEND_CURRENCY]) {
-        spendToBaseRate = convertToBase(1, AD_SPEND_CURRENCY, latest);
-      }
-    } catch (err) {
-      console.warn('[profit] ad spend FX failed:', err.message);
+    if (latestRatesResult && latestRatesResult[AD_SPEND_CURRENCY]) {
+      spendToBaseRate = convertToBase(1, AD_SPEND_CURRENCY, latestRatesResult);
     }
 
-    async function joinSpend() {
-      const { data: spendRows, error } = await supabase
-        .from('ad_spend')
-        .select('campaign_id, date, spend, purchases_total, purchase_value_total, purchase_roas_total, cost_per_purchase, fetched_at')
-        .eq('date_preset', preset);
-      if (error) throw new Error(error.message);
-      const { data: campaignRows } = await supabase
-        .from('ad_campaigns')
-        .select('id, name, account_id');
-      const nameById = new Map((campaignRows || []).map(c => [c.id, c.name]));
+    const { spendRows, campaignRows } = adDataResult;
+    const nameById = new Map((campaignRows || []).map(c => [c.id, c.name]));
+    const spendByCampaign = new Map();
+    let latestFetchedAt = 0;
 
-      const spendByCampaign = new Map();
-      let latestFetchedAt = 0;
-      for (const row of spendRows || []) {
-        const fetchedAt = Date.parse(row.fetched_at || '');
-        if (Number.isFinite(fetchedAt)) latestFetchedAt = Math.max(latestFetchedAt, fetchedAt);
-        if (!spendByCampaign.has(row.campaign_id)) {
-          spendByCampaign.set(row.campaign_id, {
-            campaignId: row.campaign_id,
-            spend: 0, spendNative: 0, purchases: 0, value: 0, roas: null, cpa: null,
-          });
-        }
-        const s = spendByCampaign.get(row.campaign_id);
-        s.spendNative += Number(row.spend || 0);
-        s.spend += Number(row.spend || 0) * spendToBaseRate;
-        s.purchases += Number(row.purchases_total || 0);
-        s.value += Number(row.purchase_value_total || 0) * spendToBaseRate;
-        if (row.purchase_roas_total) s.roas = Number(row.purchase_roas_total);
-        if (row.cost_per_purchase) s.cpa = Number(row.cost_per_purchase) * spendToBaseRate;
-      }
-
-      let joined = 0;
-      for (const [key, agg] of perCampaign) {
-        const campaignId = key;
-        const spendInfo = spendByCampaign.get(campaignId);
-        if (spendInfo) {
-          agg.spend = spendInfo.spend;
-          agg.spendNative = spendInfo.spendNative;
-          agg.purchases = spendInfo.purchases;
-          agg.purchaseValue = spendInfo.value;
-          agg.roas = spendInfo.roas;
-          agg.cpa = spendInfo.cpa;
-          agg.name = nameById.get(campaignId) || null;
-          agg.isAdCampaign = true;
-          joined += 1;
-        }
-      }
-      for (const [campaignId, spendInfo] of spendByCampaign) {
-        const isInSelectedScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === campaignId;
-        if (!isInSelectedScope || perCampaign.has(campaignId)) continue;
-        perCampaign.set(campaignId, {
-          key: campaignId,
-          name: nameById.get(campaignId) || campaignId,
-          count: 0,
-          gross: 0,
-          tips: 0,
-          fees: 0,
-          net: 0,
-          spend: spendInfo.spend,
-          spendNative: spendInfo.spendNative,
-          profit: -spendInfo.spend,
-          purchases: spendInfo.purchases,
-          purchaseValue: spendInfo.value,
-          roas: spendInfo.roas,
-          cpa: spendInfo.cpa,
-          isAdCampaign: true,
+    for (const row of spendRows || []) {
+      const fetchedAt = Date.parse(row.fetched_at || '');
+      if (Number.isFinite(fetchedAt)) latestFetchedAt = Math.max(latestFetchedAt, fetchedAt);
+      if (!spendByCampaign.has(row.campaign_id)) {
+        spendByCampaign.set(row.campaign_id, {
+          campaignId: row.campaign_id,
+          spend: 0, spendNative: 0, purchases: 0, value: 0, roas: null, cpa: null,
         });
       }
-      return {
-        spendByCampaign,
-        joined,
-        rowCount: (spendRows || []).length,
-        latestFetchedAt,
-        stale: !latestFetchedAt || Date.now() - latestFetchedAt > ADS_SYNC_TTL_MS,
-      };
+      const s = spendByCampaign.get(row.campaign_id);
+      s.spendNative += Number(row.spend || 0);
+      s.spend += Number(row.spend || 0) * spendToBaseRate;
+      s.purchases += Number(row.purchases_total || 0);
+      s.value += Number(row.purchase_value_total || 0) * spendToBaseRate;
+      if (row.purchase_roas_total) s.roas = Number(row.purchase_roas_total);
+      if (row.cost_per_purchase) s.cpa = Number(row.cost_per_purchase) * spendToBaseRate;
     }
 
-    try {
-      const first = await joinSpend();
-      spendFreshAt = first.latestFetchedAt || null;
-      totalSpend = 0;
-      for (const s of first.spendByCampaign.values()) totalSpend += s.spend;
-      if (first.rowCount === 0 || first.stale) {
-        console.log(`[profit] preset ${preset} ${first.rowCount === 0 ? 'empty' : 'stale'} — syncing selected ad preset`);
-        adRefreshScheduled = scheduleAdRefresh(preset);
+    spendFreshAt = latestFetchedAt || null;
+    const ttl = getPresetTtl(preset);
+    const isStale = !latestFetchedAt || (Date.now() - latestFetchedAt > ttl);
+    if ((spendRows || []).length === 0 || isStale) {
+      adRefreshScheduled = scheduleAdRefresh(preset);
+    }
+
+    for (const [key, agg] of perCampaign) {
+      const campaignId = key;
+      const spendInfo = spendByCampaign.get(campaignId);
+      if (spendInfo) {
+        agg.spend = spendInfo.spend;
+        agg.spendNative = spendInfo.spendNative;
+        agg.purchases = spendInfo.purchases;
+        agg.purchaseValue = spendInfo.value;
+        agg.roas = spendInfo.roas;
+        agg.cpa = spendInfo.cpa;
+        agg.name = nameById.get(campaignId) || null;
+        agg.isAdCampaign = true;
       }
-    } catch (err) {
-      console.warn('[profit] ad spend join failed:', err.message);
+    }
+
+    for (const [campaignId, spendInfo] of spendByCampaign) {
+      const isInSelectedScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === campaignId;
+      if (!isInSelectedScope || perCampaign.has(campaignId)) continue;
+      perCampaign.set(campaignId, {
+        key: campaignId,
+        name: nameById.get(campaignId) || campaignId,
+        count: 0,
+        gross: 0,
+        tips: 0,
+        fees: 0,
+        net: 0,
+        spend: spendInfo.spend,
+        spendNative: spendInfo.spendNative,
+        profit: -spendInfo.spend,
+        purchases: spendInfo.purchases,
+        purchaseValue: spendInfo.value,
+        roas: spendInfo.roas,
+        cpa: spendInfo.cpa,
+        isAdCampaign: true,
+      });
     }
   }
 
@@ -312,30 +366,36 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
 
   const storeRows = [...perStore.values()].sort((a, b) => b.gross - a.gross);
 
-  const recent = convertedPayments.slice(0, 10).map((p) => ({
-    id: p.raw.id,
-    name: p.raw.billing_name || p.raw.customer_name || null,
-    currency: p.currency,
-    date: p.raw.created_at,
-    amountBase: p.amountBase,
-    tipBase: p.tipBase,
-    grossBase: p.grossBase,
-    feeBase: p.feeBase,
-    netBase: p.netBase,
-    native: {
-      amount: parseFloat(p.raw.amount || 0),
-      tip: parseFloat(p.raw.service_fee || 0),
-      gross: parseFloat(p.raw.total_amount || 0),
-      fee: parseFloat(p.raw.stripe_fee || 0),
-      net: parseFloat(p.raw.net_amount ?? p.raw.total_amount ?? 0),
+  const allTransactions = convertedPayments.map((p) => {
+    const { donationNative, tipNative, grossNative, feeNative, netNative } = computePaymentAmounts(p.raw);
+    return {
+      id: p.raw.id,
+      name: p.raw.billing_name || p.raw.customer_name || null,
+      campaign: p.raw.source_ref || p.raw.utm_campaign || 'direct',
+      storeDomain: p.raw.store_domain || 'unknown',
       currency: p.currency,
-    },
-    fx: p.fx,
-  }));
+      date: p.raw.created_at,
+      amountBase: p.amountBase,
+      tipBase: p.tipBase,
+      grossBase: p.grossBase,
+      feeBase: p.feeBase,
+      netBase: p.netBase,
+      native: {
+        amount: donationNative,
+        tip: tipNative,
+        gross: grossNative,
+        fee: feeNative,
+        net: netNative,
+        currency: p.currency,
+      },
+      fx: p.fx,
+    };
+  });
 
   return {
     baseCurrency: BASE_CURRENCY,
     range: { start: dateRange?.startDate || null, end: dateRange?.endDate || null },
+    isSingleDay,
     totals: {
       count: total.count,
       gross: total.gross,
@@ -349,11 +409,14 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
       metaPurchases: total.metaPurchases,
       metaPurchaseValue: total.metaPurchaseValue,
     },
-    daily: dailyRows,
+    daily: isSingleDay ? hourlyRows : dailyRows,
+    timelineType: isSingleDay ? 'hourly' : 'daily',
     perCampaign: campaignRows,
     perStore: storeRows,
     currencyBreakdown,
-    recent,
+    recent: allTransactions.slice(0, 15),
+    transactions: allTransactions,
+    totalTransactionsCount: paymentResult.count,
     adSync: {
       preset,
       presetDays: presetDaySpan(preset),
@@ -375,6 +438,61 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
   };
 }
 
+async function getChartTimeline(campaignSlug = null, chartRange = '7d', tzOffset = 0) {
+  const now = new Date();
+  const tzOffsetMinutes = Number(tzOffset) || 0;
+  // Local today calculation
+  const localNowMs = now.getTime() - (tzOffsetMinutes * 60000);
+  const localNow = new Date(localNowMs);
+  const localTodayStartUtcMs = Date.UTC(localNow.getUTCFullYear(), localNow.getUTCMonth(), localNow.getUTCDate()) + (tzOffsetMinutes * 60000);
+  const todayStart = new Date(localTodayStartUtcMs);
+
+  let dateRange = null;
+  let isHourly = false;
+
+  if (chartRange === '24h' || chartRange === 'today_hourly' || chartRange === 'today') {
+    dateRange = { startDate: todayStart.toISOString(), endDate: now.toISOString() };
+    isHourly = true;
+  } else if (chartRange === 'yesterday_hourly' || chartRange === 'yesterday') {
+    const yStart = new Date(todayStart.getTime() - 86400000);
+    const yEnd = new Date(todayStart.getTime() - 1);
+    dateRange = { startDate: yStart.toISOString(), endDate: yEnd.toISOString() };
+    isHourly = true;
+  } else if (chartRange === '7d' || chartRange === 'last7days') {
+    dateRange = { startDate: new Date(todayStart.getTime() - 6 * 86400000).toISOString(), endDate: now.toISOString() };
+  } else if (chartRange === '14d') {
+    dateRange = { startDate: new Date(todayStart.getTime() - 13 * 86400000).toISOString(), endDate: now.toISOString() };
+  } else if (chartRange === '30d' || chartRange === 'last30days') {
+    dateRange = { startDate: new Date(todayStart.getTime() - 29 * 86400000).toISOString(), endDate: now.toISOString() };
+  } else if (chartRange === '90d' || chartRange === 'thisYear') {
+    dateRange = { startDate: new Date(todayStart.getTime() - 89 * 86400000).toISOString(), endDate: now.toISOString() };
+  }
+
+  const paymentResult = await fetchPayments(campaignSlug, dateRange);
+  const converted = await convertPaymentsToBase(paymentResult.rows);
+
+  if (isHourly) {
+    const hourly = emptyDaily();
+    for (const p of converted) {
+      const { hourKey } = getLocalHourAndDate(p.raw.created_at, tzOffsetMinutes);
+      hourly.add(hourKey, p);
+    }
+    const hourlyRows = Array.from({ length: 24 }, (_, i) => {
+      const hk = String(i).padStart(2, '0') + ':00';
+      return hourly.map.get(hk) || { date: hk, count: 0, gross: 0, tips: 0, fees: 0, net: 0, spend: 0, profit: 0 };
+    });
+    return { timeline: hourlyRows, type: 'hourly', chartRange };
+  } else {
+    const daily = emptyDaily();
+    for (const p of converted) {
+      const { dateKey } = getLocalHourAndDate(p.raw.created_at, tzOffsetMinutes);
+      daily.add(dateKey, p);
+    }
+    const dailyRows = [...daily.map.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
+    return { timeline: dailyRows, type: 'daily', chartRange };
+  }
+}
+
 async function triggerAdSync() {
   try {
     const result = await syncAll();
@@ -384,4 +502,11 @@ async function triggerAdSync() {
   }
 }
 
-module.exports = { getProfitOverview, triggerAdSync, MAX_PAYMENTS, presetForRange, presetDaySpan };
+module.exports = {
+  getProfitOverview,
+  getChartTimeline,
+  triggerAdSync,
+  MAX_PAYMENTS,
+  presetForRange,
+  presetDaySpan,
+};

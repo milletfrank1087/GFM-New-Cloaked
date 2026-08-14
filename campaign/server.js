@@ -19,6 +19,7 @@ const {
   getDeviceBrowserAnalytics,
   getDashboardOverview,
   getProfitOverview,
+  getChartTimeline,
   triggerAdSync,
   syncAll,
   createDonationToken,
@@ -39,6 +40,7 @@ const {
 } = require('./lib/tracking');
 const { createJourneyLog } = require('./lib/logger');
 const { visitors, getOrCreateVisitor } = require('./lib/visitors');
+const { startBackgroundSyncWorker } = require('./lib/ads-manager');
 
 const createPublicRouter = require('./routes/public');
 const createDonationRouter = require('./routes/donation');
@@ -197,6 +199,7 @@ const ctx = {
   getDeviceBrowserAnalytics,
   getDashboardOverview,
   getProfitOverview,
+  getChartTimeline,
   triggerAdSync,
   syncAll,
   createDonationToken,
@@ -249,6 +252,7 @@ async function refreshCampaignCache() {
 
 refreshCampaignCache();
 setInterval(refreshCampaignCache, 60000);
+startBackgroundSyncWorker();
 
 app.listen(PORT, () => {
   const trackingConfig = getTrackingConfig();

@@ -3,7 +3,51 @@ const { supabase } = require('./db/client');
 const ADS_MANAGER_URL = process.env.ADS_MANAGER_URL || 'https://fb-ads-manager.up.railway.app';
 const SYNC_PRESETS = ['today', 'yesterday', 'last_7d', 'last_14d', 'last_28d', 'last_30d', 'last_90d'];
 const PREFERRED_PRESET = 'last_7d';
-const DEFAULT_FETCH_TIMEOUT = 20000;
+const DEFAULT_FETCH_TIMEOUT = 25000;
+
+/* Tiered Volatility TTLs: Mutable intraday synced more frequently, historical less frequently */
+const PRESET_TTLS = {
+  today: 5 * 60 * 1000,         // 5 minutes (mutable intraday spend)
+  yesterday: 20 * 60 * 1000,     // 20 minutes
+  last_7d: 30 * 60 * 1000,       // 30 minutes (settling conversions)
+  last_14d: 60 * 60 * 1000,      // 1 hour
+  last_28d: 120 * 60 * 1000,     // 2 hours
+  last_30d: 180 * 60 * 1000,     // 3 hours
+  last_90d: 360 * 60 * 1000,     // 6 hours
+};
+
+const MIN_SYNC_INTERVAL_MS = 2 * 60 * 1000; // Hard minimum 2 minutes between calls per preset
+
+/* In-flight Promise coalescing Map to prevent duplicate upstream requests */
+const inFlightSyncs = new Map();
+const lastSyncCompleted = new Map();
+let consecutiveErrors = 0;
+let circuitBreakerUntil = 0;
+let backgroundWorkerTimer = null;
+
+function extractNumeric(val) {
+  if (val == null) return 0;
+  if (typeof val === 'number') return Number.isFinite(val) ? val : 0;
+  if (typeof val === 'string') {
+    const parsed = parseFloat(val);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+  if (Array.isArray(val) && val.length > 0) {
+    const first = val[0];
+    if (typeof first === 'object' && first !== null) {
+      return extractNumeric(first.value || first.amount || first.count || first.spend);
+    }
+    return extractNumeric(first);
+  }
+  if (typeof val === 'object') {
+    return extractNumeric(val.value || val.amount || val.count || val.spend);
+  }
+  return 0;
+}
+
+function getPresetTtl(preset) {
+  return PRESET_TTLS[preset] || (15 * 60 * 1000);
+}
 
 function normalizeCampaign(c) {
   return {
@@ -22,21 +66,30 @@ function normalizeCampaign(c) {
 
 function normalizeSpendRow(campaignId, accountId, preset, row) {
   const date = row.date || null;
+  const spend = extractNumeric(row.spend);
+  const reach = extractNumeric(row.reach);
+  const impressions = extractNumeric(row.impressions);
+  const purchases_total = extractNumeric(row.purchases_total || row.purchases || row.actions);
+  const purchase_value_total = extractNumeric(row.purchase_value_total || row.purchase_value || row.action_values);
+  const purchase_roas_total = extractNumeric(row.purchase_roas_total || row.purchase_roas || row.roas) || (spend > 0 && purchase_value_total > 0 ? purchase_value_total / spend : null);
+  const cost_per_purchase = extractNumeric(row.cost_per_purchase || row.cost_per_action_type || row.cpa) || (purchases_total > 0 ? spend / purchases_total : null);
+  const clicks = extractNumeric(row.link_clicks || row.inline_link_clicks || row.clicks);
+
   return {
-    campaign_id: campaignId,
-    account_id: accountId,
+    campaign_id: String(campaignId),
+    account_id: String(accountId || ''),
     date_preset: preset,
     date,
-    spend: Number(row.spend || 0),
-    reach: Number(row.reach || 0),
-    impressions: Number(row.impressions || 0),
-    purchases_total: Number(row.purchases_total || 0),
-    purchase_value_total: Number(row.purchase_value_total || 0),
-    purchase_roas_total: Number(row.purchase_roas_total || 0) || null,
-    cost_per_purchase: Number(row.cost_per_purchase || 0) || null,
-    cpc: Number(row.cpc || row.cost_per_inline_link_click || 0) || null,
-    cpm: Number(row.cpm || 0) || null,
-    clicks: Number(row.link_clicks || row.inline_link_clicks || 0),
+    spend,
+    reach,
+    impressions,
+    purchases_total,
+    purchase_value_total,
+    purchase_roas_total,
+    cost_per_purchase,
+    cpc: extractNumeric(row.cpc || row.cost_per_inline_link_click) || null,
+    cpm: extractNumeric(row.cpm) || null,
+    clicks,
     fetched_at: new Date().toISOString(),
   };
 }
@@ -104,80 +157,97 @@ async function syncCampaigns() {
   return { ok: true, synced: rows.length, accountId };
 }
 
-async function syncSpend() {
-  const out = { campaigns: 0, spendRows: 0, presets: [], refreshed: [] };
-  const { data: campaigns, error: campErr } = await supabase
-    .from('ad_campaigns')
-    .select('id, account_id, name')
-    .order('name');
-  if (campErr) throw new Error(`campaign fetch failed: ${campErr.message}`);
+async function syncPreset(preset, { force = false, refresh = true } = {}) {
+  const now = Date.now();
 
-  for (const preset of SYNC_PRESETS) {
-    let data = await fetchFromManager('/api/dashboard', { date_preset: preset, level: 'campaign' });
-    if (!data || !data.rows || !Array.isArray(data.rows)) continue;
-
-    const accountSpend = data.totals?.spend || 0;
-    if (!accountSpend) {
-      try {
-        console.log(`[ads-sync] preset ${preset} empty, refreshing via fb-ads-manager`);
-        await refreshPreset(preset);
-        out.refreshed.push(preset);
-        data = await fetchFromManager('/api/dashboard', { date_preset: preset, level: 'campaign' });
-      } catch (err) {
-        console.warn(`[ads-sync] refresh ${preset} failed:`, err.message);
-        continue;
-      }
-    }
-
-    const byId = new Map(campaigns.map(c => [c.id, c]));
-    const rows = [];
-    for (const r of data.rows || []) {
-      const id = String(r.id || r.campaign_id || '');
-      const campaign = byId.get(id) || campaigns.find(c => c.id === id);
-      if (!campaign) continue;
-      rows.push(normalizeSpendRow(campaign.id, campaign.account_id, preset, r));
-    }
-    if (!rows.length) continue;
-    const { error } = await supabase
-      .from('ad_spend')
-      .upsert(rows, { onConflict: 'campaign_id,date_preset' });
-    if (error) {
-      console.warn(`[ads-sync] preset ${preset} upsert failed:`, error.message);
-      continue;
-    }
-    out.spendRows += rows.length;
-    out.presets.push(preset);
+  // Check circuit breaker
+  if (now < circuitBreakerUntil && !force) {
+    console.warn(`[ads-sync] Circuit breaker active until ${new Date(circuitBreakerUntil).toISOString()}. Skipping sync.`);
+    return { ok: false, reason: 'circuit_breaker_active' };
   }
 
-  out.campaigns = campaigns.length;
-  return { ok: true, ...out };
+  // Check debounce / TTL unless forced
+  const lastSync = lastSyncCompleted.get(preset) || 0;
+  if (!force && (now - lastSync < MIN_SYNC_INTERVAL_MS)) {
+    return { ok: true, cached: true, preset, note: 'within_debounce_window' };
+  }
+
+  // In-flight Promise coalescing
+  if (inFlightSyncs.has(preset)) {
+    return inFlightSyncs.get(preset);
+  }
+
+  const syncPromise = (async () => {
+    try {
+      let { data: campaigns, error: campErr } = await supabase
+        .from('ad_campaigns')
+        .select('id, account_id, name')
+        .order('name');
+      if (campErr) throw new Error(`campaign fetch failed: ${campErr.message}`);
+
+      if (!campaigns || campaigns.length === 0) {
+        await syncCampaigns();
+        const refetch = await supabase.from('ad_campaigns').select('id, account_id, name').order('name');
+        campaigns = refetch.data || [];
+      }
+
+      if (refresh) {
+        try {
+          await refreshPreset(preset);
+        } catch (err) {
+          console.warn(`[ads-sync] refreshPreset ${preset} note:`, err.message);
+        }
+      }
+
+      const data = await fetchFromManager('/api/dashboard', { date_preset: preset, level: 'campaign' });
+      if (!data || !Array.isArray(data.rows)) throw new Error(`no rows for preset ${preset}`);
+
+      const byId = new Map(campaigns.map(c => [c.id, c]));
+      const rows = [];
+      for (const r of data.rows) {
+        const id = String(r.id || r.campaign_id || '');
+        const campaign = byId.get(id);
+        if (campaign) rows.push(normalizeSpendRow(campaign.id, campaign.account_id, preset, r));
+      }
+
+      if (rows.length > 0) {
+        const { error } = await supabase
+          .from('ad_spend')
+          .upsert(rows, { onConflict: 'campaign_id,date_preset' });
+        if (error) throw new Error(`preset ${preset} upsert failed: ${error.message}`);
+      }
+
+      lastSyncCompleted.set(preset, Date.now());
+      consecutiveErrors = 0;
+      return { ok: true, preset, rows: rows.length, fetchedAt: new Date().toISOString() };
+    } catch (err) {
+      consecutiveErrors += 1;
+      if (consecutiveErrors >= 3) {
+        circuitBreakerUntil = Date.now() + (10 * 60 * 1000); // 10m pause
+        console.error(`[ads-sync] 3 consecutive errors. Activating circuit breaker for 10 minutes.`);
+      }
+      throw err;
+    } finally {
+      inFlightSyncs.delete(preset);
+    }
+  })();
+
+  inFlightSyncs.set(preset, syncPromise);
+  return syncPromise;
 }
 
-async function syncPreset(preset, { refresh = true } = {}) {
-  const { data: campaigns, error: campErr } = await supabase
-    .from('ad_campaigns')
-    .select('id, account_id, name')
-    .order('name');
-  if (campErr) throw new Error(`campaign fetch failed: ${campErr.message}`);
-
-  if (refresh) await refreshPreset(preset);
-  const data = await fetchFromManager('/api/dashboard', { date_preset: preset, level: 'campaign' });
-  if (!data || !Array.isArray(data.rows)) throw new Error(`no rows for preset ${preset}`);
-
-  const byId = new Map(campaigns.map(c => [c.id, c]));
-  const rows = [];
-  for (const r of data.rows) {
-    const id = String(r.id || r.campaign_id || '');
-    const campaign = byId.get(id);
-    if (campaign) rows.push(normalizeSpendRow(campaign.id, campaign.account_id, preset, r));
+async function syncSpend() {
+  const out = { campaigns: 0, spendRows: 0, presets: [] };
+  for (const preset of ['today', 'last_7d']) {
+    try {
+      const res = await syncPreset(preset, { force: true });
+      if (res.rows) out.spendRows += res.rows;
+      out.presets.push(preset);
+    } catch (err) {
+      console.warn(`[ads-sync] syncSpend preset ${preset} error:`, err.message);
+    }
   }
-  if (!rows.length) throw new Error(`no matching campaigns for preset ${preset}`);
-
-  const { error } = await supabase
-    .from('ad_spend')
-    .upsert(rows, { onConflict: 'campaign_id,date_preset' });
-  if (error) throw new Error(`preset ${preset} upsert failed: ${error.message}`);
-  return { ok: true, preset, rows: rows.length, fetchedAt: new Date().toISOString() };
+  return { ok: true, ...out };
 }
 
 async function syncAll() {
@@ -186,4 +256,57 @@ async function syncAll() {
   return { ok: true, campaigns, spend, at: new Date().toISOString() };
 }
 
-module.exports = { syncAll, syncCampaigns, syncSpend, syncPreset, SYNC_PRESETS, PREFERRED_PRESET };
+/* Background Synchronizer Daemon */
+function startBackgroundSyncWorker() {
+  if (backgroundWorkerTimer) return;
+  console.log('[ads-sync] Background sync worker started (5m today / 30m last_7d).');
+
+  // Initial non-blocking warmup after 3 seconds
+  setTimeout(async () => {
+    try {
+      await syncPreset('today', { refresh: true });
+      await syncPreset('last_7d', { refresh: false });
+    } catch (err) {
+      console.warn('[ads-sync] Initial background warmup note:', err.message);
+    }
+  }, 3000);
+
+  // Periodic interval (every 5 minutes)
+  let ticks = 0;
+  backgroundWorkerTimer = setInterval(async () => {
+    ticks += 1;
+    try {
+      // Sync today every 5 minutes
+      await syncPreset('today', { refresh: true });
+
+      // Sync last_7d every 30 minutes (every 6 ticks)
+      if (ticks % 6 === 0) {
+        await syncPreset('last_7d', { refresh: true });
+      }
+    } catch (err) {
+      console.warn('[ads-sync] Periodic background sync note:', err.message);
+    }
+  }, 5 * 60 * 1000);
+}
+
+function stopBackgroundSyncWorker() {
+  if (backgroundWorkerTimer) {
+    clearInterval(backgroundWorkerTimer);
+    backgroundWorkerTimer = null;
+    console.log('[ads-sync] Background sync worker stopped.');
+  }
+}
+
+module.exports = {
+  syncAll,
+  syncCampaigns,
+  syncSpend,
+  syncPreset,
+  getPresetTtl,
+  startBackgroundSyncWorker,
+  stopBackgroundSyncWorker,
+  SYNC_PRESETS,
+  PREFERRED_PRESET,
+  MIN_SYNC_INTERVAL_MS,
+  extractNumeric,
+};
