@@ -219,6 +219,11 @@ function getOrSetSessionId(req, res) {
   return sid;
 }
 
+function isBotUserAgent(userAgent) {
+  if (!userAgent || typeof userAgent !== 'string') return false;
+  return /bot|crawler|spider|scraper|facebookexternalhit|meta-externalagent|facebot|googlebot|bingbot|yandex|slurp|duckduckbot|baiduspider|twitterbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|headless|lighthouse|ptst/i.test(userAgent);
+}
+
 function cleanIpAddress(rawIp) {
   if (!rawIp || typeof rawIp !== 'string') return 'Unknown';
   return rawIp.replace(/^::ffff:/, '').trim();
@@ -227,8 +232,8 @@ function cleanIpAddress(rawIp) {
 function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glioblastoma-grace', req = null, res = null) {
   const cleanIp = cleanIpAddress(ip);
 
-  // Ignore internal/developer/admin traffic
-  if (isInternalVisitor(cleanIp, req)) {
+  // Ignore internal/developer/admin traffic and bots
+  if (isInternalVisitor(cleanIp, req) || isBotUserAgent(userAgent)) {
     return null;
   }
 
@@ -717,16 +722,8 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     // 2. Exact checkout session match (explicit variant recorded during checkout init)
     if (!trackingVariant) {
       const s = checkoutSessionsList.find(cs => cs.ip_address === p.ip_address && Math.abs(parseFloat(cs.amount) - rawAmt) < 0.01);
-      if (s && s.tracking?.variant) {
-        trackingVariant = s.tracking.variant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL;
-      }
-    }
-
-    // 3. Fallback: match against active in-memory visitor session in this window
-    if (!trackingVariant) {
-      const vis = filteredVisitors.find(v => v.ip === p.ip_address);
-      if (vis) {
-        trackingVariant = vis.variant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL;
+      if (s && (s.tracking?.variant === VARIANTS.VARIANT_B || s.tracking?.variant === VARIANTS.CONTROL)) {
+        trackingVariant = s.tracking.variant;
       }
     }
 
@@ -753,11 +750,13 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
 
   for (const key of ['control', 'variant_b']) {
     const v = stats[key];
-    const visitorDenom = Math.max(v.visitors, v.donations > 0 ? v.donations : 0);
+    const visitorDenom = Math.max(v.visitors, v.donations);
+    const mobileDenom = Math.max(v.mobileVisitors, v.mobileDonations);
+    const desktopDenom = Math.max(v.desktopVisitors, v.desktopDonations);
     
     v.cr = visitorDenom > 0 ? parseFloat(((v.donations / visitorDenom) * 100).toFixed(2)) : 0;
-    v.mobileCr = v.mobileVisitors > 0 ? parseFloat(((v.mobileDonations / v.mobileVisitors) * 100).toFixed(2)) : 0;
-    v.desktopCr = v.desktopVisitors > 0 ? parseFloat(((v.desktopDonations / v.desktopVisitors) * 100).toFixed(2)) : 0;
+    v.mobileCr = mobileDenom > 0 ? parseFloat(((v.mobileDonations / mobileDenom) * 100).toFixed(2)) : 0;
+    v.desktopCr = desktopDenom > 0 ? parseFloat(((v.desktopDonations / desktopDenom) * 100).toFixed(2)) : 0;
     v.aov = v.donations > 0 ? parseFloat((v.gross / v.donations).toFixed(2)) : 0;
     v.rpv = visitorDenom > 0 ? parseFloat((v.net / visitorDenom).toFixed(2)) : 0;
     
