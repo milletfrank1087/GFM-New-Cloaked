@@ -158,6 +158,10 @@
               </svg>
               Refresh
             </button>
+
+            <button onclick="resetAbData()" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 text-rose-700 transition-colors shadow-sm" title="Clear all recorded test traffic and start fresh">
+              Clear Test Data
+            </button>
           </div>
         </div>
       </div>
@@ -758,6 +762,19 @@
           </tr>
         `;
       }).join('');
+    }
+
+    async function resetAbData() {
+      if (!confirm('Are you sure you want to clear all A/B test visitor traffic and reset the cockpit to a clean state? (This only resets A/B analytics; live donations remain intact).')) {
+        return;
+      }
+      try {
+        const res = await fetch('/api/admin/ab-test/reset', { method: 'POST' });
+        if (!res.ok) throw new Error('Reset failed');
+        await loadAbMetrics();
+      } catch (err) {
+        alert('Failed to reset A/B test data: ' + err.message);
+      }
     }
 
     // Auto-boot

@@ -25,6 +25,17 @@ const visitorSessionMap = new Map();
 // In-memory IP Geolocation Cache
 const ipGeoCache = new Map();
 
+// Optional reset checkpoint
+let abResetTimestamp = 0;
+
+function resetAbTestData() {
+  visitorSessions.length = 0;
+  visitorSessionMap.clear();
+  ipGeoCache.clear();
+  abResetTimestamp = Date.now();
+  return { ok: true, resetAt: new Date(abResetTimestamp).toISOString() };
+}
+
 function isPrivateIp(ip) {
   if (!ip || typeof ip !== 'string') return true;
   const clean = ip.replace(/^::ffff:/, '').trim();
@@ -373,9 +384,9 @@ function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
     case 'allTime':
     default: {
       return {
-        startTime: 0,
+        startTime: abResetTimestamp > 0 ? abResetTimestamp : 0,
         endTime: Date.now() + 86400000,
-        startDateISO: new Date(0).toISOString(),
+        startDateISO: new Date(abResetTimestamp > 0 ? abResetTimestamp : 0).toISOString(),
         endDateISO: new Date(Date.now() + 86400000).toISOString()
       };
     }
@@ -738,5 +749,6 @@ module.exports = {
   setVariantCookie,
   recordImpression,
   recordEngagementEvent,
-  getAbTestMetrics
+  getAbTestMetrics,
+  resetAbTestData
 };

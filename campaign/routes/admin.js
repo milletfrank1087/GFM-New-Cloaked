@@ -20,6 +20,7 @@ module.exports = function createAdminRouter(ctx) {
     getProfitOverview,
     getChartTimeline,
     getAbTestMetrics,
+    resetAbTestData,
     triggerAdSync
   } = ctx;
 
@@ -201,6 +202,16 @@ module.exports = function createAdminRouter(ctx) {
     } catch (error) {
       console.error('[admin/ab-test] error:', error);
       res.status(500).json({ error: 'Failed to load A/B test metrics' });
+    }
+  });
+
+  router.post('/api/admin/ab-test/reset', adminAuth, (req, res) => {
+    try {
+      const result = resetAbTestData();
+      res.json(result);
+    } catch (error) {
+      console.error('[admin/ab-test/reset] error:', error);
+      res.status(500).json({ error: 'Failed to reset A/B test data' });
     }
   });
 
