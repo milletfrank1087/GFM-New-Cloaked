@@ -9,7 +9,10 @@ const { getAdminDashboardStats, getTimeBasedAnalytics, getDeviceBrowserAnalytics
 const { getProfitOverview, getChartTimeline, triggerAdSync } = require('./profit');
 const { syncAll, syncCampaigns, syncSpend } = require('./ads-manager');
 
+const { getAbTestMetrics } = require('./ab-testing');
+
 module.exports = {
+  getAbTestMetrics,
   getProfitOverview,
   getChartTimeline,
   triggerAdSync,

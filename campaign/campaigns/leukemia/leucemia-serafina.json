@@ -7,12 +7,12 @@
     "initials": "EC",
     "location": "Milano, Italia",
     "verified": true,
-    "createdDate": "1 Giu 2026"
+    "createdDate": "15 Lug 2026"
   },
   "goal": 85000,
   "raised": 28280,
   "donorCount": 857,
-  "daysLeft": 38,
+  "daysLeft": 36,
   "images": [
     {
       "url": "/images/campaigns/leucemia-serafina/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "La Diagnosi",
-        "content": "Tutto è iniziato nel marzo 2026, quando Serafina ha cominciato a sentire un'intensa debolezza, a manifestare petecchie alle gambe e ad avere frequenti episodi febbrili. Il 20 marzo, dopo un emocromo che ha mostrato pancitopenia e sospette cellule blastiche, è stata trasferita d'urgenza all'Unità di Ematologia dell'Istituto Nazionale dei Tumori di Milano.\n\nLa biopsia del midollo osseo e l'analisi molecolare hanno confermato la diagnosi: Leucemia Linfoblastica Acuta a cellule B (B-LAL), con presenza del gene di fusione BCR-ABL1 (cromosoma Philadelphia positivo). Si tratta di una forma aggressiva di leucemia che richiede terapia intensiva e trapianto per la sopravvivenza a lungo termine.",
+        "content": "Tutto è iniziato nel maggio 2026, quando Serafina ha cominciato a sentire un'intensa debolezza, a manifestare petecchie alle gambe e ad avere frequenti episodi febbrili. Il 18 maggio, dopo un emocromo che ha mostrato pancitopenia e sospette cellule blastiche, è stata trasferita d'urgenza all'Unità di Ematologia dell'Istituto Nazionale dei Tumori di Milano.\n\nLa biopsia del midollo osseo e l'analisi molecolare hanno confermato la diagnosi: Leucemia Linfoblastica Acuta a cellule B (B-LAL), con presenza del gene di fusione BCR-ABL1 (cromosoma Philadelphia positivo). Si tratta di una forma aggressiva di leucemia che richiede terapia intensiva e trapianto per la sopravvivenza a lungo termine.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "10 Lug 2026",
+      "date": "11 Ago 2026",
       "title": "Notizie positive dal controllo molecolare! 💪",
-      "content": "I risultati dell'ultimo RT-PCR sono incoraggianti - i livelli di BCR-ABL sono sotto lo 0,01%! I medici sono molto soddisfatti della risposta alla terapia. Il trapianto è programmato per fine agosto. Sua sorella Costanza sta già facendo gli esami preliminari come donatrice.",
+      "content": "I risultati dell'ultimo RT-PCR sono incoraggianti - i livelli di BCR-ABL sono sotto lo 0,01%! I medici sono molto soddisfatti della risposta alla terapia. Il trapianto è programmato per fine settembre. Sua sorella Costanza sta già facendo gli esami preliminari come donatrice.",
       "isNew": true
     },
     {
-      "date": "5 Lug 2026",
+      "date": "5 Ago 2026",
       "title": "Superati i 700 donatori! 🙏",
       "content": "Non abbiamo parole per esprimere la nostra gratitudine. Serafina ha completato il secondo ciclo di chemioterapia e i medici hanno confermato la remissione ematologica completa. Ogni euro ci avvicina al trapianto.",
       "isNew": false
     },
     {
-      "date": "20 Giu 2026",
+      "date": "26 Lug 2026",
       "title": "Aggiornamento dall'ospedale",
       "content": "Serafina ha completato il primo ciclo di chemioterapia all'Istituto Nazionale dei Tumori. Aveva neutropenia dopo la terapia, ma sorrideva leggendo i vostri messaggi. Le infermiere le hanno portato una piccola festa in camera. La vostra risposta ci commuove profondamente.",
       "isNew": false
     },
     {
-      "date": "1 Giu 2026",
+      "date": "15 Lug 2026",
       "title": "La campagna è iniziata",
       "content": "Con il cuore pesante ma anche con speranza, iniziamo questo appello per aiuto. Dopo due mesi di terapia intensiva, i medici hanno confermato che il trapianto è l'unica opzione per la guarigione a lungo termine. Crediamo nella solidarietà.",
       "isNew": false

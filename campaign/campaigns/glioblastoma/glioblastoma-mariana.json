@@ -7,12 +7,12 @@
     "initials": "CF",
     "location": "Porto, Portugal",
     "verified": true,
-    "createdDate": "1 Jun 2026"
+    "createdDate": "15 Jul 2026"
   },
   "goal": 90000,
   "raised": 30090,
   "donorCount": 684,
-  "daysLeft": 36,
+  "daysLeft": 35,
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-mariana/1.jpg",
@@ -41,12 +41,12 @@
       {
         "title": "O Diagnóstico",
         "icon": "diagnosis",
-        "content": "Tudo começou em fevereiro de 2026, quando a Mariana começou a ter cefaleias persistentes, sobretudo matinais, acompanhadas de náuseas e visão turva no olho esquerdo. No dia 22 de fevereiro, após um episódio de convulsões durante uma aula na Faculdade de Medicina da Universidade do Porto, foi transferida de urgência para o Serviço de Neurocirurgia do Hospital de São João.\\n\\nA ressonância magnética (RM) revelou uma massa de 4,2 cm no lobo frontal direito com captação em anel característica e edema perilesional. A biópsia estereotáctica e a análise molecular confirmaram o diagnóstico: Glioblastoma Multiforme, IDH-wildtype, grau IV segundo a OMS, com promotor MGMT não metilado — o subtipo molecular mais desfavorável, que significa uma resposta reduzida à quimioterapia."
+        "content": "Tudo começou em abril de 2026, quando a Mariana começou a ter cefaleias persistentes, sobretudo matinais, acompanhadas de náuseas e visão turva no olho esquerdo. No dia 20 de abril, após um episódio de convulsões durante uma aula na Faculdade de Medicina da Universidade do Porto, foi transferida de urgência para o Serviço de Neurocirurgia do Hospital de São João.\\n\\nA ressonância magnética (RM) revelou uma massa de 4,2 cm no lobo frontal direito com captação em anel característica e edema perilesional. A biópsia estereotáctica e a análise molecular confirmaram o diagnóstico: Glioblastoma Multiforme, IDH-wildtype, grau IV segundo a OMS, com promotor MGMT não metilado — o subtipo molecular mais desfavorável, que significa uma resposta reduzida à quimioterapia."
       },
       {
         "title": "O Tratamento Padrão e os Seus Limites",
         "icon": "treatment",
-        "content": "A Mariana foi submetida a uma resseção cirúrgica parcial do tumor (exérese subtotal) no dia 10 de março de 2026 no Hospital de São João — uma resseção completa não foi possível devido à proximidade do tumor com as áreas funcionais da linguagem. Seguiu o protocolo Stupp: radioterapia concomitante (30 sessões em 6 semanas) com temozolomida diária no IPO do Porto, seguida de ciclos de manutenção com temozolomida.\\n\\nOs médicos foram honestos: com o MGMT não metilado, a resposta à temozolomida é esperada como limitada. A sobrevivência mediana com o tratamento padrão é de 12-15 meses. A RM de controlo de maio de 2026 mostrou tumor residual estável em tamanho, mas os médicos alertaram que a recorrência é quase certa."
+        "content": "A Mariana foi submetida a uma resseção cirúrgica parcial do tumor (exérese subtotal) no dia 10 de maio de 2026 no Hospital de São João — uma resseção completa não foi possível devido à proximidade do tumor com as áreas funcionais da linguagem. Seguiu o protocolo Stupp: radioterapia concomitante (30 sessões em 6 semanas) com temozolomida diária no IPO do Porto, seguida de ciclos de manutenção com temozolomida.\\n\\nOs médicos foram honestos: com o MGMT não metilado, a resposta à temozolomida é esperada como limitada. A sobrevivência mediana com o tratamento padrão é de 12-15 meses. A RM de controlo de julho de 2026 mostrou tumor residual estável em tamanho, mas os médicos alertaram que a recorrência é quase certa."
       },
       {
         "title": "A Esperança: Imunoterapia com Células Dendríticas",
@@ -108,25 +108,25 @@
   },
   "updates": [
     {
-      "date": "12 Jul 2026",
+      "date": "10 Ago 2026",
       "title": "Resultados da RM de controlo 📋",
-      "content": "A RM de controlo após o fim da radioterapia mostra um tumor residual estável sem novas lesões. Os médicos no São João dizem que é o melhor resultado possível com o tratamento padrão, mas a recorrência continua muito provável. A clínica na Alemanha confirmou-nos que podem iniciar a imunoterapia com células dendríticas em abril, se conseguirmos o financiamento.",
+      "content": "A RM de controlo após o fim da radioterapia mostra um tumor residual estável sem novas lesões. Os médicos no São João dizem que é o melhor resultado possível com o tratamento padrão, mas a recorrência continua muito provável. A clínica na Alemanha confirmou-nos que podem iniciar a imunoterapia com células dendríticas em setembro, se conseguirmos o financiamento.",
       "isNew": true
     },
     {
-      "date": "7 Jul 2026",
+      "date": "4 Ago 2026",
       "title": "Ultrapassámos os 600 doadores! 🙏",
       "content": "O vosso apoio emociona-nos profundamente. A Mariana terminou os ciclos de manutenção com temozolomida e sente-se forte. Lê cada uma das vossas mensagens e diz que lhe dão força para continuar. Cada euro aproxima-nos da Alemanha.",
       "isNew": false
     },
     {
-      "date": "20 Jun 2026",
+      "date": "25 Jul 2026",
       "title": "Notícias do hospital",
       "content": "A Mariana terminou a radioquimioterapia concomitante no IPO do Porto. Teve cansaço e náuseas, mas a sua força mental é incrível. A oncologista explicou-nos que com o MGMT não metilado, a temozolomida sozinha não chega — por isso a imunoterapia é crucial.",
       "isNew": false
     },
     {
-      "date": "1 Jun 2026",
+      "date": "15 Jul 2026",
       "title": "A campanha começou",
       "content": "Com o coração apertado mas com determinação, lançamos este apelo. Após três meses de tratamento intensivo no sistema público, os médicos disseram-nos claramente: o tratamento padrão dá tempo, mas a imunoterapia pode dar vida. Infelizmente, não é coberta em nenhum país da Europa. Acreditamos na solidariedade.",
       "isNew": false

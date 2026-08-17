@@ -7,12 +7,12 @@
     "initials": "SM",
     "location": "Boston, MA",
     "verified": true,
-    "createdDate": "1 Jun 2026"
+    "createdDate": "15 Jul 2026"
   },
   "goal": 150000,
   "raised": 50890,
   "donorCount": 1818,
-  "daysLeft": 34,
+  "daysLeft": 32,
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-emily/1.jpg",
@@ -41,12 +41,12 @@
       {
         "title": "The Diagnosis",
         "icon": "diagnosis",
-        "content": "It all started in February 2026, when Emily began experiencing persistent morning headaches accompanied by nausea and blurred vision in her left eye. On February 22nd, after a seizure during a lecture at Boston University's pre-med program, she was rushed to the Neurosurgery Department at Massachusetts General Hospital.\n\nThe MRI revealed a 4.2 cm mass in her right frontal lobe with characteristic ring enhancement and perilesional edema. Stereotactic biopsy and molecular analysis confirmed the diagnosis: Glioblastoma Multiforme, IDH-wildtype, WHO grade IV, with unmethylated MGMT promoter — the most unfavorable molecular subtype, meaning reduced response to chemotherapy."
+        "content": "It all started in April 2026, when Emily began experiencing persistent morning headaches accompanied by nausea and blurred vision in her left eye. On April 20th, after a seizure during a lecture at Boston University's pre-med program, she was rushed to the Neurosurgery Department at Massachusetts General Hospital.\n\nThe MRI revealed a 4.2 cm mass in her right frontal lobe with characteristic ring enhancement and perilesional edema. Stereotactic biopsy and molecular analysis confirmed the diagnosis: Glioblastoma Multiforme, IDH-wildtype, WHO grade IV, with unmethylated MGMT promoter — the most unfavorable molecular subtype, meaning reduced response to chemotherapy."
       },
       {
         "title": "Standard Treatment and Its Limits",
         "icon": "treatment",
-        "content": "Emily underwent partial surgical resection (subtotal resection) on March 10, 2026 at Mass General — complete removal was not possible due to the tumor's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in May 2026 showed residual tumor stable in size, but her doctors warned that recurrence is almost certain."
+        "content": "Emily underwent partial surgical resection (subtotal resection) on May 10, 2026 at Mass General — complete removal was not possible due to the tumor's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in July 2026 showed residual tumor stable in size, but her doctors warned that recurrence is almost certain."
       },
       {
         "title": "The Hope: Dendritic Cell Immunotherapy",
@@ -108,25 +108,25 @@
   },
   "updates": [
     {
-      "date": "12 Jul 2026",
+      "date": "10 Aug 2026",
       "title": "Follow-up MRI results are in 📋",
-      "content": "The follow-up MRI after completing radiation shows stable residual tumor with no new lesions. Her doctors at Mass General say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in April, if we secure the funding.",
+      "content": "The follow-up MRI after completing radiation shows stable residual tumor with no new lesions. Her doctors at Mass General say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in September, if we secure the funding.",
       "isNew": true
     },
     {
-      "date": "7 Jul 2026",
+      "date": "4 Aug 2026",
       "title": "We've passed 600 donors! 🙏",
       "content": "Your support has been overwhelming. Emily has finished her maintenance temozolomide cycles and is feeling strong. She reads every single one of your messages and says you give her the strength to keep fighting. Every dollar brings us closer to Germany.",
       "isNew": false
     },
     {
-      "date": "20 Jun 2026",
+      "date": "25 Jul 2026",
       "title": "Treatment update",
       "content": "Emily has completed concurrent chemoradiation at Mass General. She experienced fatigue and nausea, but her mental strength is incredible. Her neuro-oncologist explained that with unmethylated MGMT, temozolomide alone isn't enough — which is why immunotherapy is critical.",
       "isNew": false
     },
     {
-      "date": "1 Jun 2026",
+      "date": "15 Jul 2026",
       "title": "The campaign has launched",
       "content": "With heavy hearts but determination, we're launching this appeal. After three months of intensive treatment through the standard care system, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it's not covered by any insurance in the US. We believe in the power of community.",
       "isNew": false

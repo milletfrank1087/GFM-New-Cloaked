@@ -7,12 +7,12 @@
     "initials": "CD",
     "location": "Sevilla, España",
     "verified": true,
-    "createdDate": "1 Jun 2026"
+    "createdDate": "15 Jul 2026"
   },
   "goal": 85000,
   "raised": 29270,
   "donorCount": 887,
-  "daysLeft": 36,
+  "daysLeft": 31,
   "images": [
     {
       "url": "/images/campaigns/leucemia-lucia/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "El Diagnóstico",
-        "content": "Todo comenzó en marzo de 2026, cuando Lucía empezó a sentir una debilidad intensa, a presentar petequias en las piernas y a tener episodios febriles frecuentes. El 20 de marzo, tras un hemograma que mostró pancitopenia y células blásticas sospechosas, fue trasladada de urgencia al Servicio de Hematología del Hospital Universitario Virgen del Rocío de Sevilla.\n\nLa biopsia de médula ósea y el análisis molecular confirmaron el diagnóstico: Leucemia Linfoblástica Aguda de células B (LLA-B), con presencia del gen de fusión BCR-ABL1 (cromosoma Filadelfia positivo). Se trata de una forma agresiva de leucemia que requiere terapia intensiva y trasplante para la supervivencia a largo plazo.",
+        "content": "Todo comenzó en mayo de 2026, cuando Lucía empezó a sentir una debilidad intensa, a presentar petequias en las piernas y a tener episodios febriles frecuentes. El 18 de mayo, tras un hemograma que mostró pancitopenia y células blásticas sospechosas, fue trasladada de urgencia al Servicio de Hematología del Hospital Universitario Virgen del Rocío de Sevilla.\n\nLa biopsia de médula ósea y el análisis molecular confirmaron el diagnóstico: Leucemia Linfoblástica Aguda de células B (LLA-B), con presencia del gen de fusión BCR-ABL1 (cromosoma Filadelfia positivo). Se trata de una forma agresiva de leucemia que requiere terapia intensiva y trasplante para la supervivencia a largo plazo.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "10 Jul 2026",
+      "date": "11 Ago 2026",
       "title": "¡Noticias positivas del control molecular! 💪",
-      "content": "Los resultados del último RT-PCR son alentadores - ¡los niveles de BCR-ABL están por debajo del 0,01%! Los médicos están muy satisfechos con la respuesta al tratamiento. El trasplante está programado para finales de agosto. Su hermana Elena ya está realizando los exámenes preliminares como donante.",
+      "content": "Los resultados del último RT-PCR son alentadores - ¡los niveles de BCR-ABL están por debajo del 0,01%! Los médicos están muy satisfechos con la respuesta al tratamiento. El trasplante está programado para finales de septiembre. Su hermana Elena ya está realizando los exámenes preliminares como donante.",
       "isNew": true
     },
     {
-      "date": "5 Jul 2026",
+      "date": "5 Ago 2026",
       "title": "¡Hemos superado los 700 donantes! 🙏",
       "content": "No tenemos palabras para expresar nuestra gratitud. Lucía ha completado el segundo ciclo de quimioterapia y los médicos han confirmado la remisión hematológica completa. Cada euro nos acerca más al trasplante.",
       "isNew": false
     },
     {
-      "date": "20 Jun 2026",
+      "date": "26 Jul 2026",
       "title": "Actualización desde el hospital",
       "content": "Lucía ha completado el primer ciclo de quimioterapia en el Hospital Virgen del Rocío. Tuvo neutropenia tras el tratamiento, pero sonreía leyendo vuestros mensajes. Las enfermeras le organizaron una pequeña fiesta en la habitación. Vuestra respuesta nos conmueve profundamente.",
       "isNew": false
     },
     {
-      "date": "1 Jun 2026",
+      "date": "15 Jul 2026",
       "title": "La campaña ha comenzado",
       "content": "Con el corazón apesadumbrado pero también con esperanza, iniciamos este llamamiento de ayuda. Tras dos meses de terapia intensiva, los médicos han confirmado que el trasplante es la única opción para la curación a largo plazo. Creemos en la solidaridad.",
       "isNew": false

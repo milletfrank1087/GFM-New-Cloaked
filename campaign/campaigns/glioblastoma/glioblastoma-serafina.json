@@ -7,12 +7,12 @@
     "initials": "EC",
     "location": "Milano, Italia",
     "verified": true,
-    "createdDate": "1 Giu 2026"
+    "createdDate": "15 Lug 2026"
   },
   "goal": 90000,
   "raised": 31080,
   "donorCount": 758,
-  "daysLeft": 29,
+  "daysLeft": 31,
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-serafina/1.jpg",
@@ -41,12 +41,12 @@
       {
         "title": "La Diagnosi",
         "icon": "diagnosis",
-        "content": "Tutto è iniziato nel febbraio 2026, quando Serafina ha cominciato a soffrire di cefalee persistenti, soprattutto mattutine, accompagnate da nausea e visione offuscata all’occhio sinistro. Il 22 febbraio, dopo un episodio di convulsioni durante una lezione alla Facoltà di Medicina dell’Università Statale di Milano, è stata trasferita d’urgenza al Dipartimento di Neurochirurgia della Fondazione IRCCS Istituto Neurologico Carlo Besta.\\n\\nLa risonanza magnetica (RM) ha rivelato una massa di 4,2 cm nel lobo frontale destro con captazione ad anello caratteristica e edema perilesionale. La biopsia stereotassica e l’analisi molecolare hanno confermato la diagnosi: Glioblastoma Multiforme, IDH-wildtype, grado IV secondo l’OMS, con promotore MGMT non metilato — il sottotipo molecolare più sfavorevole, che implica una risposta ridotta alla chemioterapia."
+        "content": "Tutto è iniziato nell'aprile 2026, quando Serafina ha cominciato a soffrire di cefalee persistenti, soprattutto mattutine, accompagnate da nausea e visione offuscata all’occhio sinistro. Il 20 aprile, dopo un episodio di convulsioni durante una lezione alla Facoltà di Medicina dell’Università Statale di Milano, è stata trasferita d’urgenza al Dipartimento di Neurochirurgia della Fondazione IRCCS Istituto Neurologico Carlo Besta.\\n\\nLa risonanza magnetica (RM) ha rivelato una massa di 4,2 cm nel lobo frontale destro con captazione ad anello caratteristica e edema perilesionale. La biopsia stereotassica e l’analisi molecolare hanno confermato la diagnosi: Glioblastoma Multiforme, IDH-wildtype, grado IV secondo l’OMS, con promotore MGMT non metilato — il sottotipo molecolare più sfavorevole, che implica una risposta ridotta alla chemioterapia."
       },
       {
         "title": "Il Trattamento Standard e i Suoi Limiti",
         "icon": "treatment",
-        "content": "Serafina è stata sottoposta a resezione chirurgica parziale del tumore (exeresi subtotale) il 10 marzo 2026 all’Istituto Besta — una resezione completa non era possibile a causa della prossimità del tumore alle aree funzionali del linguaggio. Ha poi seguito il protocollo Stupp: radioterapia concomitante (30 sedute in 6 settimane) con temozolomide giornaliera, seguita da cicli di mantenimento con temozolomide.\\n\\nI medici sono stati onesti: con il MGMT non metilato, la risposta alla temozolomide è attesa come limitata. La sopravvivenza mediana con il trattamento standard è di 12-15 mesi. La RM di controllo di maggio 2026 ha mostrato un tumore residuo stabile in dimensioni, ma i medici hanno avvertito che la recidiva è quasi certa."
+        "content": "Serafina è stata sottoposta a resezione chirurgica parziale del tumore (exeresi subtotale) il 10 maggio 2026 all’Istituto Besta — una resezione completa non era possibile a causa della prossimità del tumore alle aree funzionali del linguaggio. Ha poi seguito il protocollo Stupp: radioterapia concomitante (30 sedute in 6 settimane) con temozolomide giornaliera, seguita da cicli di mantenimento con temozolomide.\\n\\nI medici sono stati onesti: con il MGMT non metilato, la risposta alla temozolomide è attesa come limitata. La sopravvivenza mediana con il trattamento standard è di 12-15 mesi. La RM di controllo di luglio 2026 ha mostrato un tumore residuo stabile in dimensioni, ma i medici hanno avvertito che la recidiva è quasi certa."
       },
       {
         "title": "La Speranza: Immunoterapia con Cellule Dendritiche",
@@ -109,25 +109,25 @@
   },
   "updates": [
     {
-      "date": "12 Lug 2026",
+      "date": "10 Ago 2026",
       "title": "Risultati della RM di controllo 📋",
-      "content": "La RM di controllo dopo la fine della radioterapia mostra un tumore residuo stabile senza nuove lesioni. I medici al Besta dicono che è il miglior risultato possibile con il trattamento standard, ma la recidiva resta molto probabile. La clinica in Germania ci ha confermato che possono iniziare l’immunoterapia con cellule dendritiche ad aprile, se otteniamo il finanziamento.",
+      "content": "La RM di controllo dopo la fine della radioterapia mostra un tumore residuo stabile senza nuove lesioni. I medici al Besta dicono che è il miglior risultato possibile con il trattamento standard, ma la recidiva resta molto probabile. La clinica in Germania ci ha confermato che possono iniziare l’immunoterapia con cellule dendritiche a settembre, se otteniamo il finanziamento.",
       "isNew": true
     },
     {
-      "date": "7 Lug 2026",
+      "date": "4 Ago 2026",
       "title": "Abbiamo superato i 600 donatori! 🙏",
       "content": "Il vostro sostegno ci commuove profondamente. Serafina ha terminato i cicli di mantenimento con temozolomide e si sente forte. Legge ogni vostro messaggio e dice che le date la forza di andare avanti. Ogni euro ci avvicina alla Germania.",
       "isNew": false
     },
     {
-      "date": "20 Giu 2026",
+      "date": "25 Lug 2026",
       "title": "Aggiornamento dall’ospedale",
       "content": "Serafina ha terminato la radiochemioterapia concomitante al Besta. Ha avuto stanchezza e nausea, ma la sua forza mentale è incredibile. La sua oncologa ci ha spiegato che con il MGMT non metilato, la temozolomide da sola non basta — ecco perché l’immunoterapia è cruciale.",
       "isNew": false
     },
     {
-      "date": "1 Giu 2026",
+      "date": "15 Lug 2026",
       "title": "La campagna è partita",
       "content": "Con il cuore pesante ma con determinazione, lanciamo questo appello. Dopo tre mesi di trattamento intensivo nel sistema pubblico, i medici ci hanno detto chiaramente: il trattamento standard dà tempo, ma l’immunoterapia può dare vita. Purtroppo, non è coperta in nessun paese d’Europa. Crediamo nella solidarietà.",
       "isNew": false

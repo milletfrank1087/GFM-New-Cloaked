@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Help Grace beat Glioblastoma — Immunotherapy in Germany, organized by Emma Clarke</title>
+  <meta name="description" content="Emma Clarke is organizing this fundraiser on behalf of Grace Clarke. Help 21-year-old Manchester medical student Grace access life-saving immunotherapy in Germany.">
+
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gfm: {
+              green: '#02a95c',
+              'green-dark': '#008744',
+              'green-light': '#ebfbf3',
+              dark: '#2b2b2b',
+              gray: '#696969',
+              'border': '#e2e2e2',
+              'bg-subtle': '#fbfbfb',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Swiper Carousel CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #2b2b2b; }
+    
+    /* Authentic GoFundMe Progress Bar */
+    .gfm-progress-track {
+      background-color: #ededed;
+      border-radius: 9999px;
+      overflow: hidden;
+      height: 8px;
+    }
+    .gfm-progress-fill {
+      background-color: #02a95c;
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Swiper Navigation & Controls */
+    .swiper-button-next, .swiper-button-prev {
+      color: #ffffff !important;
+      background: rgba(0, 0, 0, 0.6) !important;
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 9999px !important;
+      backdrop-filter: blur(4px);
+      transition: all 0.2s ease;
+      z-index: 30 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      margin-top: 0 !important;
+    }
+    .swiper-button-next {
+      right: 12px !important;
+    }
+    .swiper-button-prev {
+      left: 12px !important;
+    }
+    .swiper-button-next:after, .swiper-button-prev:after {
+      font-size: 16px !important;
+      font-weight: 900 !important;
+      color: #ffffff !important;
+    }
+    .swiper-button-next:hover, .swiper-button-prev:hover {
+      background: rgba(0, 0, 0, 0.85) !important;
+      transform: translateY(-50%) scale(1.08) !important;
+    }
+    .swiper-pagination-bullet {
+      background: #ffffff !important;
+      opacity: 0.7 !important;
+    }
+    .swiper-pagination-bullet-active {
+      background: #02a95c !important;
+      opacity: 1 !important;
+      width: 24px !important;
+      border-radius: 9999px !important;
+    }
+
+    /* Thumbnail active state */
+    .thumb-slide.active-thumb {
+      border-color: #02a95c !important;
+      opacity: 1 !important;
+      transform: scale(1.02);
+    }
+
+    /* Modal Backdrop & Sheet */
+    .modal-overlay {
+      background-color: rgba(0, 0, 0, 0.65);
+      transition: opacity 0.25s ease;
+    }
+    .modal-sheet {
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-sheet.open {
+      transform: translateY(0);
+    }
+
+    /* Read More Expandable */
+    .story-collapsed {
+      max-height: 480px;
+      overflow: hidden;
+      position: relative;
+    }
+    .story-collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 140px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+      pointer-events: none;
+    }
+
+    /* FAQ Item Animation */
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, opacity 0.25s ease-out;
+      opacity: 0;
+    }
+    .faq-item.active .faq-content {
+      max-height: 400px;
+      opacity: 1;
+    }
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body class="bg-white antialiased text-[#2b2b2b]">
+
+  <!-- HEADER / NAVBAR -->
+  <header class="sticky top-0 z-40 bg-white border-b border-[#e2e2e2]">
+    <div class="max-w-6xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="#" class="flex items-center gap-2">
+          <!-- Heart Logo -->
+          <div class="w-8 h-8 rounded-full bg-[#02a95c] flex items-center justify-center text-white">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          <span class="font-bold text-xl tracking-tight text-[#2b2b2b]">HopeRise</span>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openShareSheet()" class="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-[#2b2b2b] px-3.5 py-1.5 rounded-full hover:bg-gray-100 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+          <span>Share</span>
+        </button>
+
+        <button onclick="openDonateSheet()" class="bg-[#02a95c] hover:bg-[#008744] text-white text-sm font-bold px-5 py-2 rounded-full transition-colors">
+          Donate
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="max-w-6xl mx-auto px-4 py-4 md:py-8 pb-28 lg:pb-8">
+
+    <!-- TITLE -->
+    <div class="mb-4 md:mb-6">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2b2b2b] leading-tight">
+        Help Grace beat Glioblastoma — Immunotherapy in Germany
+      </h1>
+    </div>
+
+    <!-- 2-COLUMN GRID (Mobile Stack, Desktop Side-by-Side) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- LEFT COLUMN (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- PHOTO CAROUSEL -->
+        <div class="space-y-2.5">
+          <!-- Main Slider Container -->
+          <div class="relative rounded-2xl overflow-hidden bg-gray-100 border border-[#e2e2e2] shadow-sm select-none group">
+            
+            <!-- Swiper Root -->
+            <div class="swiper main-swiper w-full aspect-[4/3] sm:aspect-[16/10] cursor-grab active:cursor-grabbing">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide flex items-center justify-center bg-gray-100">
+                  <img src="/images/campaigns/glioblastoma-grace/1.jpg" alt="Grace Clarke in hospital" class="w-full h-full object-cover pointer-events-none select-none">
+                </div>
+                <div class="swiper-slide flex items-center justify-center bg-gray-100">
+                  <img src="/images/campaigns/glioblastoma-grace/2.jpg" alt="Grace receiving medical treatment" class="w-full h-full object-cover pointer-events-none select-none">
+                </div>
+                <div class="swiper-slide flex items-center justify-center bg-gray-100">
+                  <img src="/images/campaigns/glioblastoma-grace/3.jpg" alt="Medical team and scans" class="w-full h-full object-cover pointer-events-none select-none">
+                </div>
+                <div class="swiper-slide flex items-center justify-center bg-gray-100">
+                  <img src="/images/campaigns/glioblastoma-grace/4.jpg" alt="Grace with family support" class="w-full h-full object-cover pointer-events-none select-none">
+                </div>
+              </div>
+
+              <!-- Pagination Dots -->
+              <div class="swiper-pagination !bottom-3"></div>
+
+              <!-- Photo Counter Pill -->
+              <div class="absolute top-3 right-3 z-10 bg-black/60 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5 pointer-events-none select-none">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <span id="slide-counter">1 / 4 Photos</span>
+              </div>
+            </div>
+
+            <!-- Custom Explicit Carousel Navigation Buttons -->
+            <button type="button" onclick="slidePrev()" aria-label="Previous image" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center shadow-md transition-all cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <button type="button" onclick="slideNext()" aria-label="Next image" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center shadow-md transition-all cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+
+          <!-- Thumbnail Rail (Click to jump directly) -->
+          <div class="grid grid-cols-4 gap-2">
+            <button onclick="goToSlide(0)" class="thumb-slide active-thumb aspect-[4/3] rounded-xl overflow-hidden border-2 border-[#02a95c] opacity-100 transition-all cursor-pointer">
+              <img src="/images/campaigns/glioblastoma-grace/1.jpg" alt="Thumb 1" class="w-full h-full object-cover">
+            </button>
+            <button onclick="goToSlide(1)" class="thumb-slide aspect-[4/3] rounded-xl overflow-hidden border-2 border-transparent opacity-60 hover:opacity-100 transition-all cursor-pointer">
+              <img src="/images/campaigns/glioblastoma-grace/2.jpg" alt="Thumb 2" class="w-full h-full object-cover">
+            </button>
+            <button onclick="goToSlide(2)" class="thumb-slide aspect-[4/3] rounded-xl overflow-hidden border-2 border-transparent opacity-60 hover:opacity-100 transition-all cursor-pointer">
+              <img src="/images/campaigns/glioblastoma-grace/3.jpg" alt="Thumb 3" class="w-full h-full object-cover">
+            </button>
+            <button onclick="goToSlide(3)" class="thumb-slide aspect-[4/3] rounded-xl overflow-hidden border-2 border-transparent opacity-60 hover:opacity-100 transition-all cursor-pointer">
+              <img src="/images/campaigns/glioblastoma-grace/4.jpg" alt="Thumb 4" class="w-full h-full object-cover">
+            </button>
+          </div>
+        </div>
+
+        <!-- MOBILE-ONLY DONATION / PROGRESS BOX (Directly Under Gallery) -->
+        <div class="lg:hidden space-y-4 pt-1">
+          <div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-extrabold text-[#2b2b2b]">£29,740</span>
+              <span class="text-sm text-[#696969]">raised of £90,000 target</span>
+            </div>
+            <!-- Progress Track -->
+            <div class="gfm-progress-track mt-2">
+              <div class="gfm-progress-fill" style="width: 33%"></div>
+            </div>
+            <div class="text-xs text-[#696969] mt-1.5 flex items-center justify-between">
+              <span>1,062 donations</span>
+              <span class="font-semibold text-emerald-700">33% reached • 29 days left</span>
+            </div>
+          </div>
+
+          <!-- 2 Action Buttons (Stacked on Mobile) -->
+          <div class="space-y-2.5 pt-1">
+            <button onclick="openDonateSheet()" class="w-full py-3.5 bg-[#02a95c] hover:bg-[#008744] active:scale-[0.99] text-white rounded-xl font-bold text-base shadow-sm transition-all flex items-center justify-center gap-2">
+              <span>Donate now</span>
+            </button>
+            <button onclick="openShareSheet()" class="w-full py-3 bg-[#f3f3f3] hover:bg-[#eaeaea] text-[#2b2b2b] rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 text-[#2b2b2b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <span>Share fundraiser</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ORGANIZER & BENEFICIARY META -->
+        <div class="py-4 border-y border-[#e2e2e2] flex items-center gap-3 text-sm">
+          <div class="w-11 h-11 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-sm flex-shrink-0">
+            EC
+          </div>
+          <div class="text-xs sm:text-sm text-[#696969] leading-snug">
+            <p><strong class="text-[#2b2b2b]">Emma Clarke</strong> is organizing this fundraiser.</p>
+            <p class="mt-0.5">Created 15 July 2026 • Medical, Illness & Healing • Manchester, UK</p>
+          </div>
+        </div>
+
+        <!-- GIVING GUARANTEE (Trust Stamp) -->
+        <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-3.5 flex items-start gap-3">
+          <div class="text-[#02a95c] mt-0.5 flex-shrink-0">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="text-xs text-[#696969]">
+            <strong class="text-[#2b2b2b]">HopeRise Giving Guarantee</strong>
+            <p class="mt-0.5">Your donation is protected. In the extremely rare case that something goes wrong, you are eligible for a full refund.</p>
+          </div>
+        </div>
+
+        <!-- STORY (Full Authentic Human Letter) -->
+        <div class="space-y-4 text-base text-[#2b2b2b] leading-relaxed pt-2">
+
+          <div id="story-content" class="story-collapsed space-y-4">
+            <p>
+              Hi everyone, thank you so much for taking a moment to read our story.
+            </p>
+
+            <p>
+              Our daughter Grace is 21 years old and in her third year studying Medicine at the University of Manchester. For as long as she can remember, all she ever wanted was to become a doctor and care for patients. But in April this year, our entire world was turned upside down when Grace collapsed during a clinical lecture after suffering a sudden, unprovoked seizure.
+            </p>
+
+            <p>
+              She was rushed to the Manchester Centre for Clinical Neurosciences at <strong>Salford Royal Hospital</strong>. After an emergency MRI, doctors discovered a 4.2 cm tumour in her right frontal lobe. Within days, she had surgery and the pathology results came back with the diagnosis every family dreads: <strong>Glioblastoma Multiforme (WHO Grade IV)</strong>. To make matters harder, molecular tests revealed her tumour has an <em>unmethylated MGMT promoter</em>, which means standard chemotherapy has very limited effectiveness against it.
+            </p>
+
+            <!-- Personal Quote Block -->
+            <div class="my-5 p-4 rounded-xl bg-emerald-50/60 border-l-4 border-[#02a95c] italic text-sm text-[#2b2b2b]">
+              "I wanted to become a doctor to help people. Now I'm learning what it means to be a patient — and how unbearable it is to know that a treatment exists that could save you, but you can't access it. Every donation isn't just money — it's time. Time I get to keep living. If I make it through this, I promise to dedicate my life to neuro-oncology, so no one else has to go through what I'm going through."
+              <div class="not-italic font-bold text-xs text-emerald-900 mt-2">— Grace Clarke</div>
+            </div>
+
+            <h3 class="text-lg font-bold text-[#2b2b2b] pt-2">Where we are now & standard treatment limits</h3>
+            <p>
+              Grace has shown unbelievable courage over the past four months. She underwent brain surgery at Salford Royal on 10th May 2026, followed by the Stupp protocol: six weeks of concurrent daily radiotherapy and chemotherapy. The NHS doctors and nurses have been extraordinary, and we cannot thank them enough for their care and dedication.
+            </p>
+
+            <p>
+              However, standard NHS treatment for glioblastoma has reached its limits. Because recurrence with this type of brain tumour is almost certain and fast, her neuro-oncology team explained that our best hope to give Grace long-term survival is <strong>dendritic cell immunotherapy</strong> — a specialised, cutting-edge treatment available at certified oncology centres in Germany (such as IOZK in Cologne).
+            </p>
+
+            <h3 class="text-lg font-bold text-[#2b2b2b] pt-2">The Hope: Dendritic Cell Immunotherapy in Germany</h3>
+            <p>
+              The immunotherapy in Germany takes Grace’s own immune cells from her blood, trains them in a specialised laboratory with antigens from her tumour tissue, and re-infuses them so her immune system actively attacks microscopic cancer cells. A recent clinical study published in <em>Human Vaccines & Immunotherapeutics</em> demonstrated a <strong>68% increase in median overall survival</strong> for glioblastoma patients receiving dendritic cell vaccines.
+            </p>
+
+            <p>
+              Because this personalised immunotherapy is considered advanced and experimental, it is not funded by the NHS or NICE in the UK. The clinic in Germany has reviewed Grace's scans from Salford Royal and confirmed she is an eligible candidate to begin treatment in <strong>September 2026</strong>.
+            </p>
+
+            <h3 class="text-lg font-bold text-[#2b2b2b] pt-2">Transparent Cost Breakdown</h3>
+            <p>
+              The full protocol involves 4 to 6 cycles over the next 12 months, along with specialised proton therapy and essential medical travel and accommodation, coming to a total cost of <strong>£90,000</strong>:
+            </p>
+
+            <ul class="list-disc pl-5 space-y-1.5 text-sm text-[#4a4a4a]">
+              <li><strong>£48,000</strong> — 4 to 6 cycles of personalized dendritic cell vaccine preparation and clinical administration in Germany</li>
+              <li><strong>£22,000</strong> — Stereotactic proton beam therapy protocol</li>
+              <li><strong>£8,000</strong> — Next-generation molecular immuno-sequencing and monitoring</li>
+              <li><strong>£9,000</strong> — 12 months of travel, logistics and medical accommodation in Germany</li>
+              <li><strong>£3,000</strong> — Reserve for unforeseen medical prescriptions and care</li>
+            </ul>
+
+            <p class="pt-2">
+              As a family, we are putting everything we have toward this, but £90,000 is simply impossible for us alone. Grace has so much life ahead of her, so much she still wants to give to the world as a future doctor.
+            </p>
+
+            <p>
+              If you can donate anything at all — whether it's £10, £25 or whatever you can manage — or simply share this page with your friends, family and social networks, you are giving Grace a real fighting chance.
+            </p>
+
+            <p>
+              From the bottom of our hearts, thank you for your kindness, love and prayers.
+            </p>
+
+            <p class="font-semibold pt-1">
+              Emma, David, and Grace Clarke x
+            </p>
+          </div>
+
+          <!-- Read More Button -->
+          <button id="read-more-btn" onclick="toggleStory()" class="text-[#02a95c] font-bold text-sm hover:underline flex items-center gap-1">
+            <span>Read more</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+        </div>
+
+        <hr class="border-[#e2e2e2] my-6">
+
+        <!-- MILESTONES ROADMAP -->
+        <div class="space-y-4">
+          <h2 class="text-xl font-bold text-[#2b2b2b]">Campaign Milestones</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="bg-[#ebfbf3] border border-[#02a95c]/30 rounded-xl p-3 flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-[#02a95c] text-white flex items-center justify-center font-bold text-[10px] flex-shrink-0">✓</span>
+              <div>
+                <div class="font-bold text-[#02a95c]">£25,000 Reached</div>
+                <div class="text-[#4a4a4a] mt-0.5">Standard treatment completed & molecular profiling verified</div>
+              </div>
+            </div>
+
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-3 flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0">2</span>
+              <div>
+                <div class="font-bold text-[#2b2b2b]">£45,000 (50%) Target</div>
+                <div class="text-[#696969] mt-0.5">Begin first dendritic cell immunotherapy cycles in Germany</div>
+              </div>
+            </div>
+
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-3 flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0">3</span>
+              <div>
+                <div class="font-bold text-[#2b2b2b]">£72,000 (80%) Target</div>
+                <div class="text-[#696969] mt-0.5">Stereotactic proton beam therapy protocol coverage</div>
+              </div>
+            </div>
+
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-3 flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px] flex-shrink-0">4</span>
+              <div>
+                <div class="font-bold text-[#2b2b2b]">£90,000 Goal</div>
+                <div class="text-[#696969] mt-0.5">Full 12-month treatment protocol & travel secured</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-[#e2e2e2] my-6">
+
+        <!-- ALL 4 UPDATES (Full Content Feed) -->
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold text-[#2b2b2b]">Updates (4)</h2>
+          </div>
+
+          <div class="space-y-5">
+            <!-- Update 1 (Latest - 10 Aug 2026) -->
+            <div class="border-l-2 border-[#02a95c] pl-4 space-y-1.5">
+              <div class="flex items-center gap-2">
+                <span class="bg-[#ebfbf3] text-[#02a95c] text-[11px] font-bold px-2 py-0.5 rounded-full">New Update</span>
+                <span class="text-xs text-[#696969]">10 August 2026 • by Emma Clarke</span>
+              </div>
+              <h3 class="font-bold text-base text-[#2b2b2b]">Follow-up MRI results are in 📋</h3>
+              <p class="text-sm text-[#4a4a4a] leading-relaxed">
+                The follow-up MRI after completing radiotherapy shows stable residual tumour with no new lesions. Her doctors at Salford Royal say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in September, if we secure the funding. Thank you all for giving us this hope!
+              </p>
+            </div>
+
+            <!-- Update 2 (4 Aug 2026) -->
+            <div class="border-l-2 border-slate-200 pl-4 space-y-1.5">
+              <div class="text-xs text-[#696969]">4 August 2026 • by Emma Clarke</div>
+              <h3 class="font-bold text-base text-[#2b2b2b]">We've passed 500 donors! 🙏</h3>
+              <p class="text-sm text-[#4a4a4a] leading-relaxed">
+                Your support has been overwhelming. Grace has finished her maintenance temozolomide cycles and is feeling strong. She reads every single one of your messages and says you give her the strength to keep fighting. Every pound brings us closer to Germany.
+              </p>
+            </div>
+
+            <!-- Update 3 (25 Jul 2026) -->
+            <div class="border-l-2 border-slate-200 pl-4 space-y-1.5">
+              <div class="text-xs text-[#696969]">25 July 2026 • by Emma Clarke</div>
+              <h3 class="font-bold text-base text-[#2b2b2b]">Treatment update</h3>
+              <p class="text-sm text-[#4a4a4a] leading-relaxed">
+                Grace has completed concurrent chemoradiation at Salford Royal. She experienced fatigue and nausea, but her mental strength is incredible. Her neuro-oncologist explained that with unmethylated MGMT, temozolomide alone isn't enough — which is why immunotherapy is critical.
+              </p>
+            </div>
+
+            <!-- Update 4 (15 Jul 2026) -->
+            <div class="border-l-2 border-slate-200 pl-4 space-y-1.5">
+              <div class="text-xs text-[#696969]">15 July 2026 • by Emma Clarke</div>
+              <h3 class="font-bold text-base text-[#2b2b2b]">The campaign has launched</h3>
+              <p class="text-sm text-[#4a4a4a] leading-relaxed">
+                With heavy hearts but determination, we're launching this appeal. After three months of intensive treatment on the NHS, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it isn't funded by the NHS. We believe in the power of community.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-[#e2e2e2] my-6">
+
+        <!-- WORDS OF SUPPORT / RECENT DONORS FEED -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold text-[#2b2b2b]">Words of support (184)</h2>
+          </div>
+          <p class="text-xs text-[#696969]">Please donate to share a message of support and encouragement.</p>
+
+          <!-- Donors Container (Initial 5 + expandable remaining) -->
+          <div class="space-y-3 pt-2" id="donors-list">
+            <!-- Donor 1 -->
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-amber-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">MM</div>
+              <div class="flex-1 text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-[#2b2b2b]">Manchester Med Students’ Society</span>
+                  <span class="font-bold text-[#02a95c]">£1,000</span>
+                </div>
+                <div class="text-xs text-[#696969] mb-1">1 day ago</div>
+                <p class="text-[#4a4a4a] text-xs sm:text-sm">"Grace, the whole year group and faculty are thinking of you. You will make an incredible doctor, keep fighting!"</p>
+              </div>
+            </div>
+
+            <!-- Donor 2 -->
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-emerald-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">OH</div>
+              <div class="flex-1 text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-[#2b2b2b]">Olivia H.</span>
+                  <span class="font-bold text-[#02a95c]">£25</span>
+                </div>
+                <div class="text-xs text-[#696969] mb-1">8 mins ago</div>
+                <p class="text-[#4a4a4a] text-xs sm:text-sm">"Stay strong, Grace! Sending so much love and strength to you and your family x"</p>
+              </div>
+            </div>
+
+            <!-- Donor 3 -->
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-blue-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">JT</div>
+              <div class="flex-1 text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-[#2b2b2b]">Jack T.</span>
+                  <span class="font-bold text-[#02a95c]">£20</span>
+                </div>
+                <div class="text-xs text-[#696969] mb-1">47 mins ago</div>
+                <p class="text-[#4a4a4a] text-xs sm:text-sm">"From a fellow Salford student. You've got this!"</p>
+              </div>
+            </div>
+
+            <!-- Donor 4 -->
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-purple-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">SR</div>
+              <div class="flex-1 text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-[#2b2b2b]">Sophie R.</span>
+                  <span class="font-bold text-[#02a95c]">£75</span>
+                </div>
+                <div class="text-xs text-[#696969] mb-1">1 hour ago</div>
+                <p class="text-[#4a4a4a] text-xs sm:text-sm">"Praying for you and cheering you on every step of the way x"</p>
+              </div>
+            </div>
+
+            <!-- Donor 5 -->
+            <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-rose-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">CL</div>
+              <div class="flex-1 text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-[#2b2b2b]">Charlie L.</span>
+                  <span class="font-bold text-[#02a95c]">£40</span>
+                </div>
+                <div class="text-xs text-[#696969] mb-1">3 hours ago</div>
+                <p class="text-[#4a4a4a] text-xs sm:text-sm">"Keep fighting Grace! We are all behind you."</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Load More Donors Button -->
+          <button id="load-more-btn" onclick="loadMoreDonors()" class="w-full mt-3 py-3 border-2 border-gray-200 rounded-xl font-semibold text-[#696969] hover:border-[#02a95c] hover:text-[#02a95c] transition-colors text-sm">
+            Show more donations (15 more)
+          </button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN (5 Cols): DESKTOP STICKY DONATION CARD & TOP DONATIONS -->
+      <div class="hidden lg:block lg:col-span-5">
+        <div class="sticky top-20 bg-white border border-[#e2e2e2] rounded-2xl p-6 shadow-sm space-y-5">
+          
+          <div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-extrabold text-[#2b2b2b]">£29,740</span>
+              <span class="text-sm text-[#696969]">raised of £90,000 target</span>
+            </div>
+            <!-- Progress Track -->
+            <div class="gfm-progress-track mt-3">
+              <div class="gfm-progress-fill" style="width: 33%"></div>
+            </div>
+            <div class="text-xs text-[#696969] mt-2 flex items-center justify-between">
+              <span>1,062 donations</span>
+              <span class="font-semibold text-emerald-700">33% funded • 29 days left</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="space-y-3 pt-2">
+            <button onclick="openDonateSheet()" class="w-full py-3.5 bg-[#02a95c] hover:bg-[#008744] active:scale-[0.99] text-white rounded-xl font-bold text-base shadow-sm transition-all flex items-center justify-center gap-2">
+              <span>Donate now</span>
+            </button>
+            <button onclick="openShareSheet()" class="w-full py-3 bg-[#f3f3f3] hover:bg-[#eaeaea] text-[#2b2b2b] rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 text-[#2b2b2b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <span>Share fundraiser</span>
+            </button>
+          </div>
+
+          <!-- Top Donors List on Desktop -->
+          <div class="pt-4 border-t border-[#e2e2e2] space-y-3">
+            <div class="text-xs font-bold text-[#2b2b2b] uppercase tracking-wider">Top Donations</div>
+            <div class="space-y-2.5 text-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-[10px]">1</div>
+                  <span class="font-semibold text-[#2b2b2b]">Manchester Med Students</span>
+                </div>
+                <span class="font-bold text-[#2b2b2b]">£1,000</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-[10px]">2</div>
+                  <span class="font-semibold text-[#2b2b2b]">The Clarke Family</span>
+                </div>
+                <span class="font-bold text-[#2b2b2b]">£650</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-[10px]">3</div>
+                  <span class="font-semibold text-[#2b2b2b]">Anonymous</span>
+                </div>
+                <span class="font-bold text-[#2b2b2b]">£400</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center text-[11px] text-[#696969] pt-1">
+            🔒 Protected by HopeRise Giving Guarantee
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FULL FAQ ACCORDION SECTION -->
+    <section class="mt-16 pt-12 border-t border-[#e2e2e2] max-w-4xl mx-auto">
+      <div class="text-center mb-8">
+        <span class="inline-block text-[#02a95c] font-bold text-xs uppercase tracking-wider mb-1">Support</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#2b2b2b]">Frequently Asked Questions</h2>
+        <p class="text-sm text-[#696969] mt-1">Everything you need to know about donating and supporting this appeal.</p>
+      </div>
+
+      <div class="space-y-3" id="faq-list">
+        <!-- FAQ 1 -->
+        <div class="faq-item bg-[#fbfbfb] rounded-xl border border-[#e2e2e2] overflow-hidden">
+          <button type="button" onclick="toggleFaq(this)" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors cursor-pointer">
+            <span class="font-semibold text-[#2b2b2b] text-sm sm:text-base pr-4 pointer-events-none">How will my donation be used?</span>
+            <svg class="faq-icon w-5 h-5 text-gray-500 transform transition-transform duration-200 flex-shrink-0 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-content px-5 pb-4 text-xs sm:text-sm text-[#4a4a4a] leading-relaxed">
+            100% of your donation goes directly toward Grace's clinical treatment, dendritic cell vaccine preparation in Germany, proton therapy, travel logistics and essential medical accommodation. Emma Clarke publishes regular updates with scan reports and clinic receipts on this page.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item bg-[#fbfbfb] rounded-xl border border-[#e2e2e2] overflow-hidden">
+          <button type="button" onclick="toggleFaq(this)" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors cursor-pointer">
+            <span class="font-semibold text-[#2b2b2b] text-sm sm:text-base pr-4 pointer-events-none">Is my payment information secure?</span>
+            <svg class="faq-icon w-5 h-5 text-gray-500 transform transition-transform duration-200 flex-shrink-0 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-content px-5 pb-4 text-xs sm:text-sm text-[#4a4a4a] leading-relaxed">
+            Yes, all transactions are protected by bank-grade 256-bit SSL encryption. We support Apple Pay, Google Pay, Visa, Mastercard, and American Express. Your sensitive payment details are never stored on our servers.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item bg-[#fbfbfb] rounded-xl border border-[#e2e2e2] overflow-hidden">
+          <button type="button" onclick="toggleFaq(this)" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors cursor-pointer">
+            <span class="font-semibold text-[#2b2b2b] text-sm sm:text-base pr-4 pointer-events-none">Can I donate anonymously?</span>
+            <svg class="faq-icon w-5 h-5 text-gray-500 transform transition-transform duration-200 flex-shrink-0 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-content px-5 pb-4 text-xs sm:text-sm text-[#4a4a4a] leading-relaxed">
+            Yes. During checkout, your name can be kept anonymous on the public words of support list, while you still receive a private receipt and confirmation by email.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item bg-[#fbfbfb] rounded-xl border border-[#e2e2e2] overflow-hidden">
+          <button type="button" onclick="toggleFaq(this)" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors cursor-pointer">
+            <span class="font-semibold text-[#2b2b2b] text-sm sm:text-base pr-4 pointer-events-none">Will I receive a receipt for my contribution?</span>
+            <svg class="faq-icon w-5 h-5 text-gray-500 transform transition-transform duration-200 flex-shrink-0 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-content px-5 pb-4 text-xs sm:text-sm text-[#4a4a4a] leading-relaxed">
+            Yes, an official confirmation and itemized donation receipt is emailed immediately upon successful payment.
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item bg-[#fbfbfb] rounded-xl border border-[#e2e2e2] overflow-hidden">
+          <button type="button" onclick="toggleFaq(this)" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors cursor-pointer">
+            <span class="font-semibold text-[#2b2b2b] text-sm sm:text-base pr-4 pointer-events-none">How do I know this fundraiser is legitimate?</span>
+            <svg class="faq-icon w-5 h-5 text-gray-500 transform transition-transform duration-200 flex-shrink-0 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-content px-5 pb-4 text-xs sm:text-sm text-[#4a4a4a] leading-relaxed">
+            This appeal is verified by HopeRise. Medical documentation from Salford Royal Hospital and IOZK Cologne has been submitted and reviewed. Every donation is backed by the HopeRise Giving Guarantee.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#1e293b] text-white py-12 pb-24 lg:pb-12 mt-16 border-t border-slate-700">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
+        <div class="max-w-sm">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-[#02a95c] rounded-full flex items-center justify-center text-white font-bold">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <span class="text-xl font-bold tracking-tight">HopeRise</span>
+          </div>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            Empowering families facing critical medical conditions through transparent, community-backed fundraising.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-2xl font-bold text-white">50M+</div>
+            <div class="text-slate-400 text-xs">Raised</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-white">100K+</div>
+            <div class="text-slate-400 text-xs">Appeals</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-white">1M+</div>
+            <div class="text-slate-400 text-xs">Donors</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-700/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <div>© 2026 HopeRise. All rights reserved.</div>
+        <div class="flex items-center gap-4">
+          <a href="#" class="hover:text-[#02a95c]">Terms of Service</a>
+          <a href="#" class="hover:text-[#02a95c]">Privacy Policy</a>
+          <a href="#" class="hover:text-[#02a95c]">Giving Guarantee</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE STICKY BOTTOM BAR (Appears on Scroll) -->
+  <div id="mobile-sticky-bar" class="fixed bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur-md border-t border-[#e2e2e2] p-3 lg:hidden flex items-center gap-3 transition-transform duration-300 translate-y-full pointer-events-none">
+    <div class="flex-1 min-w-0 pointer-events-auto">
+      <div class="text-xs font-bold text-[#2b2b2b]">£29,740 raised</div>
+      <div class="text-[11px] text-[#696969] truncate">of £90,000 target</div>
+    </div>
+    <button onclick="openDonateSheet()" class="bg-[#02a95c] hover:bg-[#008744] active:scale-[0.98] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer pointer-events-auto">
+      <span>Donate</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+    </button>
+  </div>
+
+  <!-- DONATION MODAL / BOTTOM SHEET -->
+  <div id="donate-modal" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div onclick="closeDonateSheet()" class="modal-overlay absolute inset-0"></div>
+
+    <!-- Sheet -->
+    <div class="modal-sheet absolute inset-x-0 bottom-0 max-w-lg mx-auto bg-white rounded-t-2xl sm:rounded-2xl sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 shadow-2xl p-5 sm:p-6" id="modal-container">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-[#e2e2e2]">
+        <div>
+          <h3 class="font-bold text-lg text-[#2b2b2b]">Make a donation</h3>
+          <p class="text-xs text-[#696969]">Grace Clarke Immunotherapy Appeal</p>
+        </div>
+        <button onclick="closeDonateSheet()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 font-bold cursor-pointer">✕</button>
+      </div>
+
+      <!-- Presets -->
+      <div class="grid grid-cols-3 gap-2.5 my-4">
+        <button onclick="selectModalAmount(15, this)" class="modal-preset-btn py-3 border-2 border-[#e2e2e2] font-bold text-[#2b2b2b] rounded-xl hover:border-[#02a95c] cursor-pointer">£15</button>
+        <button onclick="selectModalAmount(25, this)" class="modal-preset-btn py-3 border-2 border-[#e2e2e2] font-bold text-[#2b2b2b] rounded-xl hover:border-[#02a95c] cursor-pointer">£25</button>
+        <button onclick="selectModalAmount(50, this)" class="modal-preset-btn active py-3 border-2 border-[#02a95c] bg-[#ebfbf3] text-[#02a95c] font-bold rounded-xl cursor-pointer">£50</button>
+        <button onclick="selectModalAmount(100, this)" class="modal-preset-btn py-3 border-2 border-[#e2e2e2] font-bold text-[#2b2b2b] rounded-xl hover:border-[#02a95c] cursor-pointer">£100</button>
+        <button onclick="selectModalAmount(250, this)" class="modal-preset-btn py-3 border-2 border-[#e2e2e2] font-bold text-[#2b2b2b] rounded-xl hover:border-[#02a95c] cursor-pointer">£250</button>
+        <button onclick="selectModalAmount(500, this)" class="modal-preset-btn py-3 border-2 border-[#e2e2e2] font-bold text-[#2b2b2b] rounded-xl hover:border-[#02a95c] cursor-pointer">£500</button>
+      </div>
+
+      <!-- Custom Amount Input -->
+      <div class="mb-4">
+        <label class="block text-xs font-semibold text-[#2b2b2b] mb-1">Or enter a custom amount (£)</label>
+        <div class="relative">
+          <span class="absolute left-3.5 top-2.5 text-gray-500 font-bold">£</span>
+          <input type="number" id="custom-amount" min="5" placeholder="Other amount" oninput="handleCustomAmount(this.value)" class="w-full pl-8 pr-3.5 py-2 text-sm border border-[#e2e2e2] rounded-xl focus:border-[#02a95c] focus:outline-none font-semibold">
+        </div>
+      </div>
+
+      <!-- Optional Email -->
+      <div class="mb-4">
+        <label class="block text-xs font-semibold text-[#2b2b2b] mb-1">Your email address (for payment confirmation)</label>
+        <input type="email" id="donor-email" placeholder="you@example.com" class="w-full px-3.5 py-2.5 text-sm border border-[#e2e2e2] rounded-xl focus:border-[#02a95c] focus:outline-none">
+      </div>
+
+      <!-- Optional Tip -->
+      <div class="bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-3 mb-4 flex items-center justify-between text-xs">
+        <div>
+          <div class="font-bold text-[#2b2b2b]">Tip HopeRise services</div>
+          <div class="text-[#696969] text-[11px]">Helps keep the platform free for families</div>
+        </div>
+        <select id="tip-select" onchange="updateTotal()" class="border border-[#e2e2e2] rounded-lg px-2 py-1 bg-white font-semibold">
+          <option value="15">15%</option>
+          <option value="10">10%</option>
+          <option value="5">5%</option>
+          <option value="0">0%</option>
+        </select>
+      </div>
+
+      <!-- Continue CTA -->
+      <button onclick="proceedToCheckout()" class="w-full py-3.5 bg-[#02a95c] hover:bg-[#008744] active:scale-[0.98] text-white rounded-xl font-bold text-base shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+        <span>Continue to payment (<span id="total-display">£57.50</span>)</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </button>
+
+      <div class="text-center text-[11px] text-[#696969] mt-2.5">
+        🔒 256-Bit Encryption • Apple Pay, Google Pay, Cards
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    let mainSwiper = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Main Swiper Carousel
+      mainSwiper = new Swiper('.main-swiper', {
+        loop: true,
+        grabCursor: true,
+        simulateTouch: true,
+        touchRatio: 1,
+        touchAngle: 45,
+        speed: 350,
+        navigation: {
+          nextEl: '#gallery-next',
+          prevEl: '#gallery-prev',
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
+        on: {
+          slideChange: function () {
+            if (!mainSwiper) return;
+            const realIdx = mainSwiper.realIndex;
+            document.getElementById('slide-counter').textContent = `${realIdx + 1} / 4 Photos`;
+            updateThumbnailActive(realIdx);
+          }
+        }
+      });
+    });
+
+    function goToSlide(index) {
+      if (mainSwiper) {
+        mainSwiper.slideToLoop(index);
+        updateThumbnailActive(index);
+      }
+    }
+
+    function slideNext() {
+      if (mainSwiper) {
+        mainSwiper.slideNext();
+      }
+    }
+
+    function slidePrev() {
+      if (mainSwiper) {
+        mainSwiper.slidePrev();
+      }
+    }
+
+    function updateThumbnailActive(index) {
+      const thumbs = document.querySelectorAll('.thumb-slide');
+      thumbs.forEach((t, idx) => {
+        if (idx === index) {
+          t.classList.add('active-thumb', 'border-[#02a95c]', 'opacity-100');
+          t.classList.remove('border-transparent', 'opacity-60');
+        } else {
+          t.classList.remove('active-thumb', 'border-[#02a95c]', 'opacity-100');
+          t.classList.add('border-transparent', 'opacity-60');
+        }
+      });
+    }
+
+    // Remaining Donors Data from JSON
+    const remainingDonorsData = [
+      { name: 'Harry W.', amount: '£30', time: '1 hour ago', initials: 'HW', color: 'bg-emerald-500', message: '' },
+      { name: 'Anonymous', amount: '£100', time: '2 hours ago', initials: '?', color: 'bg-amber-500', message: "You've got this" },
+      { name: 'Amelia B.', amount: '£15', time: '2 hours ago', initials: 'AB', color: 'bg-pink-500', message: '' },
+      { name: 'Ella K.', amount: '£20', time: '3 hours ago', initials: 'EK', color: 'bg-indigo-500', message: 'From Leeds with love' },
+      { name: 'George T.', amount: '£50', time: '4 hours ago', initials: 'GT', color: 'bg-teal-500', message: '' },
+      { name: 'Isla S.', amount: '£15', time: '5 hours ago', initials: 'IS', color: 'bg-orange-500', message: 'Sending strength to the whole family' },
+      { name: 'Oliver C.', amount: '£25', time: '5 hours ago', initials: 'OC', color: 'bg-purple-500', message: '' },
+      { name: 'Anonymous', amount: '£20', time: '6 hours ago', initials: '?', color: 'bg-gray-400', message: "We're with you" },
+      { name: 'Thomas N.', amount: '£30', time: '6 hours ago', initials: 'TN', color: 'bg-lime-600', message: '' },
+      { name: 'Poppy H.', amount: '£10', time: '7 hours ago', initials: 'PH', color: 'bg-fuchsia-500', message: 'From Bristol' },
+      { name: 'William G.', amount: '£35', time: '8 hours ago', initials: 'WG', color: 'bg-sky-500', message: '' },
+      { name: 'Freya A.', amount: '£25', time: '9 hours ago', initials: 'FA', color: 'bg-red-500', message: 'Praying for you' },
+      { name: 'Daisy Z.', amount: '£20', time: '10 hours ago', initials: 'DZ', color: 'bg-yellow-500', message: '' }
+    ];
+
+    let hasExpandedDonors = false;
+    function loadMoreDonors() {
+      if (hasExpandedDonors) return;
+      const list = document.getElementById('donors-list');
+      remainingDonorsData.forEach(d => {
+        const item = document.createElement('div');
+        item.className = 'bg-[#fbfbfb] border border-[#e2e2e2] rounded-xl p-4 flex items-start gap-3';
+        item.innerHTML = `
+          <div class="w-10 h-10 rounded-full ${d.color} text-white font-bold text-xs flex items-center justify-center flex-shrink-0">${d.initials}</div>
+          <div class="flex-1 text-sm">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-[#2b2b2b]">${d.name}</span>
+              <span class="font-bold text-[#02a95c]">${d.amount}</span>
+            </div>
+            <div class="text-xs text-[#696969] mb-1">${d.time}</div>
+            ${d.message ? `<p class="text-[#4a4a4a] text-xs sm:text-sm">"${d.message}"</p>` : ''}
+          </div>
+        `;
+        list.appendChild(item);
+      });
+      hasExpandedDonors = true;
+      const btn = document.getElementById('load-more-btn');
+      btn.innerHTML = `<span class="text-gray-400">...and 1,044 more donors</span>`;
+      btn.classList.add('cursor-default', 'opacity-70');
+      btn.onclick = null;
+    }
+
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    }
+
+    let currentAmount = 50;
+
+    function selectModalAmount(amt, btn) {
+      currentAmount = amt;
+      document.getElementById('custom-amount').value = '';
+      document.querySelectorAll('.modal-preset-btn').forEach(b => {
+        b.classList.remove('active', 'border-[#02a95c]', 'bg-[#ebfbf3]', 'text-[#02a95c]');
+        b.classList.add('border-[#e2e2e2]', 'text-[#2b2b2b]');
+      });
+      btn.classList.add('active', 'border-[#02a95c]', 'bg-[#ebfbf3]', 'text-[#02a95c]');
+      btn.classList.remove('border-[#e2e2e2]', 'text-[#2b2b2b]');
+      updateTotal();
+    }
+
+    function handleCustomAmount(val) {
+      const num = parseFloat(val);
+      if (num && num > 0) {
+        currentAmount = num;
+        document.querySelectorAll('.modal-preset-btn').forEach(b => {
+          b.classList.remove('active', 'border-[#02a95c]', 'bg-[#ebfbf3]', 'text-[#02a95c]');
+          b.classList.add('border-[#e2e2e2]', 'text-[#2b2b2b]');
+        });
+        updateTotal();
+      }
+    }
+
+    function updateTotal() {
+      const tipPct = parseInt(document.getElementById('tip-select').value) || 0;
+      const tip = (currentAmount * tipPct) / 100;
+      const total = (currentAmount + tip).toFixed(2);
+      document.getElementById('total-display').textContent = `£${total}`;
+    }
+
+    function openDonateSheet() {
+      const modal = document.getElementById('donate-modal');
+      const container = document.getElementById('modal-container');
+      modal.classList.remove('hidden');
+      setTimeout(() => container.classList.add('open'), 10);
+    }
+
+    function closeDonateSheet() {
+      const modal = document.getElementById('donate-modal');
+      const container = document.getElementById('modal-container');
+      container.classList.remove('open');
+      setTimeout(() => modal.classList.add('hidden'), 280);
+    }
+
+    function toggleStory() {
+      const story = document.getElementById('story-content');
+      const btn = document.getElementById('read-more-btn');
+      if (story.classList.contains('story-collapsed')) {
+        story.classList.remove('story-collapsed');
+        btn.innerHTML = `<span>Read less</span><svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>`;
+      } else {
+        story.classList.add('story-collapsed');
+        btn.innerHTML = `<span>Read more</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>`;
+      }
+    }
+
+    function openShareSheet() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Help Grace beat Glioblastoma — Immunotherapy in Germany',
+          text: 'Emma Clarke is organizing this fundraiser for Grace Clarke. Please help or share if you can.',
+          url: window.location.href,
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Campaign link copied to clipboard!');
+      }
+    }
+
+    async function proceedToCheckout() {
+      const email = document.getElementById('donor-email').value;
+      const tipPct = parseInt(document.getElementById('tip-select').value) || 0;
+      const tip = (currentAmount * tipPct) / 100;
+      const total = currentAmount + tip;
+
+      const btn = event.currentTarget;
+      btn.disabled = true;
+      btn.innerHTML = `<span>Redirecting to secure payment...</span>`;
+
+      try {
+        const res = await fetch('/api/donation/init', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: total,
+            baseAmount: currentAmount,
+            tipAmount: tip,
+            email: email,
+            currency: 'GBP',
+            campaign: 'glioblastoma-grace'
+          })
+        });
+
+        const data = await res.json();
+        if (data.redirectUrl) {
+          window.location.href = data.redirectUrl;
+        } else {
+          window.location.href = '/';
+        }
+      } catch (err) {
+        window.location.href = '/';
+      }
+    }
+
+    // Scroll listener for sticky bottom bar on mobile
+    window.addEventListener('scroll', function() {
+      const bar = document.getElementById('mobile-sticky-bar');
+      if (bar) {
+        if (window.scrollY > 350) {
+          bar.classList.remove('translate-y-full');
+        } else {
+          bar.classList.add('translate-y-full');
+        }
+      }
+    });
+
+    // Initial calculation
+    updateTotal();
+  </script>
+</body>
+</html>

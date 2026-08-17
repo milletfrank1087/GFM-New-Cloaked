@@ -7,12 +7,12 @@
     "initials": "AK",
     "location": "Kraków, Polska",
     "verified": true,
-    "createdDate": "1 Cze 2026"
+    "createdDate": "15 Lip 2026"
   },
   "goal": 360000,
   "raised": 116970,
   "donorCount": 3249,
-  "daysLeft": 33,
+  "daysLeft": 35,
   "images": [
     {
       "url": "/images/campaigns/bialaczka-natalia/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "Diagnoza",
-        "content": "Wszystko zaczęło się w marcu 2026 roku, kiedy Natalia zaczęła odczuwać silne osłabienie, pojawiły się wybroczyny na nogach i częste gorączki. 20 marca, po morfologii krwi wykazującej pancytopenię i podejrzane komórki blastyczne, została pilnie przeniesiona na Oddział Hematologii Szpitala Uniwersyteckiego w Krakowie.\n\nBiopsja szpiku kostnego i analiza molekularna potwierdziły diagnozę: Ostra Białaczka Limfoblastyczna z komórek B (B-ALL) z obecnością genu fuzyjnego BCR-ABL1 (chromosom Philadelphia dodatni). Jest to agresywna postać białaczki wymagająca intensywnej terapii i przeszczepu w celu długoterminowego przeżycia.",
+        "content": "Wszystko zaczęło się w maju 2026 roku, kiedy Natalia zaczęła odczuwać silne osłabienie, pojawiły się wybroczyny na nogach i częste gorączki. 18 maja, po morfologii krwi wykazującej pancytopenię i podejrzane komórki blastyczne, została pilnie przeniesiona na Oddział Hematologii Szpitala Uniwersyteckiego w Krakowie.\n\nBiopsja szpiku kostnego i analiza molekularna potwierdziły diagnozę: Ostra Białaczka Limfoblastyczna z komórek B (B-ALL) z obecnością genu fuzyjnego BCR-ABL1 (chromosom Philadelphia dodatni). Jest to agresywna postać białaczki wymagająca intensywnej terapii i przeszczepu w celu długoterminowego przeżycia.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "10 Lip 2026",
+      "date": "11 Sie 2026",
       "title": "Pozytywne wyniki kontroli molekularnej! 💪",
-      "content": "Wyniki ostatniego RT-PCR są zachęcające — poziomy BCR-ABL są poniżej 0,01%! Lekarze są bardzo zadowoleni z odpowiedzi na leczenie. Przeszczep jest zaplanowany na koniec sierpnia. Jej siostra, Zuzia, już przechodzi wstępne badania jako dawca.",
+      "content": "Wyniki ostatniego RT-PCR są zachęcające — poziomy BCR-ABL są poniżej 0,01%! Lekarze są bardzo zadowoleni z odpowiedzi na leczenie. Przeszczep jest zaplanowany na koniec września. Jej siostra, Zuzia, już przechodzi wstępne badania jako dawca.",
       "isNew": true
     },
     {
-      "date": "5 Lip 2026",
+      "date": "5 Sie 2026",
       "title": "Przekroczyliśmy 700 darczyńców! 🙏",
       "content": "Brakuje nam słów, żeby wyrazić naszą wdzięczność. Natalia ukończyła drugi cykl chemioterapii, a lekarze potwierdzili pełną remisję hematologiczną. Każda złotówka przybliża nas do przeszczepu.",
       "isNew": false
     },
     {
-      "date": "20 Cze 2026",
+      "date": "26 Lip 2026",
       "title": "Aktualizacja ze szpitala",
       "content": "Natalia ukończyła pierwszy cykl chemioterapii w Szpitalu Uniwersyteckim w Krakowie. Miała neutropenię po leczeniu, ale uśmiechała się czytając Wasze wiadomości. Pielęgniarki urządziły jej małe przyjęcie w sali. Wasza reakcja głęboko nas wzrusza.",
       "isNew": false
     },
     {
-      "date": "1 Cze 2026",
+      "date": "15 Lip 2026",
       "title": "Kampania rozpoczęta",
       "content": "Z ciężkim sercem, ale i z nadzieją, rozpoczynamy ten apel o pomoc. Po dwóch miesiącach intensywnej terapii lekarze potwierdzili, że przeszczep jest jedyną opcją na długoterminowe wyleczenie. Wierzymy w solidarność.",
       "isNew": false

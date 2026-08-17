@@ -19,6 +19,7 @@ module.exports = function createAdminRouter(ctx) {
     getRecentFailures,
     getProfitOverview,
     getChartTimeline,
+    getAbTestMetrics,
     triggerAdSync
   } = ctx;
 
@@ -187,6 +188,17 @@ module.exports = function createAdminRouter(ctx) {
     } catch (error) {
       console.error('[admin/failures] error:', error);
       res.status(500).json({ error: 'Failed to load failures' });
+    }
+  });
+
+  router.get('/api/admin/ab-test', adminAuth, async (req, res) => {
+    try {
+      const { campaignSlug, dateRange } = parseDashboardFilters(req);
+      const metrics = await getAbTestMetrics(campaignSlug, dateRange);
+      res.json(metrics);
+    } catch (error) {
+      console.error('[admin/ab-test] error:', error);
+      res.status(500).json({ error: 'Failed to load A/B test metrics' });
     }
   });
 

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A/B Test Analytics | HopeRise Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#f0fdf4', 100: '#dcfce7', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534' },
+            gfm: { green: '#00b964', 'green-dark': '#02a95c', 'green-light': '#e8f8f0', dark: '#1e293b', gray: '#64748b' }
+          },
+          fontFamily: {
+            sans: ['DM Sans', 'sans-serif'],
+            mono: ['Space Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { --line: #e2e8f0; --paper: #f8fafc; }
+    body { background: var(--paper); color: #1e293b; font-family: 'DM Sans', sans-serif; }
+    .mono { font-family: 'Space Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  
+  <!-- Mobile Header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 px-4 py-3 flex items-center justify-between">
+    <button id="mobile-menu-btn" class="p-2 hover:bg-slate-100 rounded-lg">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <span class="font-bold text-slate-800">A/B Test Analytics</span>
+    <button onclick="logout()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+    </button>
+  </header>
+
+  <!-- Sidebar (injected by admin-common.js) -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-40 transform -translate-x-full lg:translate-x-0 transition-transform"></aside>
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+  <!-- Main Content -->
+  <main class="lg:ml-64 pt-16 lg:pt-0 min-h-screen">
+    <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
+      
+      <!-- Top Title & Quick Actions -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-bold text-slate-900">A/B Test Optimization Cockpit</h1>
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Active 50/50 Split</span>
+          </div>
+          <p class="text-sm text-slate-500 mt-0.5">Real-time conversion metrics, mobile lift, and statistical significance</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="loadAbMetrics()" class="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center gap-2">
+            <svg id="refresh-icon" class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Refresh</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Variant Preview Bars -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+        <span class="font-bold text-slate-700 flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          Direct Variant Preview Links (Forces Cookie):
+        </span>
+        <div class="flex items-center gap-2">
+          <a href="/?variant=control" target="_blank" class="flex-1 sm:flex-none text-center px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors">
+            Preview Control (Original) ↗
+          </a>
+          <a href="/?variant=variant_b" target="_blank" class="flex-1 sm:flex-none text-center px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold rounded-lg transition-colors border border-emerald-200">
+            Preview Variant B (Human-Authentic) ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- STATISTICAL CONFIDENCE HERO CARD -->
+      <div id="significance-card" class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-6 lg:p-8 shadow-xl relative overflow-hidden">
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-bold text-emerald-400 tracking-wider uppercase mb-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Statistical Significance Engine (2-Proportion Z-Test)
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold" id="winner-headline">Evaluating Test Results...</h2>
+            <p class="text-sm text-slate-300 mt-1 max-w-xl" id="winner-description">
+              Analyzing visitor distribution, conversion velocity, and order value variance across both variants.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 bg-slate-800/80 backdrop-blur-md border border-slate-700/60 rounded-2xl p-4 lg:p-5">
+            <div>
+              <div class="text-xs text-slate-400 font-medium">Confidence Level</div>
+              <div class="text-2xl font-bold font-mono text-emerald-400" id="confidence-level">--%</div>
+            </div>
+            <div class="w-px h-10 bg-slate-700"></div>
+            <div>
+              <div class="text-xs text-slate-400 font-medium">P-Value</div>
+              <div class="text-2xl font-bold font-mono text-slate-200" id="p-value">--</div>
+            </div>
+            <div class="w-px h-10 bg-slate-700"></div>
+            <div>
+              <div class="text-xs text-slate-400 font-medium">CR Relative Lift</div>
+              <div class="text-2xl font-bold font-mono text-emerald-400" id="cr-lift">--%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 TOP KPI CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Total Split Traffic -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Split Visitors</span>
+          <div class="text-2xl font-bold text-slate-900 font-mono mt-2" id="kpi-total-visitors">0</div>
+          <div class="flex items-center justify-between text-xs text-slate-500 mt-2">
+            <span>Control: <strong id="kpi-control-v">0</strong></span>
+            <span>Variant B: <strong id="kpi-variantb-v">0</strong></span>
+          </div>
+        </div>
+
+        <!-- Conversion Rate (CR) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Conversion Rate (CR%)</span>
+          <div class="text-2xl font-bold text-slate-900 font-mono mt-2 flex items-baseline gap-2">
+            <span id="kpi-cr-b">0.00%</span>
+            <span class="text-xs font-bold text-emerald-600" id="kpi-cr-badge">+0%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">
+            Control Baseline: <strong id="kpi-cr-a">0.00%</strong>
+          </div>
+        </div>
+
+        <!-- Revenue Per Visitor (RPV) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Revenue Per Visitor (RPV)</span>
+          <div class="text-2xl font-bold text-slate-900 font-mono mt-2 flex items-baseline gap-2">
+            <span id="kpi-rpv-b">€0.00</span>
+            <span class="text-xs font-bold text-emerald-600" id="kpi-rpv-badge">+0%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">
+            Control Baseline: <strong id="kpi-rpv-a">€0.00</strong>
+          </div>
+        </div>
+
+        <!-- Total Raised (A/B Test) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Net Raised (Base EUR)</span>
+          <div class="text-2xl font-bold text-emerald-600 font-mono mt-2" id="kpi-total-raised">€0.00</div>
+          <div class="text-xs text-slate-500 mt-2">
+            Across <strong id="kpi-total-donations">0</strong> completed donations
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SIDE-BY-SIDE VARIANT COMPARISON MATRIX -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Side-by-Side Performance Matrix</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Comprehensive segment breakdown across mobile vs desktop devices</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
+              <tr>
+                <th class="py-3.5 px-5 font-bold">Variant</th>
+                <th class="py-3.5 px-4 font-bold">Visitors (Mob / Dsk)</th>
+                <th class="py-3.5 px-4 font-bold">Donations</th>
+                <th class="py-3.5 px-4 font-bold">Overall CR%</th>
+                <th class="py-3.5 px-4 font-bold">Mobile CR% (95% Ad)</th>
+                <th class="py-3.5 px-4 font-bold">Avg Donation (AOV)</th>
+                <th class="py-3.5 px-4 font-bold">Total Net Revenue</th>
+                <th class="py-3.5 px-4 font-bold">RPV (Net / Visitor)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100" id="matrix-tbody">
+              <!-- Rendered dynamically -->
+              <tr>
+                <td colspan="8" class="text-center py-8 text-slate-400">Loading variant data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/admin/js/admin-common.js"></script>
+  <script>
+    async function loadAbMetrics() {
+      const refreshIcon = document.getElementById('refresh-icon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+      try {
+        const res = await fetch('/api/admin/ab-test');
+        if (!res.ok) throw new Error('Failed to load metrics');
+        const data = await res.json();
+        renderDashboard(data);
+      } catch (err) {
+        console.error('Failed to load A/B test metrics:', err);
+      } finally {
+        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+      }
+    }
+
+    function renderDashboard(data) {
+      const c = data.variants.control;
+      const b = data.variants.variant_b;
+      const sig = data.significance;
+      const lift = data.lift;
+
+      // Top Hero
+      const winnerHeadline = document.getElementById('winner-headline');
+      const winnerDesc = document.getElementById('winner-description');
+      const confLevel = document.getElementById('confidence-level');
+      const pVal = document.getElementById('p-value');
+      const crLiftEl = document.getElementById('cr-lift');
+
+      confLevel.textContent = `${sig.confidence}%`;
+      pVal.textContent = sig.pValue;
+      crLiftEl.textContent = `${lift.cr >= 0 ? '+' : ''}${lift.cr}%`;
+
+      if (sig.isSignificant) {
+        if (sig.winner === 'variant_b') {
+          winnerHeadline.textContent = 'Variant B (Human-Authentic) is Winning!';
+          winnerHeadline.className = 'text-2xl sm:text-3xl font-extrabold text-emerald-400';
+          winnerDesc.textContent = `Variant B is outperforming Control with ${sig.confidence}% confidence. Relative CR lift is +${lift.cr}%.`;
+        } else {
+          winnerHeadline.textContent = 'Control (Original) is Leading';
+          winnerHeadline.className = 'text-2xl sm:text-3xl font-extrabold text-slate-100';
+          winnerDesc.textContent = `Control is currently performing better with ${sig.confidence}% confidence.`;
+        }
+      } else {
+        winnerHeadline.textContent = 'Collecting Sample Data...';
+        winnerHeadline.className = 'text-2xl sm:text-3xl font-extrabold text-amber-300';
+        winnerDesc.textContent = `Test in progress (${data.totalVisitors} visitors recorded). Need more volume to achieve 95% statistical significance threshold.`;
+      }
+
+      // 4 Top Cards
+      document.getElementById('kpi-total-visitors').textContent = data.totalVisitors.toLocaleString();
+      document.getElementById('kpi-control-v').textContent = c.visitors.toLocaleString();
+      document.getElementById('kpi-variantb-v').textContent = b.visitors.toLocaleString();
+
+      document.getElementById('kpi-cr-b').textContent = `${b.cr.toFixed(2)}%`;
+      document.getElementById('kpi-cr-a').textContent = `${c.cr.toFixed(2)}%`;
+      const crBadge = document.getElementById('kpi-cr-badge');
+      crBadge.textContent = `${lift.cr >= 0 ? '+' : ''}${lift.cr}%`;
+      crBadge.className = lift.cr >= 0 ? 'text-xs font-bold text-emerald-600' : 'text-xs font-bold text-rose-600';
+
+      document.getElementById('kpi-rpv-b').textContent = `€${b.rpv.toFixed(2)}`;
+      document.getElementById('kpi-rpv-a').textContent = `€${c.rpv.toFixed(2)}`;
+      const rpvBadge = document.getElementById('kpi-rpv-badge');
+      rpvBadge.textContent = `${lift.rpv >= 0 ? '+' : ''}${lift.rpv}%`;
+      rpvBadge.className = lift.rpv >= 0 ? 'text-xs font-bold text-emerald-600' : 'text-xs font-bold text-rose-600';
+
+      document.getElementById('kpi-total-raised').textContent = `€${(c.net + b.net).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('kpi-total-donations').textContent = data.totalDonations.toLocaleString();
+
+      // Matrix Table
+      const tbody = document.getElementById('matrix-tbody');
+      tbody.innerHTML = `
+        <tr class="hover:bg-slate-50 transition-colors">
+          <td class="py-4 px-5">
+            <div class="font-bold text-slate-900">Variant A (Control)</div>
+            <div class="text-xs text-slate-400">Original Template</div>
+          </td>
+          <td class="py-4 px-4 font-mono font-medium text-slate-700">
+            ${c.visitors.toLocaleString()} <span class="text-xs text-slate-400">(${c.mobileVisitors}m / ${c.desktopVisitors}d)</span>
+          </td>
+          <td class="py-4 px-4 font-mono font-bold text-slate-900">
+            ${c.donations}
+          </td>
+          <td class="py-4 px-4 font-mono font-bold text-slate-900">
+            ${c.cr.toFixed(2)}%
+          </td>
+          <td class="py-4 px-4 font-mono font-bold text-slate-700">
+            ${c.mobileCr.toFixed(2)}%
+          </td>
+          <td class="py-4 px-4 font-mono font-medium text-slate-700">
+            €${c.aov.toFixed(2)}
+          </td>
+          <td class="py-4 px-4 font-mono font-bold text-emerald-600">
+            €${c.net.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+          </td>
+          <td class="py-4 px-4 font-mono font-bold text-slate-900">
+            €${c.rpv.toFixed(2)}
+          </td>
+        </tr>
+
+        <tr class="bg-emerald-50/40 hover:bg-emerald-50 transition-colors border-l-4 border-emerald-500">
+          <td class="py-4 px-5">
+            <div class="flex items-center gap-1.5 font-bold text-emerald-900">
+              <span>Variant B (Challenger)</span>
+              <span class="text-[10px] bg-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded font-bold">New</span>
+            </div>
+            <div class="text-xs text-emerald-700">Human-Authentic (Mobile Optimized)</div>
+          </td>
+          <td class="py-4 px-4 font-mono font-medium text-slate-700">
+            ${b.visitors.toLocaleString()} <span class="text-xs text-slate-400">(${b.mobileVisitors}m / ${b.desktopVisitors}d)</span>
+          </td>
+          <td class="py-4 px-4 font-mono font-bold text-slate-900">
+            ${b.donations}
+          </td>
+          <td class="py-4 px-4 font-mono font-bold ${lift.cr >= 0 ? 'text-emerald-700' : 'text-slate-900'}">
+            ${b.cr.toFixed(2)}%
+          </td>
+          <td class="py-4 px-4 font-mono font-bold ${b.mobileCr >= c.mobileCr ? 'text-emerald-700' : 'text-slate-900'}">
+            ${b.mobileCr.toFixed(2)}%
+          </td>
+          <td class="py-4 px-4 font-mono font-medium text-slate-700">
+            €${b.aov.toFixed(2)}
+          </td>
+          <td class="py-4 px-4 font-mono font-bold text-emerald-600">
+            €${b.net.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+          </td>
+          <td class="py-4 px-4 font-mono font-bold ${lift.rpv >= 0 ? 'text-emerald-700' : 'text-slate-900'}">
+            €${b.rpv.toFixed(2)}
+          </td>
+        </tr>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAbMetrics);
+  </script>
+</body>
+</html>

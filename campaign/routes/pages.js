@@ -1,10 +1,11 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { resolveVariant, recordImpression, VARIANTS } = require('../lib/ab-testing');
 
 module.exports = function createPagesRouter(ctx) {
   const router = express.Router();
-  const { getTrackingConfig, getCachedCampaignJSON } = ctx;
+  const { getTrackingConfig, getCachedCampaignJSON, ACTIVE_CAMPAIGN } = ctx;
 
   router.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'index.html'));
@@ -56,17 +57,25 @@ module.exports = function createPagesRouter(ctx) {
       }
     }
 
-    const indexPath = path.join(__dirname, '..', 'public', 'index.html');
-    let html = fs.readFileSync(indexPath, 'utf8');
+    const assignedVariant = resolveVariant(req, res);
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
+    const ua = req.headers['user-agent'] || '';
+    recordImpression(assignedVariant, ua, ip);
+
+    const useVariantB = assignedVariant === VARIANTS.VARIANT_B;
+    const targetTemplate = useVariantB ? 'grace-variant-b.html' : 'index.html';
+    const templatePath = path.join(__dirname, '..', 'public', targetTemplate);
+
+    let html = fs.readFileSync(templatePath, 'utf8');
     html = html.replace('<!-- TRACKING_PIXELS_PLACEHOLDER -->', pixelScripts);
     html = html.replace('<!-- GOOGLE_PAY_SDK_PLACEHOLDER -->', '');
     html = html.replace('<!-- PAYMENT_SCRIPT_PLACEHOLDER -->', '');
 
     const cachedCampaignJSON = getCachedCampaignJSON();
     if (cachedCampaignJSON) {
-      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__CAMPAIGN_DATA=${cachedCampaignJSON};</script>`);
+      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__CAMPAIGN_DATA=${cachedCampaignJSON};window.__AB_VARIANT="${assignedVariant}";</script>`);
     } else {
-      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', '');
+      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__AB_VARIANT="${assignedVariant}";</script>`);
     }
 
     res.send(html);

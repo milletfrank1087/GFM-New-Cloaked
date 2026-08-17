@@ -77,8 +77,10 @@ module.exports = function createDonationRouter(ctx) {
       } : {};
 
       const pixelConfig = getTrackingConfig();
+      const variant = tracking?.variant || req.cookies?._ab_variant || 'control';
       const enrichedTracking = {
         ...(tracking || {}),
+        variant,
         campaignDisplay,
         metaPixelId: pixelConfig.fbPixelId || null,
         tiktokPixelId: pixelConfig.tiktokPixelId || null,
