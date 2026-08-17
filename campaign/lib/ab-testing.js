@@ -544,9 +544,16 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
   const rates = await fetchRates();
   const bounds = calculateDateBounds(dateRange, rangeKey, tzOffset);
 
+  let effectiveStartTime = bounds.startTime;
+  let effectiveStartDateISO = bounds.startDateISO;
+  if (abResetTimestamp > 0 && (!dateRange || rangeKey === 'today' || rangeKey === 'allTime')) {
+    effectiveStartTime = Math.max(effectiveStartTime, abResetTimestamp);
+    effectiveStartDateISO = new Date(effectiveStartTime).toISOString();
+  }
+
   // 1. Filter In-Memory Visitor Sessions
   const filteredVisitors = visitorSessions.filter(s => {
-    if (s.timestamp < bounds.startTime || s.timestamp > bounds.endTime) return false;
+    if (s.timestamp < effectiveStartTime || s.timestamp > bounds.endTime) return false;
     if (campaignSlug && campaignSlug !== 'all' && s.campaignSlug !== campaignSlug) return false;
     return true;
   });
@@ -572,9 +579,9 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
       paymentsQuery = paymentsQuery.eq('source_ref', campaignSlug);
       if (sessionsQuery) sessionsQuery = sessionsQuery.eq('source_ref', campaignSlug);
     }
-    if (bounds.startDateISO && bounds.startTime > 0) {
-      paymentsQuery = paymentsQuery.gte('created_at', bounds.startDateISO);
-      if (sessionsQuery) sessionsQuery = sessionsQuery.gte('created_at', bounds.startDateISO);
+    if (effectiveStartDateISO && effectiveStartTime > 0) {
+      paymentsQuery = paymentsQuery.gte('created_at', effectiveStartDateISO);
+      if (sessionsQuery) sessionsQuery = sessionsQuery.gte('created_at', effectiveStartDateISO);
     }
     if (bounds.endDateISO && bounds.endTime < Date.now() + 86400000) {
       paymentsQuery = paymentsQuery.lte('created_at', bounds.endDateISO);
@@ -750,23 +757,21 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
 
   for (const key of ['control', 'variant_b']) {
     const v = stats[key];
-    const visitorDenom = Math.max(v.visitors, v.donations);
-    const mobileDenom = Math.max(v.mobileVisitors, v.mobileDonations);
-    const desktopDenom = Math.max(v.desktopVisitors, v.desktopDonations);
     
-    v.cr = visitorDenom > 0 ? parseFloat(((v.donations / visitorDenom) * 100).toFixed(2)) : 0;
-    v.mobileCr = mobileDenom > 0 ? parseFloat(((v.mobileDonations / mobileDenom) * 100).toFixed(2)) : 0;
-    v.desktopCr = desktopDenom > 0 ? parseFloat(((v.desktopDonations / desktopDenom) * 100).toFixed(2)) : 0;
+    // CR and RPV are strictly 0 if no visitors exist
+    v.cr = v.visitors > 0 ? Math.min(100, parseFloat(((v.donations / v.visitors) * 100).toFixed(2))) : 0;
+    v.mobileCr = v.mobileVisitors > 0 ? Math.min(100, parseFloat(((v.mobileDonations / v.mobileVisitors) * 100).toFixed(2))) : 0;
+    v.desktopCr = v.desktopVisitors > 0 ? Math.min(100, parseFloat(((v.desktopDonations / v.desktopVisitors) * 100).toFixed(2))) : 0;
     v.aov = v.donations > 0 ? parseFloat((v.gross / v.donations).toFixed(2)) : 0;
-    v.rpv = visitorDenom > 0 ? parseFloat((v.net / visitorDenom).toFixed(2)) : 0;
+    v.rpv = v.visitors > 0 ? parseFloat((v.net / v.visitors).toFixed(2)) : 0;
     
     // Engagement KPIs
     v.avgStayTime = v.stayTimeCount > 0 ? Math.round(v.stayTimeSum / v.stayTimeCount) : 0;
     v.avgStayTimeFormatted = formatDuration(v.avgStayTime);
-    v.checkoutOpenRate = visitorDenom > 0 ? parseFloat(((v.checkoutOpens / visitorDenom) * 100).toFixed(1)) : 0;
-    v.checkoutInitRate = visitorDenom > 0 ? parseFloat(((v.checkoutInitiations / visitorDenom) * 100).toFixed(1)) : 0;
-    v.bounceRate = visitorDenom > 0 ? parseFloat(((v.bounces / visitorDenom) * 100).toFixed(1)) : 0;
-    v.deepScrollRate = visitorDenom > 0 ? parseFloat(((v.scroll75 / visitorDenom) * 100).toFixed(1)) : 0;
+    v.checkoutOpenRate = v.visitors > 0 ? parseFloat(((v.checkoutOpens / v.visitors) * 100).toFixed(1)) : 0;
+    v.checkoutInitRate = v.visitors > 0 ? parseFloat(((v.checkoutInitiations / v.visitors) * 100).toFixed(1)) : 0;
+    v.bounceRate = v.visitors > 0 ? parseFloat(((v.bounces / v.visitors) * 100).toFixed(1)) : 0;
+    v.deepScrollRate = v.visitors > 0 ? parseFloat(((v.scroll75 / v.visitors) * 100).toFixed(1)) : 0;
 
     v.gross = parseFloat(v.gross.toFixed(2));
     v.net = parseFloat(v.net.toFixed(2));
