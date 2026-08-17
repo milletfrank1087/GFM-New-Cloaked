@@ -812,6 +812,9 @@
     </div>
   </div>
 
+  <!-- Tracking & Analytics Module -->
+  <script src="/js/tracking.js"></script>
+
   <!-- JAVASCRIPT LOGIC -->
   <script>
     let currentAmount = 50;
@@ -830,6 +833,15 @@
     ];
 
     document.addEventListener('DOMContentLoaded', function() {
+      // Initialize browser-side Meta Pixel & CAPI tracking
+      if (typeof Tracking !== 'undefined') {
+        try {
+          Tracking.init();
+          Tracking.trackPageView();
+          Tracking.trackViewContent({ contentType: 'campaign', contentName: 'glioblastoma-grace' });
+        } catch (_) {}
+      }
+
       // Dynamic data binding from window.__CAMPAIGN_DATA if present
       if (window.__CAMPAIGN_DATA) {
         try {
@@ -978,6 +990,11 @@
       const container = document.getElementById('modal-container');
       modal.classList.remove('hidden');
       setTimeout(() => container.classList.add('open'), 10);
+      if (typeof Tracking !== 'undefined') {
+        try {
+          Tracking.trackInitiateCheckout({ value: currentAmount, currency: 'GBP' });
+        } catch (_) {}
+      }
     }
 
     function closeDonateSheet() {
@@ -1024,6 +1041,23 @@
         btn.innerHTML = `<span>Connecting to secure checkout...</span>`;
       }
 
+      let trackingPayload = { variant: 'variant_b' };
+      let clientLocationPayload = null;
+
+      if (typeof Tracking !== 'undefined') {
+        if (email && typeof Tracking.setUserEmail === 'function') {
+          try { await Tracking.setUserEmail(email); } catch (_) {}
+        }
+        clientLocationPayload = typeof Tracking.getClientLocation === 'function' ? Tracking.getClientLocation() : null;
+        const purchaseEventId = Tracking.generateEventId('Purchase');
+        trackingPayload.eventId = purchaseEventId;
+        try {
+          sessionStorage.setItem('_purchase_event_id', purchaseEventId);
+          sessionStorage.setItem('_purchase_amount', String(currentAmount));
+          sessionStorage.setItem('_purchase_currency', 'GBP');
+        } catch (_) {}
+      }
+
       try {
         const res = await fetch('/api/init-donation', {
           method: 'POST',
@@ -1033,9 +1067,8 @@
             tip: tip,
             isAnonymous: isAnonymous,
             donorEmail: email || null,
-            tracking: {
-              variant: 'variant_b'
-            }
+            tracking: trackingPayload,
+            clientLocation: clientLocationPayload
           })
         });
 
