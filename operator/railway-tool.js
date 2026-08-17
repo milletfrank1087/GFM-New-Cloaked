@@ -134,36 +134,23 @@ async function redeploy(serviceQuery) {
     return;
   }
 
-  const latest = match.deployments.edges[0]?.node;
-  const live = match.deployments.edges.find(d => d.node.status === 'SUCCESS')?.node;
-  const target = latest || live;
-
-  if (!target) {
-    console.error(`No deployment to redeploy for ${match.name}`);
-    return;
-  }
-
-  console.log(`Triggering redeploy for ${match.name} (Deployment: ${target.id}, Status: ${target.status})...`);
+  console.log(`Triggering deployment of latest commit for ${match.name}...`);
   try {
-    const res = await gql(`mutation Redeploy($id: String!) {
-      deploymentRedeploy(id: $id) {
-        id
-        status
-      }
-    }`, { id: target.id });
-    console.log(`✓ Redeploy initiated successfully. New status:`, res.deploymentRedeploy.status);
+    const res = await gql(`mutation DeployLatest($serviceId: String!, $environmentId: String!) {
+      serviceInstanceDeploy(serviceId: $serviceId, environmentId: $environmentId)
+    }`, { serviceId: match.id, environmentId: ENVIRONMENT_ID });
+    console.log(`✓ Deploy initiated:`, res.serviceInstanceDeploy);
   } catch (err) {
-    if (live && live.id !== target.id) {
-      console.log(`Latest failed deployment is locked (${err.message}). Redeploying last SUCCESSFUL deployment ${live.id}...`);
+    console.log(`Fallback: redeploying existing deployment (${err.message})...`);
+    const live = match.deployments.edges.find(d => d.node.status === 'SUCCESS')?.node;
+    if (live) {
       const res = await gql(`mutation Redeploy($id: String!) {
         deploymentRedeploy(id: $id) {
           id
           status
         }
       }`, { id: live.id });
-      console.log(`✓ Redeploy of live deployment initiated. New status:`, res.deploymentRedeploy.status);
-    } else {
-      throw err;
+      console.log(`✓ Redeploy of live deployment initiated:`, res.deploymentRedeploy.status);
     }
   }
 }

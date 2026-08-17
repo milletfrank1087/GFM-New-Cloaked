@@ -88,8 +88,9 @@ See `operator/README.md` and `docs/ROTATION-PLAYBOOK.md` § Domain Setup. GoDadd
 - The `<title>` tag on the donor checkout is the ONLY visible DOM element Stripe.js telemetry transmits, so it must remain a generic "Complete Payment" string (see `store/lib/locale.js`). All other donor-facing text is invisible to Stripe's automated systems.
 - Active stores' `weight_pct` sums must equal 100. The admin dashboard warns on save if they don't, but the `get_next_store` RPC self-corrects.
 - `CALLBACK_SECRET` (env var) is **shared across all campaigns and stores** (copy from a live store — do NOT generate per deploy). Must be a generic random string with no restricted words; sterility check will flag bad literals.
+- **Railway Management Tool**: `node operator/railway-tool.js status|logs|redeploy|heal` allows monitoring deployment status across all 16 services, inspecting build/runtime logs, and redeploying without CLI workspace scope bugs.
 - **Railway Watch Paths**: 16 services share this repo on Railway. To prevent builder queue timeouts (`scheduling build on Metal builder`), all campaign services use `watchPatterns: ["campaign/**"]` and all store services use `watchPatterns: ["store/**"]`. New services must configure `watchPatterns` upon creation.
-- **A/B Split Attribution Discipline**: In `campaign/lib/ab-testing.js`, donations are attributed strictly via explicit `checkout_sessions.tracking.variant` (`control` vs `variant_b`) or URL params. Untracked donations (e.g. historical payments prior to A/B activation) are excluded from split reports to prevent overreporting on Control.
+- **A/B Split Attribution & Session Persistence**: In `campaign/lib/ab-testing.js`, donations are attributed strictly via explicit `checkout_sessions.tracking.variant` (`control` vs `variant_b`) or URL params. Visitor sessions are backed by `.ab-sessions-cache.json` across reboots. When reset, `abResetTimestamp` guarantees that historical payments are excluded from 'today' and 'allTime' views, preventing CR artifacts.
 
 ## When you find something missing from this map
 
