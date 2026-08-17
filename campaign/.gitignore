@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 *.log
 npm-debug.log*
+.ab-sessions-cache.json

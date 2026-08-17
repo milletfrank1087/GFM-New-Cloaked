@@ -4,9 +4,19 @@ Local tooling for provisioning store infrastructure. Not part of the runtime ser
 
 | Script | Purpose |
 |--------|---------|
+| `railway-tool.js` | Railway management CLI — deployment status, build/runtime logs, single-service redeploy, sequential healing |
 | `godaddy-dns.ps1` | GoDaddy REST API — list/set/delete DNS records |
 | `railway-api.ps1` | Railway GraphQL helpers (dot-source) |
 | `connect-store-dns.ps1` | One-shot: Railway custom domain + GoDaddy CNAME + `STORE_DOMAIN` |
+
+## Railway Tool Commands
+
+```powershell
+node operator/railway-tool.js status                       # Show live commit & build status for all 16 services
+node operator/railway-tool.js logs "UK Campaign" 50       # Fetch recent build and runtime logs for a service
+node operator/railway-tool.js redeploy "UK Campaign"      # Trigger a clean redeploy for a service
+node operator/railway-tool.js heal                        # Sequentially redeploy all failed services without queue congestion
+```
 
 ## Prerequisites
 

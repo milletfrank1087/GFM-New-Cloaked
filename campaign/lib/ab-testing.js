@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { supabase, fetchRates, convertToBase } = require('./db/client');
 const { parseUserAgent } = require('./userAgentParser');
 
@@ -18,21 +20,61 @@ const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 // Maximum in-memory visitor logs to prevent memory leaks
 const MAX_VISITOR_SESSIONS = 10000;
 
-// HopeRise A/B Testing & Visitor Analytics Engine (v2.1)
+// HopeRise A/B Testing & Visitor Analytics Engine (v2.2 Persistent)
 const visitorSessions = [];
 const visitorSessionMap = new Map();
 
 // In-memory IP Geolocation Cache
 const ipGeoCache = new Map();
 
-// Optional reset checkpoint
+// Optional reset checkpoint & Disk Persistence
 let abResetTimestamp = 0;
+const CACHE_FILE = path.join(__dirname, '..', '.ab-sessions-cache.json');
+let saveTimeout = null;
+
+function saveSessionsCache() {
+  if (saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    try {
+      const payload = {
+        abResetTimestamp,
+        sessions: visitorSessions.slice(0, 2000)
+      };
+      fs.writeFileSync(CACHE_FILE, JSON.stringify(payload), 'utf8');
+    } catch (_) {}
+  }, 1500);
+}
+
+function loadSessionsCache() {
+  try {
+    if (fs.existsSync(CACHE_FILE)) {
+      const raw = fs.readFileSync(CACHE_FILE, 'utf8');
+      const data = JSON.parse(raw);
+      if (data && typeof data.abResetTimestamp === 'number') {
+        abResetTimestamp = data.abResetTimestamp;
+      }
+      if (Array.isArray(data.sessions)) {
+        for (const s of data.sessions) {
+          if (s && s.key && !visitorSessionMap.has(s.key)) {
+            visitorSessionMap.set(s.key, s);
+            visitorSessions.push(s);
+          }
+        }
+      }
+    }
+  } catch (_) {}
+}
+
+loadSessionsCache();
 
 function resetAbTestData() {
   visitorSessions.length = 0;
   visitorSessionMap.clear();
   ipGeoCache.clear();
   abResetTimestamp = Date.now();
+  try {
+    fs.writeFileSync(CACHE_FILE, JSON.stringify({ abResetTimestamp, sessions: [] }), 'utf8');
+  } catch (_) {}
   return { ok: true, resetAt: new Date(abResetTimestamp).toISOString() };
 }
 
@@ -279,12 +321,15 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
       if (removed) visitorSessionMap.delete(removed.key);
     }
 
+    saveSessionsCache();
+
     // Resolve IP geolocation in background
     resolveIpLocation(cleanIp).then(geo => {
       session.locationLabel = geo.locationLabel;
       session.city = geo.city;
       session.country = geo.country;
       session.countryCode = geo.countryCode;
+      saveSessionsCache();
     }).catch(() => {
       session.locationLabel = 'Unknown Location';
     });
@@ -329,6 +374,7 @@ function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = nul
         session.scrollDepth = depth;
       }
     }
+    saveSessionsCache();
   }
 }
 
