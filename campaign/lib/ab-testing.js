@@ -550,28 +550,45 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
   let paymentsQuery = supabase
     ? supabase
         .from('payments')
-        .select('id, amount, service_fee, total_amount, stripe_fee, net_amount, currency, source_ref, user_agent, created_at, checkout_sessions(tracking)')
+        .select('id, amount, service_fee, total_amount, stripe_fee, net_amount, currency, source_ref, user_agent, created_at, ip_address, landing_url')
         .eq('status', 'completed')
+        .order('created_at', { ascending: false })
+    : null;
+
+  let sessionsQuery = supabase
+    ? supabase
+        .from('checkout_sessions')
+        .select('id, amount, currency, source_ref, tracking, ip_address, created_at')
         .order('created_at', { ascending: false })
     : null;
 
   if (paymentsQuery) {
     if (campaignSlug && campaignSlug !== 'all') {
       paymentsQuery = paymentsQuery.eq('source_ref', campaignSlug);
+      if (sessionsQuery) sessionsQuery = sessionsQuery.eq('source_ref', campaignSlug);
     }
     if (bounds.startDateISO && bounds.startTime > 0) {
       paymentsQuery = paymentsQuery.gte('created_at', bounds.startDateISO);
+      if (sessionsQuery) sessionsQuery = sessionsQuery.gte('created_at', bounds.startDateISO);
     }
     if (bounds.endDateISO && bounds.endTime < Date.now() + 86400000) {
       paymentsQuery = paymentsQuery.lte('created_at', bounds.endDateISO);
+      if (sessionsQuery) sessionsQuery = sessionsQuery.lte('created_at', bounds.endDateISO);
     }
   }
 
   let payments = [];
+  let checkoutSessionsList = [];
   if (paymentsQuery) {
-    const { data, error } = await paymentsQuery;
-    if (!error && data) {
-      payments = data;
+    const [payRes, sessRes] = await Promise.all([
+      paymentsQuery,
+      sessionsQuery || Promise.resolve({ data: [] })
+    ]);
+    if (!payRes.error && payRes.data) {
+      payments = payRes.data;
+    }
+    if (!sessRes.error && sessRes.data) {
+      checkoutSessionsList = sessRes.data;
     }
   }
 
@@ -688,7 +705,15 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     const netBase = convertToBase(rawNet, cur, rates);
     const tipBase = convertToBase(rawTip, cur, rates);
 
-    const trackingVariant = p.checkout_sessions?.tracking?.variant;
+    let trackingVariant = 'control';
+    if (p.landing_url && (p.landing_url.includes('variant=variant_b') || p.landing_url.includes('variant=b'))) {
+      trackingVariant = VARIANTS.VARIANT_B;
+    } else {
+      const s = checkoutSessionsList.find(cs => cs.ip_address === p.ip_address && Math.abs(parseFloat(cs.amount) - rawAmt) < 0.01);
+      if (s && s.tracking?.variant === VARIANTS.VARIANT_B) {
+        trackingVariant = VARIANTS.VARIANT_B;
+      }
+    }
     const targetKey = trackingVariant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL;
     const isMobile = /mobile|iphone|android|ipad|tablet|ipod/i.test(p.user_agent || '');
 
