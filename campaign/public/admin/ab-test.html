@@ -10,6 +10,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/admin/css/profit.css">
   <style>
+    body {
+      overflow-x: hidden;
+    }
     .drawer-toggle {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -130,11 +133,11 @@
   </aside>
 
   <!-- Main Content Area -->
-  <main class="lg:pl-64 min-h-screen">
+  <main class="lg:pl-64 min-h-screen overflow-x-hidden">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
 
-      <!-- Top Header & Filter Controls -->
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
+      <!-- Top Operations Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-slate-500">
             <span class="w-2 h-2 rounded-full bg-[#00875a] inline-block animate-pulse"></span>
@@ -145,43 +148,55 @@
           <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#061b31] tracking-tight mt-1">A/B Conversion & Revenue Cockpit</h1>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
-          <!-- Date Range Pills with smooth horizontal scrolling on mobile -->
-          <div class="inline-flex rounded-lg border border-gray-200 bg-white p-0.5 shadow-sm text-xs font-semibold overflow-x-auto no-scrollbar max-w-full" id="range-pills">
-            <button onclick="selectRange('allTime')" class="stripe-pill active whitespace-nowrap" data-range="allTime">All Time</button>
-            <button onclick="selectRange('today')" class="stripe-pill inactive whitespace-nowrap" data-range="today">Today</button>
-            <button onclick="selectRange('yesterday')" class="stripe-pill inactive whitespace-nowrap" data-range="yesterday">Yesterday</button>
-            <button onclick="selectRange('last7days')" class="stripe-pill inactive whitespace-nowrap" data-range="last7days">Last 7D</button>
-            <button onclick="selectRange('last30days')" class="stripe-pill inactive whitespace-nowrap" data-range="last30days">Last 30D</button>
-            <button onclick="selectRange('thisMonth')" class="stripe-pill inactive whitespace-nowrap" data-range="thisMonth">This Month</button>
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          <div class="inline-flex items-center gap-1">
+            <a href="/?variant=control" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-xs transition-colors flex items-center gap-1">
+              Control ↗
+            </a>
+            <a href="/?variant=variant_b" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-xs transition-colors flex items-center gap-1">
+              Variant B ↗
+            </a>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2">
-            <select id="filter-campaign" onchange="loadAbMetrics()" class="text-xs font-semibold bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-slate-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#635bff] flex-1 sm:flex-initial">
-              <option value="glioblastoma-grace" selected>glioblastoma-grace (Active)</option>
-              <option value="all">All Campaigns</option>
-            </select>
+          <button onclick="loadAbMetrics()" class="btn-primary text-xs font-semibold px-3 py-1.5 flex items-center gap-1.5 shadow-xs">
+            <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            <span>Refresh</span>
+          </button>
 
-            <div class="inline-flex items-center gap-1">
-              <a href="/?variant=control" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
-                Control ↗
-              </a>
-              <a href="/?variant=variant_b" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
-                Variant B ↗
-              </a>
+          <button onclick="resetAbData()" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 text-rose-700 transition-colors shadow-xs" title="Clear all recorded test traffic and start fresh">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Control Deck Card: Filter Pills & Campaign Scope -->
+      <div class="stripe-card p-2.5 sm:p-3.5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 sm:gap-3">
+          
+          <!-- Quick Date Range Segmented Control with smooth scroll -->
+          <div class="w-full lg:w-auto overflow-x-auto no-scrollbar scroll-smooth-x py-0.5">
+            <div class="inline-flex items-center bg-[#eef3f8] p-1 rounded-lg gap-1 min-w-max" id="range-pills">
+              <button onclick="selectRange('allTime')" class="stripe-pill active whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="allTime">All Time</button>
+              <button onclick="selectRange('today')" class="stripe-pill inactive whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="today">Today</button>
+              <button onclick="selectRange('yesterday')" class="stripe-pill inactive whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="yesterday">Yesterday</button>
+              <button onclick="selectRange('last7days')" class="stripe-pill inactive whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="last7days">Last 7D</button>
+              <button onclick="selectRange('last30days')" class="stripe-pill inactive whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="last30days">Last 30D</button>
+              <button onclick="selectRange('thisMonth')" class="stripe-pill inactive whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="thisMonth">This Month</button>
             </div>
-
-            <button onclick="loadAbMetrics()" class="btn-primary text-xs font-semibold px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
-              <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
-              Refresh
-            </button>
-
-            <button onclick="resetAbData()" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 text-rose-700 transition-colors shadow-sm" title="Clear all recorded test traffic and start fresh">
-              Reset
-            </button>
           </div>
+
+          <!-- Campaign Select Dropdown -->
+          <div class="w-full lg:w-auto flex items-center gap-2">
+            <div class="relative w-full lg:min-w-[240px]">
+              <select id="filter-campaign" onchange="loadAbMetrics()" class="w-full bg-white border border-gray-200 text-[#061b31] text-xs font-semibold rounded-lg py-1.5 px-3 pr-8 focus:ring-1 focus:ring-[#635bff] focus:outline-none transition-all shadow-xs cursor-pointer">
+                <option value="glioblastoma-grace" selected>glioblastoma-grace (Active Split)</option>
+                <option value="all">All Campaigns</option>
+              </select>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -205,23 +220,23 @@
 
           <!-- Quick Decision Summary Boxes -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100">
-            <div class="text-center sm:text-left">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Certainty</div>
+            <div class="text-center sm:text-left min-w-0">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Certainty</div>
               <div id="conf-level-val" class="text-sm sm:text-base font-bold text-[#061b31] tabular-numbers mt-0.5">0.0%</div>
               <div id="conf-level-sub" class="text-[10px] text-slate-500 mt-0.5 truncate">Confidence</div>
             </div>
-            <div class="text-center sm:text-left">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Donation Lift</div>
+            <div class="text-center sm:text-left min-w-0">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Donation Lift</div>
               <div id="cr-lift-val" class="text-sm sm:text-base font-bold text-[#00875a] tabular-numbers mt-0.5">+0.0%</div>
               <div class="text-[10px] text-slate-500 mt-0.5 truncate">B vs Control</div>
             </div>
-            <div class="text-center sm:text-left">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Reading Time</div>
+            <div class="text-center sm:text-left min-w-0">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Reading Time</div>
               <div id="time-lift-val" class="text-sm sm:text-base font-bold text-[#635bff] tabular-numbers mt-0.5">+0s</div>
               <div class="text-[10px] text-slate-500 mt-0.5 truncate">Engagement</div>
             </div>
-            <div class="text-center sm:text-left">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Suggested</div>
+            <div class="text-center sm:text-left min-w-0">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Suggested</div>
               <div id="action-rec-val" class="text-xs font-bold text-slate-700 mt-1 truncate">50/50 Split</div>
               <div class="text-[10px] text-slate-400 mt-0.5 truncate">Guidance</div>
             </div>
@@ -233,15 +248,15 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4 items-stretch">
         
         <!-- Card 1: Visitors Split -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
           <div>
             <div class="flex items-center justify-between gap-1">
               <span class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Total Visitors</span>
               <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">50/50</span>
             </div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
               <span id="kpi-total-visitors">0</span>
-              <span class="text-[10px] font-bold text-slate-400 uppercase" id="kpi-visitors-split">A:0 · B:0</span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase truncate" id="kpi-visitors-split">A:0 · B:0</span>
             </div>
             <div class="text-[11px] text-slate-500 mt-0.5 truncate">
               <span>A: <strong id="kpi-visitors-a" class="text-slate-700">0</strong></span>
@@ -253,12 +268,12 @@
         </div>
 
         <!-- Card 2: Donation Conversion Rate -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
           <div>
             <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Donation Rate (CR)</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
               <span id="kpi-cr-b">0.00%</span>
-              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-cr-badge">+0%</span>
+              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-cr-badge">+0%</span>
             </div>
             <div class="text-[11px] text-slate-500 mt-0.5 truncate">
               Control: <strong id="kpi-cr-a" class="text-slate-700">0.00%</strong>
@@ -268,12 +283,12 @@
         </div>
 
         <!-- Card 3: Revenue Per Visitor (RPV) -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
           <div>
             <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Rev / Visitor</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#00875a] tabular-numbers mt-1 flex items-baseline gap-1.5">
+            <div class="text-xl sm:text-2xl font-bold text-[#00875a] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
               <span id="kpi-rpv-b">€0.00</span>
-              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-rpv-badge">+0%</span>
+              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-rpv-badge">+0%</span>
             </div>
             <div class="text-[11px] text-slate-500 mt-0.5 truncate">
               Control: <strong id="kpi-rpv-a" class="text-slate-700">€0.00</strong>
@@ -283,12 +298,12 @@
         </div>
 
         <!-- Card 4: Story Reading Time -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
           <div>
             <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Reading Time</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#635bff] tabular-numbers mt-1 flex items-baseline gap-1.5">
+            <div class="text-xl sm:text-2xl font-bold text-[#635bff] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
               <span id="kpi-stay-b">0s</span>
-              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-stay-badge">+0s</span>
+              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-stay-badge">+0s</span>
             </div>
             <div class="text-[11px] text-slate-500 mt-0.5 truncate">
               Control: <strong id="kpi-stay-a" class="text-slate-700">0s</strong>
@@ -298,12 +313,12 @@
         </div>
 
         <!-- Card 5: Donate Intent Rate -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
           <div>
             <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Donate Intent</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
               <span id="kpi-open-b">0.0%</span>
-              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-open-badge">+0%</span>
+              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-open-badge">+0%</span>
             </div>
             <div class="text-[11px] text-slate-500 mt-0.5 truncate">
               Control: <strong id="kpi-open-a" class="text-slate-700">0.0%</strong>
@@ -313,12 +328,12 @@
         </div>
 
         <!-- Card 6: Deep Readers (75%+ Scroll) -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
           <div>
             <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Deep Readers</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
               <span id="kpi-scroll-b">0.0%</span>
-              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-scroll-badge">+0%</span>
+              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-scroll-badge">+0%</span>
             </div>
             <div class="text-[11px] text-slate-500 mt-0.5 truncate">
               Control: <strong id="kpi-scroll-a" class="text-slate-700">0.0%</strong>
@@ -373,19 +388,19 @@
         <!-- Drawer 1: Variant A (Control) Visitors -->
         <div class="stripe-card overflow-hidden">
           <button onclick="toggleVisitorDrawer('control')" class="w-full p-3.5 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
-            <div class="flex items-center gap-3">
-              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shadow-sm">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shadow-sm shrink-0">
                 A
               </div>
-              <div>
+              <div class="min-w-0">
                 <h3 class="text-xs sm:text-sm font-bold text-[#061b31] flex items-center gap-2 flex-wrap">
-                  <span>Variant A (Control) — Visitor Log</span>
-                  <span id="drawer-count-control" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">0 visitors</span>
+                  <span class="truncate">Variant A (Control) — Visitor Log</span>
+                  <span id="drawer-count-control" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 shrink-0">0 visitors</span>
                 </h3>
-                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
               </div>
             </div>
-            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0 ml-2">
               <span id="drawer-arrow-label-control" class="hidden sm:inline">Show Details</span>
               <svg id="drawer-arrow-control" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -422,19 +437,19 @@
         <!-- Drawer 2: Variant B (Human-Authentic) Visitors -->
         <div class="stripe-card overflow-hidden">
           <button onclick="toggleVisitorDrawer('variant_b')" class="w-full p-3.5 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
-            <div class="flex items-center gap-3">
-              <div class="w-7 h-7 rounded-lg bg-[#e6f7f0] text-[#00875a] flex items-center justify-center font-bold text-xs shadow-sm">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-7 h-7 rounded-lg bg-[#e6f7f0] text-[#00875a] flex items-center justify-center font-bold text-xs shadow-sm shrink-0">
                 B
               </div>
-              <div>
+              <div class="min-w-0">
                 <h3 class="text-xs sm:text-sm font-bold text-[#061b31] flex items-center gap-2 flex-wrap">
-                  <span>Variant B (Challenger) — Visitor Log</span>
-                  <span id="drawer-count-variant_b" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#e6f7f0] text-[#00875a]">0 visitors</span>
+                  <span class="truncate">Variant B (Challenger) — Visitor Log</span>
+                  <span id="drawer-count-variant_b" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#e6f7f0] text-[#00875a] shrink-0">0 visitors</span>
                 </h3>
-                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
               </div>
             </div>
-            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0 ml-2">
               <span id="drawer-arrow-label-variant_b" class="hidden sm:inline">Show Details</span>
               <svg id="drawer-arrow-variant_b" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>

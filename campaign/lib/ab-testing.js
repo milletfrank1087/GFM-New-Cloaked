@@ -297,7 +297,6 @@ function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = nul
   let session = visitorSessionMap.get(sessionKey);
 
   // Fallback find by IP and variant in top 100 recent sessions if cookie not found
-  const cleanIp = cleanIpAddress(ip);
   if (!session && cleanIp) {
     for (let i = 0; i < Math.min(100, visitorSessions.length); i++) {
       if (visitorSessions[i].ip === cleanIp && visitorSessions[i].variant === variant) {
