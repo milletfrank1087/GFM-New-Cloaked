@@ -259,6 +259,7 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
       stayTime: 0,
       scrollDepth: 0,
       checkoutOpened: false,
+      checkoutInitiated: false,
       donated: false,
       amount: 0,
       currency: 'GBP',
@@ -314,6 +315,9 @@ function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = nul
       }
     } else if (eventName === 'checkout_open') {
       session.checkoutOpened = true;
+    } else if (eventName === 'checkout_initiated' || eventName === 'init_checkout') {
+      session.checkoutOpened = true;
+      session.checkoutInitiated = true;
     } else if (eventName === 'scroll_depth') {
       const depth = parseInt(data.depth || 0, 10);
       if (depth > session.scrollDepth) {
@@ -585,6 +589,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
       net: 0,
       tips: 0,
       checkoutOpens: 0,
+      checkoutInitiations: 0,
       stayTimeSum: 0,
       stayTimeCount: 0,
       scroll25: 0,
@@ -606,6 +611,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
       net: 0,
       tips: 0,
       checkoutOpens: 0,
+      checkoutInitiations: 0,
       stayTimeSum: 0,
       stayTimeCount: 0,
       scroll25: 0,
@@ -633,6 +639,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     else target.desktopVisitors++;
 
     if (s.checkoutOpened) target.checkoutOpens++;
+    if (s.checkoutInitiated) target.checkoutInitiations++;
 
     if (s.stayTime > 0) {
       target.stayTimeSum += s.stayTime;
@@ -662,6 +669,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
         stayTimeFormatted: formatDuration(s.stayTime),
         scrollDepth: s.scrollDepth,
         checkoutOpened: s.checkoutOpened,
+        checkoutInitiated: s.checkoutInitiated || false,
         donated: s.donated,
         amountFormatted: s.amount > 0 ? `£${s.amount.toFixed(2)}` : '—',
         campaign: s.campaignSlug
@@ -711,6 +719,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     v.avgStayTime = v.stayTimeCount > 0 ? Math.round(v.stayTimeSum / v.stayTimeCount) : 0;
     v.avgStayTimeFormatted = formatDuration(v.avgStayTime);
     v.checkoutOpenRate = visitorDenom > 0 ? parseFloat(((v.checkoutOpens / visitorDenom) * 100).toFixed(1)) : 0;
+    v.checkoutInitRate = visitorDenom > 0 ? parseFloat(((v.checkoutInitiations / visitorDenom) * 100).toFixed(1)) : 0;
     v.bounceRate = visitorDenom > 0 ? parseFloat(((v.bounces / visitorDenom) * 100).toFixed(1)) : 0;
     v.deepScrollRate = visitorDenom > 0 ? parseFloat(((v.scroll75 / visitorDenom) * 100).toFixed(1)) : 0;
 

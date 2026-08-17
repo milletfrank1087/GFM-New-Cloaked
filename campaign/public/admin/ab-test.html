@@ -13,15 +13,6 @@
     body {
       overflow-x: hidden;
     }
-    .drawer-toggle {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .drawer-toggle:hover {
-      background-color: #f8fafc;
-    }
-    .visitor-row:hover {
-      background-color: #f8fafc;
-    }
     .badge-emerald {
       background: #e6f7f0;
       color: #00875a;
@@ -67,17 +58,17 @@
 </head>
 <body class="bg-[#f8fafc] text-[#061b31] font-sans antialiased min-h-screen">
 
-  <!-- Mobile Navigation Header -->
-  <header class="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-30 px-3.5 py-2.5 flex items-center justify-between shadow-sm">
-    <div class="flex items-center gap-3">
+  <!-- Mobile Top Bar -->
+  <header class="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-30 px-3.5 py-2.5 flex items-center justify-between shadow-xs">
+    <div class="flex items-center gap-2.5">
       <button onclick="toggleNav()" class="p-1.5 -ml-1 text-slate-600 hover:text-slate-900 focus:outline-none" aria-label="Toggle navigation">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
       <div class="flex items-center gap-2">
-        <div class="w-7 h-7 bg-[#635bff] rounded flex items-center justify-center text-white font-bold text-xs shadow-sm">HR</div>
-        <span class="font-bold text-sm tracking-tight text-[#061b31]">A/B Cockpit</span>
+        <div class="w-7 h-7 bg-[#635bff] rounded flex items-center justify-center text-white font-bold text-xs shadow-xs">HR</div>
+        <span class="font-bold text-sm tracking-tight text-[#061b31]">A/B Split Cockpit</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -101,7 +92,7 @@
   <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shadow-lg lg:shadow-none">
     <div class="p-5 border-b border-gray-100 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 bg-[#635bff] rounded-md flex items-center justify-center text-white font-bold text-sm shadow-sm">HR</div>
+        <div class="w-8 h-8 bg-[#635bff] rounded-md flex items-center justify-center text-white font-bold text-sm shadow-xs">HR</div>
         <div>
           <h1 class="font-bold text-sm text-[#061b31] leading-tight">HopeRise</h1>
           <p class="text-[11px] text-slate-400">Operations Control</p>
@@ -125,7 +116,7 @@
       <div class="flex items-center justify-between text-xs text-slate-500">
         <span class="flex items-center gap-1.5 font-medium">
           <span class="w-2 h-2 rounded-full bg-[#00875a]"></span>
-          Split Engine Active
+          50/50 Split Live
         </span>
         <button onclick="logoutAdmin()" class="text-xs font-semibold text-slate-600 hover:text-[#635bff] transition-colors">Sign Out</button>
       </div>
@@ -134,26 +125,26 @@
 
   <!-- Main Content Area -->
   <main class="lg:pl-64 min-h-screen overflow-x-hidden">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4">
 
-      <!-- Top Operations Bar -->
+      <!-- Compact Header & Action Bar -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-slate-500">
+          <div class="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-slate-500">
             <span class="w-2 h-2 rounded-full bg-[#00875a] inline-block animate-pulse"></span>
-            <span>Live 50/50 Traffic Split</span>
+            <span>Live 50/50 Split</span>
             <span class="text-slate-300">•</span>
-            <span id="last-updated-label" class="font-mono text-[11px] text-slate-400">Checking…</span>
+            <span id="last-updated-label" class="font-mono text-slate-400">Checking…</span>
           </div>
-          <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#061b31] tracking-tight mt-1">A/B Conversion & Revenue Cockpit</h1>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-[#061b31] tracking-tight mt-0.5">A/B Performance Breakdown</h1>
         </div>
 
         <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
           <div class="inline-flex items-center gap-1">
-            <a href="/?variant=control" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-xs transition-colors flex items-center gap-1">
+            <a href="/?variant=control" target="_blank" class="text-xs font-semibold bg-white border border-gray-200 hover:border-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg shadow-xs transition-colors flex items-center gap-1">
               Control ↗
             </a>
-            <a href="/?variant=variant_b" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-xs transition-colors flex items-center gap-1">
+            <a href="/?variant=variant_b" target="_blank" class="text-xs font-semibold bg-white border border-gray-200 hover:border-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg shadow-xs transition-colors flex items-center gap-1">
               Variant B ↗
             </a>
           </div>
@@ -165,18 +156,18 @@
             <span>Refresh</span>
           </button>
 
-          <button onclick="resetAbData()" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 text-rose-700 transition-colors shadow-xs" title="Clear all recorded test traffic and start fresh">
+          <button onclick="resetAbData()" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors shadow-xs" title="Reset analytics to 0">
             Reset
           </button>
         </div>
       </div>
 
-      <!-- Control Deck Card: Filter Pills & Campaign Scope -->
-      <div class="stripe-card p-2.5 sm:p-3.5">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 sm:gap-3">
+      <!-- Filter Controls: Single Scrollable Row -->
+      <div class="stripe-card p-2 sm:p-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           
-          <!-- Quick Date Range Segmented Control with smooth scroll -->
-          <div class="w-full lg:w-auto overflow-x-auto no-scrollbar scroll-smooth-x py-0.5">
+          <!-- Date Range Pills -->
+          <div class="w-full sm:w-auto overflow-x-auto no-scrollbar scroll-smooth-x py-0.5">
             <div class="inline-flex items-center bg-[#eef3f8] p-1 rounded-lg gap-1 min-w-max" id="range-pills">
               <button onclick="selectRange('allTime')" class="stripe-pill active whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="allTime">All Time</button>
               <button onclick="selectRange('today')" class="stripe-pill inactive whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-md" data-range="today">Today</button>
@@ -187,299 +178,289 @@
             </div>
           </div>
 
-          <!-- Campaign Select Dropdown -->
-          <div class="w-full lg:w-auto flex items-center gap-2">
-            <div class="relative w-full lg:min-w-[240px]">
-              <select id="filter-campaign" onchange="loadAbMetrics()" class="w-full bg-white border border-gray-200 text-[#061b31] text-xs font-semibold rounded-lg py-1.5 px-3 pr-8 focus:ring-1 focus:ring-[#635bff] focus:outline-none transition-all shadow-xs cursor-pointer">
-                <option value="glioblastoma-grace" selected>glioblastoma-grace (Active Split)</option>
-                <option value="all">All Campaigns</option>
-              </select>
-            </div>
+          <!-- Campaign Select -->
+          <div class="w-full sm:w-auto sm:min-w-[220px]">
+            <select id="filter-campaign" onchange="loadAbMetrics()" class="w-full bg-white border border-gray-200 text-[#061b31] text-xs font-semibold rounded-lg py-1.5 px-3 pr-8 focus:ring-1 focus:ring-[#635bff] focus:outline-none transition-all shadow-xs cursor-pointer">
+              <option value="glioblastoma-grace" selected>glioblastoma-grace (Active)</option>
+              <option value="all">All Campaigns</option>
+            </select>
           </div>
 
         </div>
       </div>
 
-      <!-- Plain-English Verdict & Winner Decision Hero -->
-      <div id="verdict-card" class="stripe-card p-4 sm:p-6 border-l-4 border-l-[#635bff]">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6">
-          <div class="space-y-1.5 sm:space-y-2 max-w-3xl">
+      <!-- Live Verdict Banner (Concise, High Signal) -->
+      <div id="verdict-card" class="stripe-card p-3.5 sm:p-4 border-l-4 border-l-[#635bff]">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
-              <span id="verdict-badge" class="badge-purple px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                Gathering Early Traffic
+              <span id="verdict-badge" class="badge-purple px-2 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider">
+                Gathering Traffic
               </span>
-              <span id="sample-size-badge" class="text-xs text-slate-400 font-medium">0 Visitors Evaluated</span>
+              <span id="sample-size-badge" class="text-xs text-slate-400 font-medium">0 Visitors</span>
             </div>
-            <h2 id="verdict-headline" class="text-lg sm:text-2xl font-bold text-[#061b31]">
-              A/B Test Initializing…
+            <h2 id="verdict-headline" class="text-sm sm:text-base font-bold text-[#061b31] mt-1">
+              A/B Test Running (50/50 Split)
             </h2>
-            <p id="verdict-description" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Evaluating donation conversion rate, revenue per visitor, and donor reading time across Variant A (Control) and Variant B (Human-Authentic).
+            <p id="verdict-description" class="text-xs text-slate-500 mt-0.5 truncate">
+              Evaluating visitor engagement and conversion across Variant A &amp; Variant B.
             </p>
           </div>
 
-          <!-- Quick Decision Summary Boxes -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100">
-            <div class="text-center sm:text-left min-w-0">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Certainty</div>
-              <div id="conf-level-val" class="text-sm sm:text-base font-bold text-[#061b31] tabular-numbers mt-0.5">0.0%</div>
-              <div id="conf-level-sub" class="text-[10px] text-slate-500 mt-0.5 truncate">Confidence</div>
+          <div class="flex items-center gap-3 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100 shrink-0">
+            <div>
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Certainty</div>
+              <div id="conf-level-val" class="text-sm font-bold text-[#061b31] tabular-numbers">0.0%</div>
             </div>
-            <div class="text-center sm:text-left min-w-0">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Donation Lift</div>
-              <div id="cr-lift-val" class="text-sm sm:text-base font-bold text-[#00875a] tabular-numbers mt-0.5">+0.0%</div>
-              <div class="text-[10px] text-slate-500 mt-0.5 truncate">B vs Control</div>
-            </div>
-            <div class="text-center sm:text-left min-w-0">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Reading Time</div>
-              <div id="time-lift-val" class="text-sm sm:text-base font-bold text-[#635bff] tabular-numbers mt-0.5">+0s</div>
-              <div class="text-[10px] text-slate-500 mt-0.5 truncate">Engagement</div>
-            </div>
-            <div class="text-center sm:text-left min-w-0">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider truncate">Suggested</div>
-              <div id="action-rec-val" class="text-xs font-bold text-slate-700 mt-1 truncate">50/50 Split</div>
-              <div class="text-[10px] text-slate-400 mt-0.5 truncate">Guidance</div>
+            <div class="w-px h-6 bg-slate-200"></div>
+            <div>
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Donation Lift</div>
+              <div id="cr-lift-val" class="text-sm font-bold text-[#00875a] tabular-numbers">+0.0%</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Intuitive KPI Cards Grid (6 High-Yield Metrics) -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4 items-stretch">
+      <!-- MAIN FEATURE: Uncluttered Side-by-Side Variant Comparison (Variant A vs Variant B) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
         
-        <!-- Card 1: Visitors Split -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
+        <!-- CARD 1: VARIANT A (CONTROL / ORIGINAL) -->
+        <div class="stripe-card p-4 sm:p-5 flex flex-col justify-between border-t-4 border-t-slate-400">
           <div>
-            <div class="flex items-center justify-between gap-1">
-              <span class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Total Visitors</span>
-              <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">50/50</span>
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shadow-xs">
+                  A
+                </div>
+                <div>
+                  <h3 class="font-bold text-sm text-[#061b31]">Variant A (Control)</h3>
+                  <p class="text-[11px] text-slate-400">Original Template</p>
+                </div>
+              </div>
+              <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600" id="card-visitors-badge-a">
+                0 visitors
+              </span>
             </div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
-              <span id="kpi-total-visitors">0</span>
-              <span class="text-[10px] font-bold text-slate-400 uppercase truncate" id="kpi-visitors-split">A:0 · B:0</span>
+
+            <!-- Hero Metric: Net Revenue & Conversion -->
+            <div class="grid grid-cols-2 gap-2.5 py-3.5 border-b border-gray-100 bg-slate-50/70 -mx-4 sm:-mx-5 px-4 sm:px-5 mt-2">
+              <div>
+                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Net Revenue</div>
+                <div class="text-xl sm:text-2xl font-extrabold text-[#061b31] tabular-numbers mt-0.5" id="hero-net-a">€0.00</div>
+                <div class="text-[11px] text-slate-500 mt-0.5 font-medium" id="hero-donations-a">0 donations</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Donation CR%</div>
+                <div class="text-xl sm:text-2xl font-extrabold text-slate-800 tabular-numbers mt-0.5" id="hero-cr-a">0.00%</div>
+                <div class="text-[11px] text-slate-500 mt-0.5" id="hero-rpv-a">€0.00 / visitor</div>
+              </div>
             </div>
-            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
-              <span>A: <strong id="kpi-visitors-a" class="text-slate-700">0</strong></span>
-              <span class="text-slate-300 mx-1">•</span>
-              <span>B: <strong id="kpi-visitors-b" class="text-slate-700">0</strong></span>
+
+            <!-- Core Funnel Breakdown Rows -->
+            <div class="divide-y divide-gray-100 text-xs mt-1">
+              
+              <!-- 1. Total Visitors -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Total Visitors</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-visitors-a">0 <span class="text-[11px] font-normal text-slate-400" id="stat-mob-visitors-a">(0 mob / 0 dsk)</span></span>
+              </div>
+
+              <!-- 2. Reading Time -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Avg Reading Time</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-stay-a">0s</span>
+              </div>
+
+              <!-- 3. Deep Scroll% (75%+) -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Deep Scroll% (75%+)</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-scroll-a">0.0%</span>
+              </div>
+
+              <!-- 4. Modal Opening -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Modal Opened</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-modal-a">0.0% <span class="text-[11px] font-normal text-slate-400" id="stat-modal-count-a">(0)</span></span>
+              </div>
+
+              <!-- 5. Checkout Initiated -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Checkout Initiated</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-checkout-a">0.0% <span class="text-[11px] font-normal text-slate-400" id="stat-checkout-count-a">(0)</span></span>
+              </div>
+
+              <!-- 6. Gross Amount & Average -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Gross Raised</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-gross-a">€0.00 <span class="text-[11px] font-normal text-slate-400" id="stat-aov-a">(avg €0.00)</span></span>
+              </div>
+
             </div>
           </div>
-          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate" id="kpi-mobile-share">Mobile: 0%</div>
+
+          <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Mobile CR: <strong id="stat-mob-cr-a" class="text-slate-700">0.00%</strong></span>
+            <button onclick="toggleVisitorDrawer('control')" class="text-xs font-semibold text-[#635bff] hover:underline flex items-center gap-1">
+              <span>Inspect Visitors</span>
+              <svg id="drawer-arrow-control" class="w-3.5 h-3.5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Card 2: Donation Conversion Rate -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
+        <!-- CARD 2: VARIANT B (CHALLENGER / HUMAN-AUTHENTIC) -->
+        <div class="stripe-card p-4 sm:p-5 flex flex-col justify-between border-t-4 border-t-[#00875a] bg-gradient-to-b from-white to-[#f8fffa]">
           <div>
-            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Donation Rate (CR)</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
-              <span id="kpi-cr-b">0.00%</span>
-              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-cr-badge">+0%</span>
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-[#e6f7f0] text-[#00875a] flex items-center justify-center font-bold text-xs shadow-xs">
+                  B
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <h3 class="font-bold text-sm text-[#061b31]">Variant B (Challenger)</h3>
+                    <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#e6f7f0] text-[#00875a]">NEW</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">Human-Authentic (Mobile First)</p>
+                </div>
+              </div>
+              <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#e6f7f0] text-[#00875a]" id="card-visitors-badge-b">
+                0 visitors
+              </span>
             </div>
-            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
-              Control: <strong id="kpi-cr-a" class="text-slate-700">0.00%</strong>
-            </div>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">% who donate</div>
-        </div>
 
-        <!-- Card 3: Revenue Per Visitor (RPV) -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
-          <div>
-            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Rev / Visitor</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#00875a] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
-              <span id="kpi-rpv-b">€0.00</span>
-              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-rpv-badge">+0%</span>
+            <!-- Hero Metric: Net Revenue & Conversion -->
+            <div class="grid grid-cols-2 gap-2.5 py-3.5 border-b border-gray-100 bg-[#f0fbf5] -mx-4 sm:-mx-5 px-4 sm:px-5 mt-2">
+              <div>
+                <div class="text-[10px] font-bold uppercase tracking-wider text-[#00875a]">Net Revenue</div>
+                <div class="text-xl sm:text-2xl font-extrabold text-[#00875a] tabular-numbers mt-0.5" id="hero-net-b">€0.00</div>
+                <div class="text-[11px] text-[#00875a]/80 mt-0.5 font-medium" id="hero-donations-b">0 donations</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-bold uppercase tracking-wider text-[#00875a]">Donation CR%</div>
+                <div class="text-xl sm:text-2xl font-extrabold text-[#00875a] tabular-numbers mt-0.5" id="hero-cr-b">0.00%</div>
+                <div class="text-[11px] text-slate-600 mt-0.5" id="hero-rpv-b">€0.00 / visitor</div>
+              </div>
             </div>
-            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
-              Control: <strong id="kpi-rpv-a" class="text-slate-700">€0.00</strong>
-            </div>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">Yield per visitor</div>
-        </div>
 
-        <!-- Card 4: Story Reading Time -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
-          <div>
-            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Reading Time</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#635bff] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
-              <span id="kpi-stay-b">0s</span>
-              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-stay-badge">+0s</span>
-            </div>
-            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
-              Control: <strong id="kpi-stay-a" class="text-slate-700">0s</strong>
-            </div>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">Story reading time</div>
-        </div>
+            <!-- Core Funnel Breakdown Rows -->
+            <div class="divide-y divide-gray-100 text-xs mt-1">
+              
+              <!-- 1. Total Visitors -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Total Visitors</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-visitors-b">0 <span class="text-[11px] font-normal text-slate-400" id="stat-mob-visitors-b">(0 mob / 0 dsk)</span></span>
+              </div>
 
-        <!-- Card 5: Donate Intent Rate -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
-          <div>
-            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Donate Intent</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
-              <span id="kpi-open-b">0.0%</span>
-              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-open-badge">+0%</span>
-            </div>
-            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
-              Control: <strong id="kpi-open-a" class="text-slate-700">0.0%</strong>
-            </div>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">% opened donate</div>
-        </div>
+              <!-- 2. Reading Time -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Avg Reading Time</span>
+                <span class="font-bold text-[#635bff] tabular-numbers" id="stat-stay-b">0s</span>
+              </div>
 
-        <!-- Card 6: Deep Readers (75%+ Scroll) -->
-        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px] min-w-0">
-          <div>
-            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Deep Readers</div>
-            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5 min-w-0">
-              <span id="kpi-scroll-b">0.0%</span>
-              <span class="text-[10px] font-bold text-[#00875a] shrink-0" id="kpi-scroll-badge">+0%</span>
-            </div>
-            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
-              Control: <strong id="kpi-scroll-a" class="text-slate-700">0.0%</strong>
+              <!-- 3. Deep Scroll% (75%+) -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Deep Scroll% (75%+)</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-scroll-b">0.0%</span>
+              </div>
+
+              <!-- 4. Modal Opening -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Modal Opened</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-modal-b">0.0% <span class="text-[11px] font-normal text-slate-400" id="stat-modal-count-b">(0)</span></span>
+              </div>
+
+              <!-- 5. Checkout Initiated -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Checkout Initiated</span>
+                <span class="font-bold text-slate-800 tabular-numbers" id="stat-checkout-b">0.0% <span class="text-[11px] font-normal text-slate-400" id="stat-checkout-count-b">(0)</span></span>
+              </div>
+
+              <!-- 6. Gross Amount & Average -->
+              <div class="py-2 flex items-center justify-between">
+                <span class="text-slate-500 font-medium">Gross Raised</span>
+                <span class="font-bold text-[#00875a] tabular-numbers" id="stat-gross-b">€0.00 <span class="text-[11px] font-normal text-slate-400" id="stat-aov-b">(avg €0.00)</span></span>
+              </div>
+
             </div>
           </div>
-          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">75%+ page scroll</div>
+
+          <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-500">Mobile CR: <strong id="stat-mob-cr-b" class="text-[#00875a]">0.00%</strong></span>
+            <button onclick="toggleVisitorDrawer('variant_b')" class="text-xs font-semibold text-[#00875a] hover:underline flex items-center gap-1">
+              <span>Inspect Visitors</span>
+              <svg id="drawer-arrow-variant_b" class="w-3.5 h-3.5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+          </div>
         </div>
 
       </div>
 
-      <!-- Side-by-Side Comprehensive Performance Matrix Table -->
-      <div class="stripe-card overflow-hidden">
-        <div class="p-3.5 sm:p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-          <div>
-            <h2 class="text-sm sm:text-base font-bold text-[#061b31]">Side-by-Side Performance Comparison</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Detailed breakdown of traffic, donations, reader engagement, and net revenue</p>
-          </div>
-          <div class="text-[11px] sm:text-xs text-slate-400 font-medium">
-            Currency: EUR Base Normalized
-          </div>
-        </div>
-
-        <div class="overflow-x-auto scroll-smooth-x">
-          <table class="w-full text-left stripe-table min-w-[700px]">
-            <thead>
-              <tr>
-                <th class="sticky-col py-3 px-4 font-bold">Variant</th>
-                <th class="py-3 px-3 font-bold">Visitors (Mob / Dsk)</th>
-                <th class="py-3 px-3 font-bold">Donations</th>
-                <th class="py-3 px-3 font-bold">CR% (Overall)</th>
-                <th class="py-3 px-3 font-bold">Mobile CR%</th>
-                <th class="py-3 px-3 font-bold">Avg Reading</th>
-                <th class="py-3 px-3 font-bold">Modal Open%</th>
-                <th class="py-3 px-3 font-bold">Deep Scroll%</th>
-                <th class="py-3 px-3 font-bold">Avg Donation</th>
-                <th class="py-3 px-3 font-bold">Net Revenue</th>
-                <th class="py-3 px-4 font-bold">Rev / Visitor</th>
-              </tr>
-            </thead>
-            <tbody id="matrix-tbody">
-              <tr>
-                <td colspan="11" class="text-center py-8 text-slate-400">Loading variant performance data…</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Expandable Visitor Detail Lists (Under Each Variant) -->
-      <div class="space-y-3 sm:space-y-4">
+      <!-- Collapsible Detailed Visitor Logs -->
+      <div class="space-y-3">
         
-        <!-- Drawer 1: Variant A (Control) Visitors -->
-        <div class="stripe-card overflow-hidden">
-          <button onclick="toggleVisitorDrawer('control')" class="w-full p-3.5 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shadow-sm shrink-0">
-                A
-              </div>
-              <div class="min-w-0">
-                <h3 class="text-xs sm:text-sm font-bold text-[#061b31] flex items-center gap-2 flex-wrap">
-                  <span class="truncate">Variant A (Control) — Visitor Log</span>
-                  <span id="drawer-count-control" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 shrink-0">0 visitors</span>
-                </h3>
-                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
-              </div>
+        <!-- Visitor Log Drawer: Variant A -->
+        <div id="drawer-content-control" class="hidden stripe-card overflow-hidden">
+          <div class="p-3 bg-slate-50 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+              <span class="font-bold text-xs sm:text-sm text-[#061b31]">Variant A (Control) — Live Visitor Log</span>
             </div>
-            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0 ml-2">
-              <span id="drawer-arrow-label-control" class="hidden sm:inline">Show Details</span>
-              <svg id="drawer-arrow-control" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </div>
-          </button>
-
-          <!-- Collapsible Content for Control -->
-          <div id="drawer-content-control" class="hidden border-t border-gray-100 bg-white">
-            <div class="overflow-x-auto max-h-[420px] overflow-y-auto scroll-smooth-x">
-              <table class="w-full text-left stripe-table text-xs min-w-[650px]">
-                <thead class="bg-slate-50 sticky top-0 z-10 border-b border-gray-200">
-                  <tr>
-                    <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Device & Browser</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">IP Address</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Location</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Reading Time</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Scroll Depth</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Donate Intent</th>
-                    <th class="py-2.5 px-4 font-bold text-slate-500">Donation Outcome</th>
-                  </tr>
-                </thead>
-                <tbody id="visitors-tbody-control">
-                  <tr>
-                    <td colspan="8" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <button onclick="toggleVisitorDrawer('control')" class="text-xs font-semibold text-slate-500 hover:text-slate-800">Close ✕</button>
+          </div>
+          <div class="overflow-x-auto max-h-[360px] overflow-y-auto scroll-smooth-x">
+            <table class="w-full text-left stripe-table text-xs min-w-[650px]">
+              <thead class="bg-white sticky top-0 z-10 border-b border-gray-200 text-slate-500">
+                <tr>
+                  <th class="py-2 px-3 font-bold">Visited</th>
+                  <th class="py-2 px-3 font-bold">Device</th>
+                  <th class="py-2 px-3 font-bold">IP Address</th>
+                  <th class="py-2 px-3 font-bold">Location</th>
+                  <th class="py-2 px-3 font-bold">Reading</th>
+                  <th class="py-2 px-3 font-bold">Scroll</th>
+                  <th class="py-2 px-3 font-bold">Intent</th>
+                  <th class="py-2 px-3 font-bold">Outcome</th>
+                </tr>
+              </thead>
+              <tbody id="visitors-tbody-control">
+                <tr>
+                  <td colspan="8" class="text-center py-6 text-slate-400">No visitors recorded yet.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <!-- Drawer 2: Variant B (Human-Authentic) Visitors -->
-        <div class="stripe-card overflow-hidden">
-          <button onclick="toggleVisitorDrawer('variant_b')" class="w-full p-3.5 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-7 h-7 rounded-lg bg-[#e6f7f0] text-[#00875a] flex items-center justify-center font-bold text-xs shadow-sm shrink-0">
-                B
-              </div>
-              <div class="min-w-0">
-                <h3 class="text-xs sm:text-sm font-bold text-[#061b31] flex items-center gap-2 flex-wrap">
-                  <span class="truncate">Variant B (Challenger) — Visitor Log</span>
-                  <span id="drawer-count-variant_b" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#e6f7f0] text-[#00875a] shrink-0">0 visitors</span>
-                </h3>
-                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
-              </div>
+        <!-- Visitor Log Drawer: Variant B -->
+        <div id="drawer-content-variant_b" class="hidden stripe-card overflow-hidden">
+          <div class="p-3 bg-[#e6f7f0]/60 border-b border-[#b3e6d2] flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#00875a]"></span>
+              <span class="font-bold text-xs sm:text-sm text-[#00875a]">Variant B (Challenger) — Live Visitor Log</span>
             </div>
-            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0 ml-2">
-              <span id="drawer-arrow-label-variant_b" class="hidden sm:inline">Show Details</span>
-              <svg id="drawer-arrow-variant_b" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </div>
-          </button>
-
-          <!-- Collapsible Content for Variant B -->
-          <div id="drawer-content-variant_b" class="hidden border-t border-gray-100 bg-white">
-            <div class="overflow-x-auto max-h-[420px] overflow-y-auto scroll-smooth-x">
-              <table class="w-full text-left stripe-table text-xs min-w-[650px]">
-                <thead class="bg-slate-50 sticky top-0 z-10 border-b border-gray-200">
-                  <tr>
-                    <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Device & Browser</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">IP Address</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Location</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Reading Time</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Scroll Depth</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Donate Intent</th>
-                    <th class="py-2.5 px-4 font-bold text-slate-500">Donation Outcome</th>
-                  </tr>
-                </thead>
-                <tbody id="visitors-tbody-variant_b">
-                  <tr>
-                    <td colspan="8" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <button onclick="toggleVisitorDrawer('variant_b')" class="text-xs font-semibold text-slate-500 hover:text-slate-800">Close ✕</button>
+          </div>
+          <div class="overflow-x-auto max-h-[360px] overflow-y-auto scroll-smooth-x">
+            <table class="w-full text-left stripe-table text-xs min-w-[650px]">
+              <thead class="bg-white sticky top-0 z-10 border-b border-gray-200 text-slate-500">
+                <tr>
+                  <th class="py-2 px-3 font-bold">Visited</th>
+                  <th class="py-2 px-3 font-bold">Device</th>
+                  <th class="py-2 px-3 font-bold">IP Address</th>
+                  <th class="py-2 px-3 font-bold">Location</th>
+                  <th class="py-2 px-3 font-bold">Reading</th>
+                  <th class="py-2 px-3 font-bold">Scroll</th>
+                  <th class="py-2 px-3 font-bold">Intent</th>
+                  <th class="py-2 px-3 font-bold">Outcome</th>
+                </tr>
+              </thead>
+              <tbody id="visitors-tbody-variant_b">
+                <tr>
+                  <td colspan="8" class="text-center py-6 text-slate-400">No visitors recorded yet.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -521,18 +502,16 @@
     function toggleVisitorDrawer(variant) {
       const content = document.getElementById(`drawer-content-${variant}`);
       const arrow = document.getElementById(`drawer-arrow-${variant}`);
-      const label = document.getElementById(`drawer-arrow-label-${variant}`);
       if (!content) return;
 
       const isHidden = content.classList.contains('hidden');
       if (isHidden) {
         content.classList.remove('hidden');
         if (arrow) arrow.classList.add('rotate-180');
-        if (label) label.textContent = 'Hide Details';
+        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } else {
         content.classList.add('hidden');
         if (arrow) arrow.classList.remove('rotate-180');
-        if (label) label.textContent = 'Show Details';
       }
     }
 
@@ -588,174 +567,65 @@
       const verdictDesc = document.getElementById('verdict-description');
       const sampleBadge = document.getElementById('sample-size-badge');
 
-      if (sampleBadge) sampleBadge.textContent = `${data.totalVisitors.toLocaleString()} Visitors Evaluated`;
+      if (sampleBadge) sampleBadge.textContent = `${data.totalVisitors.toLocaleString()} Visitors`;
       if (verdictHeadline) verdictHeadline.textContent = v.headline;
       if (verdictDesc) verdictDesc.textContent = v.description;
       if (verdictBadge) {
         verdictBadge.textContent = v.statusBadge;
-        verdictBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider badge-${v.badgeColor || 'purple'}`;
+        verdictBadge.className = `px-2 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider badge-${v.badgeColor || 'purple'}`;
       }
       if (verdictCard) {
-        verdictCard.className = `stripe-card p-4 sm:p-6 border-l-4 border-l-${v.badgeColor === 'emerald' ? '[#00875a]' : v.badgeColor === 'amber' ? '[#b45309]' : '[#635bff]'}`;
+        verdictCard.className = `stripe-card p-3.5 sm:p-4 border-l-4 border-l-${v.badgeColor === 'emerald' ? '[#00875a]' : v.badgeColor === 'amber' ? '[#b45309]' : '[#635bff]'}`;
       }
 
       // Summary mini cards
       const confLevelVal = document.getElementById('conf-level-val');
-      const confLevelSub = document.getElementById('conf-level-sub');
       const crLiftVal = document.getElementById('cr-lift-val');
-      const timeLiftVal = document.getElementById('time-lift-val');
-      const actionRecVal = document.getElementById('action-rec-val');
 
       if (confLevelVal) confLevelVal.textContent = `${sig.confidence.toFixed(1)}%`;
-      if (confLevelSub) confLevelSub.textContent = v.confidenceLabel;
       if (crLiftVal) {
         const sign = lift.cr >= 0 ? '+' : '';
         crLiftVal.textContent = `${sign}${lift.cr.toFixed(1)}%`;
-        crLiftVal.className = `text-sm sm:text-base font-bold tabular-numbers mt-0.5 ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
-      }
-      if (timeLiftVal) {
-        const diffSec = b.avgStayTime - c.avgStayTime;
-        const sign = diffSec >= 0 ? '+' : '';
-        timeLiftVal.textContent = `${sign}${diffSec}s`;
-        timeLiftVal.className = `text-sm sm:text-base font-bold tabular-numbers mt-0.5 ${diffSec >= 0 ? 'text-[#635bff]' : 'text-slate-600'}`;
-      }
-      if (actionRecVal) actionRecVal.textContent = v.actionRecommendation;
-
-      // 2. 6 KPI Cards
-      document.getElementById('kpi-total-visitors').textContent = data.totalVisitors.toLocaleString();
-      document.getElementById('kpi-visitors-a').textContent = c.visitors.toLocaleString();
-      document.getElementById('kpi-visitors-b').textContent = b.visitors.toLocaleString();
-      const splitBadge = document.getElementById('kpi-visitors-split');
-      if (splitBadge) {
-        splitBadge.textContent = `A:${c.visitors} · B:${b.visitors}`;
-      }
-      
-      const totalMob = (c.mobileVisitors || 0) + (b.mobileVisitors || 0);
-      const mobShare = data.totalVisitors > 0 ? Math.round((totalMob / data.totalVisitors) * 100) : 0;
-      document.getElementById('kpi-mobile-share').textContent = `Mobile: ${mobShare}% (${totalMob} mob)`;
-
-      // CR
-      document.getElementById('kpi-cr-a').textContent = `${c.cr.toFixed(2)}%`;
-      document.getElementById('kpi-cr-b').textContent = `${b.cr.toFixed(2)}%`;
-      const crBadge = document.getElementById('kpi-cr-badge');
-      if (crBadge) {
-        const crSign = lift.cr >= 0 ? '+' : '';
-        crBadge.textContent = `${crSign}${lift.cr.toFixed(1)}%`;
-        crBadge.className = `text-[10px] font-bold ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
+        crLiftVal.className = `text-sm font-bold tabular-numbers ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
       }
 
-      // RPV
-      document.getElementById('kpi-rpv-a').textContent = `€${c.rpv.toFixed(2)}`;
-      document.getElementById('kpi-rpv-b').textContent = `€${b.rpv.toFixed(2)}`;
-      const rpvBadge = document.getElementById('kpi-rpv-badge');
-      if (rpvBadge) {
-        const rpvSign = lift.rpv >= 0 ? '+' : '';
-        rpvBadge.textContent = `${rpvSign}${lift.rpv.toFixed(1)}%`;
-        rpvBadge.className = `text-[10px] font-bold ${lift.rpv >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
-      }
+      // 2. VARIANT A (CONTROL) CARD
+      document.getElementById('card-visitors-badge-a').textContent = `${c.visitors.toLocaleString()} visitors`;
+      document.getElementById('hero-net-a').textContent = `€${c.net.toFixed(2)}`;
+      document.getElementById('hero-donations-a').textContent = `${c.donations} donation${c.donations === 1 ? '' : 's'}`;
+      document.getElementById('hero-cr-a').textContent = `${c.cr.toFixed(2)}%`;
+      document.getElementById('hero-rpv-a').textContent = `€${c.rpv.toFixed(2)} / visitor`;
 
-      // Reading Time
-      document.getElementById('kpi-stay-a').textContent = c.avgStayTimeFormatted || `${c.avgStayTime}s`;
-      document.getElementById('kpi-stay-b').textContent = b.avgStayTimeFormatted || `${b.avgStayTime}s`;
-      const stayBadge = document.getElementById('kpi-stay-badge');
-      if (stayBadge) {
-        const stayDiff = b.avgStayTime - c.avgStayTime;
-        const staySign = stayDiff >= 0 ? '+' : '';
-        stayBadge.textContent = `${staySign}${stayDiff}s`;
-        stayBadge.className = `text-[10px] font-bold ${stayDiff >= 0 ? 'text-[#00875a]' : 'text-slate-500'}`;
-      }
+      document.getElementById('stat-visitors-a').innerHTML = `${c.visitors.toLocaleString()} <span class="text-[11px] font-normal text-slate-400">(${c.mobileVisitors}m / ${c.desktopVisitors}d)</span>`;
+      document.getElementById('stat-stay-a').textContent = c.avgStayTimeFormatted || `${c.avgStayTime}s`;
+      document.getElementById('stat-scroll-a').textContent = `${c.deepScrollRate.toFixed(1)}%`;
+      document.getElementById('stat-modal-a').innerHTML = `${c.checkoutOpenRate.toFixed(1)}% <span class="text-[11px] font-normal text-slate-400">(${c.checkoutOpens || 0})</span>`;
+      document.getElementById('stat-checkout-a').innerHTML = `${(c.checkoutInitRate || 0).toFixed(1)}% <span class="text-[11px] font-normal text-slate-400">(${c.checkoutInitiations || 0})</span>`;
+      document.getElementById('stat-gross-a').innerHTML = `€${c.gross.toFixed(2)} <span class="text-[11px] font-normal text-slate-400">(avg €${c.aov.toFixed(2)})</span>`;
+      document.getElementById('stat-mob-cr-a').textContent = `${c.mobileCr.toFixed(2)}%`;
 
-      // Donate Intent
-      document.getElementById('kpi-open-a').textContent = `${c.checkoutOpenRate.toFixed(1)}%`;
-      document.getElementById('kpi-open-b').textContent = `${b.checkoutOpenRate.toFixed(1)}%`;
-      const openBadge = document.getElementById('kpi-open-badge');
-      if (openBadge) {
-        const openDiff = b.checkoutOpenRate - c.checkoutOpenRate;
-        const openSign = openDiff >= 0 ? '+' : '';
-        openBadge.textContent = `${openSign}${openDiff.toFixed(1)}%`;
-        openBadge.className = `text-[10px] font-bold ${openDiff >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
-      }
+      // 3. VARIANT B (CHALLENGER) CARD
+      document.getElementById('card-visitors-badge-b').textContent = `${b.visitors.toLocaleString()} visitors`;
+      document.getElementById('hero-net-b').textContent = `€${b.net.toFixed(2)}`;
+      document.getElementById('hero-donations-b').textContent = `${b.donations} donation${b.donations === 1 ? '' : 's'}`;
+      document.getElementById('hero-cr-b').textContent = `${b.cr.toFixed(2)}%`;
+      document.getElementById('hero-rpv-b').textContent = `€${b.rpv.toFixed(2)} / visitor`;
 
-      // Deep Readers
-      document.getElementById('kpi-scroll-a').textContent = `${c.deepScrollRate.toFixed(1)}%`;
-      document.getElementById('kpi-scroll-b').textContent = `${b.deepScrollRate.toFixed(1)}%`;
-      const scrollBadge = document.getElementById('kpi-scroll-badge');
-      if (scrollBadge) {
-        const scrollDiff = b.deepScrollRate - c.deepScrollRate;
-        const scrollSign = scrollDiff >= 0 ? '+' : '';
-        scrollBadge.textContent = `${scrollSign}${scrollDiff.toFixed(1)}%`;
-        scrollBadge.className = `text-[10px] font-bold ${scrollDiff >= 0 ? 'text-[#00875a]' : 'text-slate-500'}`;
-      }
-
-      // 3. Matrix Table
-      renderMatrixTable(c, b);
+      document.getElementById('stat-visitors-b').innerHTML = `${b.visitors.toLocaleString()} <span class="text-[11px] font-normal text-slate-400">(${b.mobileVisitors}m / ${b.desktopVisitors}d)</span>`;
+      document.getElementById('stat-stay-b').textContent = b.avgStayTimeFormatted || `${b.avgStayTime}s`;
+      document.getElementById('stat-scroll-b').textContent = `${b.deepScrollRate.toFixed(1)}%`;
+      document.getElementById('stat-modal-b').innerHTML = `${b.checkoutOpenRate.toFixed(1)}% <span class="text-[11px] font-normal text-slate-400">(${b.checkoutOpens || 0})</span>`;
+      document.getElementById('stat-checkout-b').innerHTML = `${(b.checkoutInitRate || 0).toFixed(1)}% <span class="text-[11px] font-normal text-slate-400">(${b.checkoutInitiations || 0})</span>`;
+      document.getElementById('stat-gross-b').innerHTML = `€${b.gross.toFixed(2)} <span class="text-[11px] font-normal text-slate-400">(avg €${b.aov.toFixed(2)})</span>`;
+      document.getElementById('stat-mob-cr-b').textContent = `${b.mobileCr.toFixed(2)}%`;
 
       // 4. Visitor Details Lists
       renderVisitorList('control', data.visitorLists.control || []);
       renderVisitorList('variant_b', data.visitorLists.variant_b || []);
     }
 
-    function renderMatrixTable(c, b) {
-      const tbody = document.getElementById('matrix-tbody');
-      if (!tbody) return;
-
-      tbody.innerHTML = `
-        <tr class="border-b border-gray-100 visitor-row">
-          <td class="sticky-col py-3 px-4 font-semibold text-[#061b31]">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-slate-400 shrink-0"></span>
-              <div class="min-w-0">
-                <div class="truncate font-bold text-xs sm:text-sm">Variant A (Control)</div>
-                <div class="text-[11px] font-normal text-slate-400 truncate">Original Template</div>
-              </div>
-            </div>
-          </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium whitespace-nowrap">
-            ${c.visitors.toLocaleString()} <span class="text-[11px] text-slate-400">(${c.mobileVisitors}m / ${c.desktopVisitors}d)</span>
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31] whitespace-nowrap">${c.donations}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-slate-800 whitespace-nowrap">${c.cr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.mobileCr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.avgStayTimeFormatted || c.avgStayTime + 's'}</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.checkoutOpenRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.deepScrollRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">€${c.aov.toFixed(2)}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31] whitespace-nowrap">€${c.net.toFixed(2)}</td>
-          <td class="py-3 px-4 tabular-numbers font-bold text-slate-700 whitespace-nowrap">€${c.rpv.toFixed(2)}</td>
-        </tr>
-        <tr class="visitor-row bg-[#f8fffa]/50">
-          <td class="sticky-col py-3 px-4 font-semibold text-[#061b31]">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-[#00875a] shrink-0"></span>
-              <div class="min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <span class="truncate font-bold text-xs sm:text-sm">Variant B (Challenger)</span>
-                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#e6f7f0] text-[#00875a] shrink-0">NEW</span>
-                </div>
-                <div class="text-[11px] font-normal text-slate-400 truncate">Human-Authentic (Mobile First)</div>
-              </div>
-            </div>
-          </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium whitespace-nowrap">
-            ${b.visitors.toLocaleString()} <span class="text-[11px] text-slate-400">(${b.mobileVisitors}m / ${b.desktopVisitors}d)</span>
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">${b.donations}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">${b.cr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium whitespace-nowrap">${b.mobileCr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-[#635bff] font-medium whitespace-nowrap">${b.avgStayTimeFormatted || b.avgStayTime + 's'}</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 whitespace-nowrap">${b.checkoutOpenRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 whitespace-nowrap">${b.deepScrollRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 whitespace-nowrap">€${b.aov.toFixed(2)}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">€${b.net.toFixed(2)}</td>
-          <td class="py-3 px-4 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">€${b.rpv.toFixed(2)}</td>
-        </tr>
-      `;
-    }
-
     function renderVisitorList(variant, visitors) {
-      const countEl = document.getElementById(`drawer-count-${variant}`);
       const tbody = document.getElementById(`visitors-tbody-${variant}`);
-      if (countEl) countEl.textContent = `${visitors.length} visitor${visitors.length === 1 ? '' : 's'}`;
       if (!tbody) return;
 
       if (!visitors || visitors.length === 0) {
@@ -775,12 +645,15 @@
           : `<span class="text-slate-600 font-mono">${v.stayTimeFormatted || '0s'}</span>`;
 
         const scrollBadge = v.scrollDepth >= 75
-          ? `<span class="badge-blue px-1.5 py-0.5 rounded font-medium">${v.scrollDepth}% (Full)</span>`
+          ? `<span class="badge-blue px-1.5 py-0.5 rounded font-medium">${v.scrollDepth}%</span>`
           : `<span class="text-slate-500">${v.scrollDepth}%</span>`;
 
-        const intentBadge = v.checkoutOpened
-          ? `<span class="badge-purple px-1.5 py-0.5 rounded font-semibold">Opened Modal</span>`
-          : `<span class="text-slate-400">—</span>`;
+        let intentBadge = `<span class="text-slate-400">—</span>`;
+        if (v.checkoutInitiated) {
+          intentBadge = `<span class="badge-blue px-1.5 py-0.5 rounded font-bold">Checkout Redirect</span>`;
+        } else if (v.checkoutOpened) {
+          intentBadge = `<span class="badge-purple px-1.5 py-0.5 rounded font-semibold">Opened Modal</span>`;
+        }
 
         const outcomeBadge = v.donated
           ? `<span class="badge-emerald px-2 py-0.5 rounded-full font-bold">Donated ${v.amountFormatted}</span>`
@@ -788,29 +661,29 @@
 
         return `
           <tr class="border-b border-gray-100 visitor-row">
-            <td class="py-2.5 px-4 tabular-numbers text-slate-600 whitespace-nowrap">
+            <td class="py-2 px-3 tabular-numbers text-slate-600 whitespace-nowrap">
               <span class="font-medium text-[#061b31]">${v.timeAgo}</span>
               <span class="text-[10px] text-slate-400 block font-mono">${v.timeFormatted}</span>
             </td>
-            <td class="py-2.5 px-3 whitespace-nowrap font-medium text-slate-700">
+            <td class="py-2 px-3 whitespace-nowrap font-medium text-slate-700">
               ${v.deviceLabel}
             </td>
-            <td class="py-2.5 px-3 font-mono text-[11px] text-slate-600 whitespace-nowrap select-all font-semibold">
+            <td class="py-2 px-3 font-mono text-[11px] text-slate-600 whitespace-nowrap select-all font-semibold">
               ${v.ip}
             </td>
-            <td class="py-2.5 px-3 text-slate-700 whitespace-nowrap font-medium">
+            <td class="py-2 px-3 text-slate-700 whitespace-nowrap font-medium">
               ${v.locationLabel}
             </td>
-            <td class="py-2.5 px-3 tabular-numbers whitespace-nowrap">
+            <td class="py-2 px-3 tabular-numbers whitespace-nowrap">
               ${timeBadge}
             </td>
-            <td class="py-2.5 px-3 tabular-numbers whitespace-nowrap">
+            <td class="py-2 px-3 tabular-numbers whitespace-nowrap">
               ${scrollBadge}
             </td>
-            <td class="py-2.5 px-3 whitespace-nowrap">
+            <td class="py-2 px-3 whitespace-nowrap">
               ${intentBadge}
             </td>
-            <td class="py-2.5 px-4 whitespace-nowrap">
+            <td class="py-2 px-3 whitespace-nowrap">
               ${outcomeBadge}
             </td>
           </tr>
@@ -834,7 +707,6 @@
     // Auto-boot
     document.addEventListener('DOMContentLoaded', () => {
       loadAbMetrics();
-      // Auto-refresh every 30 seconds for live monitoring
       setInterval(loadAbMetrics, 30000);
     });
   </script>

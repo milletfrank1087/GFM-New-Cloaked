@@ -107,6 +107,11 @@ module.exports = function createDonationRouter(ctx) {
       const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, enrichedTracking.clientLocation);
       JourneyLog.paymentEvent(visitor, 'redirect_initiated', `${fmtCurrency(amount)} → ${store.domain}`);
 
+      try {
+        const { recordEngagementEvent } = require('../lib/ab-testing');
+        recordEngagementEvent(variant, 'checkout_initiated', { amount, tip }, clientInfo.ipAddress, req);
+      } catch (_) {}
+
       const storeBase = process.env.DEV_STORE_URL || `https://${store.domain}`;
       const redirectUrl = `${storeBase}/s/${token}`;
       res.json({ redirectUrl });
