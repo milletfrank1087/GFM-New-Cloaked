@@ -18,7 +18,7 @@ const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 // Maximum in-memory visitor logs to prevent memory leaks
 const MAX_VISITOR_SESSIONS = 10000;
 
-// In-memory visitor sessions ring buffer & lookup
+// HopeRise A/B Testing & Visitor Analytics Engine (v2.1)
 const visitorSessions = [];
 const visitorSessionMap = new Map();
 
