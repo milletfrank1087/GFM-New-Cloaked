@@ -104,8 +104,8 @@
 
     <div class="mt-auto p-4 border-t border-gray-100 bg-slate-50/50">
       <div class="flex items-center justify-between text-xs text-slate-500">
-        <span class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="flex items-center gap-1.5 font-medium">
+          <span class="w-2 h-2 rounded-full bg-[#00875a]"></span>
           Split Engine Active
         </span>
         <button onclick="logoutAdmin()" class="text-xs font-semibold text-slate-600 hover:text-[#635bff] transition-colors">Sign Out</button>
@@ -121,7 +121,7 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-slate-500">
-            <span class="w-2 h-2 rounded-full bg-[#00875a] inline-block animate-pulse"></span>
+            <span class="w-2 h-2 rounded-full bg-[#00875a] inline-block"></span>
             <span>Live 50/50 Traffic Split</span>
             <span class="text-slate-300">•</span>
             <span id="last-updated-label" class="font-mono text-[11px] text-slate-400">Checking…</span>
@@ -220,7 +220,7 @@
             <span>A: <strong id="kpi-visitors-a" class="text-slate-700">0</strong></span>
             <span>B: <strong id="kpi-visitors-b" class="text-slate-700">0</strong></span>
           </div>
-          <div class="text-[10px] text-slate-400 mt-0.5 truncate" id="kpi-mobile-share">📱 Mobile: 0%</div>
+          <div class="text-[10px] text-slate-400 mt-0.5 truncate" id="kpi-mobile-share">Mobile: 0%</div>
         </div>
 
         <!-- Card 2: Donation Conversion Rate -->
@@ -343,7 +343,7 @@
                   <span>Variant A (Original Control) — Individual Visitor Log</span>
                   <span id="drawer-count-control" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">0 visitors</span>
                 </h3>
-                <p class="text-xs text-slate-400 mt-0.5">Click to view real-time visitor devices, reading durations, scroll depth, and donations</p>
+                <p class="text-xs text-slate-400 mt-0.5">Live visitor devices, geolocation, reading duration, scroll depth, and donations</p>
               </div>
             </div>
             <div class="flex items-center gap-2 text-xs font-semibold text-[#635bff]">
@@ -362,7 +362,8 @@
                   <tr>
                     <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Device & Browser</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Location / IP</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">IP Address</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Location</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Reading Time</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Scroll Depth</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Donate Intent</th>
@@ -371,7 +372,7 @@
                 </thead>
                 <tbody id="visitors-tbody-control">
                   <tr>
-                    <td colspan="7" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
+                    <td colspan="8" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
                   </tr>
                 </tbody>
               </table>
@@ -391,7 +392,7 @@
                   <span>Variant B (Human-Authentic Challenger) — Individual Visitor Log</span>
                   <span id="drawer-count-variant_b" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#e6f7f0] text-[#00875a]">0 visitors</span>
                 </h3>
-                <p class="text-xs text-slate-400 mt-0.5">Click to view real-time visitor devices, reading durations, scroll depth, and donations</p>
+                <p class="text-xs text-slate-400 mt-0.5">Live visitor devices, geolocation, reading duration, scroll depth, and donations</p>
               </div>
             </div>
             <div class="flex items-center gap-2 text-xs font-semibold text-[#00875a]">
@@ -410,7 +411,8 @@
                   <tr>
                     <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Device & Browser</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-500">Location / IP</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">IP Address</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Location</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Reading Time</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Scroll Depth</th>
                     <th class="py-2.5 px-3 font-bold text-slate-500">Donate Intent</th>
@@ -419,7 +421,7 @@
                 </thead>
                 <tbody id="visitors-tbody-variant_b">
                   <tr>
-                    <td colspan="7" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
+                    <td colspan="8" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
                   </tr>
                 </tbody>
               </table>
@@ -572,7 +574,7 @@
       
       const totalMob = (c.mobileVisitors || 0) + (b.mobileVisitors || 0);
       const mobShare = data.totalVisitors > 0 ? Math.round((totalMob / data.totalVisitors) * 100) : 0;
-      document.getElementById('kpi-mobile-share').textContent = `📱 Mobile: ${mobShare}% (${totalMob} visitors)`;
+      document.getElementById('kpi-mobile-share').textContent = `Mobile: ${mobShare}% (${totalMob} visitors)`;
 
       // CR
       document.getElementById('kpi-cr-a').textContent = `${c.cr.toFixed(2)}%`;
@@ -701,7 +703,7 @@
       if (!visitors || visitors.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" class="text-center py-6 text-slate-400">
+            <td colspan="8" class="text-center py-6 text-slate-400">
               No visitors recorded for ${variant === 'variant_b' ? 'Variant B' : 'Variant A'} in this time window.
             </td>
           </tr>
@@ -712,31 +714,34 @@
       tbody.innerHTML = visitors.map(v => {
         const timeBadge = v.stayTimeSeconds >= 45 
           ? `<span class="badge-emerald px-1.5 py-0.5 rounded font-medium">${v.stayTimeFormatted}</span>`
-          : `<span class="text-slate-600">${v.stayTimeFormatted || '0s'}</span>`;
+          : `<span class="text-slate-600 font-mono">${v.stayTimeFormatted || '0s'}</span>`;
 
         const scrollBadge = v.scrollDepth >= 75
           ? `<span class="badge-blue px-1.5 py-0.5 rounded font-medium">${v.scrollDepth}% (Full)</span>`
           : `<span class="text-slate-500">${v.scrollDepth}%</span>`;
 
         const intentBadge = v.checkoutOpened
-          ? `<span class="badge-purple px-1.5 py-0.5 rounded font-semibold">🎯 Clicked Donate</span>`
+          ? `<span class="badge-purple px-1.5 py-0.5 rounded font-semibold">Opened Modal</span>`
           : `<span class="text-slate-400">—</span>`;
 
         const outcomeBadge = v.donated
-          ? `<span class="badge-emerald px-2 py-0.5 rounded-full font-bold">🎉 Donated ${v.amountFormatted}</span>`
-          : `<span class="text-slate-400">👀 Browsed</span>`;
+          ? `<span class="badge-emerald px-2 py-0.5 rounded-full font-bold">Donated ${v.amountFormatted}</span>`
+          : `<span class="badge-slate px-1.5 py-0.5 rounded font-normal text-slate-500">Browsed</span>`;
 
         return `
           <tr class="border-b border-gray-100 visitor-row">
             <td class="py-2.5 px-4 tabular-numbers text-slate-600 whitespace-nowrap">
               <span class="font-medium text-[#061b31]">${v.timeAgo}</span>
-              <span class="text-[10px] text-slate-400 block">${v.timeFormatted}</span>
+              <span class="text-[10px] text-slate-400 block font-mono">${v.timeFormatted}</span>
             </td>
             <td class="py-2.5 px-3 whitespace-nowrap font-medium text-slate-700">
               ${v.deviceLabel}
             </td>
-            <td class="py-2.5 px-3 font-mono text-[11px] text-slate-500 whitespace-nowrap">
-              ${v.ipMasked}
+            <td class="py-2.5 px-3 font-mono text-[11px] text-slate-600 whitespace-nowrap select-all font-semibold">
+              ${v.ip}
+            </td>
+            <td class="py-2.5 px-3 text-slate-700 whitespace-nowrap font-medium">
+              ${v.locationLabel}
             </td>
             <td class="py-2.5 px-3 tabular-numbers whitespace-nowrap">
               ${timeBadge}

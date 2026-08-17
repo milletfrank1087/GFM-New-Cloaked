@@ -22,20 +22,90 @@ const MAX_VISITOR_SESSIONS = 10000;
 const visitorSessions = [];
 const visitorSessionMap = new Map();
 
-function maskIp(ip) {
-  if (!ip || typeof ip !== 'string') return 'Unknown';
+// In-memory IP Geolocation Cache
+const ipGeoCache = new Map();
+
+function isPrivateIp(ip) {
+  if (!ip || typeof ip !== 'string') return true;
   const clean = ip.replace(/^::ffff:/, '').trim();
-  if (clean.includes('.')) {
-    const parts = clean.split('.');
-    if (parts.length === 4) {
-      return `${parts[0]}.${parts[1]}.***.***`;
+  if (clean === '127.0.0.1' || clean === '::1' || clean === 'localhost' || clean === 'unknown') return true;
+  if (clean.startsWith('10.') || clean.startsWith('192.168.') || clean.startsWith('172.16.') || clean.startsWith('172.31.')) return true;
+  return false;
+}
+
+async function resolveIpLocation(rawIp) {
+  if (!rawIp || typeof rawIp !== 'string') {
+    return { country: 'Unknown', countryCode: '', city: '', locationLabel: 'Unknown Location' };
+  }
+  const cleanIp = rawIp.replace(/^::ffff:/, '').trim();
+
+  if (isPrivateIp(cleanIp)) {
+    return { country: 'Local Network', countryCode: 'LOCAL', city: 'Internal', locationLabel: 'Local / Internal' };
+  }
+
+  if (ipGeoCache.has(cleanIp)) {
+    return ipGeoCache.get(cleanIp);
+  }
+
+  // 1. Primary: ip-api.com
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const res = await fetch(`http://ip-api.com/json/${cleanIp}?fields=status,country,countryCode,regionName,city,query`, {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'CampaignServer/1.0' }
+    });
+    clearTimeout(timeout);
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.status === 'success') {
+        const parts = [data.city, data.regionName, data.country].filter(Boolean);
+        const geo = {
+          country: data.country || 'Unknown',
+          countryCode: data.countryCode || '',
+          city: data.city || '',
+          locationLabel: parts.length > 0 ? parts.join(', ') : (data.country || 'Unknown')
+        };
+        ipGeoCache.set(cleanIp, geo);
+        return geo;
+      }
     }
+  } catch (err) {
+    // Failover to secondary provider
   }
-  if (clean.includes(':')) {
-    const parts = clean.split(':');
-    return `${parts[0]}:${parts[1] || '0'}:****:****`;
+
+  // 2. Secondary fallback: ipapi.co
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const res = await fetch(`https://ipapi.co/${cleanIp}/json/`, {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'CampaignServer/1.0' }
+    });
+    clearTimeout(timeout);
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.country_name) {
+        const parts = [data.city, data.region, data.country_name].filter(Boolean);
+        const geo = {
+          country: data.country_name || 'Unknown',
+          countryCode: data.country_code || '',
+          city: data.city || '',
+          locationLabel: parts.length > 0 ? parts.join(', ') : (data.country_name || 'Unknown')
+        };
+        ipGeoCache.set(cleanIp, geo);
+        return geo;
+      }
+    }
+  } catch (err) {
+    // Fallback default
   }
-  return clean.substring(0, 4) + '***';
+
+  const fallback = { country: 'Unknown', countryCode: '', city: '', locationLabel: 'Unknown Location' };
+  ipGeoCache.set(cleanIp, fallback);
+  return fallback;
 }
 
 function formatDeviceLabel(uaInfo) {
@@ -43,13 +113,13 @@ function formatDeviceLabel(uaInfo) {
   const browserName = uaInfo.browser ? uaInfo.browser.charAt(0).toUpperCase() + uaInfo.browser.slice(1) : 'Browser';
   
   if (uaInfo.deviceType === 'mobile') {
-    if (uaInfo.os === 'ios') return `📱 iPhone (${osName}) • ${browserName}`;
-    if (uaInfo.os === 'android') return `📱 Android • ${browserName}`;
-    return `📱 Mobile • ${browserName}`;
+    if (uaInfo.os === 'ios') return `iPhone (${osName}) - ${browserName}`;
+    if (uaInfo.os === 'android') return `Android - ${browserName}`;
+    return `Mobile (${osName}) - ${browserName}`;
   } else if (uaInfo.deviceType === 'tablet') {
-    return `📱 Tablet (${osName}) • ${browserName}`;
+    return `Tablet (${osName}) - ${browserName}`;
   } else {
-    return `💻 Desktop (${osName}) • ${browserName}`;
+    return `Desktop (${osName}) - ${browserName}`;
   }
 }
 
@@ -126,11 +196,17 @@ function getOrSetSessionId(req, res) {
   return sid;
 }
 
+function cleanIpAddress(rawIp) {
+  if (!rawIp || typeof rawIp !== 'string') return 'Unknown';
+  return rawIp.replace(/^::ffff:/, '').trim();
+}
+
 function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glioblastoma-grace', req = null, res = null) {
   const sid = req ? getOrSetSessionId(req, res) : `ip_${ip}`;
   const sessionKey = `${sid}_${variant}`;
   const uaInfo = parseUserAgent(userAgent);
   const now = Date.now();
+  const cleanIp = cleanIpAddress(ip);
 
   let session = visitorSessionMap.get(sessionKey);
   if (!session) {
@@ -141,13 +217,16 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
       createdAt: new Date(now).toISOString(),
       variant: variant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL,
       campaignSlug: campaignSlug || 'glioblastoma-grace',
-      ip: ip || 'unknown',
-      ipMasked: maskIp(ip),
+      ip: cleanIp,
       userAgent: userAgent || '',
       uaInfo: uaInfo,
       deviceType: uaInfo.deviceType,
       isMobile: uaInfo.isMobile || uaInfo.deviceType === 'mobile',
       deviceLabel: formatDeviceLabel(uaInfo),
+      locationLabel: 'Resolving…',
+      city: '',
+      country: '',
+      countryCode: '',
       stayTime: 0,
       scrollDepth: 0,
       checkoutOpened: false,
@@ -164,6 +243,16 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
       const removed = visitorSessions.pop();
       if (removed) visitorSessionMap.delete(removed.key);
     }
+
+    // Resolve IP geolocation in background
+    resolveIpLocation(cleanIp).then(geo => {
+      session.locationLabel = geo.locationLabel;
+      session.city = geo.city;
+      session.country = geo.country;
+      session.countryCode = geo.countryCode;
+    }).catch(() => {
+      session.locationLabel = 'Unknown Location';
+    });
   }
   return session;
 }
@@ -174,9 +263,10 @@ function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = nul
   let session = visitorSessionMap.get(sessionKey);
 
   // Fallback find by IP and variant in top 100 recent sessions if cookie not found
-  if (!session && ip) {
+  const cleanIp = cleanIpAddress(ip);
+  if (!session && cleanIp) {
     for (let i = 0; i < Math.min(100, visitorSessions.length); i++) {
-      if (visitorSessions[i].ip === ip && visitorSessions[i].variant === variant) {
+      if (visitorSessions[i].ip === cleanIp && visitorSessions[i].variant === variant) {
         session = visitorSessions[i];
         break;
       }
@@ -206,7 +296,6 @@ function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
   if (dateRange?.startDate && dateRange?.endDate) {
     const start = new Date(dateRange.startDate).getTime();
     let end = new Date(dateRange.endDate).getTime();
-    // If end is at exact midnight date boundary, extend to end of that day
     if (dateRange.endDate.includes('00:00:00') || /^\d{4}-\d{2}-\d{2}$/.test(dateRange.endDate)) {
       end += 86400000 - 1;
     }
@@ -343,14 +432,13 @@ function normalCdf(x) {
 function generateIntuitiveVerdict(sig, stats, lift, totalVisitors) {
   const vA = stats.control;
   const vB = stats.variant_b;
-  const totalDonations = vA.donations + vB.donations;
 
   if (totalVisitors < 10) {
     return {
       statusBadge: 'Gathering Early Traffic',
       badgeColor: 'slate',
       headline: 'A/B Test Initializing…',
-      description: `Traffic split is active (50/50). Currently observed ${totalVisitors} visitor${totalVisitors === 1 ? '' : 's'}. Recommendations will appear as more traffic arrives.`,
+      description: `Traffic split is active (50/50). Currently observed ${totalVisitors} visitor${totalVisitors === 1 ? '' : 's'}. Automated recommendations will activate as traffic increases.`,
       confidenceLabel: 'Needs More Visitors',
       actionRecommendation: 'Keep 50/50 traffic split running'
     };
@@ -361,7 +449,7 @@ function generateIntuitiveVerdict(sig, stats, lift, totalVisitors) {
       statusBadge: 'Variant B is Winning',
       badgeColor: 'emerald',
       headline: `Variant B Beats Original by +${lift.cr.toFixed(1)}% Higher Conversion`,
-      description: `Variant B (Human-Authentic) is generating €${vB.rpv.toFixed(2)} per visitor vs €${vA.rpv.toFixed(2)} on Control. The statistical test proves with ${sig.confidence}% certainty this is not random chance.`,
+      description: `Variant B (Human-Authentic) is generating €${vB.rpv.toFixed(2)} per visitor vs €${vA.rpv.toFixed(2)} on Control. The statistical model indicates with ${sig.confidence}% certainty that this outcome is genuine.`,
       confidenceLabel: `${sig.confidence}% Certainty (High)`,
       actionRecommendation: 'Recommended: Switch 100% traffic to Variant B'
     };
@@ -378,13 +466,12 @@ function generateIntuitiveVerdict(sig, stats, lift, totalVisitors) {
     };
   }
 
-  // Inconclusive / Trending
   if (lift.cr > 15 && totalVisitors >= 30) {
     return {
       statusBadge: 'Variant B Trending Ahead',
       badgeColor: 'blue',
       headline: `Variant B Trending +${lift.cr.toFixed(1)}% Higher Conversion`,
-      description: `Variant B currently leads with a ${vB.cr}% donation rate (vs ${vA.cr}% on Control) and +${formatDuration(vB.avgStayTime - vA.avgStayTime)} longer reading time. Needs ~${Math.max(20, 100 - totalVisitors)} more visitors to reach 95% mathematical certainty.`,
+      description: `Variant B currently leads with a ${vB.cr}% donation rate (vs ${vA.cr}% on Control) and +${formatDuration(vB.avgStayTime - vA.avgStayTime)} longer reading time. Need ~${Math.max(20, 100 - totalVisitors)} more visitors to reach 95% mathematical certainty.`,
       confidenceLabel: `${sig.confidence}% Confidence (Trending)`,
       actionRecommendation: 'Allow test to collect more conversions'
     };
@@ -405,7 +492,7 @@ function generateIntuitiveVerdict(sig, stats, lift, totalVisitors) {
     statusBadge: 'Too Close to Call',
     badgeColor: 'slate',
     headline: 'Both Variants Performing Similarly',
-    description: `Variant A conversion: ${vA.cr}%, Variant B conversion: ${vB.cr}%. Differences are within normal random variance.`,
+    description: `Variant A conversion: ${vA.cr}%, Variant B conversion: ${vB.cr}%. Differences remain within normal random distribution.`,
     confidenceLabel: `${sig.confidence}% Confidence (Neutral)`,
     actionRecommendation: 'Keep test running to evaluate larger sample'
   };
@@ -532,7 +619,9 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
         timeAgo: formatRelativeTime(s.timestamp),
         timeFormatted: new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
         dateFormatted: new Date(s.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }),
-        ipMasked: s.ipMasked,
+        ip: s.ip || 'Unknown',
+        locationLabel: s.locationLabel || (s.country ? `${s.city ? s.city + ', ' : ''}${s.country}` : 'Unknown Location'),
+        countryCode: s.countryCode || '',
         isMobile: s.isMobile,
         deviceType: s.deviceType,
         deviceLabel: s.deviceLabel,
@@ -573,7 +662,6 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     }
   }
 
-  // Minimum fallback for clean UI display when 0 visitors recorded
   const totalRawVisitors = stats.control.visitors + stats.variant_b.visitors;
 
   for (const key of ['control', 'variant_b']) {
