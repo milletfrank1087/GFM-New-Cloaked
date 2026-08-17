@@ -313,6 +313,7 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
       paymentId: null
     };
 
+    // Save in memory
     visitorSessionMap.set(sessionKey, session);
     visitorSessions.unshift(session); // Newest first
 
@@ -323,6 +324,27 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
 
     saveSessionsCache();
 
+    // Persist to Supabase ab_visitors asynchronously
+    if (supabase) {
+      supabase.from('ab_visitors').upsert({
+        session_key: sessionKey,
+        session_id: sid,
+        variant: session.variant,
+        campaign_slug: session.campaignSlug,
+        ip_address: cleanIp,
+        user_agent: userAgent || '',
+        device_type: session.deviceType,
+        is_mobile: session.isMobile,
+        device_label: session.deviceLabel,
+        location_label: session.locationLabel,
+        city: session.city,
+        country: session.country,
+        country_code: session.countryCode,
+        created_at: new Date(now).toISOString(),
+        updated_at: new Date(now).toISOString()
+      }, { onConflict: 'session_key' }).catch(() => {});
+    }
+
     // Resolve IP geolocation in background
     resolveIpLocation(cleanIp).then(geo => {
       session.locationLabel = geo.locationLabel;
@@ -330,6 +352,15 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
       session.country = geo.country;
       session.countryCode = geo.countryCode;
       saveSessionsCache();
+      if (supabase) {
+        supabase.from('ab_visitors').update({
+          location_label: geo.locationLabel,
+          city: geo.city,
+          country: geo.country,
+          country_code: geo.countryCode,
+          updated_at: new Date().toISOString()
+        }).eq('session_key', sessionKey).catch(() => {});
+      }
     }).catch(() => {
       session.locationLabel = 'Unknown Location';
     });
@@ -375,6 +406,15 @@ function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = nul
       }
     }
     saveSessionsCache();
+
+    if (supabase) {
+      const updates = { updated_at: new Date().toISOString() };
+      if (eventName === 'stay_time') updates.stay_time = session.stayTime;
+      if (session.checkoutOpened) updates.checkout_opened = true;
+      if (session.checkoutInitiated) updates.checkout_initiated = true;
+      if (session.scrollDepth) updates.scroll_depth = session.scrollDepth;
+      supabase.from('ab_visitors').update(updates).eq('session_key', session.key).catch(() => {});
+    }
   }
 }
 
@@ -418,6 +458,8 @@ function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
         endDateISO: new Date(end).toISOString()
       };
     }
+    case '7d':
+    case 'last_7d':
     case 'last7days': {
       const start = todayMidnight.getTime() - 6 * 86400000;
       const end = now.getTime();
@@ -428,6 +470,8 @@ function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
         endDateISO: new Date(end).toISOString()
       };
     }
+    case '30d':
+    case 'last_30d':
     case 'last30days': {
       const start = todayMidnight.getTime() - 29 * 86400000;
       const end = now.getTime();
@@ -438,6 +482,8 @@ function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
         endDateISO: new Date(end).toISOString()
       };
     }
+    case 'month':
+    case 'this_month':
     case 'thisMonth': {
       const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
       const end = now.getTime();
@@ -448,6 +494,8 @@ function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
         endDateISO: new Date(end).toISOString()
       };
     }
+    case 'prev_month':
+    case 'last_month':
     case 'lastMonth': {
       const start = new Date(now.getFullYear(), now.getMonth() - 1, 1).getTime();
       const end = new Date(now.getFullYear(), now.getMonth(), 1).getTime() - 1;
@@ -458,6 +506,8 @@ function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
         endDateISO: new Date(end).toISOString()
       };
     }
+    case 'all':
+    case 'all_time':
     case 'allTime':
     default: {
       return {
@@ -604,7 +654,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     return true;
   });
 
-  // 2. Query Supabase for Completed Payments in Window
+  // 2. Query Supabase for Completed Payments, Sessions, and Persistent Visitors in Window
   let paymentsQuery = supabase
     ? supabase
         .from('payments')
@@ -620,27 +670,41 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
         .order('created_at', { ascending: false })
     : null;
 
+  let dbVisitorsQuery = supabase
+    ? supabase
+        .from('ab_visitors')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5000)
+    : null;
+
   if (paymentsQuery) {
     if (campaignSlug && campaignSlug !== 'all') {
       paymentsQuery = paymentsQuery.eq('source_ref', campaignSlug);
       if (sessionsQuery) sessionsQuery = sessionsQuery.eq('source_ref', campaignSlug);
+      if (dbVisitorsQuery) dbVisitorsQuery = dbVisitorsQuery.eq('campaign_slug', campaignSlug);
     }
     if (effectiveStartDateISO && effectiveStartTime > 0) {
       paymentsQuery = paymentsQuery.gte('created_at', effectiveStartDateISO);
       if (sessionsQuery) sessionsQuery = sessionsQuery.gte('created_at', effectiveStartDateISO);
+      if (dbVisitorsQuery) dbVisitorsQuery = dbVisitorsQuery.gte('created_at', effectiveStartDateISO);
     }
     if (bounds.endDateISO && bounds.endTime < Date.now() + 86400000) {
       paymentsQuery = paymentsQuery.lte('created_at', bounds.endDateISO);
       if (sessionsQuery) sessionsQuery = sessionsQuery.lte('created_at', bounds.endDateISO);
+      if (dbVisitorsQuery) dbVisitorsQuery = dbVisitorsQuery.lte('created_at', bounds.endDateISO);
     }
   }
 
   let payments = [];
   let checkoutSessionsList = [];
+  let dbVisitors = [];
+
   if (paymentsQuery) {
-    const [payRes, sessRes] = await Promise.all([
+    const [payRes, sessRes, dbVisRes] = await Promise.all([
       paymentsQuery,
-      sessionsQuery || Promise.resolve({ data: [] })
+      sessionsQuery || Promise.resolve({ data: [] }),
+      dbVisitorsQuery || Promise.resolve({ data: [] })
     ]);
     if (!payRes.error && payRes.data) {
       payments = payRes.data;
@@ -648,7 +712,59 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     if (!sessRes.error && sessRes.data) {
       checkoutSessionsList = sessRes.data;
     }
+    if (dbVisRes && !dbVisRes.error && dbVisRes.data) {
+      dbVisitors = dbVisRes.data;
+    }
   }
+
+  // Combine DB persistent visitors and memory visitors into unified deduplicated map
+  const unifiedVisitorMap = new Map();
+
+  for (const row of dbVisitors) {
+    const key = row.session_key || `${row.session_id}_${row.variant}`;
+    const ts = new Date(row.created_at).getTime();
+    unifiedVisitorMap.set(key, {
+      id: row.session_id || row.id,
+      key: key,
+      timestamp: ts,
+      createdAt: row.created_at,
+      variant: row.variant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL,
+      campaignSlug: row.campaign_slug || 'glioblastoma-grace',
+      ip: row.ip_address || 'Unknown',
+      userAgent: row.user_agent || '',
+      deviceType: row.device_type || (row.is_mobile ? 'mobile' : 'desktop'),
+      isMobile: row.is_mobile || false,
+      deviceLabel: row.device_label || (row.is_mobile ? 'Mobile Device' : 'Desktop Browser'),
+      locationLabel: row.location_label || 'Unknown Location',
+      city: row.city || '',
+      country: row.country || '',
+      countryCode: row.country_code || '',
+      stayTime: row.stay_time || 0,
+      scrollDepth: row.scroll_depth || 0,
+      checkoutOpened: row.checkout_opened || false,
+      checkoutInitiated: row.checkout_initiated || false,
+      donated: row.donated || false,
+      amount: parseFloat(row.donation_amount || 0),
+      currency: row.donation_currency || 'GBP'
+    });
+  }
+
+  for (const s of filteredVisitors) {
+    const existing = unifiedVisitorMap.get(s.key);
+    if (!existing) {
+      unifiedVisitorMap.set(s.key, s);
+    } else {
+      // Overlay fresher live in-memory engagement metrics
+      if (s.stayTime > existing.stayTime) existing.stayTime = s.stayTime;
+      if (s.scrollDepth > existing.scrollDepth) existing.scrollDepth = s.scrollDepth;
+      if (s.checkoutOpened) existing.checkoutOpened = true;
+      if (s.checkoutInitiated) existing.checkoutInitiated = true;
+      if (s.donated) existing.donated = true;
+    }
+  }
+
+  const allUnifiedVisitors = Array.from(unifiedVisitorMap.values())
+    .sort((a, b) => b.timestamp - a.timestamp);
 
   // 3. Initialize Stats for Control and Variant B
   const stats = {
@@ -704,8 +820,8 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     variant_b: []
   };
 
-  // Aggregate Filtered Visitor Sessions
-  for (const s of filteredVisitors) {
+  // Aggregate Deduplicated Unified Visitor Sessions
+  for (const s of allUnifiedVisitors) {
     const target = s.variant === VARIANTS.VARIANT_B ? stats.variant_b : stats.control;
     const list = s.variant === VARIANTS.VARIANT_B ? visitorLists.variant_b : visitorLists.control;
 
