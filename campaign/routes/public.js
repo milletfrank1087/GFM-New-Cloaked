@@ -34,7 +34,7 @@ module.exports = function createPublicRouter(ctx) {
       const targetVariant = variant || req.cookies?._ab_variant || 'control';
       const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
       const { recordEngagementEvent } = require('../lib/ab-testing');
-      recordEngagementEvent(targetVariant, eventName, data, ip);
+      recordEngagementEvent(targetVariant, eventName, data, ip, req);
       res.json({ ok: true });
     } catch (e) {
       res.status(200).json({ ok: false });

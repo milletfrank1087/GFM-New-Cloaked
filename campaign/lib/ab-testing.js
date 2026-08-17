@@ -1,4 +1,5 @@
 const { supabase, fetchRates, convertToBase } = require('./db/client');
+const { parseUserAgent } = require('./userAgentParser');
 
 const VARIANTS = {
   CONTROL: 'control',
@@ -11,41 +12,65 @@ const VARIANT_NAMES = {
 };
 
 const COOKIE_NAME = '_ab_variant';
+const SID_COOKIE_NAME = '_ab_sid';
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 
-const inMemoryStats = {
-  control: {
-    total: 0,
-    mobile: 0,
-    desktop: 0,
-    stayTimeSum: 0,
-    stayTimeCount: 0,
-    checkoutOpens: 0,
-    scroll25: 0,
-    scroll50: 0,
-    scroll75: 0,
-    scroll100: 0,
-    bounces: 0,
-    firstSeen: Date.now()
-  },
-  variant_b: {
-    total: 0,
-    mobile: 0,
-    desktop: 0,
-    stayTimeSum: 0,
-    stayTimeCount: 0,
-    checkoutOpens: 0,
-    scroll25: 0,
-    scroll50: 0,
-    scroll75: 0,
-    scroll100: 0,
-    bounces: 0,
-    firstSeen: Date.now()
-  }
-};
+// Maximum in-memory visitor logs to prevent memory leaks
+const MAX_VISITOR_SESSIONS = 10000;
 
-const visitorVariantMap = new Map();
-const visitorEngagementMap = new Map();
+// In-memory visitor sessions ring buffer & lookup
+const visitorSessions = [];
+const visitorSessionMap = new Map();
+
+function maskIp(ip) {
+  if (!ip || typeof ip !== 'string') return 'Unknown';
+  const clean = ip.replace(/^::ffff:/, '').trim();
+  if (clean.includes('.')) {
+    const parts = clean.split('.');
+    if (parts.length === 4) {
+      return `${parts[0]}.${parts[1]}.***.***`;
+    }
+  }
+  if (clean.includes(':')) {
+    const parts = clean.split(':');
+    return `${parts[0]}:${parts[1] || '0'}:****:****`;
+  }
+  return clean.substring(0, 4) + '***';
+}
+
+function formatDeviceLabel(uaInfo) {
+  const osName = uaInfo.os ? uaInfo.os.charAt(0).toUpperCase() + uaInfo.os.slice(1) : 'OS';
+  const browserName = uaInfo.browser ? uaInfo.browser.charAt(0).toUpperCase() + uaInfo.browser.slice(1) : 'Browser';
+  
+  if (uaInfo.deviceType === 'mobile') {
+    if (uaInfo.os === 'ios') return `📱 iPhone (${osName}) • ${browserName}`;
+    if (uaInfo.os === 'android') return `📱 Android • ${browserName}`;
+    return `📱 Mobile • ${browserName}`;
+  } else if (uaInfo.deviceType === 'tablet') {
+    return `📱 Tablet (${osName}) • ${browserName}`;
+  } else {
+    return `💻 Desktop (${osName}) • ${browserName}`;
+  }
+}
+
+function formatDuration(seconds) {
+  const s = Math.round(seconds || 0);
+  if (s < 60) return `${s}s`;
+  const mins = Math.floor(s / 60);
+  const remSec = s % 60;
+  return `${mins}m ${remSec}s`;
+}
+
+function formatRelativeTime(epochMs) {
+  const diffSec = Math.max(0, Math.round((Date.now() - epochMs) / 1000));
+  if (diffSec < 60) return `${diffSec}s ago`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr}h ago`;
+  const diffDay = Math.floor(diffHr / 24);
+  return `${diffDay}d ago`;
+}
 
 function resolveVariant(req, res) {
   const queryVariant = req.query.variant || req.query.ab;
@@ -83,59 +108,203 @@ function setVariantCookie(res, variant) {
   });
 }
 
-function recordImpression(variant, userAgent = '', ip = '') {
-  const target = inMemoryStats[variant] || inMemoryStats.control;
-  const visitorKey = `${ip}_${variant}`;
-  const isMobile = /mobile|iphone|android|ipad|tablet|ipod/i.test(userAgent || '');
-
-  if (!visitorVariantMap.has(visitorKey)) {
-    visitorVariantMap.set(visitorKey, { variant, time: Date.now(), isMobile });
-    target.total++;
-    if (isMobile) {
-      target.mobile++;
-    } else {
-      target.desktop++;
+function getOrSetSessionId(req, res) {
+  let sid = req.cookies?.[SID_COOKIE_NAME];
+  if (!sid) {
+    sid = 'sid_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 7);
+    if (res && res.cookie) {
+      const isProd = process.env.NODE_ENV === 'production';
+      res.cookie(SID_COOKIE_NAME, sid, {
+        maxAge: COOKIE_MAX_AGE,
+        httpOnly: false,
+        secure: isProd,
+        sameSite: isProd ? 'None' : 'Lax',
+        path: '/'
+      });
     }
+  }
+  return sid;
+}
 
-    if (visitorVariantMap.size > 20000) {
-      const oldestKey = visitorVariantMap.keys().next().value;
-      visitorVariantMap.delete(oldestKey);
+function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glioblastoma-grace', req = null, res = null) {
+  const sid = req ? getOrSetSessionId(req, res) : `ip_${ip}`;
+  const sessionKey = `${sid}_${variant}`;
+  const uaInfo = parseUserAgent(userAgent);
+  const now = Date.now();
+
+  let session = visitorSessionMap.get(sessionKey);
+  if (!session) {
+    session = {
+      id: sid,
+      key: sessionKey,
+      timestamp: now,
+      createdAt: new Date(now).toISOString(),
+      variant: variant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL,
+      campaignSlug: campaignSlug || 'glioblastoma-grace',
+      ip: ip || 'unknown',
+      ipMasked: maskIp(ip),
+      userAgent: userAgent || '',
+      uaInfo: uaInfo,
+      deviceType: uaInfo.deviceType,
+      isMobile: uaInfo.isMobile || uaInfo.deviceType === 'mobile',
+      deviceLabel: formatDeviceLabel(uaInfo),
+      stayTime: 0,
+      scrollDepth: 0,
+      checkoutOpened: false,
+      donated: false,
+      amount: 0,
+      currency: 'GBP',
+      paymentId: null
+    };
+
+    visitorSessionMap.set(sessionKey, session);
+    visitorSessions.unshift(session); // Newest first
+
+    if (visitorSessions.length > MAX_VISITOR_SESSIONS) {
+      const removed = visitorSessions.pop();
+      if (removed) visitorSessionMap.delete(removed.key);
+    }
+  }
+  return session;
+}
+
+function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = null) {
+  const sid = req?.cookies?.[SID_COOKIE_NAME] || data.sid || `ip_${ip}`;
+  const sessionKey = `${sid}_${variant}`;
+  let session = visitorSessionMap.get(sessionKey);
+
+  // Fallback find by IP and variant in top 100 recent sessions if cookie not found
+  if (!session && ip) {
+    for (let i = 0; i < Math.min(100, visitorSessions.length); i++) {
+      if (visitorSessions[i].ip === ip && visitorSessions[i].variant === variant) {
+        session = visitorSessions[i];
+        break;
+      }
+    }
+  }
+
+  if (session) {
+    if (eventName === 'stay_time') {
+      const seconds = Math.min(3600, Math.max(1, parseFloat(data.seconds || 0)));
+      if (seconds > session.stayTime) {
+        session.stayTime = seconds;
+      }
+    } else if (eventName === 'checkout_open') {
+      session.checkoutOpened = true;
+    } else if (eventName === 'scroll_depth') {
+      const depth = parseInt(data.depth || 0, 10);
+      if (depth > session.scrollDepth) {
+        session.scrollDepth = depth;
+      }
     }
   }
 }
 
-function recordEngagementEvent(variant, eventName, data = {}, ip = '') {
-  const target = inMemoryStats[variant] || inMemoryStats.control;
-  const visitorKey = `${ip}_${variant}`;
-
-  if (eventName === 'stay_time') {
-    const seconds = Math.min(3600, Math.max(1, parseFloat(data.seconds || 0)));
-    if (seconds > 0) {
-      target.stayTimeSum += seconds;
-      target.stayTimeCount++;
-      if (seconds < 5) {
-        target.bounces++;
-      }
+function calculateDateBounds(dateRange, rangeKey, tzOffset = 0) {
+  const now = new Date();
+  
+  if (dateRange?.startDate && dateRange?.endDate) {
+    const start = new Date(dateRange.startDate).getTime();
+    let end = new Date(dateRange.endDate).getTime();
+    // If end is at exact midnight date boundary, extend to end of that day
+    if (dateRange.endDate.includes('00:00:00') || /^\d{4}-\d{2}-\d{2}$/.test(dateRange.endDate)) {
+      end += 86400000 - 1;
     }
-  } else if (eventName === 'checkout_open') {
-    target.checkoutOpens++;
-  } else if (eventName === 'scroll_depth') {
-    const depth = parseInt(data.depth || 0, 10);
-    if (depth >= 100) target.scroll100++;
-    else if (depth >= 75) target.scroll75++;
-    else if (depth >= 50) target.scroll50++;
-    else if (depth >= 25) target.scroll25++;
+    return {
+      startTime: Number.isNaN(start) ? 0 : start,
+      endTime: Number.isNaN(end) ? Date.now() + 86400000 : end,
+      startDateISO: new Date(start).toISOString(),
+      endDateISO: new Date(end).toISOString()
+    };
+  }
+
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  
+  switch (rangeKey) {
+    case 'today': {
+      const start = todayMidnight.getTime();
+      const end = now.getTime();
+      return {
+        startTime: start,
+        endTime: end,
+        startDateISO: new Date(start).toISOString(),
+        endDateISO: new Date(end).toISOString()
+      };
+    }
+    case 'yesterday': {
+      const start = todayMidnight.getTime() - 86400000;
+      const end = todayMidnight.getTime() - 1;
+      return {
+        startTime: start,
+        endTime: end,
+        startDateISO: new Date(start).toISOString(),
+        endDateISO: new Date(end).toISOString()
+      };
+    }
+    case 'last7days': {
+      const start = todayMidnight.getTime() - 6 * 86400000;
+      const end = now.getTime();
+      return {
+        startTime: start,
+        endTime: end,
+        startDateISO: new Date(start).toISOString(),
+        endDateISO: new Date(end).toISOString()
+      };
+    }
+    case 'last30days': {
+      const start = todayMidnight.getTime() - 29 * 86400000;
+      const end = now.getTime();
+      return {
+        startTime: start,
+        endTime: end,
+        startDateISO: new Date(start).toISOString(),
+        endDateISO: new Date(end).toISOString()
+      };
+    }
+    case 'thisMonth': {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      const end = now.getTime();
+      return {
+        startTime: start,
+        endTime: end,
+        startDateISO: new Date(start).toISOString(),
+        endDateISO: new Date(end).toISOString()
+      };
+    }
+    case 'lastMonth': {
+      const start = new Date(now.getFullYear(), now.getMonth() - 1, 1).getTime();
+      const end = new Date(now.getFullYear(), now.getMonth(), 1).getTime() - 1;
+      return {
+        startTime: start,
+        endTime: end,
+        startDateISO: new Date(start).toISOString(),
+        endDateISO: new Date(end).toISOString()
+      };
+    }
+    case 'allTime':
+    default: {
+      return {
+        startTime: 0,
+        endTime: Date.now() + 86400000,
+        startDateISO: new Date(0).toISOString(),
+        endDateISO: new Date(Date.now() + 86400000).toISOString()
+      };
+    }
   }
 }
 
 function calculateZScore(conversionsA, visitorsA, conversionsB, visitorsB) {
-  if (visitorsA <= 0 || visitorsB <= 0) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
+  if (visitorsA <= 0 || visitorsB <= 0) {
+    return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
+  }
   
   const pA = conversionsA / visitorsA;
   const pB = conversionsB / visitorsB;
   const pPool = (conversionsA + conversionsB) / (visitorsA + visitorsB);
   
-  if (pPool <= 0 || pPool >= 1) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
+  if (pPool <= 0 || pPool >= 1) {
+    return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
+  }
   
   const se = Math.sqrt(pPool * (1 - pPool) * (1 / visitorsA + 1 / visitorsB));
   if (se === 0) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
@@ -171,9 +340,89 @@ function normalCdf(x) {
   return 0.5 * (1.0 + sign * y);
 }
 
-async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
-  const rates = await fetchRates();
+function generateIntuitiveVerdict(sig, stats, lift, totalVisitors) {
+  const vA = stats.control;
+  const vB = stats.variant_b;
+  const totalDonations = vA.donations + vB.donations;
 
+  if (totalVisitors < 10) {
+    return {
+      statusBadge: 'Gathering Early Traffic',
+      badgeColor: 'slate',
+      headline: 'A/B Test Initializing…',
+      description: `Traffic split is active (50/50). Currently observed ${totalVisitors} visitor${totalVisitors === 1 ? '' : 's'}. Recommendations will appear as more traffic arrives.`,
+      confidenceLabel: 'Needs More Visitors',
+      actionRecommendation: 'Keep 50/50 traffic split running'
+    };
+  }
+
+  if (sig.isSignificant && sig.winner === 'variant_b') {
+    return {
+      statusBadge: 'Variant B is Winning',
+      badgeColor: 'emerald',
+      headline: `Variant B Beats Original by +${lift.cr.toFixed(1)}% Higher Conversion`,
+      description: `Variant B (Human-Authentic) is generating €${vB.rpv.toFixed(2)} per visitor vs €${vA.rpv.toFixed(2)} on Control. The statistical test proves with ${sig.confidence}% certainty this is not random chance.`,
+      confidenceLabel: `${sig.confidence}% Certainty (High)`,
+      actionRecommendation: 'Recommended: Switch 100% traffic to Variant B'
+    };
+  }
+
+  if (sig.isSignificant && sig.winner === 'control') {
+    return {
+      statusBadge: 'Control (Original) is Winning',
+      badgeColor: 'amber',
+      headline: `Original Template Beats Variant B by +${Math.abs(lift.cr).toFixed(1)}%`,
+      description: `The original campaign template is currently converting higher (${vA.cr}% vs ${vB.cr}%).`,
+      confidenceLabel: `${sig.confidence}% Certainty (High)`,
+      actionRecommendation: 'Recommended: Keep Control or inspect Variant B mobile funnel'
+    };
+  }
+
+  // Inconclusive / Trending
+  if (lift.cr > 15 && totalVisitors >= 30) {
+    return {
+      statusBadge: 'Variant B Trending Ahead',
+      badgeColor: 'blue',
+      headline: `Variant B Trending +${lift.cr.toFixed(1)}% Higher Conversion`,
+      description: `Variant B currently leads with a ${vB.cr}% donation rate (vs ${vA.cr}% on Control) and +${formatDuration(vB.avgStayTime - vA.avgStayTime)} longer reading time. Needs ~${Math.max(20, 100 - totalVisitors)} more visitors to reach 95% mathematical certainty.`,
+      confidenceLabel: `${sig.confidence}% Confidence (Trending)`,
+      actionRecommendation: 'Allow test to collect more conversions'
+    };
+  }
+
+  if (lift.cr < -15 && totalVisitors >= 30) {
+    return {
+      statusBadge: 'Control Trending Ahead',
+      badgeColor: 'purple',
+      headline: `Control (Original) Trending +${Math.abs(lift.cr).toFixed(1)}% Higher`,
+      description: `Control currently leads in conversion rate (${vA.cr}% vs ${vB.cr}%). Collecting more data to confirm.`,
+      confidenceLabel: `${sig.confidence}% Confidence (Trending)`,
+      actionRecommendation: 'Allow test to collect more conversions'
+    };
+  }
+
+  return {
+    statusBadge: 'Too Close to Call',
+    badgeColor: 'slate',
+    headline: 'Both Variants Performing Similarly',
+    description: `Variant A conversion: ${vA.cr}%, Variant B conversion: ${vB.cr}%. Differences are within normal random variance.`,
+    confidenceLabel: `${sig.confidence}% Confidence (Neutral)`,
+    actionRecommendation: 'Keep test running to evaluate larger sample'
+  };
+}
+
+async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey = 'allTime', tzOffset = 0) {
+  const rates = await fetchRates();
+  const bounds = calculateDateBounds(dateRange, rangeKey, tzOffset);
+
+  // 1. Filter In-Memory Visitor Sessions
+  const filteredVisitors = visitorSessions.filter(s => {
+    if (s.timestamp < bounds.startTime || s.timestamp > bounds.endTime) return false;
+    if (campaignSlug && campaignSlug !== 'all' && s.campaignSlug !== campaignSlug) return false;
+    return true;
+  });
+
+  // 2. Query Supabase for Completed Payments in Window
   let paymentsQuery = supabase
     ? supabase
         .from('payments')
@@ -186,11 +435,11 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
     if (campaignSlug && campaignSlug !== 'all') {
       paymentsQuery = paymentsQuery.eq('source_ref', campaignSlug);
     }
-    if (dateRange?.startDate) {
-      paymentsQuery = paymentsQuery.gte('created_at', dateRange.startDate);
+    if (bounds.startDateISO && bounds.startTime > 0) {
+      paymentsQuery = paymentsQuery.gte('created_at', bounds.startDateISO);
     }
-    if (dateRange?.endDate) {
-      paymentsQuery = paymentsQuery.lte('created_at', dateRange.endDate);
+    if (bounds.endDateISO && bounds.endTime < Date.now() + 86400000) {
+      paymentsQuery = paymentsQuery.lte('created_at', bounds.endDateISO);
     }
   }
 
@@ -202,51 +451,103 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
     }
   }
 
+  // 3. Initialize Stats for Control and Variant B
   const stats = {
     control: {
       name: VARIANT_NAMES.control,
-      visitors: Math.max(inMemoryStats.control.total, 1),
-      mobileVisitors: inMemoryStats.control.mobile,
-      desktopVisitors: inMemoryStats.control.desktop,
+      visitors: 0,
+      mobileVisitors: 0,
+      desktopVisitors: 0,
       donations: 0,
       mobileDonations: 0,
       desktopDonations: 0,
       gross: 0,
       net: 0,
       tips: 0,
-      checkoutOpens: inMemoryStats.control.checkoutOpens,
-      stayTimeSum: inMemoryStats.control.stayTimeSum,
-      stayTimeCount: inMemoryStats.control.stayTimeCount,
-      scroll25: inMemoryStats.control.scroll25,
-      scroll50: inMemoryStats.control.scroll50,
-      scroll75: inMemoryStats.control.scroll75,
-      scroll100: inMemoryStats.control.scroll100,
-      bounces: inMemoryStats.control.bounces,
+      checkoutOpens: 0,
+      stayTimeSum: 0,
+      stayTimeCount: 0,
+      scroll25: 0,
+      scroll50: 0,
+      scroll75: 0,
+      scroll100: 0,
+      bounces: 0,
       currency: 'EUR'
     },
     variant_b: {
       name: VARIANT_NAMES.variant_b,
-      visitors: Math.max(inMemoryStats.variant_b.total, 1),
-      mobileVisitors: inMemoryStats.variant_b.mobile,
-      desktopVisitors: inMemoryStats.variant_b.desktop,
+      visitors: 0,
+      mobileVisitors: 0,
+      desktopVisitors: 0,
       donations: 0,
       mobileDonations: 0,
       desktopDonations: 0,
       gross: 0,
       net: 0,
       tips: 0,
-      checkoutOpens: inMemoryStats.variant_b.checkoutOpens,
-      stayTimeSum: inMemoryStats.variant_b.stayTimeSum,
-      stayTimeCount: inMemoryStats.variant_b.stayTimeCount,
-      scroll25: inMemoryStats.variant_b.scroll25,
-      scroll50: inMemoryStats.variant_b.scroll50,
-      scroll75: inMemoryStats.variant_b.scroll75,
-      scroll100: inMemoryStats.variant_b.scroll100,
-      bounces: inMemoryStats.variant_b.bounces,
+      checkoutOpens: 0,
+      stayTimeSum: 0,
+      stayTimeCount: 0,
+      scroll25: 0,
+      scroll50: 0,
+      scroll75: 0,
+      scroll100: 0,
+      bounces: 0,
       currency: 'EUR'
     }
   };
 
+  // Build visitor lists for deep inspection
+  const visitorLists = {
+    control: [],
+    variant_b: []
+  };
+
+  // Aggregate Filtered Visitor Sessions
+  for (const s of filteredVisitors) {
+    const target = s.variant === VARIANTS.VARIANT_B ? stats.variant_b : stats.control;
+    const list = s.variant === VARIANTS.VARIANT_B ? visitorLists.variant_b : visitorLists.control;
+
+    target.visitors++;
+    if (s.isMobile) target.mobileVisitors++;
+    else target.desktopVisitors++;
+
+    if (s.checkoutOpened) target.checkoutOpens++;
+
+    if (s.stayTime > 0) {
+      target.stayTimeSum += s.stayTime;
+      target.stayTimeCount++;
+      if (s.stayTime < 6 && !s.checkoutOpened) target.bounces++;
+    }
+
+    if (s.scrollDepth >= 100) target.scroll100++;
+    else if (s.scrollDepth >= 75) target.scroll75++;
+    else if (s.scrollDepth >= 50) target.scroll50++;
+    else if (s.scrollDepth >= 25) target.scroll25++;
+
+    // Add to detail list (up to 50 most recent per variant)
+    if (list.length < 50) {
+      list.push({
+        id: s.id,
+        timeAgo: formatRelativeTime(s.timestamp),
+        timeFormatted: new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        dateFormatted: new Date(s.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }),
+        ipMasked: s.ipMasked,
+        isMobile: s.isMobile,
+        deviceType: s.deviceType,
+        deviceLabel: s.deviceLabel,
+        stayTimeSeconds: s.stayTime,
+        stayTimeFormatted: formatDuration(s.stayTime),
+        scrollDepth: s.scrollDepth,
+        checkoutOpened: s.checkoutOpened,
+        donated: s.donated,
+        amountFormatted: s.amount > 0 ? `£${s.amount.toFixed(2)}` : '—',
+        campaign: s.campaignSlug
+      });
+    }
+  }
+
+  // Aggregate Payments
   for (const p of payments) {
     const cur = p.currency || 'EUR';
     const rawAmt = parseFloat(p.amount) || 0;
@@ -272,20 +573,25 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
     }
   }
 
+  // Minimum fallback for clean UI display when 0 visitors recorded
+  const totalRawVisitors = stats.control.visitors + stats.variant_b.visitors;
+
   for (const key of ['control', 'variant_b']) {
     const v = stats[key];
-    v.cr = v.visitors > 0 ? parseFloat(((v.donations / v.visitors) * 100).toFixed(2)) : 0;
+    const visitorDenom = Math.max(v.visitors, v.donations > 0 ? v.donations : 0);
+    
+    v.cr = visitorDenom > 0 ? parseFloat(((v.donations / visitorDenom) * 100).toFixed(2)) : 0;
     v.mobileCr = v.mobileVisitors > 0 ? parseFloat(((v.mobileDonations / v.mobileVisitors) * 100).toFixed(2)) : 0;
     v.desktopCr = v.desktopVisitors > 0 ? parseFloat(((v.desktopDonations / v.desktopVisitors) * 100).toFixed(2)) : 0;
     v.aov = v.donations > 0 ? parseFloat((v.gross / v.donations).toFixed(2)) : 0;
-    v.rpv = v.visitors > 0 ? parseFloat((v.net / v.visitors).toFixed(2)) : 0;
+    v.rpv = visitorDenom > 0 ? parseFloat((v.net / visitorDenom).toFixed(2)) : 0;
     
     // Engagement KPIs
-    v.avgStayTime = v.stayTimeCount > 0 ? Math.round(v.stayTimeSum / v.stayTimeCount) : 48; // fallback realistic baseline
-    v.checkoutOpenRate = v.visitors > 0 ? parseFloat(((v.checkoutOpens / v.visitors) * 100).toFixed(1)) : 0;
-    v.bounceRate = v.visitors > 0 ? parseFloat(((v.bounces / v.visitors) * 100).toFixed(1)) : 0;
-    v.deepScrollRate = v.visitors > 0 ? parseFloat(((v.scroll75 / v.visitors) * 100).toFixed(1)) : 0;
-    v.transactionsPer1k = v.visitors > 0 ? parseFloat(((v.donations / v.visitors) * 1000).toFixed(1)) : 0;
+    v.avgStayTime = v.stayTimeCount > 0 ? Math.round(v.stayTimeSum / v.stayTimeCount) : 0;
+    v.avgStayTimeFormatted = formatDuration(v.avgStayTime);
+    v.checkoutOpenRate = visitorDenom > 0 ? parseFloat(((v.checkoutOpens / visitorDenom) * 100).toFixed(1)) : 0;
+    v.bounceRate = visitorDenom > 0 ? parseFloat(((v.bounces / visitorDenom) * 100).toFixed(1)) : 0;
+    v.deepScrollRate = visitorDenom > 0 ? parseFloat(((v.scroll75 / visitorDenom) * 100).toFixed(1)) : 0;
 
     v.gross = parseFloat(v.gross.toFixed(2));
     v.net = parseFloat(v.net.toFixed(2));
@@ -294,26 +600,30 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
 
   const significance = calculateZScore(
     stats.control.donations,
-    stats.control.visitors,
+    Math.max(stats.control.visitors, 1),
     stats.variant_b.donations,
-    stats.variant_b.visitors
+    Math.max(stats.variant_b.visitors, 1)
   );
 
   const crDiff = stats.control.cr > 0 
     ? parseFloat((((stats.variant_b.cr - stats.control.cr) / stats.control.cr) * 100).toFixed(1))
-    : 0;
+    : (stats.variant_b.cr > 0 ? 100 : 0);
 
   const rpvDiff = stats.control.rpv > 0
     ? parseFloat((((stats.variant_b.rpv - stats.control.rpv) / stats.control.rpv) * 100).toFixed(1))
-    : 0;
+    : (stats.variant_b.rpv > 0 ? 100 : 0);
 
   const stayTimeDiff = stats.control.avgStayTime > 0
     ? parseFloat((((stats.variant_b.avgStayTime - stats.control.avgStayTime) / stats.control.avgStayTime) * 100).toFixed(1))
     : 0;
 
+  const intuitiveVerdict = generateIntuitiveVerdict(significance, stats, { cr: crDiff, rpv: rpvDiff, stayTime: stayTimeDiff }, totalRawVisitors);
+
   return {
     variants: stats,
+    visitorLists,
     significance,
+    verdict: intuitiveVerdict,
     lift: {
       cr: crDiff,
       rpv: rpvDiff,
@@ -322,6 +632,11 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
     totalVisitors: stats.control.visitors + stats.variant_b.visitors,
     totalDonations: stats.control.donations + stats.variant_b.donations,
     totalRevenue: parseFloat((stats.control.gross + stats.variant_b.gross).toFixed(2)),
+    bounds: {
+      rangeKey,
+      startDate: bounds.startDateISO,
+      endDate: bounds.endDateISO
+    },
     updatedAt: new Date().toISOString()
   };
 }
@@ -330,6 +645,7 @@ module.exports = {
   VARIANTS,
   VARIANT_NAMES,
   COOKIE_NAME,
+  SID_COOKIE_NAME,
   resolveVariant,
   setVariantCookie,
   recordImpression,

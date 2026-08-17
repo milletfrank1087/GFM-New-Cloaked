@@ -60,7 +60,7 @@ module.exports = function createPagesRouter(ctx) {
     const assignedVariant = resolveVariant(req, res);
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
     const ua = req.headers['user-agent'] || '';
-    recordImpression(assignedVariant, ua, ip);
+    recordImpression(assignedVariant, ua, ip, ACTIVE_CAMPAIGN?.id || 'glioblastoma-grace', req, res);
 
     const useVariantB = assignedVariant === VARIANTS.VARIANT_B;
     const targetTemplate = useVariantB ? 'grace-variant-b.html' : 'index.html';

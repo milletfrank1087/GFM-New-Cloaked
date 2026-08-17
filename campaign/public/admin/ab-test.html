@@ -2,213 +2,303 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A/B Test Cockpit | HopeRise Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/admin/css/profit.css">
+  <style>
+    .drawer-toggle {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .drawer-toggle:hover {
+      background-color: #f8fafc;
+    }
+    .visitor-row:hover {
+      background-color: #f8fafc;
+    }
+    .badge-emerald {
+      background: #e6f7f0;
+      color: #00875a;
+      border: 1px solid #b3e6d2;
+    }
+    .badge-purple {
+      background: #f3f0ff;
+      color: #635bff;
+      border: 1px solid #dcd7fe;
+    }
+    .badge-slate {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    .badge-amber {
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+    .badge-blue {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+  </style>
 </head>
-<body class="min-h-screen text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
+<body class="bg-[#f8fafc] text-[#061b31] font-sans antialiased min-h-screen">
 
-  <!-- Mobile Top Header -->
-  <header class="lg:hidden fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 px-3.5 py-2.5 flex items-center justify-between" style="padding-top: max(0.6rem, env(safe-area-inset-top));">
-    <div class="flex items-center gap-2.5">
-      <button id="mobile-menu-btn" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" class="p-2 -ml-1 text-slate-700 hover:bg-slate-100 active:bg-slate-200 rounded-lg touch-target flex items-center justify-center">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  <!-- Mobile Navigation Header -->
+  <header class="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-30 px-4 py-3 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-3">
+      <button onclick="toggleNav()" class="p-1.5 -ml-1.5 text-slate-600 hover:text-slate-900 focus:outline-none" aria-label="Toggle navigation">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
       </button>
       <div class="flex items-center gap-2">
-        <div class="w-6 h-6 bg-[#635bff] rounded-md flex items-center justify-center text-white shadow-xs font-bold text-[10px]">HR</div>
-        <span class="font-bold text-sm text-[#061b31] tracking-tight">A/B Cockpit</span>
+        <div class="w-7 h-7 bg-[#635bff] rounded flex items-center justify-center text-white font-bold text-xs">HR</div>
+        <span class="font-bold text-sm tracking-tight text-[#061b31]">A/B Cockpit</span>
       </div>
     </div>
-    <div class="flex items-center gap-1.5">
-      <button onclick="loadAbMetrics()" id="mobile-refresh-btn" aria-label="Refresh Data" class="p-2 text-slate-600 hover:bg-slate-100 active:bg-slate-200 rounded-lg touch-target flex items-center justify-center">
-        <svg id="mobile-refresh-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+    <div class="flex items-center gap-2">
+      <button onclick="loadAbMetrics()" class="p-1.5 text-slate-500 hover:text-slate-800 transition-colors" title="Refresh">
+        <svg id="mobile-refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
       </button>
-      <button onclick="logout()" aria-label="Logout" class="p-2 -mr-1 text-slate-400 hover:text-slate-600 rounded-lg touch-target flex items-center justify-center">
-        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      <button onclick="logoutAdmin()" class="p-1.5 text-slate-500 hover:text-slate-800 transition-colors" title="Logout">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
       </button>
     </div>
   </header>
 
-  <!-- Sidebar (injected by admin-common.js) -->
-  <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out"></aside>
-  <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 hidden lg:hidden transition-opacity" onclick="closeSidebar()"></div>
+  <!-- Sidebar Overlay -->
+  <div id="nav-overlay" onclick="toggleNav()" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden transition-opacity"></div>
 
-  <!-- Main Workspace -->
-  <main class="lg:ml-64 pt-14 lg:pt-0 min-h-screen">
-    <div class="max-w-[1560px] mx-auto p-3.5 sm:p-6 lg:p-8 space-y-4 sm:space-y-5">
-
-      <!-- Top Operations Bar -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 pb-2 border-b border-gray-200">
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-64 bg-white border-r border-gray-200 z-50 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shadow-lg lg:shadow-none">
+    <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 bg-[#635bff] rounded-md flex items-center justify-center text-white font-bold text-sm shadow-sm">HR</div>
         <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="pulse-dot" id="fresh-dot"></span>
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="freshness-label" aria-live="polite">Live A/B Testing Engine</span>
-            <span class="text-xs text-slate-300">·</span>
-            <span class="text-xs text-slate-400 font-mono" id="last-updated-label">Syncing data…</span>
-          </div>
-          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#061b31]">A/B Conversion &amp; Revenue Cockpit</h1>
+          <h1 class="font-bold text-sm text-[#061b31] leading-tight">HopeRise</h1>
+          <p class="text-[11px] text-slate-400">Operations Control</p>
         </div>
-        
-        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <div class="flex items-center gap-1.5 bg-white border border-gray-200 rounded-md px-2.5 py-1.5 text-xs text-slate-600 shadow-xs">
-            <span class="font-semibold text-slate-700">Preview:</span>
-            <a href="/?variant=control" target="_blank" class="text-slate-500 hover:text-slate-900 font-medium hover:underline">Control ↗</a>
-            <span class="text-slate-300">|</span>
-            <a href="/?variant=variant_b" target="_blank" class="text-[#635bff] hover:text-[#533afd] font-semibold hover:underline">Variant B ↗</a>
+      </div>
+      <button onclick="toggleNav()" class="lg:hidden p-1 text-slate-400 hover:text-slate-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-3">
+      <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Campaign Operations</div>
+      <nav class="space-y-1 mt-1" id="admin-nav-links">
+        <!-- Injected by admin-common.js -->
+      </nav>
+    </div>
+
+    <div class="mt-auto p-4 border-t border-gray-100 bg-slate-50/50">
+      <div class="flex items-center justify-between text-xs text-slate-500">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Split Engine Active
+        </span>
+        <button onclick="logoutAdmin()" class="text-xs font-semibold text-slate-600 hover:text-[#635bff] transition-colors">Sign Out</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="lg:pl-64 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+      <!-- Top Header & Filter Controls -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-slate-500">
+            <span class="w-2 h-2 rounded-full bg-[#00875a] inline-block animate-pulse"></span>
+            <span>Live 50/50 Traffic Split</span>
+            <span class="text-slate-300">•</span>
+            <span id="last-updated-label" class="font-mono text-[11px] text-slate-400">Checking…</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#061b31] tracking-tight mt-1">A/B Conversion & Revenue Cockpit</h1>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="inline-flex rounded-lg border border-gray-200 bg-white p-0.5 shadow-sm text-xs font-semibold" id="range-pills">
+            <button onclick="selectRange('allTime')" class="stripe-pill active" data-range="allTime">All Time</button>
+            <button onclick="selectRange('today')" class="stripe-pill inactive" data-range="today">Today</button>
+            <button onclick="selectRange('yesterday')" class="stripe-pill inactive" data-range="yesterday">Yesterday</button>
+            <button onclick="selectRange('last7days')" class="stripe-pill inactive" data-range="last7days">Last 7D</button>
+            <button onclick="selectRange('last30days')" class="stripe-pill inactive" data-range="last30days">Last 30D</button>
+            <button onclick="selectRange('thisMonth')" class="stripe-pill inactive" data-range="thisMonth">This Month</button>
           </div>
 
-          <button id="refresh-btn" onclick="loadAbMetrics()" class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-md bg-[#635bff] hover:bg-[#533afd] text-white text-xs font-medium shadow-xs flex items-center gap-1.5 transition-all">
-            <svg id="refresh-icon" class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span id="refresh-label">Refresh</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <select id="filter-campaign" onchange="loadAbMetrics()" class="text-xs font-semibold bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-slate-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#635bff]">
+              <option value="glioblastoma-grace" selected>glioblastoma-grace (Active Split)</option>
+              <option value="all">All Campaigns</option>
+            </select>
+
+            <a href="/?variant=control" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
+              Control ↗
+            </a>
+            <a href="/?variant=variant_b" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
+              Variant B ↗
+            </a>
+
+            <button onclick="loadAbMetrics()" class="btn-primary text-xs font-semibold px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
+              <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Control Deck: Filter Pills -->
-      <div class="stripe-card p-3 sm:p-3.5">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-          
-          <div class="flex items-center bg-[#eef3f8] p-1 rounded-lg overflow-x-auto scroll-smooth-x no-scrollbar" id="range-pills">
-            <button onclick="selectRange('allTime', this)" class="stripe-pill active">All Time</button>
-            <button onclick="selectRange('today', this)" class="stripe-pill inactive">Today</button>
-            <button onclick="selectRange('yesterday', this)" class="stripe-pill inactive">Yesterday</button>
-            <button onclick="selectRange('last7days', this)" class="stripe-pill inactive">Last 7D</button>
-            <button onclick="selectRange('last30days', this)" class="stripe-pill inactive">Last 30D</button>
-          </div>
-
-          <div class="flex items-center gap-3">
-            <div class="relative min-w-[200px] flex-1 sm:flex-none">
-              <select id="filter-campaign" onchange="loadAbMetrics()" class="w-full bg-white border border-gray-200 text-[#061b31] text-xs sm:text-sm font-medium rounded-md py-1.5 px-3 pr-8 focus:ring-1 focus:ring-[#635bff] focus:outline-none transition-all cursor-pointer">
-                <option value="all">All Campaigns</option>
-                <option value="glioblastoma-grace" selected>glioblastoma-grace (Active Split)</option>
-              </select>
-            </div>
-            <div class="hidden sm:block text-right">
-              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-50 text-[#635bff] border border-indigo-100">50/50 Traffic Split</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- HERO CARD: Statistical Significance Engine -->
-      <div class="stripe-card p-6 sm:p-8 bg-gradient-to-r from-white via-white to-[#fbfcff] border-l-4 border-l-[#635bff]">
+      <!-- Plain-English Verdict & Winner Decision Hero -->
+      <div id="verdict-card" class="stripe-card p-5 sm:p-6 border-l-4 border-l-[#635bff]">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div class="space-y-2 max-w-2xl">
+          <div class="space-y-2 max-w-3xl">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-50 text-[#635bff] uppercase tracking-wider border border-indigo-100">2-Proportion Z-Test Engine</span>
-              <span class="text-xs font-mono font-bold text-slate-500" id="sample-size-badge">2 Visitors Evaluated</span>
+              <span id="verdict-badge" class="badge-purple px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                Gathering Early Traffic
+              </span>
+              <span id="sample-size-badge" class="text-xs text-slate-400 font-medium">0 Visitors Evaluated</span>
             </div>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-[#061b31] tracking-tight" id="winner-headline">Collecting Sample Data…</h2>
-            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed" id="winner-description">
-              Evaluating conversion rate lift, revenue per visitor, and donor engagement duration across Variant A (Control) and Variant B (Human-Authentic).
+            <h2 id="verdict-headline" class="text-xl sm:text-2xl font-bold text-[#061b31]">
+              A/B Test Initializing…
+            </h2>
+            <p id="verdict-description" class="text-sm text-slate-600 leading-relaxed">
+              Evaluating donation conversion rate, revenue per visitor, and donor reading time across Variant A (Control) and Variant B (Human-Authentic).
             </p>
           </div>
 
-          <div class="flex flex-wrap items-center gap-3 sm:gap-4 bg-[#f8fafd] border border-gray-200 rounded-xl p-4 sm:p-5">
-            <div>
-              <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Confidence</div>
-              <div class="text-2xl sm:text-3xl font-extrabold tabular-numbers text-[#00875a]" id="confidence-level">0.0%</div>
+          <!-- Quick Decision Summary Boxes -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100 min-w-fit">
+            <div class="text-center sm:text-left">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Certainty</div>
+              <div id="conf-level-val" class="text-base font-bold text-[#061b31] tabular-numbers mt-0.5">0.0%</div>
+              <div id="conf-level-sub" class="text-[10px] text-slate-500 mt-0.5">Statistical confidence</div>
             </div>
-            <div class="w-px h-10 bg-gray-200"></div>
-            <div>
-              <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">P-Value</div>
-              <div class="text-2xl sm:text-3xl font-extrabold tabular-numbers text-slate-700" id="p-value">1.000</div>
+            <div class="text-center sm:text-left">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Donation Lift</div>
+              <div id="cr-lift-val" class="text-base font-bold text-[#00875a] tabular-numbers mt-0.5">+0.0%</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">B vs Control</div>
             </div>
-            <div class="w-px h-10 bg-gray-200"></div>
-            <div>
-              <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">CR Lift</div>
-              <div class="text-2xl sm:text-3xl font-extrabold tabular-numbers text-[#00875a]" id="cr-lift">+0.0%</div>
+            <div class="text-center sm:text-left">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Reading Time</div>
+              <div id="time-lift-val" class="text-base font-bold text-[#635bff] tabular-numbers mt-0.5">+0s</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">B donor engagement</div>
+            </div>
+            <div class="text-center sm:text-left">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Suggested Action</div>
+              <div id="action-rec-val" class="text-xs font-bold text-slate-700 mt-1">Keep 50/50 Split</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Automated guidance</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 6 High-Signal KPI Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      <!-- Intuitive KPI Cards Grid (6 High-Yield Metrics) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         
-        <!-- Total Split Visitors -->
+        <!-- Card 1: Visitors Split -->
         <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Split Visitors</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5" id="kpi-total-visitors">0</div>
-          <div class="text-[11px] text-slate-400 mt-1 flex justify-between">
-            <span>A: <strong id="kpi-control-v">0</strong></span>
-            <span>B: <strong id="kpi-variantb-v">0</strong></span>
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Total Visitors</span>
+            <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">50/50</span>
           </div>
+          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5" id="kpi-total-visitors">0</div>
+          <div class="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
+            <span>A: <strong id="kpi-visitors-a" class="text-slate-700">0</strong></span>
+            <span>B: <strong id="kpi-visitors-b" class="text-slate-700">0</strong></span>
+          </div>
+          <div class="text-[10px] text-slate-400 mt-0.5 truncate" id="kpi-mobile-share">📱 Mobile: 0%</div>
         </div>
 
-        <!-- Overall Conversion Rate -->
+        <!-- Card 2: Donation Conversion Rate -->
         <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Overall CR%</div>
+          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Donation Rate (CR)</div>
           <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
             <span id="kpi-cr-b">0.00%</span>
             <span class="text-[10px] font-bold text-[#00875a]" id="kpi-cr-badge">+0%</span>
           </div>
-          <div class="text-[11px] text-slate-400 mt-1">
-            Ctrl: <strong id="kpi-cr-a">0.00%</strong>
+          <div class="text-[11px] text-slate-500 mt-1">
+            Original: <strong id="kpi-cr-a" class="text-slate-700">0.00%</strong>
           </div>
+          <div class="text-[10px] text-slate-400 mt-0.5">% of visitors who donate</div>
         </div>
 
-        <!-- Mobile CR% (95% Ad Traffic) -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Mobile CR% (Ads)</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-mobcr-b">0.00%</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-mobcr-badge">+0%</span>
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1">
-            Ctrl: <strong id="kpi-mobcr-a">0.00%</strong>
-          </div>
-        </div>
-
-        <!-- Average Stay Time (Seconds) -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Avg Stay Time</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-stay-b">0s</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-stay-badge">+0%</span>
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1">
-            Ctrl: <strong id="kpi-stay-a">0s</strong>
-          </div>
-        </div>
-
-        <!-- Checkout Open Rate (Micro-Conversion) -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Modal Open %</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-open-b">0.0%</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-open-badge">+0%</span>
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1">
-            Ctrl: <strong id="kpi-open-a">0.0%</strong>
-          </div>
-        </div>
-
-        <!-- Revenue Per Visitor (RPV) -->
+        <!-- Card 3: Revenue Per Visitor (RPV) -->
         <div class="stripe-card p-4">
           <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Rev / Visitor</div>
           <div class="text-xl sm:text-2xl font-bold text-[#00875a] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
             <span id="kpi-rpv-b">€0.00</span>
             <span class="text-[10px] font-bold text-[#00875a]" id="kpi-rpv-badge">+0%</span>
           </div>
-          <div class="text-[11px] text-slate-400 mt-1">
-            Ctrl: <strong id="kpi-rpv-a">€0.00</strong>
+          <div class="text-[11px] text-slate-500 mt-1">
+            Original: <strong id="kpi-rpv-a" class="text-slate-700">€0.00</strong>
           </div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Average yield per visitor</div>
+        </div>
+
+        <!-- Card 4: Story Reading Time -->
+        <div class="stripe-card p-4">
+          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Reading Time</div>
+          <div class="text-xl sm:text-2xl font-bold text-[#635bff] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
+            <span id="kpi-stay-b">0s</span>
+            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-stay-badge">+0s</span>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-1">
+            Original: <strong id="kpi-stay-a" class="text-slate-700">0s</strong>
+          </div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Time donors spend reading</div>
+        </div>
+
+        <!-- Card 5: Donate Intent Rate -->
+        <div class="stripe-card p-4">
+          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Donate Intent</div>
+          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
+            <span id="kpi-open-b">0.0%</span>
+            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-open-badge">+0%</span>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-1">
+            Original: <strong id="kpi-open-a" class="text-slate-700">0.0%</strong>
+          </div>
+          <div class="text-[10px] text-slate-400 mt-0.5">% who clicked Donate button</div>
+        </div>
+
+        <!-- Card 6: Deep Readers (75%+ Scroll) -->
+        <div class="stripe-card p-4">
+          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Deep Readers</div>
+          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
+            <span id="kpi-scroll-b">0.0%</span>
+            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-scroll-badge">+0%</span>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-1">
+            Original: <strong id="kpi-scroll-a" class="text-slate-700">0.0%</strong>
+          </div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Scrolled to updates & FAQ</div>
         </div>
 
       </div>
 
-      <!-- Detailed Side-by-Side Performance Matrix Table -->
+      <!-- Side-by-Side Comprehensive Performance Matrix Table -->
       <div class="stripe-card overflow-hidden">
-        <div class="p-4 sm:p-5 border-b border-gray-100 flex items-center justify-between">
+        <div class="p-4 sm:p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 class="text-sm sm:text-base font-bold text-[#061b31]">Side-by-Side Comprehensive Performance Matrix</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Segmented engagement, scroll depth, conversion velocity, and net profitability</p>
+            <h2 class="text-sm sm:text-base font-bold text-[#061b31]">Side-by-Side Performance Comparison</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Detailed breakdown of traffic, donations, reader engagement, and net revenue</p>
+          </div>
+          <div class="text-xs text-slate-400 font-medium">
+            Currency: EUR / GBP Base Normalized
           </div>
         </div>
 
@@ -221,20 +311,122 @@
                 <th class="py-3 px-3 font-bold">Donations</th>
                 <th class="py-3 px-3 font-bold">CR% (Overall)</th>
                 <th class="py-3 px-3 font-bold">Mobile CR%</th>
-                <th class="py-3 px-3 font-bold">Avg Stay Time</th>
+                <th class="py-3 px-3 font-bold">Avg Reading Time</th>
                 <th class="py-3 px-3 font-bold">Modal Open%</th>
-                <th class="py-3 px-3 font-bold">AOV (€)</th>
-                <th class="py-3 px-3 font-bold">Net Revenue (€)</th>
-                <th class="py-3 px-4 font-bold">RPV (€)</th>
+                <th class="py-3 px-3 font-bold">Deep Scroll%</th>
+                <th class="py-3 px-3 font-bold">Avg Donation</th>
+                <th class="py-3 px-3 font-bold">Net Revenue</th>
+                <th class="py-3 px-4 font-bold">Rev / Visitor</th>
               </tr>
             </thead>
             <tbody id="matrix-tbody">
               <tr>
-                <td colspan="10" class="text-center py-8 text-slate-400">Loading variant performance data…</td>
+                <td colspan="11" class="text-center py-8 text-slate-400">Loading variant performance data…</td>
               </tr>
             </tbody>
           </table>
         </div>
+      </div>
+
+      <!-- Expandable Visitor Detail Lists (Under Each Variant) -->
+      <div class="space-y-4">
+        
+        <!-- Drawer 1: Variant A (Control) Visitors -->
+        <div class="stripe-card overflow-hidden">
+          <button onclick="toggleVisitorDrawer('control')" class="w-full p-4 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs">
+                A
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-[#061b31] flex items-center gap-2">
+                  <span>Variant A (Original Control) — Individual Visitor Log</span>
+                  <span id="drawer-count-control" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">0 visitors</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Click to view real-time visitor devices, reading durations, scroll depth, and donations</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-[#635bff]">
+              <span id="drawer-arrow-label-control">Show Details</span>
+              <svg id="drawer-arrow-control" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </button>
+
+          <!-- Collapsible Content for Control -->
+          <div id="drawer-content-control" class="hidden border-t border-gray-100 bg-white">
+            <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
+              <table class="w-full text-left stripe-table text-xs">
+                <thead class="bg-slate-50 sticky top-0 z-10 border-b border-gray-200">
+                  <tr>
+                    <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Device & Browser</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Location / IP</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Reading Time</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Scroll Depth</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Donate Intent</th>
+                    <th class="py-2.5 px-4 font-bold text-slate-500">Donation Outcome</th>
+                  </tr>
+                </thead>
+                <tbody id="visitors-tbody-control">
+                  <tr>
+                    <td colspan="7" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drawer 2: Variant B (Challenger) Visitors -->
+        <div class="stripe-card overflow-hidden">
+          <button onclick="toggleVisitorDrawer('variant_b')" class="w-full p-4 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-[#e6f7f0] text-[#00875a] flex items-center justify-center font-bold text-xs">
+                B
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-[#061b31] flex items-center gap-2">
+                  <span>Variant B (Human-Authentic Challenger) — Individual Visitor Log</span>
+                  <span id="drawer-count-variant_b" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#e6f7f0] text-[#00875a]">0 visitors</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Click to view real-time visitor devices, reading durations, scroll depth, and donations</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-[#00875a]">
+              <span id="drawer-arrow-label-variant_b">Show Details</span>
+              <svg id="drawer-arrow-variant_b" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </button>
+
+          <!-- Collapsible Content for Variant B -->
+          <div id="drawer-content-variant_b" class="hidden border-t border-gray-100 bg-white">
+            <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
+              <table class="w-full text-left stripe-table text-xs">
+                <thead class="bg-slate-50 sticky top-0 z-10 border-b border-gray-200">
+                  <tr>
+                    <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Device & Browser</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Location / IP</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Reading Time</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Scroll Depth</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-500">Donate Intent</th>
+                    <th class="py-2.5 px-4 font-bold text-slate-500">Donation Outcome</th>
+                  </tr>
+                </thead>
+                <tbody id="visitors-tbody-variant_b">
+                  <tr>
+                    <td colspan="7" class="text-center py-6 text-slate-400">No visitor sessions recorded yet in this time window.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -243,18 +435,65 @@
   <script src="/admin/js/admin-common.js"></script>
   <script>
     let currentRange = 'allTime';
+    let currentData = null;
 
-    function selectRange(range, btn) {
-      currentRange = range;
-      document.querySelectorAll('#range-pills .stripe-pill').forEach(b => {
-        b.classList.remove('active');
-        b.classList.add('inactive');
+    function getDateRanges() {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      return {
+        today: { startDate: today.toISOString(), endDate: now.toISOString() },
+        yesterday: { startDate: new Date(today.getTime() - 86400000).toISOString(), endDate: new Date(today.getTime() - 1).toISOString() },
+        last7days: { startDate: new Date(today.getTime() - 6 * 86400000).toISOString(), endDate: now.toISOString() },
+        last30days: { startDate: new Date(today.getTime() - 29 * 86400000).toISOString(), endDate: now.toISOString() },
+        thisMonth: { startDate: startOfThisMonth.toISOString(), endDate: now.toISOString() },
+        lastMonth: { startDate: startOfLastMonth.toISOString(), endDate: new Date(startOfThisMonth.getTime() - 1).toISOString() }
+      };
+    }
+
+    function selectRange(rangeKey) {
+      currentRange = rangeKey;
+      document.querySelectorAll('#range-pills .stripe-pill').forEach(btn => {
+        const isSelected = btn.dataset.range === rangeKey;
+        btn.classList.toggle('active', isSelected);
+        btn.classList.toggle('inactive', !isSelected);
       });
-      if (btn) {
-        btn.classList.add('active');
-        btn.classList.remove('inactive');
-      }
       loadAbMetrics();
+    }
+
+    function toggleVisitorDrawer(variant) {
+      const content = document.getElementById(`drawer-content-${variant}`);
+      const arrow = document.getElementById(`drawer-arrow-${variant}`);
+      const label = document.getElementById(`drawer-arrow-label-${variant}`);
+      if (!content) return;
+
+      const isHidden = content.classList.contains('hidden');
+      if (isHidden) {
+        content.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotate-180');
+        if (label) label.textContent = 'Hide Details';
+      } else {
+        content.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-180');
+        if (label) label.textContent = 'Show Details';
+      }
+    }
+
+    function buildQueryString() {
+      const params = new URLSearchParams();
+      const campaign = document.getElementById('filter-campaign')?.value;
+      if (campaign && campaign !== 'all') params.set('campaign', campaign);
+      params.set('range', currentRange);
+      params.set('tzOffset', new Date().getTimezoneOffset());
+
+      const ranges = getDateRanges();
+      const r = ranges[currentRange];
+      if (currentRange !== 'allTime' && r) {
+        params.set('startDate', r.startDate);
+        params.set('endDate', r.endDate);
+      }
+      return params.toString();
     }
 
     async function loadAbMetrics() {
@@ -264,10 +503,10 @@
       if (mobileRefreshIcon) mobileRefreshIcon.classList.add('animate-spin');
 
       try {
-        const campaign = document.getElementById('filter-campaign').value;
-        const res = await fetch(`/api/admin/ab-test?campaign=${campaign}&range=${currentRange}`);
-        if (!res.ok) throw new Error('Failed to load metrics');
+        const res = await fetch('/api/admin/ab-test?' + buildQueryString());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
+        currentData = data;
         renderDashboard(data);
       } catch (err) {
         console.error('Failed to load A/B test metrics:', err);
@@ -282,160 +521,246 @@
     function renderDashboard(data) {
       const c = data.variants.control;
       const b = data.variants.variant_b;
-      const sig = data.significance;
+      const v = data.verdict;
       const lift = data.lift;
+      const sig = data.significance;
 
-      // Top Hero
-      const winnerHeadline = document.getElementById('winner-headline');
-      const winnerDesc = document.getElementById('winner-description');
-      const confLevel = document.getElementById('confidence-level');
-      const pVal = document.getElementById('p-value');
-      const crLiftEl = document.getElementById('cr-lift');
+      // 1. Verdict & Winner Hero Card
+      const verdictCard = document.getElementById('verdict-card');
+      const verdictBadge = document.getElementById('verdict-badge');
+      const verdictHeadline = document.getElementById('verdict-headline');
+      const verdictDesc = document.getElementById('verdict-description');
       const sampleBadge = document.getElementById('sample-size-badge');
 
       if (sampleBadge) sampleBadge.textContent = `${data.totalVisitors.toLocaleString()} Visitors Evaluated`;
-      if (confLevel) confLevel.textContent = `${sig.confidence.toFixed(1)}%`;
-      if (pVal) pVal.textContent = sig.pValue.toFixed(3);
-      if (crLiftEl) {
-        crLiftEl.textContent = `${lift.cr >= 0 ? '+' : ''}${lift.cr.toFixed(1)}%`;
-        crLiftEl.className = lift.cr >= 0 ? 'text-2xl sm:text-3xl font-extrabold tabular-numbers text-[#00875a]' : 'text-2xl sm:text-3xl font-extrabold tabular-numbers text-[#df1b41]';
+      if (verdictHeadline) verdictHeadline.textContent = v.headline;
+      if (verdictDesc) verdictDesc.textContent = v.description;
+      if (verdictBadge) {
+        verdictBadge.textContent = v.statusBadge;
+        verdictBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider badge-${v.badgeColor || 'purple'}`;
+      }
+      if (verdictCard) {
+        verdictCard.className = `stripe-card p-5 sm:p-6 border-l-4 border-l-${v.badgeColor === 'emerald' ? '[#00875a]' : v.badgeColor === 'amber' ? '[#b45309]' : '[#635bff]'}`;
       }
 
-      if (sig.isSignificant) {
-        if (sig.winner === 'variant_b') {
-          winnerHeadline.textContent = 'Variant B (Human-Authentic) is Winning!';
-          winnerHeadline.className = 'text-2xl sm:text-3xl font-extrabold text-[#00875a] tracking-tight';
-          winnerDesc.textContent = `Variant B is outperforming Control with ${sig.confidence}% confidence and +${lift.cr}% conversion rate lift.`;
-        } else {
-          winnerHeadline.textContent = 'Control (Original) is Leading';
-          winnerHeadline.className = 'text-2xl sm:text-3xl font-extrabold text-[#061b31] tracking-tight';
-          winnerDesc.textContent = `Control is currently performing better with ${sig.confidence}% confidence.`;
-        }
-      } else {
-        winnerHeadline.textContent = 'Collecting Sample Data…';
-        winnerHeadline.className = 'text-2xl sm:text-3xl font-extrabold text-[#061b31] tracking-tight';
-        winnerDesc.textContent = `Test in progress (${data.totalVisitors} visitors recorded). Need more traffic to cross the 95% statistical significance threshold.`;
-      }
+      // Summary mini cards
+      const confLevelVal = document.getElementById('conf-level-val');
+      const confLevelSub = document.getElementById('conf-level-sub');
+      const crLiftVal = document.getElementById('cr-lift-val');
+      const timeLiftVal = document.getElementById('time-lift-val');
+      const actionRecVal = document.getElementById('action-rec-val');
 
-      // 6 Top Cards
+      if (confLevelVal) confLevelVal.textContent = `${sig.confidence.toFixed(1)}%`;
+      if (confLevelSub) confLevelSub.textContent = v.confidenceLabel;
+      if (crLiftVal) {
+        const sign = lift.cr >= 0 ? '+' : '';
+        crLiftVal.textContent = `${sign}${lift.cr.toFixed(1)}%`;
+        crLiftVal.className = `text-base font-bold tabular-numbers mt-0.5 ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
+      }
+      if (timeLiftVal) {
+        const diffSec = b.avgStayTime - c.avgStayTime;
+        const sign = diffSec >= 0 ? '+' : '';
+        timeLiftVal.textContent = `${sign}${diffSec}s`;
+        timeLiftVal.className = `text-base font-bold tabular-numbers mt-0.5 ${diffSec >= 0 ? 'text-[#635bff]' : 'text-slate-600'}`;
+      }
+      if (actionRecVal) actionRecVal.textContent = v.actionRecommendation;
+
+      // 2. 6 KPI Cards
       document.getElementById('kpi-total-visitors').textContent = data.totalVisitors.toLocaleString();
-      document.getElementById('kpi-control-v').textContent = c.visitors.toLocaleString();
-      document.getElementById('kpi-variantb-v').textContent = b.visitors.toLocaleString();
+      document.getElementById('kpi-visitors-a').textContent = c.visitors.toLocaleString();
+      document.getElementById('kpi-visitors-b').textContent = b.visitors.toLocaleString();
+      
+      const totalMob = (c.mobileVisitors || 0) + (b.mobileVisitors || 0);
+      const mobShare = data.totalVisitors > 0 ? Math.round((totalMob / data.totalVisitors) * 100) : 0;
+      document.getElementById('kpi-mobile-share').textContent = `📱 Mobile: ${mobShare}% (${totalMob} visitors)`;
 
-      // Overall CR
-      document.getElementById('kpi-cr-b').textContent = `${b.cr.toFixed(2)}%`;
+      // CR
       document.getElementById('kpi-cr-a').textContent = `${c.cr.toFixed(2)}%`;
+      document.getElementById('kpi-cr-b').textContent = `${b.cr.toFixed(2)}%`;
       const crBadge = document.getElementById('kpi-cr-badge');
-      crBadge.textContent = `${lift.cr >= 0 ? '+' : ''}${lift.cr.toFixed(1)}%`;
-      crBadge.className = lift.cr >= 0 ? 'text-[10px] font-bold text-[#00875a]' : 'text-[10px] font-bold text-[#df1b41]';
-
-      // Mobile CR
-      const mobCrDiff = c.mobileCr > 0 ? parseFloat((((b.mobileCr - c.mobileCr) / c.mobileCr) * 100).toFixed(1)) : 0;
-      document.getElementById('kpi-mobcr-b').textContent = `${b.mobileCr.toFixed(2)}%`;
-      document.getElementById('kpi-mobcr-a').textContent = `${c.mobileCr.toFixed(2)}%`;
-      const mobCrBadge = document.getElementById('kpi-mobcr-badge');
-      mobCrBadge.textContent = `${mobCrDiff >= 0 ? '+' : ''}${mobCrDiff}%`;
-      mobCrBadge.className = mobCrDiff >= 0 ? 'text-[10px] font-bold text-[#00875a]' : 'text-[10px] font-bold text-[#df1b41]';
-
-      // Stay Time
-      document.getElementById('kpi-stay-b').textContent = `${b.avgStayTime}s`;
-      document.getElementById('kpi-stay-a').textContent = `${c.avgStayTime}s`;
-      const stayBadge = document.getElementById('kpi-stay-badge');
-      stayBadge.textContent = `${lift.stayTime >= 0 ? '+' : ''}${lift.stayTime}%`;
-      stayBadge.className = lift.stayTime >= 0 ? 'text-[10px] font-bold text-[#00875a]' : 'text-[10px] font-bold text-[#df1b41]';
-
-      // Modal Open %
-      const openDiff = c.checkoutOpenRate > 0 ? parseFloat((((b.checkoutOpenRate - c.checkoutOpenRate) / c.checkoutOpenRate) * 100).toFixed(1)) : 0;
-      document.getElementById('kpi-open-b').textContent = `${b.checkoutOpenRate.toFixed(1)}%`;
-      document.getElementById('kpi-open-a').textContent = `${c.checkoutOpenRate.toFixed(1)}%`;
-      const openBadge = document.getElementById('kpi-open-badge');
-      openBadge.textContent = `${openDiff >= 0 ? '+' : ''}${openDiff}%`;
-      openBadge.className = openDiff >= 0 ? 'text-[10px] font-bold text-[#00875a]' : 'text-[10px] font-bold text-[#df1b41]';
+      if (crBadge) {
+        const crSign = lift.cr >= 0 ? '+' : '';
+        crBadge.textContent = `${crSign}${lift.cr.toFixed(1)}%`;
+        crBadge.className = `text-[10px] font-bold ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
+      }
 
       // RPV
-      document.getElementById('kpi-rpv-b').textContent = `€${b.rpv.toFixed(2)}`;
       document.getElementById('kpi-rpv-a').textContent = `€${c.rpv.toFixed(2)}`;
+      document.getElementById('kpi-rpv-b').textContent = `€${b.rpv.toFixed(2)}`;
       const rpvBadge = document.getElementById('kpi-rpv-badge');
-      rpvBadge.textContent = `${lift.rpv >= 0 ? '+' : ''}${lift.rpv.toFixed(1)}%`;
-      rpvBadge.className = lift.rpv >= 0 ? 'text-[10px] font-bold text-[#00875a]' : 'text-[10px] font-bold text-[#df1b41]';
+      if (rpvBadge) {
+        const rpvSign = lift.rpv >= 0 ? '+' : '';
+        rpvBadge.textContent = `${rpvSign}${lift.rpv.toFixed(1)}%`;
+        rpvBadge.className = `text-[10px] font-bold ${lift.rpv >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
+      }
 
-      // Performance Matrix Table
+      // Reading Time
+      document.getElementById('kpi-stay-a').textContent = c.avgStayTimeFormatted || `${c.avgStayTime}s`;
+      document.getElementById('kpi-stay-b').textContent = b.avgStayTimeFormatted || `${b.avgStayTime}s`;
+      const stayBadge = document.getElementById('kpi-stay-badge');
+      if (stayBadge) {
+        const stayDiff = b.avgStayTime - c.avgStayTime;
+        const staySign = stayDiff >= 0 ? '+' : '';
+        stayBadge.textContent = `${staySign}${stayDiff}s`;
+        stayBadge.className = `text-[10px] font-bold ${stayDiff >= 0 ? 'text-[#00875a]' : 'text-slate-500'}`;
+      }
+
+      // Donate Intent
+      document.getElementById('kpi-open-a').textContent = `${c.checkoutOpenRate.toFixed(1)}%`;
+      document.getElementById('kpi-open-b').textContent = `${b.checkoutOpenRate.toFixed(1)}%`;
+      const openBadge = document.getElementById('kpi-open-badge');
+      if (openBadge) {
+        const openDiff = b.checkoutOpenRate - c.checkoutOpenRate;
+        const openSign = openDiff >= 0 ? '+' : '';
+        openBadge.textContent = `${openSign}${openDiff.toFixed(1)}%`;
+        openBadge.className = `text-[10px] font-bold ${openDiff >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
+      }
+
+      // Deep Readers
+      document.getElementById('kpi-scroll-a').textContent = `${c.deepScrollRate.toFixed(1)}%`;
+      document.getElementById('kpi-scroll-b').textContent = `${b.deepScrollRate.toFixed(1)}%`;
+      const scrollBadge = document.getElementById('kpi-scroll-badge');
+      if (scrollBadge) {
+        const scrollDiff = b.deepScrollRate - c.deepScrollRate;
+        const scrollSign = scrollDiff >= 0 ? '+' : '';
+        scrollBadge.textContent = `${scrollSign}${scrollDiff.toFixed(1)}%`;
+        scrollBadge.className = `text-[10px] font-bold ${scrollDiff >= 0 ? 'text-[#00875a]' : 'text-slate-500'}`;
+      }
+
+      // 3. Matrix Table
+      renderMatrixTable(c, b);
+
+      // 4. Visitor Details Lists
+      renderVisitorList('control', data.visitorLists.control || []);
+      renderVisitorList('variant_b', data.visitorLists.variant_b || []);
+    }
+
+    function renderMatrixTable(c, b) {
       const tbody = document.getElementById('matrix-tbody');
-      tbody.innerHTML = `
-        <tr>
-          <td class="py-3 px-4 font-semibold text-[#061b31]">
-            <div>Variant A (Control)</div>
-            <div class="text-[11px] text-slate-400 font-normal">Original Template</div>
-          </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">
-            ${c.visitors.toLocaleString()} <span class="text-[10px] text-slate-400">(${c.mobileVisitors}m / ${c.desktopVisitors}d)</span>
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31]">
-            ${c.donations}
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-slate-800">
-            ${c.cr.toFixed(2)}%
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-medium text-slate-700">
-            ${c.mobileCr.toFixed(2)}%
-          </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">
-            ${c.avgStayTime}s
-          </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">
-            ${c.checkoutOpenRate.toFixed(1)}%
-          </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">
-            €${c.aov.toFixed(2)}
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">
-            €${c.net.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-          </td>
-          <td class="py-3 px-4 tabular-numbers font-bold text-[#061b31]">
-            €${c.rpv.toFixed(2)}
-          </td>
-        </tr>
+      if (!tbody) return;
 
-        <tr class="bg-[#edf9f3]/40 border-l-2 border-l-[#00875a]">
-          <td class="py-3 px-4 font-bold text-[#00875a]">
-            <div class="flex items-center gap-1.5">
-              <span>Variant B (Challenger)</span>
-              <span class="text-[9px] bg-emerald-100 text-[#00875a] px-1.5 py-0.2 rounded font-bold uppercase">New</span>
+      tbody.innerHTML = `
+        <tr class="border-b border-gray-100 visitor-row">
+          <td class="py-3 px-4 font-semibold text-[#061b31]">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+              <div>
+                <div>Variant A (Control)</div>
+                <div class="text-[11px] font-normal text-slate-400">Original Campaign Template</div>
+              </div>
             </div>
-            <div class="text-[11px] text-slate-500 font-normal">Human-Authentic (Mobile First)</div>
           </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">
-            ${b.visitors.toLocaleString()} <span class="text-[10px] text-slate-400">(${b.mobileVisitors}m / ${b.desktopVisitors}d)</span>
+          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium">
+            ${c.visitors.toLocaleString()} <span class="text-[11px] text-slate-400">(${c.mobileVisitors}m / ${c.desktopVisitors}d)</span>
           </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31]">
-            ${b.donations}
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31]">${c.donations}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-slate-800">${c.cr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.mobileCr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.avgStayTimeFormatted || c.avgStayTime + 's'}</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.checkoutOpenRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.deepScrollRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600">€${c.aov.toFixed(2)}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31]">€${c.net.toFixed(2)}</td>
+          <td class="py-3 px-4 tabular-numbers font-bold text-slate-700">€${c.rpv.toFixed(2)}</td>
+        </tr>
+        <tr class="visitor-row bg-[#f8fffa]/50">
+          <td class="py-3 px-4 font-semibold text-[#061b31]">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#00875a]"></span>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span>Variant B (Challenger)</span>
+                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#e6f7f0] text-[#00875a]">NEW</span>
+                </div>
+                <div class="text-[11px] font-normal text-slate-400">Human-Authentic (Mobile First)</div>
+              </div>
+            </div>
           </td>
-          <td class="py-3 px-3 tabular-numbers font-bold ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-[#df1b41]'}">
-            ${b.cr.toFixed(2)}%
+          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium">
+            ${b.visitors.toLocaleString()} <span class="text-[11px] text-slate-400">(${b.mobileVisitors}m / ${b.desktopVisitors}d)</span>
           </td>
-          <td class="py-3 px-3 tabular-numbers font-bold ${mobCrDiff >= 0 ? 'text-[#00875a]' : 'text-slate-700'}">
-            ${b.mobileCr.toFixed(2)}%
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-medium ${lift.stayTime >= 0 ? 'text-[#00875a]' : 'text-slate-700'}">
-            ${b.avgStayTime}s
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-medium ${openDiff >= 0 ? 'text-[#00875a]' : 'text-slate-700'}">
-            ${b.checkoutOpenRate.toFixed(1)}%
-          </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">
-            €${b.aov.toFixed(2)}
-          </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">
-            €${b.net.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-          </td>
-          <td class="py-3 px-4 tabular-numbers font-bold ${lift.rpv >= 0 ? 'text-[#00875a]' : 'text-[#061b31]'}">
-            €${b.rpv.toFixed(2)}
-          </td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">${b.donations}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">${b.cr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium">${b.mobileCr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-[#635bff] font-medium">${b.avgStayTimeFormatted || b.avgStayTime + 's'}</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700">${b.checkoutOpenRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700">${b.deepScrollRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700">€${b.aov.toFixed(2)}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">€${b.net.toFixed(2)}</td>
+          <td class="py-3 px-4 tabular-numbers font-bold text-[#00875a]">€${b.rpv.toFixed(2)}</td>
         </tr>
       `;
     }
 
-    document.addEventListener('DOMContentLoaded', loadAbMetrics);
+    function renderVisitorList(variant, visitors) {
+      const countEl = document.getElementById(`drawer-count-${variant}`);
+      const tbody = document.getElementById(`visitors-tbody-${variant}`);
+      if (countEl) countEl.textContent = `${visitors.length} visitor${visitors.length === 1 ? '' : 's'}`;
+      if (!tbody) return;
+
+      if (!visitors || visitors.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-6 text-slate-400">
+              No visitors recorded for ${variant === 'variant_b' ? 'Variant B' : 'Variant A'} in this time window.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = visitors.map(v => {
+        const timeBadge = v.stayTimeSeconds >= 45 
+          ? `<span class="badge-emerald px-1.5 py-0.5 rounded font-medium">${v.stayTimeFormatted}</span>`
+          : `<span class="text-slate-600">${v.stayTimeFormatted || '0s'}</span>`;
+
+        const scrollBadge = v.scrollDepth >= 75
+          ? `<span class="badge-blue px-1.5 py-0.5 rounded font-medium">${v.scrollDepth}% (Full)</span>`
+          : `<span class="text-slate-500">${v.scrollDepth}%</span>`;
+
+        const intentBadge = v.checkoutOpened
+          ? `<span class="badge-purple px-1.5 py-0.5 rounded font-semibold">🎯 Clicked Donate</span>`
+          : `<span class="text-slate-400">—</span>`;
+
+        const outcomeBadge = v.donated
+          ? `<span class="badge-emerald px-2 py-0.5 rounded-full font-bold">🎉 Donated ${v.amountFormatted}</span>`
+          : `<span class="text-slate-400">👀 Browsed</span>`;
+
+        return `
+          <tr class="border-b border-gray-100 visitor-row">
+            <td class="py-2.5 px-4 tabular-numbers text-slate-600 whitespace-nowrap">
+              <span class="font-medium text-[#061b31]">${v.timeAgo}</span>
+              <span class="text-[10px] text-slate-400 block">${v.timeFormatted}</span>
+            </td>
+            <td class="py-2.5 px-3 whitespace-nowrap font-medium text-slate-700">
+              ${v.deviceLabel}
+            </td>
+            <td class="py-2.5 px-3 font-mono text-[11px] text-slate-500 whitespace-nowrap">
+              ${v.ipMasked}
+            </td>
+            <td class="py-2.5 px-3 tabular-numbers whitespace-nowrap">
+              ${timeBadge}
+            </td>
+            <td class="py-2.5 px-3 tabular-numbers whitespace-nowrap">
+              ${scrollBadge}
+            </td>
+            <td class="py-2.5 px-3 whitespace-nowrap">
+              ${intentBadge}
+            </td>
+            <td class="py-2.5 px-4 whitespace-nowrap">
+              ${outcomeBadge}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Auto-boot
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAbMetrics();
+      // Auto-refresh every 30 seconds for live monitoring
+      setInterval(loadAbMetrics, 30000);
+    });
   </script>
 </body>
 </html>

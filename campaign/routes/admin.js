@@ -194,7 +194,9 @@ module.exports = function createAdminRouter(ctx) {
   router.get('/api/admin/ab-test', adminAuth, async (req, res) => {
     try {
       const { campaignSlug, dateRange } = parseDashboardFilters(req);
-      const metrics = await getAbTestMetrics(campaignSlug, dateRange);
+      const rangeKey = req.query.range || 'allTime';
+      const tzOffset = parseInt(req.query.tzOffset || 0, 10);
+      const metrics = await getAbTestMetrics(campaignSlug, dateRange, rangeKey, tzOffset);
       res.json(metrics);
     } catch (error) {
       console.error('[admin/ab-test] error:', error);
