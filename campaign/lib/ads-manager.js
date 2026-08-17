@@ -226,12 +226,32 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
       const data = await fetchFromManager('/api/dashboard', { date_preset: preset, level: 'campaign' });
       if (!data || !Array.isArray(data.rows)) throw new Error(`no rows for preset ${preset}`);
 
-      const byId = new Map(campaigns.map(c => [c.id, c]));
+      let byId = new Map(campaigns.map(c => [c.id, c]));
+      const hasUnseen = data.rows.some(r => {
+        const id = String(r.id || r.campaign_id || '');
+        return id && !byId.has(id);
+      });
+      if (hasUnseen) {
+        try {
+          await syncCampaigns();
+          const refetch = await supabase.from('ad_campaigns').select('id, account_id, name').order('name');
+          campaigns = refetch.data || [];
+          byId = new Map(campaigns.map(c => [c.id, c]));
+        } catch (syncErr) {
+          console.warn('[ads-sync] Auto-seed campaigns error:', syncErr.message);
+        }
+      }
+
       const rows = [];
       for (const r of data.rows) {
         const id = String(r.id || r.campaign_id || '');
         const campaign = byId.get(id);
-        if (campaign) rows.push(normalizeSpendRow(campaign.id, campaign.account_id, preset, r));
+        if (campaign) {
+          rows.push(normalizeSpendRow(campaign.id, campaign.account_id, preset, r));
+        } else if (id) {
+          const accId = String(r.account_id || r.ad_account_id || data.account_id || 'act_default');
+          rows.push(normalizeSpendRow(id, accId, preset, r));
+        }
       }
 
       if (rows.length > 0) {
@@ -322,6 +342,11 @@ function startBackgroundSyncWorker() {
     try {
       // Sync today every 5 minutes
       await syncPreset('today', { refresh: true });
+
+      // Refresh campaigns list every hour (every 12 ticks)
+      if (ticks % 12 === 0) {
+        await syncCampaigns().catch(e => console.warn('[ads-sync] Campaign list refresh note:', e.message));
+      }
 
       // Sync yesterday every 20 minutes (every 4 ticks)
       if (ticks % 4 === 0) {

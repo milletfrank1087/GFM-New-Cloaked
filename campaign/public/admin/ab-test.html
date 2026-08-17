@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>A/B Test Cockpit | HopeRise Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,30 +44,46 @@
       color: #1d4ed8;
       border: 1px solid #bfdbfe;
     }
+    .sticky-col {
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 10;
+    }
+    tr:hover .sticky-col {
+      background: #f8fafc;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 <body class="bg-[#f8fafc] text-[#061b31] font-sans antialiased min-h-screen">
 
   <!-- Mobile Navigation Header -->
-  <header class="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-30 px-4 py-3 flex items-center justify-between shadow-sm">
+  <header class="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-30 px-3.5 py-2.5 flex items-center justify-between shadow-sm">
     <div class="flex items-center gap-3">
-      <button onclick="toggleNav()" class="p-1.5 -ml-1.5 text-slate-600 hover:text-slate-900 focus:outline-none" aria-label="Toggle navigation">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button onclick="toggleNav()" class="p-1.5 -ml-1 text-slate-600 hover:text-slate-900 focus:outline-none" aria-label="Toggle navigation">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
       <div class="flex items-center gap-2">
-        <div class="w-7 h-7 bg-[#635bff] rounded flex items-center justify-center text-white font-bold text-xs">HR</div>
+        <div class="w-7 h-7 bg-[#635bff] rounded flex items-center justify-center text-white font-bold text-xs shadow-sm">HR</div>
         <span class="font-bold text-sm tracking-tight text-[#061b31]">A/B Cockpit</span>
       </div>
     </div>
-    <div class="flex items-center gap-2">
-      <button onclick="loadAbMetrics()" class="p-1.5 text-slate-500 hover:text-slate-800 transition-colors" title="Refresh">
+    <div class="flex items-center gap-1.5">
+      <button onclick="loadAbMetrics()" class="p-2 text-slate-500 hover:text-slate-800 transition-colors" title="Refresh">
         <svg id="mobile-refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
       </button>
-      <button onclick="logoutAdmin()" class="p-1.5 text-slate-500 hover:text-slate-800 transition-colors" title="Logout">
+      <button onclick="logoutAdmin()" class="p-2 text-slate-500 hover:text-slate-800 transition-colors" title="Logout">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
         </svg>
@@ -115,42 +131,45 @@
 
   <!-- Main Content Area -->
   <main class="lg:pl-64 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
 
       <!-- Top Header & Filter Controls -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
         <div>
           <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-slate-500">
-            <span class="w-2 h-2 rounded-full bg-[#00875a] inline-block"></span>
+            <span class="w-2 h-2 rounded-full bg-[#00875a] inline-block animate-pulse"></span>
             <span>Live 50/50 Traffic Split</span>
             <span class="text-slate-300">•</span>
             <span id="last-updated-label" class="font-mono text-[11px] text-slate-400">Checking…</span>
           </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#061b31] tracking-tight mt-1">A/B Conversion & Revenue Cockpit</h1>
+          <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#061b31] tracking-tight mt-1">A/B Conversion & Revenue Cockpit</h1>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2">
-          <div class="inline-flex rounded-lg border border-gray-200 bg-white p-0.5 shadow-sm text-xs font-semibold" id="range-pills">
-            <button onclick="selectRange('allTime')" class="stripe-pill active" data-range="allTime">All Time</button>
-            <button onclick="selectRange('today')" class="stripe-pill inactive" data-range="today">Today</button>
-            <button onclick="selectRange('yesterday')" class="stripe-pill inactive" data-range="yesterday">Yesterday</button>
-            <button onclick="selectRange('last7days')" class="stripe-pill inactive" data-range="last7days">Last 7D</button>
-            <button onclick="selectRange('last30days')" class="stripe-pill inactive" data-range="last30days">Last 30D</button>
-            <button onclick="selectRange('thisMonth')" class="stripe-pill inactive" data-range="thisMonth">This Month</button>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
+          <!-- Date Range Pills with smooth horizontal scrolling on mobile -->
+          <div class="inline-flex rounded-lg border border-gray-200 bg-white p-0.5 shadow-sm text-xs font-semibold overflow-x-auto no-scrollbar max-w-full" id="range-pills">
+            <button onclick="selectRange('allTime')" class="stripe-pill active whitespace-nowrap" data-range="allTime">All Time</button>
+            <button onclick="selectRange('today')" class="stripe-pill inactive whitespace-nowrap" data-range="today">Today</button>
+            <button onclick="selectRange('yesterday')" class="stripe-pill inactive whitespace-nowrap" data-range="yesterday">Yesterday</button>
+            <button onclick="selectRange('last7days')" class="stripe-pill inactive whitespace-nowrap" data-range="last7days">Last 7D</button>
+            <button onclick="selectRange('last30days')" class="stripe-pill inactive whitespace-nowrap" data-range="last30days">Last 30D</button>
+            <button onclick="selectRange('thisMonth')" class="stripe-pill inactive whitespace-nowrap" data-range="thisMonth">This Month</button>
           </div>
 
-          <div class="flex items-center gap-2">
-            <select id="filter-campaign" onchange="loadAbMetrics()" class="text-xs font-semibold bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-slate-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#635bff]">
-              <option value="glioblastoma-grace" selected>glioblastoma-grace (Active Split)</option>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="filter-campaign" onchange="loadAbMetrics()" class="text-xs font-semibold bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-slate-700 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#635bff] flex-1 sm:flex-initial">
+              <option value="glioblastoma-grace" selected>glioblastoma-grace (Active)</option>
               <option value="all">All Campaigns</option>
             </select>
 
-            <a href="/?variant=control" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
-              Control ↗
-            </a>
-            <a href="/?variant=variant_b" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
-              Variant B ↗
-            </a>
+            <div class="inline-flex items-center gap-1">
+              <a href="/?variant=control" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
+                Control ↗
+              </a>
+              <a href="/?variant=variant_b" target="_blank" class="text-xs font-medium bg-white border border-gray-200 hover:border-slate-300 text-slate-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1">
+                Variant B ↗
+              </a>
+            </div>
 
             <button onclick="loadAbMetrics()" class="btn-primary text-xs font-semibold px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,162 +179,178 @@
             </button>
 
             <button onclick="resetAbData()" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 text-rose-700 transition-colors shadow-sm" title="Clear all recorded test traffic and start fresh">
-              Clear Test Data
+              Reset
             </button>
           </div>
         </div>
       </div>
 
       <!-- Plain-English Verdict & Winner Decision Hero -->
-      <div id="verdict-card" class="stripe-card p-5 sm:p-6 border-l-4 border-l-[#635bff]">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div class="space-y-2 max-w-3xl">
-            <div class="flex items-center gap-2">
+      <div id="verdict-card" class="stripe-card p-4 sm:p-6 border-l-4 border-l-[#635bff]">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6">
+          <div class="space-y-1.5 sm:space-y-2 max-w-3xl">
+            <div class="flex items-center gap-2 flex-wrap">
               <span id="verdict-badge" class="badge-purple px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
                 Gathering Early Traffic
               </span>
               <span id="sample-size-badge" class="text-xs text-slate-400 font-medium">0 Visitors Evaluated</span>
             </div>
-            <h2 id="verdict-headline" class="text-xl sm:text-2xl font-bold text-[#061b31]">
+            <h2 id="verdict-headline" class="text-lg sm:text-2xl font-bold text-[#061b31]">
               A/B Test Initializing…
             </h2>
-            <p id="verdict-description" class="text-sm text-slate-600 leading-relaxed">
+            <p id="verdict-description" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
               Evaluating donation conversion rate, revenue per visitor, and donor reading time across Variant A (Control) and Variant B (Human-Authentic).
             </p>
           </div>
 
           <!-- Quick Decision Summary Boxes -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100 min-w-fit">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100">
             <div class="text-center sm:text-left">
               <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Certainty</div>
-              <div id="conf-level-val" class="text-base font-bold text-[#061b31] tabular-numbers mt-0.5">0.0%</div>
-              <div id="conf-level-sub" class="text-[10px] text-slate-500 mt-0.5">Statistical confidence</div>
+              <div id="conf-level-val" class="text-sm sm:text-base font-bold text-[#061b31] tabular-numbers mt-0.5">0.0%</div>
+              <div id="conf-level-sub" class="text-[10px] text-slate-500 mt-0.5 truncate">Confidence</div>
             </div>
             <div class="text-center sm:text-left">
               <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Donation Lift</div>
-              <div id="cr-lift-val" class="text-base font-bold text-[#00875a] tabular-numbers mt-0.5">+0.0%</div>
-              <div class="text-[10px] text-slate-500 mt-0.5">B vs Control</div>
+              <div id="cr-lift-val" class="text-sm sm:text-base font-bold text-[#00875a] tabular-numbers mt-0.5">+0.0%</div>
+              <div class="text-[10px] text-slate-500 mt-0.5 truncate">B vs Control</div>
             </div>
             <div class="text-center sm:text-left">
               <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Reading Time</div>
-              <div id="time-lift-val" class="text-base font-bold text-[#635bff] tabular-numbers mt-0.5">+0s</div>
-              <div class="text-[10px] text-slate-500 mt-0.5">B donor engagement</div>
+              <div id="time-lift-val" class="text-sm sm:text-base font-bold text-[#635bff] tabular-numbers mt-0.5">+0s</div>
+              <div class="text-[10px] text-slate-500 mt-0.5 truncate">Engagement</div>
             </div>
             <div class="text-center sm:text-left">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Suggested Action</div>
-              <div id="action-rec-val" class="text-xs font-bold text-slate-700 mt-1">Keep 50/50 Split</div>
-              <div class="text-[10px] text-slate-400 mt-0.5">Automated guidance</div>
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Suggested</div>
+              <div id="action-rec-val" class="text-xs font-bold text-slate-700 mt-1 truncate">50/50 Split</div>
+              <div class="text-[10px] text-slate-400 mt-0.5 truncate">Guidance</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Intuitive KPI Cards Grid (6 High-Yield Metrics) -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4 items-stretch">
         
         <!-- Card 1: Visitors Split -->
-        <div class="stripe-card p-4">
-          <div class="flex items-center justify-between">
-            <span class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Total Visitors</span>
-            <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">50/50</span>
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+          <div>
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Total Visitors</span>
+              <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">50/50</span>
+            </div>
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+              <span id="kpi-total-visitors">0</span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase" id="kpi-visitors-split">A:0 · B:0</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
+              <span>A: <strong id="kpi-visitors-a" class="text-slate-700">0</strong></span>
+              <span class="text-slate-300 mx-1">•</span>
+              <span>B: <strong id="kpi-visitors-b" class="text-slate-700">0</strong></span>
+            </div>
           </div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5" id="kpi-total-visitors">0</div>
-          <div class="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
-            <span>A: <strong id="kpi-visitors-a" class="text-slate-700">0</strong></span>
-            <span>B: <strong id="kpi-visitors-b" class="text-slate-700">0</strong></span>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-0.5 truncate" id="kpi-mobile-share">Mobile: 0%</div>
+          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate" id="kpi-mobile-share">Mobile: 0%</div>
         </div>
 
         <!-- Card 2: Donation Conversion Rate -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Donation Rate (CR)</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-cr-b">0.00%</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-cr-badge">+0%</span>
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+          <div>
+            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Donation Rate (CR)</div>
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+              <span id="kpi-cr-b">0.00%</span>
+              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-cr-badge">+0%</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
+              Control: <strong id="kpi-cr-a" class="text-slate-700">0.00%</strong>
+            </div>
           </div>
-          <div class="text-[11px] text-slate-500 mt-1">
-            Original: <strong id="kpi-cr-a" class="text-slate-700">0.00%</strong>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-0.5">% of visitors who donate</div>
+          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">% who donate</div>
         </div>
 
         <!-- Card 3: Revenue Per Visitor (RPV) -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Rev / Visitor</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#00875a] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-rpv-b">€0.00</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-rpv-badge">+0%</span>
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+          <div>
+            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Rev / Visitor</div>
+            <div class="text-xl sm:text-2xl font-bold text-[#00875a] tabular-numbers mt-1 flex items-baseline gap-1.5">
+              <span id="kpi-rpv-b">€0.00</span>
+              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-rpv-badge">+0%</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
+              Control: <strong id="kpi-rpv-a" class="text-slate-700">€0.00</strong>
+            </div>
           </div>
-          <div class="text-[11px] text-slate-500 mt-1">
-            Original: <strong id="kpi-rpv-a" class="text-slate-700">€0.00</strong>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-0.5">Average yield per visitor</div>
+          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">Yield per visitor</div>
         </div>
 
         <!-- Card 4: Story Reading Time -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Reading Time</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#635bff] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-stay-b">0s</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-stay-badge">+0s</span>
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+          <div>
+            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Reading Time</div>
+            <div class="text-xl sm:text-2xl font-bold text-[#635bff] tabular-numbers mt-1 flex items-baseline gap-1.5">
+              <span id="kpi-stay-b">0s</span>
+              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-stay-badge">+0s</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
+              Control: <strong id="kpi-stay-a" class="text-slate-700">0s</strong>
+            </div>
           </div>
-          <div class="text-[11px] text-slate-500 mt-1">
-            Original: <strong id="kpi-stay-a" class="text-slate-700">0s</strong>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-0.5">Time donors spend reading</div>
+          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">Story reading time</div>
         </div>
 
         <!-- Card 5: Donate Intent Rate -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Donate Intent</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-open-b">0.0%</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-open-badge">+0%</span>
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+          <div>
+            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Donate Intent</div>
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+              <span id="kpi-open-b">0.0%</span>
+              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-open-badge">+0%</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
+              Control: <strong id="kpi-open-a" class="text-slate-700">0.0%</strong>
+            </div>
           </div>
-          <div class="text-[11px] text-slate-500 mt-1">
-            Original: <strong id="kpi-open-a" class="text-slate-700">0.0%</strong>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-0.5">% who clicked Donate button</div>
+          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">% opened donate</div>
         </div>
 
         <!-- Card 6: Deep Readers (75%+ Scroll) -->
-        <div class="stripe-card p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Deep Readers</div>
-          <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1.5 flex items-baseline gap-1.5">
-            <span id="kpi-scroll-b">0.0%</span>
-            <span class="text-[10px] font-bold text-[#00875a]" id="kpi-scroll-badge">+0%</span>
+        <div class="stripe-card p-3 sm:p-4 flex flex-col justify-between h-full min-h-[110px]">
+          <div>
+            <div class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 truncate">Deep Readers</div>
+            <div class="text-xl sm:text-2xl font-bold text-[#061b31] tabular-numbers mt-1 flex items-baseline gap-1.5">
+              <span id="kpi-scroll-b">0.0%</span>
+              <span class="text-[10px] font-bold text-[#00875a]" id="kpi-scroll-badge">+0%</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
+              Control: <strong id="kpi-scroll-a" class="text-slate-700">0.0%</strong>
+            </div>
           </div>
-          <div class="text-[11px] text-slate-500 mt-1">
-            Original: <strong id="kpi-scroll-a" class="text-slate-700">0.0%</strong>
-          </div>
-          <div class="text-[10px] text-slate-400 mt-0.5">Scrolled to updates & FAQ</div>
+          <div class="text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-100 truncate">75%+ page scroll</div>
         </div>
 
       </div>
 
       <!-- Side-by-Side Comprehensive Performance Matrix Table -->
       <div class="stripe-card overflow-hidden">
-        <div class="p-4 sm:p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="p-3.5 sm:p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
           <div>
             <h2 class="text-sm sm:text-base font-bold text-[#061b31]">Side-by-Side Performance Comparison</h2>
             <p class="text-xs text-slate-400 mt-0.5">Detailed breakdown of traffic, donations, reader engagement, and net revenue</p>
           </div>
-          <div class="text-xs text-slate-400 font-medium">
-            Currency: EUR / GBP Base Normalized
+          <div class="text-[11px] sm:text-xs text-slate-400 font-medium">
+            Currency: EUR Base Normalized
           </div>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left stripe-table">
+        <div class="overflow-x-auto scroll-smooth-x">
+          <table class="w-full text-left stripe-table min-w-[700px]">
             <thead>
               <tr>
-                <th class="py-3 px-4 font-bold">Variant</th>
+                <th class="sticky-col py-3 px-4 font-bold">Variant</th>
                 <th class="py-3 px-3 font-bold">Visitors (Mob / Dsk)</th>
                 <th class="py-3 px-3 font-bold">Donations</th>
                 <th class="py-3 px-3 font-bold">CR% (Overall)</th>
                 <th class="py-3 px-3 font-bold">Mobile CR%</th>
-                <th class="py-3 px-3 font-bold">Avg Reading Time</th>
+                <th class="py-3 px-3 font-bold">Avg Reading</th>
                 <th class="py-3 px-3 font-bold">Modal Open%</th>
                 <th class="py-3 px-3 font-bold">Deep Scroll%</th>
                 <th class="py-3 px-3 font-bold">Avg Donation</th>
@@ -333,25 +368,25 @@
       </div>
 
       <!-- Expandable Visitor Detail Lists (Under Each Variant) -->
-      <div class="space-y-4">
+      <div class="space-y-3 sm:space-y-4">
         
         <!-- Drawer 1: Variant A (Control) Visitors -->
         <div class="stripe-card overflow-hidden">
-          <button onclick="toggleVisitorDrawer('control')" class="w-full p-4 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
+          <button onclick="toggleVisitorDrawer('control')" class="w-full p-3.5 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
             <div class="flex items-center gap-3">
-              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs">
+              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shadow-sm">
                 A
               </div>
               <div>
-                <h3 class="text-sm font-bold text-[#061b31] flex items-center gap-2">
-                  <span>Variant A (Original Control) — Individual Visitor Log</span>
-                  <span id="drawer-count-control" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">0 visitors</span>
+                <h3 class="text-xs sm:text-sm font-bold text-[#061b31] flex items-center gap-2 flex-wrap">
+                  <span>Variant A (Control) — Visitor Log</span>
+                  <span id="drawer-count-control" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">0 visitors</span>
                 </h3>
-                <p class="text-xs text-slate-400 mt-0.5">Live visitor devices, geolocation, reading duration, scroll depth, and donations</p>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
               </div>
             </div>
-            <div class="flex items-center gap-2 text-xs font-semibold text-[#635bff]">
-              <span id="drawer-arrow-label-control">Show Details</span>
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0">
+              <span id="drawer-arrow-label-control" class="hidden sm:inline">Show Details</span>
               <svg id="drawer-arrow-control" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
@@ -360,8 +395,8 @@
 
           <!-- Collapsible Content for Control -->
           <div id="drawer-content-control" class="hidden border-t border-gray-100 bg-white">
-            <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
-              <table class="w-full text-left stripe-table text-xs">
+            <div class="overflow-x-auto max-h-[420px] overflow-y-auto scroll-smooth-x">
+              <table class="w-full text-left stripe-table text-xs min-w-[650px]">
                 <thead class="bg-slate-50 sticky top-0 z-10 border-b border-gray-200">
                   <tr>
                     <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
@@ -384,23 +419,23 @@
           </div>
         </div>
 
-        <!-- Drawer 2: Variant B (Challenger) Visitors -->
+        <!-- Drawer 2: Variant B (Human-Authentic) Visitors -->
         <div class="stripe-card overflow-hidden">
-          <button onclick="toggleVisitorDrawer('variant_b')" class="w-full p-4 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
+          <button onclick="toggleVisitorDrawer('variant_b')" class="w-full p-3.5 sm:p-5 flex items-center justify-between drawer-toggle text-left focus:outline-none">
             <div class="flex items-center gap-3">
-              <div class="w-7 h-7 rounded-lg bg-[#e6f7f0] text-[#00875a] flex items-center justify-center font-bold text-xs">
+              <div class="w-7 h-7 rounded-lg bg-[#e6f7f0] text-[#00875a] flex items-center justify-center font-bold text-xs shadow-sm">
                 B
               </div>
               <div>
-                <h3 class="text-sm font-bold text-[#061b31] flex items-center gap-2">
-                  <span>Variant B (Human-Authentic Challenger) — Individual Visitor Log</span>
-                  <span id="drawer-count-variant_b" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#e6f7f0] text-[#00875a]">0 visitors</span>
+                <h3 class="text-xs sm:text-sm font-bold text-[#061b31] flex items-center gap-2 flex-wrap">
+                  <span>Variant B (Challenger) — Visitor Log</span>
+                  <span id="drawer-count-variant_b" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#e6f7f0] text-[#00875a]">0 visitors</span>
                 </h3>
-                <p class="text-xs text-slate-400 mt-0.5">Live visitor devices, geolocation, reading duration, scroll depth, and donations</p>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Live devices, geolocation, reading duration, scroll depth, and outcomes</p>
               </div>
             </div>
-            <div class="flex items-center gap-2 text-xs font-semibold text-[#00875a]">
-              <span id="drawer-arrow-label-variant_b">Show Details</span>
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#635bff] shrink-0">
+              <span id="drawer-arrow-label-variant_b" class="hidden sm:inline">Show Details</span>
               <svg id="drawer-arrow-variant_b" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
@@ -409,8 +444,8 @@
 
           <!-- Collapsible Content for Variant B -->
           <div id="drawer-content-variant_b" class="hidden border-t border-gray-100 bg-white">
-            <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
-              <table class="w-full text-left stripe-table text-xs">
+            <div class="overflow-x-auto max-h-[420px] overflow-y-auto scroll-smooth-x">
+              <table class="w-full text-left stripe-table text-xs min-w-[650px]">
                 <thead class="bg-slate-50 sticky top-0 z-10 border-b border-gray-200">
                   <tr>
                     <th class="py-2.5 px-4 font-bold text-slate-500">Visited</th>
@@ -546,7 +581,7 @@
         verdictBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider badge-${v.badgeColor || 'purple'}`;
       }
       if (verdictCard) {
-        verdictCard.className = `stripe-card p-5 sm:p-6 border-l-4 border-l-${v.badgeColor === 'emerald' ? '[#00875a]' : v.badgeColor === 'amber' ? '[#b45309]' : '[#635bff]'}`;
+        verdictCard.className = `stripe-card p-4 sm:p-6 border-l-4 border-l-${v.badgeColor === 'emerald' ? '[#00875a]' : v.badgeColor === 'amber' ? '[#b45309]' : '[#635bff]'}`;
       }
 
       // Summary mini cards
@@ -561,13 +596,13 @@
       if (crLiftVal) {
         const sign = lift.cr >= 0 ? '+' : '';
         crLiftVal.textContent = `${sign}${lift.cr.toFixed(1)}%`;
-        crLiftVal.className = `text-base font-bold tabular-numbers mt-0.5 ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
+        crLiftVal.className = `text-sm sm:text-base font-bold tabular-numbers mt-0.5 ${lift.cr >= 0 ? 'text-[#00875a]' : 'text-rose-600'}`;
       }
       if (timeLiftVal) {
         const diffSec = b.avgStayTime - c.avgStayTime;
         const sign = diffSec >= 0 ? '+' : '';
         timeLiftVal.textContent = `${sign}${diffSec}s`;
-        timeLiftVal.className = `text-base font-bold tabular-numbers mt-0.5 ${diffSec >= 0 ? 'text-[#635bff]' : 'text-slate-600'}`;
+        timeLiftVal.className = `text-sm sm:text-base font-bold tabular-numbers mt-0.5 ${diffSec >= 0 ? 'text-[#635bff]' : 'text-slate-600'}`;
       }
       if (actionRecVal) actionRecVal.textContent = v.actionRecommendation;
 
@@ -575,10 +610,14 @@
       document.getElementById('kpi-total-visitors').textContent = data.totalVisitors.toLocaleString();
       document.getElementById('kpi-visitors-a').textContent = c.visitors.toLocaleString();
       document.getElementById('kpi-visitors-b').textContent = b.visitors.toLocaleString();
+      const splitBadge = document.getElementById('kpi-visitors-split');
+      if (splitBadge) {
+        splitBadge.textContent = `A:${c.visitors} · B:${b.visitors}`;
+      }
       
       const totalMob = (c.mobileVisitors || 0) + (b.mobileVisitors || 0);
       const mobShare = data.totalVisitors > 0 ? Math.round((totalMob / data.totalVisitors) * 100) : 0;
-      document.getElementById('kpi-mobile-share').textContent = `Mobile: ${mobShare}% (${totalMob} visitors)`;
+      document.getElementById('kpi-mobile-share').textContent = `Mobile: ${mobShare}% (${totalMob} mob)`;
 
       // CR
       document.getElementById('kpi-cr-a').textContent = `${c.cr.toFixed(2)}%`;
@@ -647,53 +686,53 @@
 
       tbody.innerHTML = `
         <tr class="border-b border-gray-100 visitor-row">
-          <td class="py-3 px-4 font-semibold text-[#061b31]">
+          <td class="sticky-col py-3 px-4 font-semibold text-[#061b31]">
             <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
-              <div>
-                <div>Variant A (Control)</div>
-                <div class="text-[11px] font-normal text-slate-400">Original Campaign Template</div>
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-400 shrink-0"></span>
+              <div class="min-w-0">
+                <div class="truncate font-bold text-xs sm:text-sm">Variant A (Control)</div>
+                <div class="text-[11px] font-normal text-slate-400 truncate">Original Template</div>
               </div>
             </div>
           </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium">
+          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium whitespace-nowrap">
             ${c.visitors.toLocaleString()} <span class="text-[11px] text-slate-400">(${c.mobileVisitors}m / ${c.desktopVisitors}d)</span>
           </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31]">${c.donations}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-slate-800">${c.cr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.mobileCr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.avgStayTimeFormatted || c.avgStayTime + 's'}</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.checkoutOpenRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600">${c.deepScrollRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-600">€${c.aov.toFixed(2)}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31]">€${c.net.toFixed(2)}</td>
-          <td class="py-3 px-4 tabular-numbers font-bold text-slate-700">€${c.rpv.toFixed(2)}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31] whitespace-nowrap">${c.donations}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-slate-800 whitespace-nowrap">${c.cr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.mobileCr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.avgStayTimeFormatted || c.avgStayTime + 's'}</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.checkoutOpenRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">${c.deepScrollRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-600 whitespace-nowrap">€${c.aov.toFixed(2)}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#061b31] whitespace-nowrap">€${c.net.toFixed(2)}</td>
+          <td class="py-3 px-4 tabular-numbers font-bold text-slate-700 whitespace-nowrap">€${c.rpv.toFixed(2)}</td>
         </tr>
         <tr class="visitor-row bg-[#f8fffa]/50">
-          <td class="py-3 px-4 font-semibold text-[#061b31]">
+          <td class="sticky-col py-3 px-4 font-semibold text-[#061b31]">
             <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-[#00875a]"></span>
-              <div>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#00875a] shrink-0"></span>
+              <div class="min-w-0">
                 <div class="flex items-center gap-1.5">
-                  <span>Variant B (Challenger)</span>
-                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#e6f7f0] text-[#00875a]">NEW</span>
+                  <span class="truncate font-bold text-xs sm:text-sm">Variant B (Challenger)</span>
+                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#e6f7f0] text-[#00875a] shrink-0">NEW</span>
                 </div>
-                <div class="text-[11px] font-normal text-slate-400">Human-Authentic (Mobile First)</div>
+                <div class="text-[11px] font-normal text-slate-400 truncate">Human-Authentic (Mobile First)</div>
               </div>
             </div>
           </td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium">
+          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium whitespace-nowrap">
             ${b.visitors.toLocaleString()} <span class="text-[11px] text-slate-400">(${b.mobileVisitors}m / ${b.desktopVisitors}d)</span>
           </td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">${b.donations}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">${b.cr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium">${b.mobileCr.toFixed(2)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-[#635bff] font-medium">${b.avgStayTimeFormatted || b.avgStayTime + 's'}</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">${b.checkoutOpenRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">${b.deepScrollRate.toFixed(1)}%</td>
-          <td class="py-3 px-3 tabular-numbers text-slate-700">€${b.aov.toFixed(2)}</td>
-          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a]">€${b.net.toFixed(2)}</td>
-          <td class="py-3 px-4 tabular-numbers font-bold text-[#00875a]">€${b.rpv.toFixed(2)}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">${b.donations}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">${b.cr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700 font-medium whitespace-nowrap">${b.mobileCr.toFixed(2)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-[#635bff] font-medium whitespace-nowrap">${b.avgStayTimeFormatted || b.avgStayTime + 's'}</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700 whitespace-nowrap">${b.checkoutOpenRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700 whitespace-nowrap">${b.deepScrollRate.toFixed(1)}%</td>
+          <td class="py-3 px-3 tabular-numbers text-slate-700 whitespace-nowrap">€${b.aov.toFixed(2)}</td>
+          <td class="py-3 px-3 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">€${b.net.toFixed(2)}</td>
+          <td class="py-3 px-4 tabular-numbers font-bold text-[#00875a] whitespace-nowrap">€${b.rpv.toFixed(2)}</td>
         </tr>
       `;
     }

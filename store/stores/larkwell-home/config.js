@@ -1,8 +1,8 @@
 module.exports = {
   name: 'Larkwell Home',
-  statementDescriptor: 'HOPERISE',
+  statementDescriptor: 'LARKWELLHOME',
   tagline: 'Kitchen, storage and home organisation pieces designed for calm, clutter-free living.',
-  contact_email: 'ecomjjsupport@gmail.com',
+  contact_email: 'support@larkwellhome.online',
   contact_phone: '+19295315752',
   currency: 'EUR',
   currencySymbol: '\u20ac',

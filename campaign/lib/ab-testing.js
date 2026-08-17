@@ -41,6 +41,18 @@ function isPrivateIp(ip) {
   const clean = ip.replace(/^::ffff:/, '').trim();
   if (clean === '127.0.0.1' || clean === '::1' || clean === 'localhost' || clean === 'unknown') return true;
   if (clean.startsWith('10.') || clean.startsWith('192.168.') || clean.startsWith('172.16.') || clean.startsWith('172.31.')) return true;
+  if (clean.startsWith('fc00:') || clean.startsWith('fe80:')) return true;
+  return false;
+}
+
+function isInternalVisitor(cleanIp, req) {
+  if (isPrivateIp(cleanIp)) return true;
+  if (req?.cookies?.admin_token) return true;
+  if (req?.headers?.['x-is-admin']) return true;
+  const envInternal = process.env.INTERNAL_IPS;
+  if (envInternal && envInternal.split(',').map(s => s.trim()).includes(cleanIp)) {
+    return true;
+  }
   return false;
 }
 
@@ -213,11 +225,17 @@ function cleanIpAddress(rawIp) {
 }
 
 function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glioblastoma-grace', req = null, res = null) {
+  const cleanIp = cleanIpAddress(ip);
+
+  // Ignore internal/developer/admin traffic
+  if (isInternalVisitor(cleanIp, req)) {
+    return null;
+  }
+
   const sid = req ? getOrSetSessionId(req, res) : `ip_${ip}`;
   const sessionKey = `${sid}_${variant}`;
   const uaInfo = parseUserAgent(userAgent);
   const now = Date.now();
-  const cleanIp = cleanIpAddress(ip);
 
   let session = visitorSessionMap.get(sessionKey);
   if (!session) {
@@ -269,6 +287,11 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
 }
 
 function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = null) {
+  const cleanIp = cleanIpAddress(ip);
+  if (isInternalVisitor(cleanIp, req)) {
+    return;
+  }
+
   const sid = req?.cookies?.[SID_COOKIE_NAME] || data.sid || `ip_${ip}`;
   const sessionKey = `${sid}_${variant}`;
   let session = visitorSessionMap.get(sessionKey);

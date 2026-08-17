@@ -4,6 +4,7 @@ const { toSmallestUnit, fromSmallestUnit, getDecimals, formatAmount } = require(
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { PAYPAL_CLIENT_ID, PAYPAL_API_BASE, getPayPalAccessToken } = require('../lib/paypal');
+const { sendDonationConfirmation } = require('../lib/email');
 
 function classifyPayPalError(error, response, body) {
   const status = response ? response.status : 0;
@@ -348,6 +349,23 @@ module.exports = function createPayPalRouter(ctx) {
           paymentSource: sourceType, cardBrand, cardLast4: cardLastDigits,
         }
       });
+
+      if (email) {
+        sendDonationConfirmation({
+          to: email,
+          name: donorNameReal !== 'Unknown' ? donorNameReal : '',
+          currency: donor.currency,
+          donationAmount: parseFloat(donor.amount),
+          tip: parseFloat(donor.fee || 0),
+          total: totalAmount,
+          cardBrand: cardBrand || 'PayPal',
+          cardLast4: cardLastDigits || '',
+          paymentSource: 'paypal',
+          reference: donor.ref || orderID.slice(-8).toUpperCase(),
+          descriptor: storeConfig.statementDescriptor || storeConfig.name,
+          paymentIntentId: orderID
+        });
+      }
 
       const campaignUrl = resolveCampaignCallbackUrl(donor, donor.ref);
       if (campaignUrl) {
