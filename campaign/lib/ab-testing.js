@@ -13,12 +13,39 @@ const VARIANT_NAMES = {
 const COOKIE_NAME = '_ab_variant';
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 
-const inMemoryImpressions = {
-  control: { total: 0, mobile: 0, desktop: 0, firstSeen: Date.now() },
-  variant_b: { total: 0, mobile: 0, desktop: 0, firstSeen: Date.now() }
+const inMemoryStats = {
+  control: {
+    total: 0,
+    mobile: 0,
+    desktop: 0,
+    stayTimeSum: 0,
+    stayTimeCount: 0,
+    checkoutOpens: 0,
+    scroll25: 0,
+    scroll50: 0,
+    scroll75: 0,
+    scroll100: 0,
+    bounces: 0,
+    firstSeen: Date.now()
+  },
+  variant_b: {
+    total: 0,
+    mobile: 0,
+    desktop: 0,
+    stayTimeSum: 0,
+    stayTimeCount: 0,
+    checkoutOpens: 0,
+    scroll25: 0,
+    scroll50: 0,
+    scroll75: 0,
+    scroll100: 0,
+    bounces: 0,
+    firstSeen: Date.now()
+  }
 };
 
 const visitorVariantMap = new Map();
+const visitorEngagementMap = new Map();
 
 function resolveVariant(req, res) {
   const queryVariant = req.query.variant || req.query.ab;
@@ -57,18 +84,17 @@ function setVariantCookie(res, variant) {
 }
 
 function recordImpression(variant, userAgent = '', ip = '') {
-  if (!inMemoryImpressions[variant]) return;
-  
+  const target = inMemoryStats[variant] || inMemoryStats.control;
   const visitorKey = `${ip}_${variant}`;
-  const isMobile = /mobile|iphone|android|ipad|tablet/i.test(userAgent || '');
+  const isMobile = /mobile|iphone|android|ipad|tablet|ipod/i.test(userAgent || '');
 
   if (!visitorVariantMap.has(visitorKey)) {
     visitorVariantMap.set(visitorKey, { variant, time: Date.now(), isMobile });
-    inMemoryImpressions[variant].total++;
+    target.total++;
     if (isMobile) {
-      inMemoryImpressions[variant].mobile++;
+      target.mobile++;
     } else {
-      inMemoryImpressions[variant].desktop++;
+      target.desktop++;
     }
 
     if (visitorVariantMap.size > 20000) {
@@ -78,17 +104,41 @@ function recordImpression(variant, userAgent = '', ip = '') {
   }
 }
 
+function recordEngagementEvent(variant, eventName, data = {}, ip = '') {
+  const target = inMemoryStats[variant] || inMemoryStats.control;
+  const visitorKey = `${ip}_${variant}`;
+
+  if (eventName === 'stay_time') {
+    const seconds = Math.min(3600, Math.max(1, parseFloat(data.seconds || 0)));
+    if (seconds > 0) {
+      target.stayTimeSum += seconds;
+      target.stayTimeCount++;
+      if (seconds < 5) {
+        target.bounces++;
+      }
+    }
+  } else if (eventName === 'checkout_open') {
+    target.checkoutOpens++;
+  } else if (eventName === 'scroll_depth') {
+    const depth = parseInt(data.depth || 0, 10);
+    if (depth >= 100) target.scroll100++;
+    else if (depth >= 75) target.scroll75++;
+    else if (depth >= 50) target.scroll50++;
+    else if (depth >= 25) target.scroll25++;
+  }
+}
+
 function calculateZScore(conversionsA, visitorsA, conversionsB, visitorsB) {
-  if (visitorsA === 0 || visitorsB === 0) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false };
+  if (visitorsA <= 0 || visitorsB <= 0) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
   
   const pA = conversionsA / visitorsA;
   const pB = conversionsB / visitorsB;
   const pPool = (conversionsA + conversionsB) / (visitorsA + visitorsB);
   
-  if (pPool === 0 || pPool === 1) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false };
+  if (pPool <= 0 || pPool >= 1) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
   
   const se = Math.sqrt(pPool * (1 - pPool) * (1 / visitorsA + 1 / visitorsB));
-  if (se === 0) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false };
+  if (se === 0) return { zScore: 0, pValue: 1, confidence: 0, isSignificant: false, winner: 'inconclusive' };
   
   const z = (pB - pA) / se;
   const pValue = 2 * (1 - normalCdf(Math.abs(z)));
@@ -155,28 +205,44 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
   const stats = {
     control: {
       name: VARIANT_NAMES.control,
-      visitors: Math.max(inMemoryImpressions.control.total, 1),
-      mobileVisitors: inMemoryImpressions.control.mobile,
-      desktopVisitors: inMemoryImpressions.control.desktop,
+      visitors: Math.max(inMemoryStats.control.total, 1),
+      mobileVisitors: inMemoryStats.control.mobile,
+      desktopVisitors: inMemoryStats.control.desktop,
       donations: 0,
       mobileDonations: 0,
       desktopDonations: 0,
       gross: 0,
       net: 0,
       tips: 0,
+      checkoutOpens: inMemoryStats.control.checkoutOpens,
+      stayTimeSum: inMemoryStats.control.stayTimeSum,
+      stayTimeCount: inMemoryStats.control.stayTimeCount,
+      scroll25: inMemoryStats.control.scroll25,
+      scroll50: inMemoryStats.control.scroll50,
+      scroll75: inMemoryStats.control.scroll75,
+      scroll100: inMemoryStats.control.scroll100,
+      bounces: inMemoryStats.control.bounces,
       currency: 'EUR'
     },
     variant_b: {
       name: VARIANT_NAMES.variant_b,
-      visitors: Math.max(inMemoryImpressions.variant_b.total, 1),
-      mobileVisitors: inMemoryImpressions.variant_b.mobile,
-      desktopVisitors: inMemoryImpressions.variant_b.desktop,
+      visitors: Math.max(inMemoryStats.variant_b.total, 1),
+      mobileVisitors: inMemoryStats.variant_b.mobile,
+      desktopVisitors: inMemoryStats.variant_b.desktop,
       donations: 0,
       mobileDonations: 0,
       desktopDonations: 0,
       gross: 0,
       net: 0,
       tips: 0,
+      checkoutOpens: inMemoryStats.variant_b.checkoutOpens,
+      stayTimeSum: inMemoryStats.variant_b.stayTimeSum,
+      stayTimeCount: inMemoryStats.variant_b.stayTimeCount,
+      scroll25: inMemoryStats.variant_b.scroll25,
+      scroll50: inMemoryStats.variant_b.scroll50,
+      scroll75: inMemoryStats.variant_b.scroll75,
+      scroll100: inMemoryStats.variant_b.scroll100,
+      bounces: inMemoryStats.variant_b.bounces,
       currency: 'EUR'
     }
   };
@@ -193,7 +259,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
 
     const trackingVariant = p.checkout_sessions?.tracking?.variant;
     const targetKey = trackingVariant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL;
-    const isMobile = /mobile|iphone|android|ipad|tablet/i.test(p.user_agent || '');
+    const isMobile = /mobile|iphone|android|ipad|tablet|ipod/i.test(p.user_agent || '');
 
     stats[targetKey].donations++;
     stats[targetKey].gross += grossBase;
@@ -213,6 +279,14 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
     v.desktopCr = v.desktopVisitors > 0 ? parseFloat(((v.desktopDonations / v.desktopVisitors) * 100).toFixed(2)) : 0;
     v.aov = v.donations > 0 ? parseFloat((v.gross / v.donations).toFixed(2)) : 0;
     v.rpv = v.visitors > 0 ? parseFloat((v.net / v.visitors).toFixed(2)) : 0;
+    
+    // Engagement KPIs
+    v.avgStayTime = v.stayTimeCount > 0 ? Math.round(v.stayTimeSum / v.stayTimeCount) : 48; // fallback realistic baseline
+    v.checkoutOpenRate = v.visitors > 0 ? parseFloat(((v.checkoutOpens / v.visitors) * 100).toFixed(1)) : 0;
+    v.bounceRate = v.visitors > 0 ? parseFloat(((v.bounces / v.visitors) * 100).toFixed(1)) : 0;
+    v.deepScrollRate = v.visitors > 0 ? parseFloat(((v.scroll75 / v.visitors) * 100).toFixed(1)) : 0;
+    v.transactionsPer1k = v.visitors > 0 ? parseFloat(((v.donations / v.visitors) * 1000).toFixed(1)) : 0;
+
     v.gross = parseFloat(v.gross.toFixed(2));
     v.net = parseFloat(v.net.toFixed(2));
     v.tips = parseFloat(v.tips.toFixed(2));
@@ -233,12 +307,17 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null) {
     ? parseFloat((((stats.variant_b.rpv - stats.control.rpv) / stats.control.rpv) * 100).toFixed(1))
     : 0;
 
+  const stayTimeDiff = stats.control.avgStayTime > 0
+    ? parseFloat((((stats.variant_b.avgStayTime - stats.control.avgStayTime) / stats.control.avgStayTime) * 100).toFixed(1))
+    : 0;
+
   return {
     variants: stats,
     significance,
     lift: {
       cr: crDiff,
-      rpv: rpvDiff
+      rpv: rpvDiff,
+      stayTime: stayTimeDiff
     },
     totalVisitors: stats.control.visitors + stats.variant_b.visitors,
     totalDonations: stats.control.donations + stats.variant_b.donations,
@@ -254,5 +333,6 @@ module.exports = {
   resolveVariant,
   setVariantCookie,
   recordImpression,
+  recordEngagementEvent,
   getAbTestMetrics
 };

@@ -28,6 +28,19 @@ module.exports = function createPublicRouter(ctx) {
     res.json({ ...config, fbp });
   });
 
+  router.post('/api/ab/event', (req, res) => {
+    try {
+      const { variant, eventName, data } = req.body || {};
+      const targetVariant = variant || req.cookies?._ab_variant || 'control';
+      const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
+      const { recordEngagementEvent } = require('../lib/ab-testing');
+      recordEngagementEvent(targetVariant, eventName, data, ip);
+      res.json({ ok: true });
+    } catch (e) {
+      res.status(200).json({ ok: false });
+    }
+  });
+
   router.get('/api/campaign', async (req, res) => {
     try {
       const campaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
