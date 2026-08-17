@@ -694,7 +694,7 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     }
   }
 
-  // Aggregate Payments
+  // Aggregate Payments strictly matching tracked visitors / sessions in this A/B window
   for (const p of payments) {
     const cur = p.currency || 'EUR';
     const rawAmt = parseFloat(p.amount) || 0;
@@ -705,15 +705,36 @@ async function getAbTestMetrics(campaignSlug = null, dateRange = null, rangeKey 
     const netBase = convertToBase(rawNet, cur, rates);
     const tipBase = convertToBase(rawTip, cur, rates);
 
-    let trackingVariant = 'control';
+    let trackingVariant = null;
+
+    // 1. Direct URL tracking parameter check
     if (p.landing_url && (p.landing_url.includes('variant=variant_b') || p.landing_url.includes('variant=b'))) {
       trackingVariant = VARIANTS.VARIANT_B;
-    } else {
+    } else if (p.landing_url && p.landing_url.includes('variant=control')) {
+      trackingVariant = VARIANTS.CONTROL;
+    }
+
+    // 2. Exact checkout session match (explicit variant recorded during checkout init)
+    if (!trackingVariant) {
       const s = checkoutSessionsList.find(cs => cs.ip_address === p.ip_address && Math.abs(parseFloat(cs.amount) - rawAmt) < 0.01);
-      if (s && s.tracking?.variant === VARIANTS.VARIANT_B) {
-        trackingVariant = VARIANTS.VARIANT_B;
+      if (s && s.tracking?.variant) {
+        trackingVariant = s.tracking.variant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL;
       }
     }
+
+    // 3. Fallback: match against active in-memory visitor session in this window
+    if (!trackingVariant) {
+      const vis = filteredVisitors.find(v => v.ip === p.ip_address);
+      if (vis) {
+        trackingVariant = vis.variant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL;
+      }
+    }
+
+    // If payment does not originate from a verified A/B tracked session in this window, do NOT count it in A/B test KPIs
+    if (!trackingVariant) {
+      continue;
+    }
+
     const targetKey = trackingVariant === VARIANTS.VARIANT_B ? VARIANTS.VARIANT_B : VARIANTS.CONTROL;
     const isMobile = /mobile|iphone|android|ipad|tablet|ipod/i.test(p.user_agent || '');
 
