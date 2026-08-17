@@ -261,12 +261,24 @@ All store services live in the **GFM Cloaked** project (`7bb4befa-cbe4-4763-a782
 
 Copy shared values (`CALLBACK_SECRET`, `SUPABASE_*`, `RESEND_API_KEY`, `CAMPAIGN_CALLBACK_URLS`) from any existing live store service using the `variables` GraphQL query.
 
-5. **Trigger deployment:**
+5. **Set Watch Patterns:**
+To prevent builder queue congestion across the 16 monorepo services, set `watchPatterns: ["store/**"]` on the new service:
+```graphql
+mutation {
+  serviceInstanceUpdate(
+    serviceId: "<serviceId>",
+    environmentId: "14944148-a284-4f59-a2cc-0b7447138f84",
+    input: { watchPatterns: ["store/**"] }
+  )
+}
+```
+
+6. **Trigger deployment:**
 ```powershell
 # mutation { serviceInstanceRedeploy(serviceId: "<serviceId>", environmentId: "<envId>") }
 ```
 
-6. **Wire DNS** (see § Domain Setup above):
+7. **Wire DNS** (see § Domain Setup above):
 ```powershell
 .\operator\connect-store-dns.ps1 -ServiceName "Store Name Shop" -ApexDomain domain.online -StoreSlug store-slug
 ```
