@@ -324,7 +324,7 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
         country_code: session.countryCode,
         created_at: new Date(now).toISOString(),
         updated_at: new Date(now).toISOString()
-      }, { onConflict: 'session_key' }).catch(() => {});
+      }, { onConflict: 'session_key' }).then(null, () => {});
     }
 
     // Resolve IP geolocation in background
@@ -341,7 +341,7 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
           country: geo.country,
           country_code: geo.countryCode,
           updated_at: new Date().toISOString()
-        }).eq('session_key', sessionKey).catch(() => {});
+        }).eq('session_key', sessionKey).then(null, () => {});
       }
     }).catch(() => {
       session.locationLabel = 'Unknown Location';
@@ -395,7 +395,7 @@ function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = nul
       if (session.checkoutOpened) updates.checkout_opened = true;
       if (session.checkoutInitiated) updates.checkout_initiated = true;
       if (session.scrollDepth) updates.scroll_depth = session.scrollDepth;
-      supabase.from('ab_visitors').update(updates).eq('session_key', session.key).catch(() => {});
+      supabase.from('ab_visitors').update(updates).eq('session_key', session.key).then(null, () => {});
     }
   }
 }

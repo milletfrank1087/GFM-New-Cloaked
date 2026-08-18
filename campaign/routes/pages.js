@@ -60,7 +60,7 @@ module.exports = function createPagesRouter(ctx) {
     const assignedVariant = resolveVariant(req, res);
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
     const ua = req.headers['user-agent'] || '';
-    recordImpression(assignedVariant, ua, ip, ACTIVE_CAMPAIGN?.id || 'glioblastoma-grace', req, res);
+    try { recordImpression(assignedVariant, ua, ip, ACTIVE_CAMPAIGN?.id || 'glioblastoma-grace', req, res); } catch (_) {}
 
     const templatePath = path.join(__dirname, '..', 'public', 'index.html');
 
