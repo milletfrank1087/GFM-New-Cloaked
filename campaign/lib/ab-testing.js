@@ -208,27 +208,9 @@ function formatRelativeTime(epochMs) {
 }
 
 function resolveVariant(req, res) {
-  const queryVariant = req.query.variant || req.query.ab;
-  if (queryVariant) {
-    const normalized = queryVariant.toLowerCase();
-    if (normalized === 'b' || normalized === 'variant_b' || normalized === '2') {
-      setVariantCookie(res, VARIANTS.VARIANT_B);
-      return VARIANTS.VARIANT_B;
-    }
-    if (normalized === 'control' || normalized === 'a' || normalized === '1' || normalized === 'original') {
-      setVariantCookie(res, VARIANTS.CONTROL);
-      return VARIANTS.CONTROL;
-    }
-  }
-
-  const existingCookie = req.cookies?.[COOKIE_NAME];
-  if (existingCookie && (existingCookie === VARIANTS.CONTROL || existingCookie === VARIANTS.VARIANT_B)) {
-    return existingCookie;
-  }
-
-  const assigned = Math.random() < 0.5 ? VARIANTS.CONTROL : VARIANTS.VARIANT_B;
-  setVariantCookie(res, assigned);
-  return assigned;
+  // 100% of visitor traffic routes to the Original Control template
+  setVariantCookie(res, VARIANTS.CONTROL);
+  return VARIANTS.CONTROL;
 }
 
 function setVariantCookie(res, variant) {

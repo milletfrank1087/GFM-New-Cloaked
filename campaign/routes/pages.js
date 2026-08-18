@@ -62,9 +62,7 @@ module.exports = function createPagesRouter(ctx) {
     const ua = req.headers['user-agent'] || '';
     recordImpression(assignedVariant, ua, ip, ACTIVE_CAMPAIGN?.id || 'glioblastoma-grace', req, res);
 
-    const useVariantB = assignedVariant === VARIANTS.VARIANT_B;
-    const targetTemplate = useVariantB ? 'grace-variant-b.html' : 'index.html';
-    const templatePath = path.join(__dirname, '..', 'public', targetTemplate);
+    const templatePath = path.join(__dirname, '..', 'public', 'index.html');
 
     let html = fs.readFileSync(templatePath, 'utf8');
     html = html.replace('<!-- TRACKING_PIXELS_PLACEHOLDER -->', pixelScripts);
