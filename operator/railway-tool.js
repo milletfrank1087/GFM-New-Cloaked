@@ -169,18 +169,26 @@ async function heal() {
 
   console.log(`Found ${failed.length} failed latest deployments. Sequential healing starting...`);
   for (const s of failed) {
-    const latest = s.deployments.edges[0]?.node;
-    console.log(`Healing ${s.name} (${latest.id})...`);
+    console.log(`Healing ${s.name}...`);
     try {
-      await gql(`mutation Redeploy($id: String!) {
-        deploymentRedeploy(id: $id) {
-          id
-          status
-        }
-      }`, { id: latest.id });
-      console.log(`✓ Redeploy triggered for ${s.name}`);
+      const res = await gql(`mutation DeployLatest($serviceId: String!, $environmentId: String!) {
+        serviceInstanceDeploy(serviceId: $serviceId, environmentId: $environmentId)
+      }`, { serviceId: s.id, environmentId: ENVIRONMENT_ID });
+      console.log(`✓ Fresh deploy triggered for ${s.name}:`, res.serviceInstanceDeploy);
     } catch (err) {
-      console.warn(`⚠️ Could not redeploy ${s.name}: ${err.message}`);
+      const live = s.deployments.edges.find(d => d.node.status === 'SUCCESS')?.node;
+      if (live) {
+        try {
+          await gql(`mutation Redeploy($id: String!) {
+            deploymentRedeploy(id: $id) { id status }
+          }`, { id: live.id });
+          console.log(`✓ Redeployed last successful for ${s.name}`);
+        } catch (err2) {
+          console.warn(`⚠️ Could not heal ${s.name}: ${err.message} / ${err2.message}`);
+        }
+      } else {
+        console.warn(`⚠️ Could not heal ${s.name}: ${err.message} (no successful fallback)`);
+      }
     }
     await new Promise(r => setTimeout(r, 4000));
   }
