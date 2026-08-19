@@ -1,9 +1,10 @@
 const { supabase } = require('./client');
 
 const FALLBACK_STORE = {
-  id: process.env.STORE_ID || 'digitelon',
-  domain: process.env.STORE_DOMAIN || 'www.digitelon.shop',
-  name: process.env.STORE_NAME || 'Digitelon',
+  id: '34bbfbdf-2ce2-4b47-b501-5e092e0a1f7f',
+  slug: 'larkwell-home',
+  domain: process.env.STORE_DOMAIN || 'www.larkwellhome.online',
+  name: 'Larkwell Home',
   payment_processor: 'stripe',
   status: 'active'
 };
