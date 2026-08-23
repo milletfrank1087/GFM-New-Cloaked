@@ -39,6 +39,7 @@ If the user's request matches one of these, FAVOR the recipe over piecing it tog
 | FB Ads data fetch (proxy, Graph API, insights) | `docs/FB-ADS-DATA.md` |
 | Campaign content refresh (dates, raised, updates) | `docs/CAMPAIGN-REFRESH-PLAYBOOK.md` |
 | Past bug fixes worth knowing about | `docs/ISSUES-AND-FIXES.md` |
+| Campaign scaling log & performance tracking | `docs/CAMPAIGN-SCALING-TRACKER.md` |
 | Approaches that were evaluated and rejected | `docs/DECISION-LOG.md` |
 | Operational gotchas + lessons learned | `LESSONS.md` |
 
