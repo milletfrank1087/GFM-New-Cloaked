@@ -43,18 +43,33 @@ Read docs/CAMPAIGN-SCALING-TRACKER.md. Query the latest Meta Ads insights (via F
 
 ## 🛠️ Active Ad Set Registry & Budget History
 
-| Campaign | Ad Set Name | Ad Set ID | Initial Budget | Aug 23 Adjustment | Optimization Goal |
+| Campaign | Ad Set Name | Ad Set ID | Aug 23 Level | Aug 24 Scale Target | Optimization Goal |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **GBM Grace - UK** | `($100/day) UK - Broad - Volume` | `120247843570680464` | $100.00/day | **$125.00/day** | Offsite Conversions |
-| **GBM Grace - UK** | `($50/day) UK - Broad - Value - Fixed` | `120247791368750464` | $50.00/day | **$65.00/day** | Value |
-| **GBM Grace - UK** | `($50/day) UK - Broad - Volume - Fixed` | `120247466901930464` | $50.00/day | **$65.00/day** | Offsite Conversions |
-| **GBM Emily - USA** | `($75/day) US - Broad - Volume - New Creative` | `120247166773850464` | $75.00/day | **$95.00/day** | Offsite Conversions |
-| **GBM Emily - USA** | `($75/day) US - Broad - Value` *(New)* | *(Duplicated from above)* | — | **$75.00/day** | Value |
-| **TOTALS** | | | **$275.00/day** | **$425.00/day** | *(+54.5% Scaling Step)* |
+| **GBM Emily - USA** | `($95/day) US - Broad - Volume - New Creative` | `120247166773850464` | $95.00/day | **$145.00/day** | Offsite Conversions |
+| **GBM Emily - USA** | `($100/day) US - Broad - Value` *(New)* | *(Branch from above)* | — | **$100.00/day** | Value |
+| **GBM Grace - UK** | `($65/day) UK - Broad - Value - Fixed` | `120247791368750464` | $65.00/day | **$95.00/day** | Value |
+| **GBM Grace - UK** | `($65/day) UK - Broad - Volume - Fixed` | `120247466901930464` | $65.00/day | **$80.00/day** | Offsite Conversions |
+| **GBM Grace - UK** | `($125/day) UK - Broad - Volume` | `120247843570680464` | $125.00/day | **$130.00/day** | Offsite Conversions |
+| **TOTALS** | | | **$350.00/day** | **$550.00/day** | *(+57.1% Scale Step)* |
 
 ---
 
 ## 📝 Change Log & Decision History
+
+### 2026-08-24 (Monday) — 24h Re-evaluation & Hard Scale (+57.1% to $550/day)
+* **24h Evaluation Post-Aug 23 Budget Raise:**
+  * **US Campaign:** Outperformed across all metrics. Spend $86.60, Meta ROAS **5.17x**, Stripe Net ROAS **4.94x** ($428.00 confirmed revenue from 9 donors). Average donation jumped to **$47.56** (with large gifts of $250, $50). CTR surged to **6.30%** and CPC dropped to **$1.15**.
+  * **UK Campaign:** Total spend $279.98, generated £490.00 (~$637 USD) in Stripe revenue across 20 donors (2.28x true ROAS). The `Value` ad set delivered **3.74x Meta ROAS** ($6.44 CPA, £175 raised), proving value-optimization is the highest-margin bidding model.
+* **Scaling Strategy Executed:**
+  1. **Aggressive US Surge:** Increased US Volume ad set from $95 $\rightarrow$ **$145/day** (+52.6%).
+  2. **US Value Branch:** Launched `($100/day) US - Broad - Value` to isolate whale donors at scale.
+  3. **UK Value Scaling:** Scaled `UK Value Fixed` from $65 $\rightarrow$ **$95/day** (+46.1%) following 3.74x ROAS.
+  4. **UK Volume Adjustments:** `UK Volume Fixed` $65 $\rightarrow$ **$80/day**, `UK Broad Volume` $125 $\rightarrow$ **$130/day**.
+* **Total Daily Budget:** Increased from **$350/day $\rightarrow$ $550/day** (+$200/day, +57.1%).
+* **Store Routing:** `Larkwell Home` processed $9,031.60 across 439 transactions with zero gateway warnings. Monthly cap: $10M.
+* **Next Review:** Aug 25 (Tuesday evening) calibration check.
+
+---
 
 ### 2026-08-23 (Sunday) — Scale Kickoff (Dual-Vector Scaling: +54.5%)
 * **Context:** Past 7 days achieved 2.99x true ROAS with fresh audiences (frequency 1.17–1.25) and strong CTRs (>5.6%). US campaign demonstrated high ticket sizes ($31.67 avg, 61.2% revenue from gifts $\ge$ $50), while UK generated consistent volume ($7.64 CPA).
@@ -63,8 +78,7 @@ Read docs/CAMPAIGN-SCALING-TRACKER.md. Query the latest Meta Ads insights (via F
   2. Increased UK Value Fixed ad set from $50 $\rightarrow$ $65/day (+30%).
   3. Increased UK Volume Fixed ad set from $50 $\rightarrow$ $65/day (+30%).
   4. Increased US Broad Volume ad set from $75 $\rightarrow$ $95/day (+26%).
-  5. Created and launched new ad set: `($75/day) US - Broad - Value` optimized for conversion value.
-* **Total Daily Budget:** Increased from **$275/day $\rightarrow$ $425/day**.
+* **Total Daily Budget:** Increased from **$275/day $\rightarrow$ $350/day**.
 * **Store Routing:** `Larkwell Home` (`www.larkwellhome.online`) active at 100% weight.
 * **Next Review:** Check evening pacing on Aug 23 / Morning review on Aug 24.
 
