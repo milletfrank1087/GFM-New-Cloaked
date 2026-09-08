@@ -130,7 +130,7 @@
         </div>
         <div>
           <span class="font-serif text-[15px] sm:text-xl font-bold text-[#143316] tracking-tight block leading-tight">
-            Sanctuary Defense Alliance
+            Frontline Calf Rescue
           </span>
           <span class="text-[9px] sm:text-[10px] text-[#64748b] tracking-wider uppercase font-semibold block leading-tight">
             Frontline Animal Rescue • Field Veterinary Care • Legal Advocacy
@@ -372,7 +372,7 @@
       <!-- STATUTORY DISCLAIMER & LEGAL LINKS -->
       <div id="checkout-disclaimer" class="text-center mt-3 px-1 space-y-1">
         <p class="text-[10px] text-[#64748b] leading-snug">
-          Sanctuary Defense Alliance is an independent citizen advocacy coalition and frontline animal rescue fund. Contributions directly support emergency veterinary rescue units, neonatal calf nursery care, and legislative advocacy in Docket #AGR-2026-884. Contributions are strictly non-tax-deductible.
+          Frontline Calf Rescue is an independent citizen advocacy coalition and frontline animal rescue fund. Contributions directly support emergency veterinary rescue units, neonatal calf nursery care, and legislative advocacy in Docket #AGR-2026-884. Contributions are strictly non-tax-deductible.
         </p>
         <p class="text-[9.5px] text-[#94a3b8]">
           By confirming, you agree to our <button onclick="showLegalModal('/terms','<%= locale.terms %>')" class="underline hover:text-[#334155]"><%= locale.terms %></button> and <button onclick="showLegalModal('/privacy','<%= locale.privacy %>')" class="underline hover:text-[#334155]"><%= locale.privacy %></button>.
@@ -473,7 +473,7 @@
 
       <div class="text-center mt-3 px-1">
         <p class="text-[10px] text-[#64748b] leading-snug">
-          Sanctuary Defense Alliance • 100% Direct Care Guarantee • Docket #AGR-2026-884
+          Frontline Calf Rescue • 100% Direct Care Guarantee • Docket #AGR-2026-884
         </p>
       </div>
     </div>
@@ -619,10 +619,10 @@
   };
 
   window.handleShareSuccess = function() {
-    var text = 'I just sponsored an emergency calf rescue through Sanctuary Defense Alliance. These newborns were separated from their mothers within hours of birth — your help means everything.';
+    var text = 'I just sponsored an emergency calf rescue through Frontline Calf Rescue. These newborns were separated from their mothers within hours of birth — your help means everything.';
     var url = document.getElementById('campaign-origin')?.value || window.location.origin;
     if (navigator.share) {
-      navigator.share({ title: 'Sanctuary Defense Alliance', text: text, url: url }).catch(function(){});
+      navigator.share({ title: 'Frontline Calf Rescue', text: text, url: url }).catch(function(){});
     } else {
       var tw = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text + ' ' + url);
       window.open(tw, '_blank', 'width=550,height=420');

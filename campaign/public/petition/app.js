@@ -1,5 +1,5 @@
 /**
- * SANCTUARY DEFENSE ALLIANCE — PETITION 2.0 CLIENT APPLICATION
+ * FRONTLINE CALF RESCUE — PETITION 2.0 CLIENT APPLICATION
  * High-Velocity Petition Intake & Sustainer Conversion Engine
  */
 
@@ -508,16 +508,16 @@
 
     if (type === 'governance' || type === 'operations' || type === 'field') {
       title = 'Field Stations, Sanctuaries & Veterinary Facilities';
-      content = 'Sanctuary Defense Alliance maintains three permanent animal care facilities and two rapid-response mobile veterinary trailers across the Northeast and Midwest corridors:\n\n• Lancaster County Rescue Barn (PA): 40-stall critical intake and quarantine hospital equipped with radiant neonatal thermal beds, isolation maternity pens, and continuous DVM monitoring.\n• Finger Lakes Neonatal Nursery (NY): 85-acre specialized nursing pasture dedicated to 12-week mother-calf bonding and social rehabilitation.\n• Wayne County Pasture Reserve (OH): 210-acre permanent lifetime grazing sanctuary protected by conservation covenants, safe from slaughter forever.\n\nBiosecurity Protocols: All facilities adhere to strict American Association of Bovine Practitioners (AABP) clinical hygiene standards. Public visitation is hosted during scheduled educational sanctuary days.';
+      content = 'Frontline Calf Rescue maintains three permanent animal care facilities and two rapid-response mobile veterinary trailers across the Northeast and Midwest corridors:\n\n• Lancaster County Rescue Barn (PA): 40-stall critical intake and quarantine hospital equipped with radiant neonatal thermal beds, isolation maternity pens, and continuous DVM monitoring.\n• Finger Lakes Neonatal Nursery (NY): 85-acre specialized nursing pasture dedicated to 12-week mother-calf bonding and social rehabilitation.\n• Wayne County Pasture Reserve (OH): 210-acre permanent lifetime grazing sanctuary protected by conservation covenants, safe from slaughter forever.\n\nBiosecurity Protocols: All facilities adhere to strict American Association of Bovine Practitioners (AABP) clinical hygiene standards. Public visitation is hosted during scheduled educational sanctuary days.';
     } else if (type === 'status' || type === 'advocacy' || type === '501c3' || type === 'irs') {
       title = 'Direct Frontline Action & Advocacy Funding';
-      content = 'Sanctuary Defense Alliance is an independent animal protection advocacy initiative. To maintain complete operational independence and engage in direct, unrestricted legislative lobbying to pass the Maternal Herd Protection Amendment in the 2026 Farm Bill, contributions are not tax-deductible as charitable gifts. 100% of donor funding directly underwrites frontline veterinary rescue trailers, emergency auction release fees, neonatal calf electrolyte formula, and grassroots citizen petition mobilization, free from government-subsidized speech restrictions.';
+      content = 'Frontline Calf Rescue is an independent animal protection advocacy initiative. To maintain complete operational independence and engage in direct, unrestricted legislative lobbying to pass the Maternal Herd Protection Amendment in the 2026 Farm Bill, contributions are not tax-deductible as charitable gifts. 100% of donor funding directly underwrites frontline veterinary rescue trailers, emergency auction release fees, neonatal calf electrolyte formula, and grassroots citizen petition mobilization, free from government-subsidized speech restrictions.';
     } else if (type === 'financials' || type === 'audit') {
       title = 'Financial Transparency & 100% Care Pledge';
       content = 'Under our strict 100% Direct Care Pledge, every public dollar contributed to the Emergency Calf Fund is directed exclusively to livestock auction legal release, mobile trauma transport, DVM diagnostics, colostrum formula, and lifetime sanctuary pasturing. Core administrative overhead is privately underwritten by founding board contributions. We are committed to full financial transparency and publish operational cost breakdowns upon request.';
     } else if (type === 'privacy') {
       title = 'Donor Privacy Protection & Zero-Monetization Charter';
-      content = 'We enforce a strict, zero-monetization data policy. Citizen petition signatures, email addresses, and donor payment sessions are encrypted in transit via 256-bit TLS/SSL and stored with cryptographic security. We never sell, rent, lease, barter, or trade constituent or donor information to commercial marketing brokers, political committees, or corporate data lists. You may request permanent record deletion at any time by contacting privacy@sanctuarydefense.org.';
+      content = 'We enforce a strict, zero-monetization data policy. Citizen petition signatures, email addresses, and donor payment sessions are encrypted in transit via 256-bit TLS/SSL and stored with cryptographic security. We never sell, rent, lease, barter, or trade constituent or donor information to commercial marketing brokers, political committees, or corporate data lists. You may request permanent record deletion at any time by contacting privacy@frontlinecalfrescue.org.';
     } else if (type === 'congressional') {
       title = 'Congressional Filing Docket #AGR-2026-884';
       content = 'Formal petition filings are prepared and submitted to the Chief Clerk of the House Committee on Agriculture pursuant to House Rule XII. Signatures are compiled and verified by congressional voting district to establish constituent standing. Certified citizen petitions will be formally entered into the public hearing record ahead of the 2026 Farm Bill Livestock & Dairy Subcommittee deliberations.';
@@ -526,10 +526,10 @@
       content = 'All undercover field investigations, veterinary case documentations, and photographic evidence of factory farming facilities are conducted under First Amendment speech protections firmly affirmed in Animal Legal Defense Fund v. Wasden, 878 F.3d 1184 (9th Cir. 2018) and Animal Legal Defense Fund v. Kelly, 9 F.4th 1219 (10th Cir. 2021). All documentary records maintain immutable cryptographic chain-of-custody hashes compliant with Federal Rules of Evidence 901 and 902(11).';
     } else if (type === 'terms') {
       title = 'Terms of Civic Inscription & Non-Partisan Advocacy';
-      content = 'By inscribing your name on this official petition, you attest that you are a citizen or resident supporting federal statutory protections for farm animals. Sanctuary Defense Alliance operates strictly as a non-partisan advocacy coalition. Signatures represent citizen support for legislative reform and do not constitute an endorsement of any political party or electoral candidate.';
+      content = 'By inscribing your name on this official petition, you attest that you are a citizen or resident supporting federal statutory protections for farm animals. Frontline Calf Rescue operates strictly as a non-partisan advocacy coalition. Signatures represent citizen support for legislative reform and do not constitute an endorsement of any political party or electoral candidate.';
     } else {
-      title = 'Sanctuary Defense Alliance Transparency';
-      content = 'Sanctuary Defense Alliance is committed to absolute operational, medical, and fiscal transparency. For specific records, inquiries, or media documentation, please contact our legal and administrative office at info@sanctuarydefense.org.';
+      title = 'Frontline Calf Rescue Transparency';
+      content = 'Frontline Calf Rescue is committed to absolute operational, medical, and fiscal transparency. For specific records, inquiries, or media documentation, please contact our legal and administrative office at info@frontlinecalfrescue.org.';
     }
 
     // Convert newlines to formatted paragraphs

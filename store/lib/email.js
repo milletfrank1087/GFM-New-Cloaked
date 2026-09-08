@@ -115,16 +115,16 @@ const EMAIL_TEMPLATES = {
     tagline: 'Emergency Calf Rescue &bull; Sponsorship Receipt',
     heading: (g) => `Thank you${g ? ', ' + g : ''} &mdash; a calf is safer tonight because of you.`,
     body: [
-      'Your sponsorship has been received by the Sanctuary Defense Alliance and is already being directed toward emergency calf rescue, warm colostrum formula, and round-the-clock veterinary triage for newborns separated from their mothers.',
+      'Your sponsorship has been received by the Frontline Calf Rescue and is already being directed toward emergency calf rescue, warm colostrum formula, and round-the-clock veterinary triage for newborns separated from their mothers.',
       'The calves your contribution supports &mdash; including Barnaby, Clover, and others rescued from dairy separation &mdash; will receive thermal nursery bedding, electrolyte supplements, and lifetime sanctuary placement. They will never face an auction ring.'
     ],
-    signoff: 'With deep gratitude for standing with them,<br>Sanctuary Defense Alliance',
-    footerText: 'Sanctuary Defense Alliance is an independent citizen advocacy coalition and frontline animal rescue fund. Contributions are non-tax-deductible.',
+    signoff: 'With deep gratitude for standing with them,<br>Frontline Calf Rescue',
+    footerText: 'Frontline Calf Rescue is an independent citizen advocacy coalition and frontline animal rescue fund. Contributions are non-tax-deductible.',
     textBody: [
-      'Your sponsorship has been received by the Sanctuary Defense Alliance and is already being directed toward emergency calf rescue, warm colostrum formula, and round-the-clock veterinary triage for newborns separated from their mothers.',
+      'Your sponsorship has been received by the Frontline Calf Rescue and is already being directed toward emergency calf rescue, warm colostrum formula, and round-the-clock veterinary triage for newborns separated from their mothers.',
       'The calves your contribution supports -- including Barnaby, Clover, and others rescued from dairy separation -- will receive thermal nursery bedding, electrolyte supplements, and lifetime sanctuary placement. They will never face an auction ring.'
     ],
-    textSignoff: 'With deep gratitude for standing with them,\nSanctuary Defense Alliance'
+    textSignoff: 'With deep gratitude for standing with them,\nFrontline Calf Rescue'
   }
 };
 
