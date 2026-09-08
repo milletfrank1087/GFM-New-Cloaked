@@ -158,7 +158,8 @@ module.exports = function createStripeRouter(ctx) {
       }));
 
       const cadence = donor.utm?.cadence || 'onetime';
-      const isSubscription = cadence === 'monthly';
+      const isSanctuaryFlow = donor.utm?.theme === 'sanctuary' || donor.utm?.causeType === 'animal-welfare';
+      const isSubscription = cadence === 'monthly' && isSanctuaryFlow;
 
       if (isSubscription) {
         const email = donor.email || null;
