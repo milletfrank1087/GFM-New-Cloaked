@@ -114,7 +114,6 @@ async function initCheckout() {
       mode: isSubscriptionMode ? 'subscription' : 'payment',
       amount: paymentAmountUnits,
       currency: paymentCurrency,
-      payment_method_types: ['card'],
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',
