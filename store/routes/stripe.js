@@ -80,6 +80,7 @@ module.exports = function createStripeRouter(ctx) {
               payment_method: 'stripe',
               stripe_payment_intent_id: invoice.payment_intent,
               stripe_charge_id: invoice.charge,
+              stripe_subscription_id: subId,
               amount: amt,
               service_fee: 0,
               total_amount: amt,
@@ -87,6 +88,24 @@ module.exports = function createStripeRouter(ctx) {
               payment_source: 'subscription',
               status: 'completed'
             }).catch(() => {});
+
+            const { data: existingSub } = await supabase
+              .from('subscriptions')
+              .select('renewal_count, total_collected')
+              .eq('stripe_subscription_id', subId)
+              .maybeSingle();
+
+            if (existingSub) {
+              await supabase.from('subscriptions')
+                .update({
+                  renewal_count: (existingSub.renewal_count || 0) + 1,
+                  total_collected: parseFloat(existingSub.total_collected || 0) + amt,
+                  status: 'active',
+                  updated_at: new Date().toISOString()
+                })
+                .eq('stripe_subscription_id', subId)
+                .catch(() => {});
+            }
           }
         }
         break;
@@ -94,6 +113,12 @@ module.exports = function createStripeRouter(ctx) {
       case 'customer.subscription.deleted': {
         const sub = event.data.object;
         StoreLog.event('subscription_cancelled', ref, `Subscription ${sub.id} cancelled (status: ${sub.status})`);
+        if (supabase) {
+          await supabase.from('subscriptions')
+            .update({ status: 'canceled', canceled_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+            .eq('stripe_subscription_id', sub.id)
+            .catch(() => {});
+        }
         break;
       }
     }
@@ -493,6 +518,7 @@ module.exports = function createStripeRouter(ctx) {
           utm_term: donor.utm?.utm_term || null,
           referrer_url: donor.utm?.referrer || null,
           landing_url: donor.utm?.sourceUrl || null,
+          stripe_subscription_id: subscriptionId || null,
           stripe_response: {
             paymentIntentId: paymentIntent.id, chargeId: charge?.id,
             status: paymentIntent.status, amount: paymentIntent.amount,
@@ -502,6 +528,35 @@ module.exports = function createStripeRouter(ctx) {
             subscriptionId: subscriptionId || null
           }
         });
+
+      if (isSubscription && subscriptionId) {
+        try {
+          const sub = await stripe.subscriptions.retrieve(subscriptionId);
+          await supabase.from('subscriptions').insert({
+            customer_id: customerId,
+            store_id: ctx.getStoreDbId(),
+            stripe_subscription_id: subscriptionId,
+            stripe_customer_id: sub.customer,
+            stripe_price_id: sub.items?.data?.[0]?.price?.id || null,
+            stripe_product_id: sub.items?.data?.[0]?.price?.product || null,
+            source_ref: donor.ref,
+            amount: totalAmount,
+            currency: donor.currency,
+            interval: 'month',
+            status: sub.status,
+            current_period_start: sub.current_period_start ? new Date(sub.current_period_start * 1000).toISOString() : null,
+            current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
+            renewal_count: 0,
+            total_collected: totalAmount,
+            customer_email: email,
+            customer_name: donorNameReal,
+            metadata: { ref: donor.ref, sid: donor.sid }
+          });
+          StoreLog.event('subscription_saved', donor.ref || '---', `${subscriptionId} → DB`);
+        } catch (subErr) {
+          StoreLog.error('subscription_save_failed', donor.ref || '---', subErr.message);
+        }
+      }
 
       const fmk = storeConfig.metadataKeys || {};
       if (email) {
