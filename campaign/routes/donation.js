@@ -62,7 +62,8 @@ module.exports = function createDonationRouter(ctx) {
       const token = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
-      const campaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
+      const targetSlug = req.body.campaign || ACTIVE_CAMPAIGN;
+      const campaign = loadCampaignFromFile(targetSlug);
       const campaignHost = req.get('host') || '';
       const campaignProto = req.protocol || 'https';
       const campaignOrigin = `${campaignProto}://${campaignHost}`;
@@ -73,31 +74,41 @@ module.exports = function createDonationRouter(ctx) {
         title: campaign.title,
         organizer: campaign.organizer?.name,
         image: absoluteImage,
-        beneficiary: (campaign.title || '').replace(/^(Help|Aidez|Ajude|Aiuta|Pomóż|Ayuda)\s+/i, '').split(/\s+(Fight|à|a|contro|walczyć|luchar)/i)[0].trim()
+        beneficiary: campaign.beneficiary || (campaign.title || '').replace(/^(Help|Aidez|Ajude|Aiuta|Pomóż|Ayuda)\s+/i, '').split(/\s+(Fight|à|a|contro|walczyć|luchar)/i)[0].trim()
       } : {};
 
       const pixelConfig = getTrackingConfig();
       const variant = tracking?.variant || req.cookies?._ab_variant || 'control';
+      const isSanctuary = targetSlug === 'sanctuary-defense-408';
       const enrichedTracking = {
         ...(tracking || {}),
         variant,
         campaignDisplay,
+        template: campaign?.template || tracking?.template || (isSanctuary ? 'petition2' : 'standard'),
+        causeType: isSanctuary ? 'animal-welfare' : 'medical',
+        theme: isSanctuary ? 'sanctuary' : 'default',
+        cadence: tracking?.cadence || 'monthly',
+        signer: req.body.donorInfo || {},
         metaPixelId: pixelConfig.fbPixelId || null,
         tiktokPixelId: pixelConfig.tiktokPixelId || null,
         clientLocation: clientLocation || clientInfo.clientLocation || null,
         campaignOrigin
       };
 
+      const resolvedEmail = donorEmail || req.body.donorInfo?.email || null;
+      const targetCurrency = req.body.currency || campaign?.currency || (isSanctuary ? 'USD' : ACTIVE_CURRENCY.code);
+      const targetLanguage = req.body.language || campaign?.language || (isSanctuary ? 'en' : ctx.DEFAULT_LANGUAGE);
+
       await createDonationToken({
         token,
         amount: parseFloat(amount),
-        currency: ACTIVE_CURRENCY.code,
-        campaignSlug: ACTIVE_CAMPAIGN,
+        currency: targetCurrency,
+        campaignSlug: targetSlug,
         storeId: store.id,
-        language: ctx.DEFAULT_LANGUAGE,
+        language: targetLanguage,
         tipAmount: parseFloat(tip),
         isAnonymous,
-        donorEmail,
+        donorEmail: resolvedEmail,
         tracking: enrichedTracking,
         ipAddress: clientInfo.ipAddress,
         userAgent: clientInfo.userAgent,

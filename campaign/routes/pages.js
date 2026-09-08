@@ -7,17 +7,8 @@ module.exports = function createPagesRouter(ctx) {
   const router = express.Router();
   const { getTrackingConfig, getCachedCampaignJSON, ACTIVE_CAMPAIGN } = ctx;
 
-  router.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'index.html'));
-  });
-
-  router.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'login.html'));
-  });
-
-  router.get('*', (req, res) => {
+  function buildPixelScripts() {
     const trackingConfig = getTrackingConfig();
-
     let pixelScripts = '';
 
     if (trackingConfig.enabled) {
@@ -56,11 +47,65 @@ module.exports = function createPagesRouter(ctx) {
   </script>`;
       }
     }
+    return pixelScripts;
+  }
 
+  function handlePetition(req, res, pixelScripts, assignedVariant) {
+    const templatePath = path.join(__dirname, '..', 'public', 'petition', 'index.html');
+    if (!fs.existsSync(templatePath)) {
+      return res.status(404).send('Petition template not found');
+    }
+    let html = fs.readFileSync(templatePath, 'utf8');
+    html = html.replace('<!-- TRACKING_PIXELS_PLACEHOLDER -->', pixelScripts);
+    const cachedCampaignJSON = getCachedCampaignJSON();
+    if (cachedCampaignJSON) {
+      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__CAMPAIGN_DATA=${cachedCampaignJSON};window.__AB_VARIANT="${assignedVariant}";</script>`);
+    } else {
+      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__AB_VARIANT="${assignedVariant}";</script>`);
+    }
+    return res.send(html);
+  }
+
+  router.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'index.html'));
+  });
+
+  router.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'login.html'));
+  });
+
+  router.get(['/petition', '/petition/', '/petition2', '/petition2/'], (req, res) => {
+    const pixelScripts = buildPixelScripts();
     const assignedVariant = resolveVariant(req, res);
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
     const ua = req.headers['user-agent'] || '';
-    try { recordImpression(assignedVariant, ua, ip, ACTIVE_CAMPAIGN?.id || 'glioblastoma-grace', req, res); } catch (_) {}
+    const activeSlug = typeof ACTIVE_CAMPAIGN === 'string' ? ACTIVE_CAMPAIGN : (ACTIVE_CAMPAIGN?.id || 'sanctuary-defense-408');
+    try { recordImpression(assignedVariant, ua, ip, activeSlug, req, res); } catch (_) {}
+    return handlePetition(req, res, pixelScripts, assignedVariant);
+  });
+
+  router.get('*', (req, res) => {
+    const pixelScripts = buildPixelScripts();
+    const assignedVariant = resolveVariant(req, res);
+    const activeSlug = typeof ACTIVE_CAMPAIGN === 'string' ? ACTIVE_CAMPAIGN : (ACTIVE_CAMPAIGN?.id || 'leukemia-sofia');
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
+    const ua = req.headers['user-agent'] || '';
+    try { recordImpression(assignedVariant, ua, ip, activeSlug, req, res); } catch (_) {}
+
+    const cachedCampaignJSON = getCachedCampaignJSON();
+    let campaignData = null;
+    try { if (cachedCampaignJSON) campaignData = JSON.parse(cachedCampaignJSON); } catch (_) {}
+
+    const isPetition = activeSlug === 'sanctuary-defense-408' ||
+                       campaignData?.template === 'petition' ||
+                       campaignData?.template === 'advocacy-dossier' ||
+                       campaignData?.template === 'petition2' ||
+                       req.query.petition === '1' ||
+                       req.query.p2 === '1';
+
+    if (isPetition) {
+      return handlePetition(req, res, pixelScripts, assignedVariant);
+    }
 
     const templatePath = path.join(__dirname, '..', 'public', 'index.html');
 
@@ -69,7 +114,6 @@ module.exports = function createPagesRouter(ctx) {
     html = html.replace('<!-- GOOGLE_PAY_SDK_PLACEHOLDER -->', '');
     html = html.replace('<!-- PAYMENT_SCRIPT_PLACEHOLDER -->', '');
 
-    const cachedCampaignJSON = getCachedCampaignJSON();
     if (cachedCampaignJSON) {
       html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__CAMPAIGN_DATA=${cachedCampaignJSON};window.__AB_VARIANT="${assignedVariant}";</script>`);
     } else {

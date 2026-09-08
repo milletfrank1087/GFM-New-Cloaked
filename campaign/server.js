@@ -254,6 +254,14 @@ async function refreshCampaignCache() {
   }
 }
 
+process.on('uncaughtException', (err) => {
+  console.error('[CAMPAIGN UNCAUGHT EXCEPTION]', err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[CAMPAIGN UNHANDLED REJECTION]', reason);
+});
+
 refreshCampaignCache();
 setInterval(refreshCampaignCache, 60000);
 startBackgroundSyncWorker();

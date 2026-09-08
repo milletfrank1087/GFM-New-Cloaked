@@ -127,7 +127,21 @@ module.exports = function createTokenRouter(ctx) {
 
         const fmt = (n) => formatAmount(n, donorCurrency);
 
-        return res.render('pages/checkout-donor', {
+        const isSanctuary = donor.ref === 'sanctuary-defense-408' ||
+                            donor.utm?.campaign === 'sanctuary_defense_408' ||
+                            donor.utm?.template === 'petition2' ||
+                            donor.utm?.template === 'advocacy-dossier' ||
+                            donor.utm?.causeType === 'animal-welfare' ||
+                            donor.utm?.theme === 'sanctuary';
+
+        const checkoutTemplate = isSanctuary ? 'pages/checkout-sanctuary' : 'pages/checkout-donor';
+
+        const signer = donor.utm?.signer || {};
+        const donorName = ((signer.firstName || '') + ' ' + (signer.lastName || '')).trim();
+        const signerZip = donor.utm?.signer_zip || signer.zip || '';
+        const cadence = donor.utm?.cadence || 'monthly';
+
+        return res.render(checkoutTemplate, {
           store: req.store,
           donor,
           locale,
@@ -151,7 +165,11 @@ module.exports = function createTokenRouter(ctx) {
           purchaseEventId: donor.utm?.eventId || null,
           donorCountryCode: donor.utm?.clientLocation?.countryCode || null,
           donorExternalId: donor.sid || null,
-          donorEmail: donor.email || null
+          donorEmail: donor.email || null,
+          isSanctuary,
+          donorName,
+          signerZip,
+          cadence
         });
       } catch (e) {
         StoreLog.error('checkout_view', '---', `Session parse error: ${e.message}`);

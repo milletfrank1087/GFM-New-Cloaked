@@ -44,6 +44,8 @@ const ALLOWLIST = [
   /^routes[\\/]paypal\.js$/,
   /^routes[\\/]token\.js$/,
   /^stores[\\/][^\\/]+[\\/]views[\\/]pages[\\/]checkout-donor\.ejs$/,
+  /^stores[\\/][^\\/]+[\\/]views[\\/]pages[\\/]checkout-sanctuary\.ejs$/,
+  /^views[\\/]pages[\\/]checkout-sanctuary\.ejs$/,
 ];
 
 function shouldSkipDir(name) {

@@ -105,25 +105,28 @@ async function initCheckout() {
   const nameInput = document.getElementById('billing-name');
   const loadingEl = document.getElementById('payment-loading');
 
+  const brandPrimaryColor = document.getElementById('payment-brand-color')?.value || '#00b964';
+
   try {
     elements = stripe.elements({
       mode: 'payment',
       amount: paymentAmountUnits,
       currency: paymentCurrency,
+      payment_method_types: ['card'],
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',
         variables: {
-          colorPrimary: '#00b964',
+          colorPrimary: brandPrimaryColor,
           borderRadius: '8px',
           fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
           spacingUnit: '4px'
         },
         rules: {
           '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', padding: '10px 12px' },
-          '.Input:focus': { border: '1px solid #00b964', boxShadow: '0 0 0 3px rgba(0,185,100,0.08)' },
+          '.Input:focus': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 3px ${brandPrimaryColor}18` },
           '.Tab': { border: '1px solid #e5e7eb', boxShadow: 'none' },
-          '.Tab--selected': { border: '1px solid #00b964', boxShadow: '0 0 0 1px #00b964' }
+          '.Tab--selected': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 1px ${brandPrimaryColor}` }
         }
       }
     });
@@ -143,6 +146,26 @@ async function initCheckout() {
     paymentElement.on('focus', () => {
       fireAddPaymentInfo();
     });
+
+    window.updateCheckoutAmount = function(newTotalAmount, newTipAmount) {
+      const decimals = parseInt(document.getElementById('payment-decimals')?.value || '2', 10);
+      const multiplier = Math.pow(10, decimals);
+      const newUnits = Math.round(newTotalAmount * multiplier);
+      
+      const paymentAmountEl = document.getElementById('payment-amount');
+      if (paymentAmountEl) paymentAmountEl.value = newUnits;
+
+      const tipEl = document.getElementById('selected-tip-amount');
+      if (tipEl) tipEl.value = (typeof newTipAmount === 'number' ? newTipAmount : parseFloat(newTipAmount || 0)).toFixed(decimals);
+
+      if (elements) {
+        try {
+          elements.update({ amount: newUnits });
+        } catch (e) {
+          console.warn('elements.update warning:', e);
+        }
+      }
+    };
 
   } catch (err) {
     if (loadingEl) loadingEl.classList.add('hidden');
@@ -186,11 +209,14 @@ async function initCheckout() {
         return;
       }
 
+      const tipInput = document.getElementById('selected-tip-amount');
+      const tipVal = tipInput && !isNaN(parseFloat(tipInput.value)) ? parseFloat(tipInput.value) : undefined;
+
       try {
         const response = await fetch('/api/create-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({})
+          body: JSON.stringify(tipVal !== undefined ? { tip: tipVal } : {})
         });
 
         const data = await response.json();

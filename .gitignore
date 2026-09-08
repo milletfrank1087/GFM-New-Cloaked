@@ -24,3 +24,10 @@ secrets/**
 
 # Local timed agent session state
 .agent-session/
+dev-runner.js
+package.json
+start-store.bat
+start-campaign.bat
+
+# Generated ad image tests (not campaign assets)
+test gens/

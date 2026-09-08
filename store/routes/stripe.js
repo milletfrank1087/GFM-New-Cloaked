@@ -93,7 +93,11 @@ module.exports = function createStripeRouter(ctx) {
           retryAfterSeconds: failFast.secondsRemaining
         });
       }
-      const totalAmount = parseFloat(donor.amount) + parseFloat(donor.fee || 0);
+      const clientTip = req.body && req.body.tip != null && !isNaN(parseFloat(req.body.tip)) && parseFloat(req.body.tip) >= 0
+        ? parseFloat(req.body.tip)
+        : parseFloat(donor.fee || 0);
+
+      const totalAmount = parseFloat(donor.amount) + clientTip;
       const donorCurrency = donor.currency || 'EUR';
       const amountInUnits = toSmallestUnit(totalAmount, donorCurrency);
       const lineItems = decomposeAmount(totalAmount, storeConfig.products, donorCurrency);
@@ -107,7 +111,7 @@ module.exports = function createStripeRouter(ctx) {
         [mk.referenceCode || 'referenceCode']: refCode,
         [mk.sessionRef || 'sessionRef']: (donor.sid || '').substring(0, 12),
         [mk.subtotal || 'subtotal']: String(donor.amount),
-        [mk.serviceFee || 'serviceFee']: String(donor.fee || 0),
+        [mk.serviceFee || 'serviceFee']: String(clientTip),
         [mk.guestCheckout || 'guestCheckout']: String(donor.guest || false),
         [mk.orderSummary || 'orderSummary']: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', ')
       };
@@ -124,7 +128,6 @@ module.exports = function createStripeRouter(ctx) {
       const intentParams = {
         amount: amountInUnits,
         currency: donorCurrency.toLowerCase(),
-        automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
         metadata,
         description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
         statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
@@ -132,7 +135,22 @@ module.exports = function createStripeRouter(ctx) {
         amount_details: { line_items: stripeLineItems }
       };
 
-      const paymentIntent = await stripe.paymentIntents.create(intentParams);
+      let paymentIntent;
+      try {
+        paymentIntent = await stripe.paymentIntents.create({
+          ...intentParams,
+          automatic_payment_methods: { enabled: true, allow_redirects: 'never' }
+        });
+      } catch (autoErr) {
+        if (autoErr.message?.includes('payment method types') || autoErr.message?.includes('capabilities')) {
+          paymentIntent = await stripe.paymentIntents.create({
+            ...intentParams,
+            payment_method_types: ['card']
+          });
+        } else {
+          throw autoErr;
+        }
+      }
 
       StoreLog.event('payment_created', donor.ref || '---', `${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
 
@@ -390,12 +408,13 @@ module.exports = function createStripeRouter(ctx) {
       if (email) {
         const refKeyName = fmk.referenceCode || 'referenceCode';
         const donationReference = (paymentIntent.metadata && paymentIntent.metadata[refKeyName]) || paymentIntent.id.slice(-8).toUpperCase();
+        const savedTip = parseFloat(paymentIntent.metadata?.[fmk.serviceFee || 'serviceFee'] || donor.fee || 0);
         sendDonationConfirmation({
           to: email,
           name: donorNameReal !== 'Unknown' ? donorNameReal : '',
           currency: donor.currency,
           donationAmount: parseFloat(donor.amount),
-          tip: parseFloat(donor.fee || 0),
+          tip: savedTip,
           total: totalAmount,
           cardBrand,
           cardLast4: cardLastDigits,
@@ -519,7 +538,6 @@ module.exports = function createStripeRouter(ctx) {
       const intentParams = {
         amount: amountInUnits,
         currency: storeCurrency.toLowerCase(),
-        automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
         metadata: {
           [mk.storeId || 'storeId']: ctx.getStoreDbId() || '',
           [mk.storeDomain || 'storeDomain']: STORE_DOMAIN,
@@ -541,7 +559,22 @@ module.exports = function createStripeRouter(ctx) {
         }
       };
 
-      const paymentIntent = await stripe.paymentIntents.create(intentParams);
+      let paymentIntent;
+      try {
+        paymentIntent = await stripe.paymentIntents.create({
+          ...intentParams,
+          automatic_payment_methods: { enabled: true, allow_redirects: 'never' }
+        });
+      } catch (autoErr) {
+        if (autoErr.message?.includes('payment method types') || autoErr.message?.includes('capabilities')) {
+          paymentIntent = await stripe.paymentIntents.create({
+            ...intentParams,
+            payment_method_types: ['card']
+          });
+        } else {
+          throw autoErr;
+        }
+      }
 
       const storeDecimals = getDecimals(storeCurrency);
       StoreLog.event('store_checkout', refCode, `${paymentIntent.id.substring(0, 18)}... - ${formatAmount(total, storeCurrency)} - ${validItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`);

@@ -29,6 +29,7 @@
       mode: 'payment',
       amount: Math.round(sc.total * multiplier),
       currency: sc.currency,
+      payment_method_types: ['card'],
       appearance: {
         theme: 'stripe',
         variables: {

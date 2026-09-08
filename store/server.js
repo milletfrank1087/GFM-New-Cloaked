@@ -72,8 +72,9 @@ const ctx = {
 };
 
 const storeDir = path.join(__dirname, 'stores', process.env.STORE_ID || 'zenflow-tools');
+const sharedViewsDir = path.join(__dirname, 'views');
 app.set('view engine', 'ejs');
-app.set('views', path.join(storeDir, 'views'));
+app.set('views', [path.join(storeDir, 'views'), sharedViewsDir]);
 
 app.use(cookieParser());
 app.use((req, res, next) => {
@@ -216,6 +217,14 @@ async function verifyProcessorBootHealth() {
     }
   }
 }
+
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[UNHANDLED REJECTION]', reason);
+});
 
 resolveStoreId().then(() => {
   app.listen(PORT, () => {
