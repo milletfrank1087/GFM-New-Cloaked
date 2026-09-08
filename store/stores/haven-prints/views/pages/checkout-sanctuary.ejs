@@ -450,8 +450,11 @@
           </div>
 
           <div class="bg-[#eef7ee] rounded-xl p-3.5 border border-[#1e4620]/15">
-            <p class="text-[11.5px] text-[#143316] leading-relaxed text-center">
-              <strong>What happens next:</strong> A confirmation email is on its way to <strong id="success-email">your inbox</strong>. Our field rescue team will send you a personal update with photos of the calves your sponsorship is directly helping.
+            <p class="text-[11.5px] text-[#143316] leading-relaxed text-center" id="success-next-steps">
+              <strong>What happens next:</strong> A confirmation receipt will arrive at <strong id="success-email">your inbox</strong> shortly. As a sustaining sponsor, you may receive periodic updates on the calves and advocacy work your contributions are funding.
+            </p>
+            <p class="text-[10px] text-[#64748b] leading-snug text-center mt-2">
+              The charge on your statement will appear as <strong>RISEHOPE</strong>.
             </p>
           </div>
 
@@ -599,6 +602,11 @@
         var reach = Math.round(tipAmt * 125);
         tipReachEl.textContent = reach >= 1000 ? '~' + (reach / 1000).toFixed(1) + 'k' : '~' + reach;
       }
+    }
+
+    var nextStepsEl = document.getElementById('success-next-steps');
+    if (nextStepsEl && cadence !== 'monthly') {
+      nextStepsEl.innerHTML = '<strong>What happens next:</strong> A confirmation receipt will arrive at <strong>' + (billingEmail || 'your inbox') + '</strong> shortly. Your one-time gift goes directly to emergency calf rescue and frontline veterinary care.';
     }
 
     var backBtn = document.getElementById('success-back-btn');
