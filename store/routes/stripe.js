@@ -589,7 +589,8 @@ module.exports = function createStripeRouter(ctx) {
           paymentSource,
           reference: donationReference,
           descriptor: storeConfig.statementDescriptor,
-          paymentIntentId: paymentIntent.id
+          paymentIntentId: paymentIntent.id,
+          emailTemplate: donor.utm?.emailTemplate || 'default'
         });
       }
 

@@ -91,26 +91,64 @@ function buildDescriptorNotice(descriptor) {
   };
 }
 
-function buildHtml({ greeting, rows, descriptor }) {
+const EMAIL_TEMPLATES = {
+  default: {
+    subject: 'Thank you for your generous donation',
+    brandColor: '#00a85a',
+    tagline: 'Confirmation of your donation',
+    heading: (g) => `Thank you${g ? ', ' + g : ''}.`,
+    body: [
+      'Your donation has arrived &mdash; and it truly moves us. Generosity like yours, often from people we may never get to meet, is what carries families through their hardest days.',
+      'Every gift, no matter its size, becomes real comfort and hope for someone who needs it. Thank you for being part of that.'
+    ],
+    signoff: `With heartfelt gratitude,<br>The ${escapeHtml(BRAND_NAME)} Team`,
+    footerText: 'This is a confirmation of a payment you made. Please keep it for your records.',
+    textBody: [
+      'Your donation has arrived -- and it truly moves us. Generosity like yours, often from people we may never get to meet, is what carries families through their hardest days.',
+      'Every gift, no matter its size, becomes real comfort and hope for someone who needs it. Thank you for being part of that.'
+    ],
+    textSignoff: `With heartfelt gratitude,\nThe ${BRAND_NAME} Team`
+  },
+  sanctuary: {
+    subject: 'Your sponsorship is protecting calves right now',
+    brandColor: '#1e4620',
+    tagline: 'Emergency Calf Rescue &bull; Sponsorship Receipt',
+    heading: (g) => `Thank you${g ? ', ' + g : ''} &mdash; a calf is safer tonight because of you.`,
+    body: [
+      'Your sponsorship has been received by the Sanctuary Defense Alliance and is already being directed toward emergency calf rescue, warm colostrum formula, and round-the-clock veterinary triage for newborns separated from their mothers.',
+      'The calves your contribution supports &mdash; including Barnaby, Clover, and others rescued from dairy separation &mdash; will receive thermal nursery bedding, electrolyte supplements, and lifetime sanctuary placement. They will never face an auction ring.'
+    ],
+    signoff: 'With deep gratitude for standing with them,<br>Sanctuary Defense Alliance',
+    footerText: 'Sanctuary Defense Alliance is an independent citizen advocacy coalition and frontline animal rescue fund. Contributions are non-tax-deductible.',
+    textBody: [
+      'Your sponsorship has been received by the Sanctuary Defense Alliance and is already being directed toward emergency calf rescue, warm colostrum formula, and round-the-clock veterinary triage for newborns separated from their mothers.',
+      'The calves your contribution supports -- including Barnaby, Clover, and others rescued from dairy separation -- will receive thermal nursery bedding, electrolyte supplements, and lifetime sanctuary placement. They will never face an auction ring.'
+    ],
+    textSignoff: 'With deep gratitude for standing with them,\nSanctuary Defense Alliance'
+  }
+};
+
+function getTemplate(templateId) {
+  return EMAIL_TEMPLATES[templateId] || EMAIL_TEMPLATES.default;
+}
+
+function buildHtml({ greeting, rows, descriptor, templateId }) {
   const notice = buildDescriptorNotice(descriptor);
+  const t = getTemplate(templateId);
+  const safeGreeting = escapeHtml(greeting);
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f4f6f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1f2937;">
   <div style="max-width:540px;margin:0 auto;padding:32px 20px;">
     <div style="text-align:center;margin-bottom:18px;">
-      <div style="font-size:22px;font-weight:700;color:#00a85a;letter-spacing:-0.3px;">${escapeHtml(BRAND_NAME)}</div>
-      <div style="font-size:12px;color:#9ca3af;margin-top:2px;">Confirmation of your donation</div>
+      <div style="font-size:22px;font-weight:700;color:${t.brandColor};letter-spacing:-0.3px;">${escapeHtml(BRAND_NAME)}</div>
+      <div style="font-size:12px;color:#9ca3af;margin-top:2px;">${t.tagline}</div>
     </div>
     <div style="background:#ffffff;border:1px solid #e8ebee;border-radius:14px;overflow:hidden;">
       <div style="padding:28px 28px 6px 28px;">
-        <h1 style="margin:0 0 14px 0;font-size:20px;font-weight:700;color:#111827;">Thank you${greeting ? ', ' + escapeHtml(greeting) : ''}.</h1>
-        <p style="margin:0 0 14px 0;font-size:15px;line-height:1.6;color:#4b5563;">
-          Your donation has arrived &mdash; and it truly moves us. Generosity like yours, often from people we may never get to meet, is what carries families through their hardest days.
-        </p>
-        <p style="margin:0 0 18px 0;font-size:15px;line-height:1.6;color:#4b5563;">
-          Every gift, no matter its size, becomes real comfort and hope for someone who needs it. Thank you for being part of that.
-        </p>
+        <h1 style="margin:0 0 14px 0;font-size:20px;font-weight:700;color:#111827;">${t.heading(safeGreeting)}</h1>
+        ${t.body.map(p => `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.6;color:#4b5563;">${p}</p>`).join('\n        ')}
       </div>
       <div style="margin:0 28px 22px 28px;background:#f7faf8;border:1px solid #e4efe9;border-radius:10px;padding:14px 20px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#374151;">
@@ -119,40 +157,33 @@ function buildHtml({ greeting, rows, descriptor }) {
       </div>
       <div style="padding:0 28px 24px 28px;">
         <p style="margin:0;font-size:14px;line-height:1.55;color:#4b5563;">
-          With heartfelt gratitude,<br>The ${escapeHtml(BRAND_NAME)} Team
+          ${t.signoff}
         </p>
       </div>
       ${notice.html}
       <div style="height:24px;"></div>
     </div>
     <p style="margin:18px 0 0 0;text-align:center;font-size:11px;line-height:1.5;color:#9ca3af;">
-      This is a confirmation of a payment you made. Please keep it for your records.
+      ${escapeHtml(t.footerText)}
     </p>
   </div>
 </body>
 </html>`;
 }
 
-function buildText({ greeting, rows, descriptor }) {
+function buildText({ greeting, rows, descriptor, templateId }) {
   const notice = buildDescriptorNotice(descriptor);
-  const lines = [
-    `Thank you${greeting ? ', ' + greeting : ''}.`,
-    '',
-    'Your donation has arrived -- and it truly moves us. Generosity like yours, often from people we may never get to meet, is what carries families through their hardest days.',
-    '',
-    'Every gift, no matter its size, becomes real comfort and hope for someone who needs it. Thank you for being part of that.',
-    '',
-    rowsToText(rows),
-    '',
-    'With heartfelt gratitude,',
-    `The ${BRAND_NAME} Team`
-  ];
-  if (notice.text) {
-    lines.push('');
-    lines.push(notice.text);
+  const t = getTemplate(templateId);
+  const headingText = t.heading(greeting || '').replace(/&mdash;/g, '--').replace(/&[a-z]+;/g, '');
+  const lines = [headingText, ''];
+  for (const p of t.textBody) {
+    lines.push(p, '');
   }
-  lines.push('');
-  lines.push('This is a confirmation of a payment you made. Please keep it for your records.');
+  lines.push(rowsToText(rows), '', t.textSignoff);
+  if (notice.text) {
+    lines.push('', notice.text);
+  }
+  lines.push('', t.footerText);
   return lines.join('\n');
 }
 
@@ -161,7 +192,7 @@ function buildEmail(opts) {
     name, currency, reference,
     donationAmount, tip, total,
     cardBrand, cardLast4, paymentSource,
-    descriptor
+    descriptor, emailTemplate
   } = opts || {};
   const ref = reference || '---';
   const cur = currency || 'EUR';
@@ -169,6 +200,7 @@ function buildEmail(opts) {
   const tipNum = Number(tip) || 0;
   const totalNum = Number(total) || (Number.isFinite(donationNum) ? donationNum + tipNum : 0);
   const hasTip = tipNum > 0;
+  const templateId = emailTemplate || 'default';
 
   const rows = buildRows({
     donationFormatted: formatAmount(Number.isFinite(donationNum) ? donationNum : totalNum, cur),
@@ -181,10 +213,11 @@ function buildEmail(opts) {
   });
 
   const greeting = firstNameOf(name);
+  const t = getTemplate(templateId);
   return {
-    subject: 'Thank you for your generous donation',
-    html: buildHtml({ greeting, rows, descriptor }),
-    text: buildText({ greeting, rows, descriptor })
+    subject: t.subject,
+    html: buildHtml({ greeting, rows, descriptor, templateId }),
+    text: buildText({ greeting, rows, descriptor, templateId })
   };
 }
 

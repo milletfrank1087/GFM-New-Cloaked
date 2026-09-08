@@ -88,6 +88,7 @@ module.exports = function createDonationRouter(ctx) {
         causeType: isSanctuary ? 'animal-welfare' : 'medical',
         theme: isSanctuary ? 'sanctuary' : 'default',
         cadence: tracking?.cadence || 'monthly',
+        emailTemplate: isSanctuary ? 'sanctuary' : 'default',
         signer: req.body.donorInfo || {},
         metaPixelId: pixelConfig.fbPixelId || null,
         tiktokPixelId: pixelConfig.tiktokPixelId || null,

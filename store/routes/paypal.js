@@ -363,7 +363,8 @@ module.exports = function createPayPalRouter(ctx) {
           paymentSource: 'paypal',
           reference: donor.ref || orderID.slice(-8).toUpperCase(),
           descriptor: storeConfig.statementDescriptor || storeConfig.name,
-          paymentIntentId: orderID
+          paymentIntentId: orderID,
+          emailTemplate: donor.utm?.emailTemplate || 'default'
         });
       }
 
