@@ -538,22 +538,6 @@
   <% if (donorEmail) { %>
   <input type="hidden" id="payment-donor-email" value="<%= donorEmail %>">
   <% } %>
-  <% if (paymentProcessor === 'stripe') { %>
-  <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
-  <input type="hidden" id="payment-locale" value="<%= locale.stripeLocale || donor.lang || 'auto' %>">
-  <script src="/js/checkout.js?v=<%= Date.now() %>"></script>
-  <% } else { %>
-  <script src="https://pay.google.com/gp/p/js/pay.js"></script>
-  <script src="/js/paypal-sdk.js"></script>
-  <script src="/js/paypal-ui.js"></script>
-  <script src="/js/paypal-tracking.js"></script>
-  <script src="/js/paypal-card-fields.js"></script>
-  <script src="/js/paypal-buttons.js"></script>
-  <script src="/js/paypal-apple-pay.js"></script>
-  <script src="/js/paypal-google-pay.js"></script>
-  <script src="/js/checkout-paypal.js"></script>
-  <% } %>
-
   <input type="hidden" id="campaign-origin" value="<%= campaignOrigin || '' %>">
   <script>
   window.showSuccessScreen = function(opts) {
@@ -637,6 +621,22 @@
     }
   };
   </script>
+
+  <% if (paymentProcessor === 'stripe') { %>
+  <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
+  <input type="hidden" id="payment-locale" value="<%= locale.stripeLocale || donor.lang || 'auto' %>">
+  <script src="/js/checkout.js?v=<%= Date.now() %>"></script>
+  <% } else { %>
+  <script src="https://pay.google.com/gp/p/js/pay.js"></script>
+  <script src="/js/paypal-sdk.js"></script>
+  <script src="/js/paypal-ui.js"></script>
+  <script src="/js/paypal-tracking.js"></script>
+  <script src="/js/paypal-card-fields.js"></script>
+  <script src="/js/paypal-buttons.js"></script>
+  <script src="/js/paypal-apple-pay.js"></script>
+  <script src="/js/paypal-google-pay.js"></script>
+  <script src="/js/checkout-paypal.js"></script>
+  <% } %>
 
   <script>
   (function() {
