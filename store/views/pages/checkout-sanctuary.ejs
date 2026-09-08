@@ -105,11 +105,17 @@
   <header class="bg-white border-b border-[#e5e2da] py-2 sm:py-3.5 px-3 sm:px-6 shadow-xs">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
       <div class="flex items-center gap-2 sm:gap-3">
-        <button onclick="if(history.length>1){history.back()}else{window.close()}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-md bg-[#eef7ee] border border-[#1e4620]/25 flex items-center justify-center text-[#1e4620] flex-shrink-0 hover:bg-[#dcf0dc] transition-colors" aria-label="Back to petition">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <button onclick="if(history.length>1){history.back()}else{window.close()}" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center flex-shrink-0 transition-colors active:scale-95" aria-label="Back to petition">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M15 19l-7-7 7-7"/>
           </svg>
         </button>
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-[#eef7ee] border border-[#1e4620]/25 flex items-center justify-center text-[#1e4620] flex-shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
         <div>
           <span class="font-serif text-[15px] sm:text-xl font-bold text-[#143316] tracking-tight block leading-tight">
             Sanctuary Defense Alliance
