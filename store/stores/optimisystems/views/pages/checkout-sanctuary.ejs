@@ -105,12 +105,11 @@
   <header class="bg-white border-b border-[#e5e2da] py-2 sm:py-3.5 px-3 sm:px-6 shadow-xs">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
       <div class="flex items-center gap-2 sm:gap-3">
-        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-md bg-[#eef7ee] border border-[#1e4620]/25 flex items-center justify-center text-[#1e4620] flex-shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="m9 12 2 2 4-4"/>
+        <button onclick="if(history.length>1){history.back()}else{window.close()}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-md bg-[#eef7ee] border border-[#1e4620]/25 flex items-center justify-center text-[#1e4620] flex-shrink-0 hover:bg-[#dcf0dc] transition-colors" aria-label="Back to petition">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 19l-7-7 7-7"/>
           </svg>
-        </div>
+        </button>
         <div>
           <span class="font-serif text-[15px] sm:text-xl font-bold text-[#143316] tracking-tight block leading-tight">
             Sanctuary Defense Alliance
@@ -197,7 +196,7 @@
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-xs font-bold text-[#64748b]"><%= symbol %></span>
                 <input type="number" id="custom-tip-input" min="0" step="1" placeholder="0.00"
-                  class="w-full bg-white border border-[#dcd8cf] rounded-lg pl-6 pr-3 py-1.5 text-xs text-[#0f172a] focus:outline-none focus:border-[#1e4620]">
+                  class="w-full bg-white border border-[#dcd8cf] rounded-lg pl-6 pr-3 py-1.5 text-[16px] text-[#0f172a] focus:outline-none focus:border-[#1e4620]">
               </div>
             </div>
             <div id="tip-impact-banner" class="mt-1 text-[10px] text-[#64748b] leading-snug"></div>
@@ -212,14 +211,14 @@
                 Constituent Email
               </label>
               <input type="email" id="billing-email" value="<%= donor.email || '' %>" placeholder="you@example.com" autocomplete="email"
-                class="w-full bg-[#faf9f6] border border-[#dcd8cf] rounded-lg px-2.5 py-2 text-[13px] text-[#0f172a] focus:bg-white focus:outline-none transition-all">
+                class="w-full bg-[#faf9f6] border border-[#dcd8cf] rounded-lg px-2.5 py-2 text-[16px] text-[#0f172a] focus:bg-white focus:outline-none transition-all">
             </div>
             <div>
               <label for="billing-name" class="block text-[10.5px] font-bold text-[#334155] mb-0.5">
                 Legal Name
               </label>
               <input type="text" id="billing-name" value="<%= donorName || '' %>" placeholder="Jane Doe" autocomplete="name"
-                class="w-full bg-[#faf9f6] border border-[#dcd8cf] rounded-lg px-2.5 py-2 text-[13px] text-[#0f172a] focus:bg-white focus:outline-none transition-all">
+                class="w-full bg-[#faf9f6] border border-[#dcd8cf] rounded-lg px-2.5 py-2 text-[16px] text-[#0f172a] focus:bg-white focus:outline-none transition-all">
             </div>
           </div>
 
@@ -447,9 +446,11 @@
 
       if (impactBanner) {
         if (currentTip > 0) {
-          impactBanner.innerHTML = '<strong>Rescue:</strong> ' + fmt(baseAmount) + ' + <strong>Outreach Tip:</strong> ' + fmt(currentTip) + ' &mdash; Total: ' + fmt(total);
+          var estReach = Math.round(currentTip * 125);
+          var reachStr = estReach >= 1000 ? ('~' + (estReach / 1000).toFixed(1) + 'k') : ('~' + estReach);
+          impactBanner.innerHTML = '<strong>Rescue:</strong> ' + fmt(baseAmount) + ' + <strong>Outreach:</strong> ' + fmt(currentTip) + ' &mdash; Your tip shows this investigation to an estimated <strong>' + reachStr + ' people</strong> through digital awareness campaigns.';
         } else {
-          impactBanner.textContent = '100% of your contribution is reserved for direct calf veterinary formula, shelter, and trauma triage.';
+          impactBanner.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:-1px;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>100% of your contribution is reserved for direct calf veterinary formula, shelter, and trauma triage.';
         }
       }
 
