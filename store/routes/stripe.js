@@ -64,6 +64,38 @@ module.exports = function createStripeRouter(ctx) {
         StoreLog.event('webhook_refund', ref, `Refund ${charge.id} - ${fromSmallestUnit(charge.amount_refunded, charge.currency)} ${charge.currency}`);
         break;
       }
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object;
+        if (invoice.billing_reason === 'subscription_cycle') {
+          const subId = invoice.subscription;
+          const amt = fromSmallestUnit(invoice.amount_paid, invoice.currency);
+          StoreLog.event('subscription_renewal', ref, `Recurring payment ${invoice.id} - ${amt} ${invoice.currency.toUpperCase()} (sub: ${subId})`);
+          if (supabase) {
+            const subMeta = invoice.subscription_details?.metadata || {};
+            const mk = storeConfig.metadataKeys || {};
+            await supabase.from('payments').insert({
+              store_id: ctx.getStoreDbId(),
+              store_domain: STORE_DOMAIN,
+              source_ref: subMeta[mk.sessionRef || 'sessionRef'] || 'subscription',
+              payment_method: 'stripe',
+              stripe_payment_intent_id: invoice.payment_intent,
+              stripe_charge_id: invoice.charge,
+              amount: amt,
+              service_fee: 0,
+              total_amount: amt,
+              currency: invoice.currency.toUpperCase(),
+              payment_source: 'subscription',
+              status: 'completed'
+            }).catch(() => {});
+          }
+        }
+        break;
+      }
+      case 'customer.subscription.deleted': {
+        const sub = event.data.object;
+        StoreLog.event('subscription_cancelled', ref, `Subscription ${sub.id} cancelled (status: ${sub.status})`);
+        break;
+      }
     }
 
     res.status(200).json({ received: true });
@@ -125,41 +157,105 @@ module.exports = function createStripeRouter(ctx) {
         tax: { total_tax_amount: 0 }
       }));
 
-      const intentParams = {
-        amount: amountInUnits,
-        currency: donorCurrency.toLowerCase(),
-        metadata,
-        description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
-        statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
-        payment_details: { order_reference: refCode },
-        amount_details: { line_items: stripeLineItems }
-      };
+      const cadence = donor.utm?.cadence || 'onetime';
+      const isSubscription = cadence === 'monthly';
 
-      let paymentIntent;
-      try {
-        paymentIntent = await stripe.paymentIntents.create({
-          ...intentParams,
-          automatic_payment_methods: { enabled: true, allow_redirects: 'never' }
+      if (isSubscription) {
+        const email = donor.email || null;
+        let customer;
+        if (email) {
+          const existing = await stripe.customers.list({ email, limit: 1 });
+          customer = existing.data.length > 0
+            ? existing.data[0]
+            : await stripe.customers.create({ email, metadata: { [mk.sessionRef || 'sessionRef']: (donor.sid || '').substring(0, 12) } });
+        } else {
+          customer = await stripe.customers.create({ metadata: { [mk.sessionRef || 'sessionRef']: (donor.sid || '').substring(0, 12) } });
+        }
+
+        const product = await stripe.products.create({
+          name: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
+          metadata: { [mk.storeId || 'storeId']: ctx.getStoreDbId() || '', type: 'donation_subscription' }
         });
-      } catch (autoErr) {
-        if (autoErr.message?.includes('payment method types') || autoErr.message?.includes('capabilities')) {
+
+        const price = await stripe.prices.create({
+          product: product.id,
+          unit_amount: amountInUnits,
+          currency: donorCurrency.toLowerCase(),
+          recurring: { interval: 'month' }
+        });
+
+        const subscription = await stripe.subscriptions.create({
+          customer: customer.id,
+          items: [{ price: price.id }],
+          payment_behavior: 'default_incomplete',
+          payment_settings: {
+            payment_method_types: ['card'],
+            save_default_payment_method: 'on_subscription'
+          },
+          metadata: {
+            ...metadata,
+            [mk.referenceCode || 'referenceCode']: refCode,
+            cadence: 'monthly'
+          },
+          expand: ['latest_invoice.payment_intent']
+        });
+
+        const paymentIntent = subscription.latest_invoice.payment_intent;
+
+        await stripe.paymentIntents.update(paymentIntent.id, {
+          metadata,
+          description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
+          statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22)
+        });
+
+        StoreLog.event('subscription_created', donor.ref || '---', `${subscription.id} / ${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}/mo`);
+
+        res.json({
+          clientSecret: paymentIntent.client_secret,
+          paymentIntentId: paymentIntent.id,
+          subscriptionId: subscription.id,
+          amount: totalAmount.toFixed(2),
+          lineItems,
+          isSubscription: true
+        });
+      } else {
+        const intentParams = {
+          amount: amountInUnits,
+          currency: donorCurrency.toLowerCase(),
+          metadata,
+          description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
+          statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
+          payment_details: { order_reference: refCode },
+          amount_details: { line_items: stripeLineItems }
+        };
+
+        let paymentIntent;
+        try {
           paymentIntent = await stripe.paymentIntents.create({
             ...intentParams,
-            payment_method_types: ['card']
+            automatic_payment_methods: { enabled: true, allow_redirects: 'never' }
           });
-        } else {
-          throw autoErr;
+        } catch (autoErr) {
+          if (autoErr.message?.includes('payment method types') || autoErr.message?.includes('capabilities')) {
+            paymentIntent = await stripe.paymentIntents.create({
+              ...intentParams,
+              payment_method_types: ['card']
+            });
+          } else {
+            throw autoErr;
+          }
         }
+
+        StoreLog.event('payment_created', donor.ref || '---', `${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
+
+        res.json({
+          clientSecret: paymentIntent.client_secret,
+          paymentIntentId: paymentIntent.id,
+          amount: totalAmount.toFixed(2),
+          lineItems,
+          isSubscription: false
+        });
       }
-
-      StoreLog.event('payment_created', donor.ref || '---', `${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
-
-      res.json({
-        clientSecret: paymentIntent.client_secret,
-        paymentIntentId: paymentIntent.id,
-        amount: totalAmount.toFixed(2),
-        lineItems
-      });
     } catch (error) {
       const sessionCookie = req.cookies.__session;
       const donor = (() => { try { return sessionCookie ? JSON.parse(sessionCookie) : {}; } catch (_) { return {}; } })();
@@ -226,7 +322,7 @@ module.exports = function createStripeRouter(ctx) {
         return res.status(400).json({ error: 'Stripe not configured for this store' });
       }
 
-      const { paymentIntentId } = req.body;
+      const { paymentIntentId, isSubscription, subscriptionId } = req.body;
       const sessionCookie = req.cookies.__session;
       if (!sessionCookie || !paymentIntentId) {
         return res.status(400).json({ error: 'Missing data' });
@@ -400,7 +496,9 @@ module.exports = function createStripeRouter(ctx) {
             paymentIntentId: paymentIntent.id, chargeId: charge?.id,
             status: paymentIntent.status, amount: paymentIntent.amount,
             currency: paymentIntent.currency, cardBrand, cardLast4: cardLastDigits,
-            walletType: pm?.card?.wallet?.type || null
+            walletType: pm?.card?.wallet?.type || null,
+            isSubscription: isSubscription || false,
+            subscriptionId: subscriptionId || null
           }
         });
 

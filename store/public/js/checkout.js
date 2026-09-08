@@ -11,6 +11,8 @@ const paymentDivisor = Math.pow(10, paymentDecimals);
 const paymentValueMajor = paymentAmountUnits / paymentDivisor;
 const paymentPixelId = document.getElementById('payment-pixel-id')?.value || null;
 const localizedEmailError = document.getElementById('locale-email-error')?.value || 'Please enter a valid email address.';
+const cadenceType = document.getElementById('cadence-type')?.value || 'onetime';
+const isSubscriptionMode = cadenceType === 'monthly';
 
 let elements, paymentElement;
 let addPaymentInfoFired = false;
@@ -109,7 +111,7 @@ async function initCheckout() {
 
   try {
     elements = stripe.elements({
-      mode: 'payment',
+      mode: isSubscriptionMode ? 'subscription' : 'payment',
       amount: paymentAmountUnits,
       currency: paymentCurrency,
       payment_method_types: ['card'],
@@ -220,6 +222,8 @@ async function initCheckout() {
         });
 
         const data = await response.json();
+        const isSubscription = data.isSubscription || false;
+        const subscriptionId = data.subscriptionId || null;
         if (!data.clientSecret) {
           consecutiveServerFailures += 1;
           const friendly = data.error || 'Payment setup failed';
@@ -268,7 +272,7 @@ async function initCheckout() {
         const confirmResponse = await fetch('/api/confirm-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ paymentIntentId, email, billingName: name })
+          body: JSON.stringify({ paymentIntentId, email, billingName: name, isSubscription, subscriptionId })
         });
 
         const confirmData = await confirmResponse.json();
