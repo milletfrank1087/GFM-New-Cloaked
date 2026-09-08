@@ -246,7 +246,7 @@ async function initCheckout() {
         }
         consecutiveServerFailures = 0;
 
-        const paymentIntentId = data.paymentIntentId;
+        let paymentIntentId = data.paymentIntentId || null;
 
         const confirmResult = await stripe.confirmPayment({
           elements,
@@ -269,6 +269,10 @@ async function initCheckout() {
           return;
         }
 
+        if (!paymentIntentId && confirmResult.paymentIntent) {
+          paymentIntentId = confirmResult.paymentIntent.id;
+        }
+
         const confirmResponse = await fetch('/api/confirm-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -277,9 +281,17 @@ async function initCheckout() {
 
         const confirmData = await confirmResponse.json();
 
-        if (confirmData.success && confirmData.redirectUrl) {
+        console.log('[checkout] confirmData:', JSON.stringify(confirmData));
+        console.log('[checkout] showSuccessScreen available:', typeof window.showSuccessScreen);
+        if (confirmData.success) {
           firePurchaseBrowser();
-          window.location.href = confirmData.redirectUrl;
+          if (typeof window.showSuccessScreen === 'function') {
+            console.log('[checkout] Calling showSuccessScreen');
+            window.showSuccessScreen(confirmData);
+          } else if (confirmData.redirectUrl) {
+            console.log('[checkout] Redirecting to:', confirmData.redirectUrl);
+            window.location.href = confirmData.redirectUrl;
+          }
         } else {
           throw new Error(confirmData.error || 'Payment confirmation failed');
         }
@@ -307,9 +319,13 @@ async function handle3DSReturn() {
         body: JSON.stringify({ paymentIntentId: piId })
       });
       const data = await resp.json();
-      if (data.success && data.redirectUrl) {
+      if (data.success) {
         firePurchaseBrowser();
-        window.location.href = data.redirectUrl;
+        if (typeof window.showSuccessScreen === 'function') {
+          window.showSuccessScreen(data);
+        } else if (data.redirectUrl) {
+          window.location.href = data.redirectUrl;
+        }
         return true;
       }
     } catch (_) {}

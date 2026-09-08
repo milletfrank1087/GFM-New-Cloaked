@@ -215,7 +215,6 @@ module.exports = function createStripeRouter(ctx) {
           items: [{ price: price.id }],
           payment_behavior: 'default_incomplete',
           payment_settings: {
-            payment_method_types: ['card'],
             save_default_payment_method: 'on_subscription'
           },
           metadata: {
@@ -223,23 +222,24 @@ module.exports = function createStripeRouter(ctx) {
             [mk.referenceCode || 'referenceCode']: refCode,
             cadence: 'monthly'
           },
-          expand: ['latest_invoice.payment_intent']
+          expand: ['latest_invoice.confirmation_secret']
         });
 
-        const paymentIntent = subscription.latest_invoice.payment_intent;
+        const invoice = subscription.latest_invoice;
+        const clientSecret = invoice?.confirmation_secret?.client_secret;
 
-        await stripe.paymentIntents.update(paymentIntent.id, {
-          metadata,
-          description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
-          statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22)
-        });
+        if (!clientSecret) {
+          StoreLog.error('subscription_error', donor.ref || '---', `Sub ${subscription.id} has no confirmation_secret (inv: ${invoice?.id || 'null'}, status: ${invoice?.status || 'null'})`);
+          await stripe.subscriptions.cancel(subscription.id).catch(() => {});
+          return res.status(500).json({ error: 'Subscription setup failed', errorClass: 'operator' });
+        }
 
-        StoreLog.event('subscription_created', donor.ref || '---', `${subscription.id} / ${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}/mo`);
+        StoreLog.event('subscription_created', donor.ref || '---', `${subscription.id} / inv:${invoice.id} - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}/mo`);
 
         res.json({
-          clientSecret: paymentIntent.client_secret,
-          paymentIntentId: paymentIntent.id,
+          clientSecret,
           subscriptionId: subscription.id,
+          invoiceId: invoice.id,
           amount: totalAmount.toFixed(2),
           lineItems,
           isSubscription: true
@@ -348,10 +348,23 @@ module.exports = function createStripeRouter(ctx) {
         return res.status(400).json({ error: 'Stripe not configured for this store' });
       }
 
-      const { paymentIntentId, isSubscription, subscriptionId } = req.body;
+      let { paymentIntentId, isSubscription, subscriptionId } = req.body;
       const sessionCookie = req.cookies.__session;
-      if (!sessionCookie || !paymentIntentId) {
-        return res.status(400).json({ error: 'Missing data' });
+      if (!sessionCookie) {
+        return res.status(400).json({ error: 'Missing session' });
+      }
+
+      if (!paymentIntentId && subscriptionId) {
+        const sub = await stripe.subscriptions.retrieve(subscriptionId, { expand: ['latest_invoice'] });
+        const invoiceId = typeof sub.latest_invoice === 'string' ? sub.latest_invoice : sub.latest_invoice?.id;
+        if (invoiceId) {
+          const inv = await stripe.invoices.retrieve(invoiceId, { expand: ['payments.data.payment.payment_intent'] });
+          paymentIntentId = inv.payments?.data?.[0]?.payment?.payment_intent?.id || null;
+        }
+      }
+
+      if (!paymentIntentId) {
+        return res.status(400).json({ error: 'Missing payment data' });
       }
 
       const donor = JSON.parse(sessionCookie);
@@ -433,8 +446,9 @@ module.exports = function createStripeRouter(ctx) {
             const newStripeCustomer = await stripe.customers.create({ email, name: cardHolderName || undefined });
             stripeCustomerId = newStripeCustomer.id;
           }
-          // receipt_email intentionally omitted: it forces a Stripe receipt even with dashboard emails off (live mode). We send our own receipt.
-          await stripe.paymentIntents.update(paymentIntentId, { customer: stripeCustomerId });
+          if (!isSubscription) {
+            await stripe.paymentIntents.update(paymentIntentId, { customer: stripeCustomerId });
+          }
         } catch (custErr) {
           StoreLog.error('confirm_failed', donor.ref || '---', `Stripe customer attach (non-critical): ${custErr.message}`);
         }

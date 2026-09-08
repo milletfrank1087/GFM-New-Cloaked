@@ -82,12 +82,24 @@
       animation: pulse-glow 2s ease-in-out infinite;
     }
     #tip-buttons-group { user-select: none; -webkit-tap-highlight-color: transparent; }
+    @keyframes scaleIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .success-animate { animation: fadeSlideUp 0.5s ease forwards; }
   </style>
 </head>
 <body class="font-sans antialiased flex flex-col min-h-screen">
 
   <!-- TOP ADMINISTRATIVE UTILITY BAR (DESKTOP ONLY) -->
-  <div class="bg-[#0f1c11] text-[#a7f3d0] text-[10.5px] font-semibold tracking-wider py-1.5 px-4 border-b border-white/10 hidden sm:block">
+  <div id="top-admin-bar" class="bg-[#0f1c11] text-[#a7f3d0] text-[10.5px] font-semibold tracking-wider py-1.5 px-4 border-b border-white/10 hidden sm:block">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
       <div class="flex items-center gap-2">
         <span class="w-1.5 h-1.5 rounded-full bg-[#34d399] live-dot"></span>
@@ -134,7 +146,7 @@
 
   <!-- MAIN DOCKET CHECKOUT CONTAINER -->
   <main class="flex-1 flex items-center justify-center px-3 sm:p-6 py-3 sm:py-8">
-    <div class="w-full max-w-xl">
+    <div id="checkout-form-wrapper" class="w-full max-w-xl">
 
       <div class="bg-white rounded-2xl sanctuary-card border border-[#e2ded5] overflow-hidden">
 
@@ -172,31 +184,63 @@
 
           <!-- DONATION PURPOSE — WHERE YOUR MONEY GOES -->
           <div class="mb-3 sm:mb-4 bg-[#eef7ee] rounded-xl p-3 border border-[#1e4620]/15">
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <span class="text-[9.5px] font-bold uppercase tracking-wider text-[#1e4620]">Where Your Sponsorship Goes</span>
+              <span class="text-[9px] text-[#64748b] ml-auto">100% Direct Care</span>
+            </div>
             <p class="text-[11.5px] text-[#143316] leading-relaxed">
-              <strong>100% of your <%= formattedTotal %> goes directly</strong> to emergency calf rescue, warm colostrum formula, thermal nursery bedding, and round-the-clock veterinary care for newborns like Barnaby who were separated from their mothers within hours of birth.
+              <strong>100% of your <%= formattedTotal %></strong> goes directly to emergency calf rescue, warm colostrum formula, thermal nursery bedding, and round-the-clock veterinary care for newborns like Barnaby who were separated from their mothers within hours of birth.
             </p>
+            <div class="flex items-start gap-3 mt-2 pt-2 border-t border-[#1e4620]/10">
+              <div class="flex-1">
+                <span class="text-[9.5px] font-bold text-[#143316] block">Designation</span>
+                <span class="text-[10px] text-[#64748b]">Direct Care for Barnaby, Clover &amp; Rescued Calves</span>
+              </div>
+              <div class="flex-1">
+                <span class="text-[9.5px] font-bold text-[#143316] block">Includes</span>
+                <span class="text-[10px] text-[#64748b]">Warm milk formula, nursery bedding &amp; field transport</span>
+              </div>
+            </div>
           </div>
 
-          <!-- OPTIONAL OUTREACH TIP — COMPACT SEGMENTED CONTROL -->
+          <!-- OPTIONAL OUTREACH TIP -->
           <div class="mb-3 sm:mb-4" id="tip-upsell-module">
             <div class="flex items-center justify-between gap-2 mb-1">
               <div class="flex items-center gap-1.5">
                 <span class="w-5 h-5 rounded-full bg-[#f0fdf4] border border-[#1e4620]/20 flex items-center justify-center flex-shrink-0">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1e4620" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                 </span>
-                <span class="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">Optional Awareness Tip</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">Optional Awareness &amp; Outreach Sponsorship</span>
               </div>
-              <span id="tip-summary-inline" class="text-[10.5px] font-bold text-[#143316]">Total: <span id="summary-total-amt"><%= formattedTotal %></span></span>
+              <span class="text-[9px] text-[#64748b] border border-[#dcd8cf] rounded-full px-1.5 py-0.5">100% Optional</span>
             </div>
-            <p class="text-[10px] text-[#64748b] leading-snug mb-1.5">
-              Optional tips fund digital awareness ads to reach more citizens and build congressional petition pressure. Every cent goes to outreach — never overhead.
+            <p class="text-[10.5px] text-[#334155] leading-snug mb-1.5">
+              100% of your <strong><%= formattedTotal %></strong> goes to calf rescue &amp; warm formula. Optional tips fund digital ads to build congressional pressure.
             </p>
-            <div class="flex rounded-lg border border-[#dcd8cf] overflow-hidden bg-white" id="tip-buttons-group">
-              <button type="button" class="tip-btn flex-1 py-2 text-[11px] font-bold text-center transition-all bg-[#eef7ee] text-[#143316] border-r border-[#dcd8cf]" data-pct="0" id="default-tip-btn">None</button>
-              <button type="button" class="tip-btn flex-1 py-2 text-[11px] font-bold text-center transition-all text-[#334155] border-r border-[#dcd8cf]" data-pct="10">10%</button>
-              <button type="button" class="tip-btn flex-1 py-2 text-[11px] font-bold text-center transition-all text-[#334155] border-r border-[#dcd8cf]" data-pct="15">15%</button>
-              <button type="button" class="tip-btn flex-1 py-2 text-[11px] font-bold text-center transition-all text-[#334155] border-r border-[#dcd8cf]" data-pct="20">20%</button>
-              <button type="button" class="tip-btn flex-1 py-2 text-[11px] font-bold text-center transition-all text-[#334155]" data-pct="custom">Other</button>
+            <p class="text-[9.5px] text-[#64748b] leading-snug mb-2 italic">
+              Commercial dairy lobbyists spend millions suppressing this issue. If you choose to add an optional outreach tip, every cent funds digital awareness ads to show this investigation to more citizens and build congressional petition pressure.
+            </p>
+            <div class="grid grid-cols-5 gap-1.5" id="tip-buttons-group">
+              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border-2 transition-all border-[#1e4620] bg-[#eef7ee] text-[#143316]" data-pct="0" id="default-tip-btn">
+                <span class="block text-[11px] font-bold">No tip</span>
+                <span class="block text-[8.5px] text-[#64748b] mt-0.5">direct care only</span>
+              </button>
+              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="10">
+                <span class="block text-[11px] font-bold">10%</span>
+                <span class="block text-[8.5px] text-[#64748b] mt-0.5" id="tip-label-10"></span>
+              </button>
+              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="15">
+                <span class="block text-[11px] font-bold">15%</span>
+                <span class="block text-[8.5px] text-[#64748b] mt-0.5" id="tip-label-15"></span>
+              </button>
+              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="20">
+                <span class="block text-[11px] font-bold">20%</span>
+                <span class="block text-[8.5px] text-[#64748b] mt-0.5" id="tip-label-20"></span>
+              </button>
+              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="custom">
+                <span class="block text-[11px] font-bold">Custom</span>
+                <span class="block text-[8.5px] text-[#64748b] mt-0.5">any amount</span>
+              </button>
             </div>
             <div id="custom-tip-wrapper" class="hidden mt-1.5">
               <div class="relative">
@@ -205,7 +249,11 @@
                   class="w-full bg-white border border-[#dcd8cf] rounded-lg pl-6 pr-3 py-1.5 text-[16px] text-[#0f172a] focus:outline-none focus:border-[#1e4620]">
               </div>
             </div>
-            <div id="tip-impact-banner" class="mt-1 text-[10px] text-[#64748b] leading-snug"></div>
+            <div id="tip-impact-banner" class="mt-1.5 text-[10px] text-[#64748b] leading-snug"></div>
+            <div id="tip-summary-row" class="mt-1.5 flex items-center justify-between text-[10.5px] font-bold text-[#143316]">
+              <span>Rescue: <%= formattedTotal %> + Outreach Tip: <span id="summary-tip-display"><%= symbol %>0.00</span></span>
+              <span>Total: <span id="summary-total-amt"><%= formattedTotal %></span></span>
+            </div>
             <input type="hidden" id="summary-base-amt-val" value="<%= formattedDonation %>">
             <input type="hidden" id="summary-tip-amt-val" value="0.00">
           </div>
@@ -322,7 +370,7 @@
       </div>
 
       <!-- STATUTORY DISCLAIMER & LEGAL LINKS -->
-      <div class="text-center mt-3 px-1 space-y-1">
+      <div id="checkout-disclaimer" class="text-center mt-3 px-1 space-y-1">
         <p class="text-[10px] text-[#64748b] leading-snug">
           Sanctuary Defense Alliance is an independent citizen advocacy coalition and frontline animal rescue fund. Contributions directly support emergency veterinary rescue units, neonatal calf nursery care, and legislative advocacy in Docket #AGR-2026-884. Contributions are strictly non-tax-deductible.
         </p>
@@ -332,6 +380,101 @@
       </div>
 
     </div>
+
+    <!-- SUCCESS / THANK-YOU SCREEN (hidden until payment completes) -->
+    <div id="success-screen" class="w-full max-w-xl hidden">
+      <div class="bg-white rounded-2xl sanctuary-card border border-[#e2ded5] overflow-hidden">
+
+        <div class="bg-[#eef7ee] px-5 pt-7 pb-5 text-center border-b border-[#d4eed4]">
+          <div class="w-16 h-16 rounded-full bg-[#1e4620] mx-auto mb-3 flex items-center justify-center shadow-lg shadow-[#1e4620]/20" style="animation: scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6L9 17l-5-5" style="stroke-dasharray: 30; stroke-dashoffset: 30; animation: drawCheck 0.6s 0.3s ease forwards"/>
+            </svg>
+          </div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-extrabold text-[#143316] mb-1">Thank You, <span id="success-donor-name">Friend</span></h2>
+          <p class="text-sm text-[#1e4620]/80 font-medium">Your generosity changes lives today.</p>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-4">
+
+          <div class="bg-[#f9f8f5] rounded-xl p-4 border border-[#e8e5de]">
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-[10px] font-bold text-[#64748b] uppercase tracking-wider">Contribution Confirmed</span>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-[#1e4620] bg-[#eef7ee] px-2 py-0.5 rounded-full border border-[#1e4620]/20">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified
+              </span>
+            </div>
+            <div class="text-3xl font-extrabold text-[#143316] mb-0.5" id="success-amount">$35.00</div>
+            <p class="text-xs text-[#64748b]" id="success-cadence">Monthly sustaining sponsorship</p>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-[#fef3c7] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span class="text-base">🍼</span>
+              </div>
+              <div>
+                <p class="text-[12px] font-bold text-[#0f172a]">Neonatal Formula & Colostrum</p>
+                <p class="text-[11px] text-[#64748b] leading-snug">Your gift provides warm bottle feedings, electrolyte supplements, and colostrum replacer for calves separated from their mothers within hours of birth.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-[#dbeafe] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span class="text-base">🩺</span>
+              </div>
+              <div>
+                <p class="text-[12px] font-bold text-[#0f172a]">Emergency Veterinary Triage</p>
+                <p class="text-[11px] text-[#64748b] leading-snug">Round-the-clock veterinary care including navel infection treatment, dehydration IV drips, and respiratory support for fragile newborns.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-[#fce7f3] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span class="text-base">🏡</span>
+              </div>
+              <div>
+                <p class="text-[12px] font-bold text-[#0f172a]">Safe Pasture & Permanent Sanctuary</p>
+                <p class="text-[11px] text-[#64748b] leading-snug">Thermal nursery bedding, clean pasture fencing, and lifetime sanctuary placement — these calves will never face an auction ring again.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="success-tip-section" class="hidden bg-[#fffbeb] rounded-xl p-3.5 border border-[#fcd34d]/30">
+            <div class="flex items-start gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" class="flex-shrink-0 mt-0.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              <div>
+                <p class="text-[11px] font-bold text-[#92400e]">+ <span id="success-tip-amount">$0</span> Awareness Outreach Tip</p>
+                <p class="text-[10.5px] text-[#b45309] leading-snug">Your tip reaches an estimated <strong id="success-tip-reach">0</strong> people through digital awareness campaigns, building congressional petition pressure to pass the Maternal Herd Protection Amendment.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-[#eef7ee] rounded-xl p-3.5 border border-[#1e4620]/15">
+            <p class="text-[11.5px] text-[#143316] leading-relaxed text-center">
+              <strong>What happens next:</strong> A confirmation email is on its way to <strong id="success-email">your inbox</strong>. Our field rescue team will send you a personal update with photos of the calves your sponsorship is directly helping.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2">
+            <button onclick="handleShareSuccess()" class="flex-1 bg-[#1e4620] hover:bg-[#143316] text-white py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share & Help More Calves
+            </button>
+            <button id="success-back-btn" onclick="window.location.href=document.referrer||'/'" class="flex-1 bg-white hover:bg-gray-50 text-[#334155] py-3 rounded-xl font-bold text-sm transition-all border border-[#e2ded5] flex items-center justify-center gap-2">
+              ← Return to Petition
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="text-center mt-3 px-1">
+        <p class="text-[10px] text-[#64748b] leading-snug">
+          Sanctuary Defense Alliance • 100% Direct Care Guarantee • Docket #AGR-2026-884
+        </p>
+      </div>
+    </div>
+
   </main>
 
   <!-- LEGAL MODAL -->
@@ -398,7 +541,7 @@
   <% if (paymentProcessor === 'stripe') { %>
   <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
   <input type="hidden" id="payment-locale" value="<%= locale.stripeLocale || donor.lang || 'auto' %>">
-  <script src="/js/checkout.js"></script>
+  <script src="/js/checkout.js?v=<%= Date.now() %>"></script>
   <% } else { %>
   <script src="https://pay.google.com/gp/p/js/pay.js"></script>
   <script src="/js/paypal-sdk.js"></script>
@@ -410,6 +553,90 @@
   <script src="/js/paypal-google-pay.js"></script>
   <script src="/js/checkout-paypal.js"></script>
   <% } %>
+
+  <input type="hidden" id="campaign-origin" value="<%= campaignOrigin || '' %>">
+  <script>
+  window.showSuccessScreen = function(opts) {
+    opts = opts || {};
+    var checkoutWrapper = document.getElementById('checkout-form-wrapper');
+    var disclaimer = document.getElementById('checkout-disclaimer');
+    var successScreen = document.getElementById('success-screen');
+    var topBar = document.getElementById('top-admin-bar');
+    var header = document.querySelector('header');
+
+    if (checkoutWrapper) checkoutWrapper.style.display = 'none';
+    if (disclaimer) disclaimer.style.display = 'none';
+    if (topBar) topBar.style.display = 'none';
+    if (successScreen) {
+      successScreen.classList.remove('hidden');
+      successScreen.classList.add('success-animate');
+    }
+
+    var sym = document.getElementById('currency-symbol')?.value || '$';
+    var symPos = document.getElementById('symbol-position')?.value || 'before';
+    var dec = parseInt(document.getElementById('payment-decimals')?.value || '2', 10);
+    var cadence = document.getElementById('cadence-type')?.value || 'monthly';
+    var baseAmt = parseFloat(document.getElementById('base-donation-amount')?.value || '0');
+    var tipAmt = parseFloat(document.getElementById('selected-tip-amount')?.value || '0');
+    var total = baseAmt + tipAmt;
+
+    function fmt(n) {
+      var s = n.toFixed(dec);
+      return symPos === 'after' ? (s + ' ' + sym) : (sym + s);
+    }
+
+    var nameEl = document.getElementById('success-donor-name');
+    var billingName = document.getElementById('billing-name')?.value || '';
+    if (nameEl && billingName) {
+      nameEl.textContent = billingName.split(/\s+/)[0];
+    }
+
+    var amountEl = document.getElementById('success-amount');
+    if (amountEl) amountEl.textContent = fmt(total);
+
+    var cadenceEl = document.getElementById('success-cadence');
+    if (cadenceEl) {
+      cadenceEl.textContent = cadence === 'monthly'
+        ? 'Monthly sustaining sponsorship — auto-renews each month'
+        : 'One-time emergency rescue gift';
+    }
+
+    var emailEl = document.getElementById('success-email');
+    var billingEmail = document.getElementById('billing-email')?.value || '';
+    if (emailEl && billingEmail) emailEl.textContent = billingEmail;
+
+    if (tipAmt > 0) {
+      var tipSection = document.getElementById('success-tip-section');
+      if (tipSection) tipSection.classList.remove('hidden');
+      var tipAmtEl = document.getElementById('success-tip-amount');
+      if (tipAmtEl) tipAmtEl.textContent = fmt(tipAmt);
+      var tipReachEl = document.getElementById('success-tip-reach');
+      if (tipReachEl) {
+        var reach = Math.round(tipAmt * 125);
+        tipReachEl.textContent = reach >= 1000 ? '~' + (reach / 1000).toFixed(1) + 'k' : '~' + reach;
+      }
+    }
+
+    var backBtn = document.getElementById('success-back-btn');
+    var origin = document.getElementById('campaign-origin')?.value;
+    if (backBtn && origin) {
+      backBtn.onclick = function() { window.location.href = origin; };
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.handleShareSuccess = function() {
+    var text = 'I just sponsored an emergency calf rescue through Sanctuary Defense Alliance. These newborns were separated from their mothers within hours of birth — your help means everything.';
+    var url = document.getElementById('campaign-origin')?.value || window.location.origin;
+    if (navigator.share) {
+      navigator.share({ title: 'Sanctuary Defense Alliance', text: text, url: url }).catch(function(){});
+    } else {
+      var tw = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text + ' ' + url);
+      window.open(tw, '_blank', 'width=550,height=420');
+    }
+  };
+  </script>
 
   <script>
   (function() {
@@ -426,6 +653,17 @@
 
     var currentTip = 0;
     var impactBanner = document.getElementById('tip-impact-banner');
+    var tipSummaryDisplay = document.getElementById('summary-tip-display');
+
+    [10, 15, 20].forEach(function(pct) {
+      var tipAmt = (baseAmount * pct) / 100;
+      var label = document.getElementById('tip-label-' + pct);
+      if (label) {
+        var reach = Math.round(tipAmt * 8);
+        label.textContent = '+' + fmt(tipAmt) + '\n~' + reach + ' people';
+        label.style.whiteSpace = 'pre-line';
+      }
+    });
 
     function applyTip(tipVal) {
       currentTip = Math.max(0, tipVal);
@@ -436,6 +674,8 @@
 
       var summaryTotal = document.getElementById('summary-total-amt');
       if (summaryTotal) summaryTotal.textContent = fmt(total);
+
+      if (tipSummaryDisplay) tipSummaryDisplay.textContent = fmt(currentTip);
 
       var paytext = cadence === 'monthly'
         ? ('Confirm ' + fmt(total) + '/mo Sustaining Sponsorship →')
@@ -454,9 +694,9 @@
         if (currentTip > 0) {
           var estReach = Math.round(currentTip * 125);
           var reachStr = estReach >= 1000 ? ('~' + (estReach / 1000).toFixed(1) + 'k') : ('~' + estReach);
-          impactBanner.innerHTML = '<strong>Rescue:</strong> ' + fmt(baseAmount) + ' + <strong>Outreach:</strong> ' + fmt(currentTip) + ' &mdash; Your tip shows this investigation to an estimated <strong>' + reachStr + ' people</strong> through digital awareness campaigns.';
+          impactBanner.innerHTML = '<strong class="text-[#143316]">Direct Care Only:</strong> 100% of your contribution is reserved for direct calf veterinary formula, shelter, and trauma triage. Your <strong>' + fmt(currentTip) + '</strong> tip shows this investigation to an estimated <strong>' + reachStr + ' people</strong> through digital awareness campaigns.';
         } else {
-          impactBanner.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:-1px;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>100% of your contribution is reserved for direct calf veterinary formula, shelter, and trauma triage.';
+          impactBanner.innerHTML = '<div class="bg-[#eef7ee] rounded-lg p-2 border border-[#1e4620]/10 flex items-start gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1e4620" stroke-width="2" class="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span><strong class="text-[#143316]">Direct Care Only:</strong> 100% of your contribution is reserved for direct calf veterinary formula, shelter, and trauma triage.</span></div>';
         }
       }
 
@@ -470,17 +710,14 @@
     var tipBtns = document.querySelectorAll('.tip-btn');
     var customWrapper = document.getElementById('custom-tip-wrapper');
     var customInput = document.getElementById('custom-tip-input');
-    var inactiveClass = 'tip-btn flex-1 py-2 text-[11px] font-bold text-center transition-all text-[#334155]';
-    var activeClass = 'tip-btn flex-1 py-2 text-[11px] font-bold text-center transition-all bg-[#eef7ee] text-[#143316]';
+    var inactiveClass = 'tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40';
+    var activeClass = 'tip-btn py-2 px-1 text-center rounded-lg border-2 transition-all border-[#1e4620] bg-[#eef7ee] text-[#143316]';
 
-    tipBtns.forEach(function(btn, idx) {
-      var hasBorderR = idx < tipBtns.length - 1;
+    tipBtns.forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
-        tipBtns.forEach(function(b, i) {
-          b.className = inactiveClass + (i < tipBtns.length - 1 ? ' border-r border-[#dcd8cf]' : '');
-        });
-        btn.className = activeClass + (hasBorderR ? ' border-r border-[#dcd8cf]' : '');
+        tipBtns.forEach(function(b) { b.className = inactiveClass; });
+        btn.className = activeClass;
 
         var pct = btn.getAttribute('data-pct');
         if (pct === 'custom') {

@@ -141,6 +141,16 @@ module.exports = function createTokenRouter(ctx) {
         const signerZip = donor.utm?.signer_zip || signer.zip || '';
         const cadence = donor.utm?.cadence || 'monthly';
 
+        let campaignOrigin = '';
+        try {
+          const srcUrl = donor.utm?.sourceUrl || '';
+          if (srcUrl) campaignOrigin = new URL(srcUrl).origin;
+        } catch (_) {}
+        if (!campaignOrigin) {
+          const cbUrl = resolveCampaignCallbackUrl(donor, donor.ref);
+          if (cbUrl) campaignOrigin = cbUrl;
+        }
+
         return res.render(checkoutTemplate, {
           store: req.store,
           donor,
@@ -169,7 +179,8 @@ module.exports = function createTokenRouter(ctx) {
           isSanctuary,
           donorName,
           signerZip,
-          cadence
+          cadence,
+          campaignOrigin
         });
       } catch (e) {
         StoreLog.error('checkout_view', '---', `Session parse error: ${e.message}`);
