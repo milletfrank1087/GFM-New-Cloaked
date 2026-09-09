@@ -115,7 +115,7 @@ async function initCheckout() {
     var checkoutRadius = isSanctuaryCheckout ? '6px' : '8px';
 
     elements = stripe.elements({
-      mode: isSubscriptionMode ? 'subscription' : 'payment',
+      mode: isSanctuaryCheckout ? 'payment' : (isSubscriptionMode ? 'subscription' : 'payment'),
       amount: paymentAmountUnits,
       currency: paymentCurrency,
       locale: stripeLocale,

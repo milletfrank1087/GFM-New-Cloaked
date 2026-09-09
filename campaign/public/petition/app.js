@@ -86,10 +86,10 @@
     if (isMonthly) {
       // Exact Preset Matches
       if (amount === 15) {
-        return `${prefix} $15/mo gift provides daily high-protein colostrum formula and clean thermal straw bedding for baby Barnaby, protecting his fragile lungs every night.`;
+        return `${prefix} $15/mo gift provides daily high-protein colostrum formula and clean thermal straw bedding for rescued nursery calves, protecting their fragile lungs every night.`;
       }
       if (amount === 35) {
-        return `${prefix} $35/mo sponsorship completely covers baby Barnaby's daily neonatal formula, digestive probiotics, and round-the-clock nursery bottle care until weaning.`;
+        return `${prefix} $35/mo sponsorship completely covers an orphaned calf's daily neonatal formula, digestive probiotics, and round-the-clock nursery bottle care until weaning.`;
       }
       if (amount === 60) {
         return `${prefix} $60/mo gift funds intensive 24/7 veterinary nursery triage, IV electrolyte hydration, and prescription antibiotics for newborn calves arriving in critical condition.`;
@@ -153,10 +153,14 @@
     const formatted = Number.isFinite(amount) && amount >= 1 && amount <= 5000 ? money.format(amount) : 'your';
     
     const reviewBtn = $('review-gift');
-    if (reviewBtn && reviewBtn.querySelector('span')) {
-      reviewBtn.querySelector('span').textContent = monthly
-        ? `Sponsor with a ${formatted}/mo gift`
-        : `Send a ${formatted} emergency gift`;
+    if (reviewBtn) {
+      reviewBtn.disabled = false;
+      reviewBtn.style.opacity = '1';
+      if (reviewBtn.querySelector('span')) {
+        reviewBtn.querySelector('span').textContent = monthly
+          ? `Sponsor with a ${formatted}/mo gift`
+          : `Send a ${formatted} emergency gift`;
+      }
     }
 
     const termsEl = $('gift-terms');
@@ -369,6 +373,16 @@
       }
     });
   }
+
+  // BFCACHE / BACK NAVIGATION RESTORATION
+  window.addEventListener('pageshow', (event) => {
+    const reviewBtn = $('review-gift');
+    if (reviewBtn) {
+      reviewBtn.disabled = false;
+      reviewBtn.style.opacity = '1';
+    }
+    updateGift();
+  });
 
   // SKIP TO CIVIC SHARE
   const skipBtn = $('skip-gift');

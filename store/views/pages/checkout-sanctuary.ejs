@@ -562,6 +562,18 @@
       color: var(--green);
       flex-shrink: 0;
     }
+    .descriptor-notice {
+      margin-top: var(--s2);
+      font-size: .6875rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+    .descriptor-notice strong {
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
 
     /* Error Box */
     .payment-error-box {
@@ -805,7 +817,7 @@
               <path d="M16 28V12M16 20C4 20 4 6 4 6s12 0 12 14ZM16 15C16 5 28 5 28 5s0 10-12 10Z"/>
             </svg>
             <p id="sponsorship-impact-text">
-              <strong>100% direct care:</strong> 100% of your <%= formattedTotal %> goes straight to daily warm colostrum formula bottles, electrolyte hydration, dry thermal straw bedding, and around-the-clock veterinary attention for rescued calves like baby Barnaby.
+              <strong>100% direct care:</strong> 100% of your <%= formattedTotal %> goes straight to daily warm colostrum formula bottles, electrolyte hydration, dry thermal straw bedding, and around-the-clock veterinary attention for orphaned and newborn calves across our sanctuary nurseries.
             </p>
           </div>
 
@@ -895,14 +907,14 @@
 
           <!-- Confirmation Action Button -->
           <button id="submit-payment" class="button primary" disabled
-            data-paytext="<%= cadence === 'monthly' ? ('Confirm ' + formattedTotal + '/mo Sustaining Sponsorship →') : ('Confirm ' + formattedTotal + ' Emergency Gift →') %>"
+            data-paytext="<%= cadence === 'monthly' ? ('Confirm ' + formattedTotal + ' Sustaining Sponsorship →') : ('Confirm ' + formattedTotal + ' Emergency Gift →') %>"
             data-processing="<%= locale.processing %>">
             <svg id="payment-spinner" class="spinner" viewBox="0 0 24 24" fill="none" style="display: none;">
               <circle class="spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
               <path class="spinner-head" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
             </svg>
             <span id="btn-text">
-              <%= cadence === 'monthly' ? ('Confirm ' + formattedTotal + '/mo Sustaining Sponsorship →') : ('Confirm ' + formattedTotal + ' Emergency Gift →') %>
+              <%= cadence === 'monthly' ? ('Confirm ' + formattedTotal + ' Sustaining Sponsorship →') : ('Confirm ' + formattedTotal + ' Emergency Gift →') %>
             </span>
           </button>
 
@@ -910,6 +922,10 @@
           <p class="reassurance">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
             Secure 256-bit encrypted checkout. You remain in full control.
+          </p>
+
+          <p class="descriptor-notice">
+            Charges will appear on your statement as <strong>RISEHOPE</strong>.
           </p>
 
         </div>
@@ -1185,7 +1201,7 @@
       if (headerTotal) headerTotal.textContent = fmt(total);
 
       var paytext = cadence === 'monthly'
-        ? ('Confirm ' + fmt(total) + '/mo Sustaining Sponsorship →')
+        ? ('Confirm ' + fmt(total) + ' Sustaining Sponsorship →')
         : ('Confirm ' + fmt(total) + ' Emergency Gift →');
 
       var btnText = document.getElementById('btn-text');
