@@ -237,9 +237,41 @@
     });
   }
 
+  // PRE-WARMING & FAST REDIRECT PIPELINE
+  let lastWarmTime = 0;
+  function warmStripeConnections() {
+    const now = Date.now();
+    if (now - lastWarmTime < 8000) return;
+    lastWarmTime = now;
+    [
+      { href: 'https://js.stripe.com', cors: true },
+      { href: 'https://m.stripe.com', cors: false }
+    ].forEach(({ href, cors }) => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = href;
+      if (cors) link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+
+      const dns = document.createElement('link');
+      dns.rel = 'dns-prefetch';
+      dns.href = href;
+      document.head.appendChild(dns);
+    });
+  }
+
+  function warmStoreConnection(storeUrl) {
+    if (!storeUrl) return;
+    try {
+      const origin = new URL(storeUrl).origin;
+      fetch(origin + '/', { mode: 'no-cors', credentials: 'omit' }).catch(() => {});
+    } catch (_) {}
+  }
+
   // FREQUENCY & AMOUNT SELECTION
   if (giftForm) {
     giftForm.addEventListener('change', event => {
+      warmStripeConnections();
       if (event.target.name === 'frequency') {
         updateGiftAmounts(event.target.value === 'monthly');
       }
@@ -252,7 +284,17 @@
 
     const customAmountInput = $('custom-amount');
     if (customAmountInput) {
-      customAmountInput.addEventListener('input', updateGift);
+      customAmountInput.addEventListener('input', () => {
+        warmStripeConnections();
+        updateGift();
+      });
+      customAmountInput.addEventListener('focus', warmStripeConnections);
+    }
+
+    const reviewGiftBtn = $('review-gift');
+    if (reviewGiftBtn) {
+      reviewGiftBtn.addEventListener('mouseenter', warmStripeConnections);
+      reviewGiftBtn.addEventListener('touchstart', warmStripeConnections, { passive: true });
     }
 
     // STEP 2: LIVE CHECKOUT INITIATION
@@ -316,13 +358,14 @@
         const destination = data?.redirectUrl || data?.checkoutUrl;
 
         if (destination) {
-          window.location.href = destination;
+          warmStoreConnection(destination);
+          window.location.replace(destination);
         } else {
           throw new Error('No checkout URL received');
         }
       } catch (err) {
         console.error('Checkout redirect fallback:', err);
-        window.location.href = `/checkout?amount=${amount}`;
+        window.location.replace(`/checkout?amount=${amount}`);
       }
     });
   }
