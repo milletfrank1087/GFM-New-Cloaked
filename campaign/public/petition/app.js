@@ -10,13 +10,69 @@
   const mobileBar = $('mobile-action');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  // Signer data cache
   const signerState = {
     firstName: '',
     lastName: '',
     email: '',
     zip: ''
   };
+
+  // --- CAPI Tracking Bridge ---
+  function generateEventId(eventName) {
+    return eventName + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+  }
+
+  function getCookie(name) {
+    const v = '; ' + document.cookie;
+    const parts = v.split('; ' + name + '=');
+    if (parts.length === 2) {
+      const raw = parts.pop().split(';').shift();
+      try { return decodeURIComponent(raw); } catch (_) { return raw; }
+    }
+    return null;
+  }
+
+  function getTrackingCookies() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      fbp: getCookie('_fbp') || null,
+      fbc: getCookie('_fbc') || null,
+      ttp: getCookie('_ttp') || null,
+      ttclid: params.get('ttclid') || getCookie('_ttclid') || null
+    };
+  }
+
+  function sendCAPI(eventName, eventId, data) {
+    const cookies = getTrackingCookies();
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: eventName,
+        eventId: eventId,
+        sourceUrl: window.location.href,
+        cookies: cookies,
+        clientLocation: null,
+        data: data || {}
+      })
+    }).catch(() => {});
+  }
+
+  function firePixelWithCAPI(eventName, metaParams, tiktokEvent, tiktokParams, capiData) {
+    const eventId = generateEventId(eventName);
+    try {
+      if (typeof fbq === 'function') {
+        fbq('track', eventName, metaParams || {}, { eventID: eventId });
+      }
+    } catch (_) {}
+    try {
+      if (tiktokEvent && typeof ttq === 'object' && typeof ttq.track === 'function') {
+        ttq.track(tiktokEvent, { ...(tiktokParams || {}), event_id: eventId });
+      }
+    } catch (_) {}
+    sendCAPI(eventName, eventId, capiData);
+    return eventId;
+  }
 
   function updateMobileBar() {
     if (!mobileBar) return;
@@ -196,15 +252,13 @@
       signerState.email = email;
       signerState.zip = zip;
 
-      // Meta / TikTok Lead Tracking
-      try {
-        if (typeof fbq === 'function') {
-          fbq('track', 'Lead', { content_name: 'Sanctuary Petition 408', status: 'signed' });
-        }
-        if (typeof ttq === 'object' && typeof ttq.track === 'function') {
-          ttq.track('SubmitForm', { contents: [{ content_name: 'Sanctuary Petition 408' }] });
-        }
-      } catch (_) {}
+      firePixelWithCAPI(
+        'Lead',
+        { content_name: 'Sanctuary Petition 408', status: 'signed' },
+        'SubmitForm',
+        { contents: [{ content_name: 'Sanctuary Petition 408' }] },
+        { contentName: 'Sanctuary Petition 408' }
+      );
 
       // Stage 1: Immediate clean loading screen with deliberate steady pacing
       const stageTitle = $('loading-stage-title');
@@ -217,10 +271,9 @@
 
       showPanel('loading');
 
-      // Stage 2: Confirming congressional voting district (at 1400ms)
       setTimeout(() => {
-        if (stageTitle) stageTitle.textContent = 'Verifying Congressional District...';
-        if (stageSub) stageSub.textContent = `Confirming voting district standing for ${first} (ZIP ${zip})`;
+        if (stageTitle) stageTitle.textContent = 'Verifying Citizen Record...';
+        if (stageSub) stageSub.textContent = `Confirming petition standing for ${first} (ZIP ${zip})`;
         if (progressBar) progressBar.style.width = '65%';
       }, 1400);
 
@@ -334,25 +387,30 @@
         }
       }
 
-      // Track InitiateCheckout
-      try {
-        if (typeof fbq === 'function') {
-          fbq('track', 'InitiateCheckout', {
-            value: amount,
-            currency: 'USD',
-            content_name: 'Sanctuary Calf Sponsorship'
-          });
-        }
-      } catch (_) {}
+      const purchaseEventId = firePixelWithCAPI(
+        'InitiateCheckout',
+        { value: amount, currency: 'USD', content_name: 'Sanctuary Calf Sponsorship' },
+        'InitiateCheckout',
+        { value: amount, currency: 'USD', content_type: 'product', content_id: 'donation',
+          contents: [{ content_id: 'donation', content_type: 'product', content_name: 'Sanctuary Calf Sponsorship', quantity: 1, price: amount }] },
+        { value: amount, currency: 'USD', contentName: 'Sanctuary Calf Sponsorship' }
+      );
 
       const searchParams = new URLSearchParams(window.location.search);
+      const cookies = getTrackingCookies();
       const tracking = {
         variant: window.__AB_VARIANT || 'control',
         utm_source: searchParams.get('utm_source') || 'organic',
         utm_medium: searchParams.get('utm_medium') || 'petition',
         utm_campaign: searchParams.get('utm_campaign') || 'sanctuary_defense_408',
         cadence: monthly ? 'monthly' : 'once',
-        signer_zip: signerState.zip
+        signer_zip: signerState.zip,
+        eventId: purchaseEventId,
+        sourceUrl: window.location.href,
+        fbp: cookies.fbp,
+        fbc: cookies.fbc,
+        ttp: cookies.ttp,
+        ttclid: cookies.ttclid
       };
 
       const payload = {
