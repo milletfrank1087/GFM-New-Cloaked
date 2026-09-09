@@ -35,6 +35,7 @@ const helpers = { getConfig, hashSHA256 };
 const EVENT_MAP = {
   PageView: { meta: 'PageView', tiktok: 'Pageview' },
   ViewContent: { meta: 'ViewContent', tiktok: 'ViewContent' },
+  Lead: { meta: 'Lead', tiktok: 'SubmitForm' },
   AddToCart: { meta: 'AddToCart', tiktok: 'AddToCart' },
   InitiateCheckout: { meta: 'InitiateCheckout', tiktok: 'InitiateCheckout' },
   AddPaymentInfo: { meta: 'AddPaymentInfo', tiktok: 'AddPaymentInfo' },

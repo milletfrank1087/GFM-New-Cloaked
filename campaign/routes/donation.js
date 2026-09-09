@@ -279,6 +279,7 @@ module.exports = function createDonationRouter(ctx) {
         JourneyLog.newVisitor(visitor, pathname, capiStatus);
       } else {
         const eventMessages = {
+          'Lead': 'Petition signed',
           'AddToCart': 'Opened donation modal',
           'InitiateCheckout': `Started checkout (${fmtCurrency(data?.value || '?')})`,
           'AddPaymentInfo': 'Entering payment details',
