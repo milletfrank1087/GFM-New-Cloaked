@@ -831,7 +831,7 @@
               100% of your <%= formattedTotal %> funds direct calf rescue &amp; formula bottles. Optional tips underwrite digital advocacy to mobilize more citizens and build congressional pressure.
             </p>
             <div class="tip-grid" id="tip-buttons-group">
-              <button type="button" class="tip-btn active" data-pct="0" id="default-tip-btn">
+              <button type="button" class="tip-btn" data-pct="0" id="default-tip-btn">
                 <span class="tip-pct">No tip</span>
                 <span class="tip-sub">direct care</span>
               </button>
@@ -839,7 +839,7 @@
                 <span class="tip-pct">10%</span>
                 <span class="tip-sub" id="tip-label-10">+10%</span>
               </button>
-              <button type="button" class="tip-btn" data-pct="15">
+              <button type="button" class="tip-btn active" data-pct="15">
                 <span class="tip-pct">15%</span>
                 <span class="tip-sub" id="tip-label-15">+15%</span>
               </button>
@@ -1227,7 +1227,7 @@
       }
     }
 
-    applyTip(0);
+    applyTip((baseAmount * 15) / 100);
 
     var tipBtns = document.querySelectorAll('.tip-btn');
     var customWrapper = document.getElementById('custom-tip-wrapper');

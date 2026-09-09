@@ -62,7 +62,9 @@ async function fetchPayments(campaignSlug, dateRange) {
     .eq('status', 'completed')
     .order('created_at', { ascending: false })
     .limit(MAX_PAYMENTS);
-  if (campaignSlug && campaignSlug !== 'all') query = query.eq('source_ref', campaignSlug);
+  if (campaignSlug && campaignSlug !== 'all') {
+    query = query.or(`source_ref.eq.${campaignSlug},utm_campaign.eq.${campaignSlug}`);
+  }
   if (dateRange?.startDate) query = query.gte('created_at', dateRange.startDate);
   if (dateRange?.endDate) {
     const end = toExclusiveEnd(dateRange.endDate);
@@ -183,11 +185,12 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     const cur = p.currency || BASE_CURRENCY;
     const { donationNative, tipNative, grossNative, feeNative, netNative } = computePaymentAmounts(p.raw);
 
-    const campaignKey = raw.utm_campaign || raw.source_ref || 'direct';
+    const campaignKey = raw.source_ref || raw.utm_campaign || 'direct';
     if (!perCampaign.has(campaignKey)) {
       perCampaign.set(campaignKey, {
         key: campaignKey, name: null, count: 0, gross: 0, tips: 0, fees: 0, net: 0,
         spend: 0, spendNative: 0, profit: 0, purchases: 0, roas: null, cpa: null, isAdCampaign: false,
+        utmCampaignId: raw.utm_campaign || null,
         byCurrency: {},
       });
     }
@@ -309,8 +312,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     }
 
     for (const [key, agg] of perCampaign) {
-      const campaignId = key;
-      const spendInfo = spendByCampaign.get(campaignId);
+      const spendInfo = spendByCampaign.get(agg.utmCampaignId || key);
       if (spendInfo) {
         agg.spend = spendInfo.spend;
         agg.spendNative = spendInfo.spendNative;
@@ -318,14 +320,15 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
         agg.purchaseValue = spendInfo.value;
         agg.roas = spendInfo.roas;
         agg.cpa = spendInfo.cpa;
-        agg.name = nameById.get(campaignId) || null;
+        agg.name = nameById.get(agg.utmCampaignId || key) || null;
         agg.isAdCampaign = true;
       }
     }
 
     for (const [campaignId, spendInfo] of spendByCampaign) {
       const isInSelectedScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === campaignId;
-      if (!isInSelectedScope || perCampaign.has(campaignId)) continue;
+      const alreadyMerged = [...perCampaign.values()].some(a => a.utmCampaignId === campaignId);
+      if (!isInSelectedScope || perCampaign.has(campaignId) || alreadyMerged) continue;
       perCampaign.set(campaignId, {
         key: campaignId,
         name: nameById.get(campaignId) || campaignId,
