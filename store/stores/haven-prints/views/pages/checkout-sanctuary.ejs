@@ -6,8 +6,7 @@
   <title><%= locale.pageTitle %></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
   <% if (paymentProcessor === 'stripe') { %>
   <script src="https://js.stripe.com/v3/"></script>
   <% } %>
@@ -31,467 +30,978 @@
     })();
   </script>
   <% } %>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            forest: {
-              DEFAULT: '#1e4620',
-              dark: '#143316',
-              light: '#2d6330',
-              tint: '#eef7ee'
-            },
-            canvas: '#fcfbf9',
-            ink: {
-              primary: '#0f172a',
-              secondary: '#334155',
-              muted: '#64748b'
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-            serif: ['Newsreader', 'Georgia', 'serif']
-          }
-        }
-      }
-    }
-  </script>
   <style>
-    html, body {
-      background-color: #fcfbf9;
-      color: #0f172a;
-      min-height: 100%;
+    :root {
+      --paper: #f8f6ef;
+      --surface: #fffefa;
+      --ink: #263e33;
+      --muted: #646960;
+      --green: #2d5140;
+      --green-hover: #213e30;
+      --green-active: #182e24;
+      --sage: #eaf0e5;
+      --sage-ink: #486044;
+      --line: #d8dccf;
+      --control-line: #828c7c;
+      --ochre: #816329;
+      --disabled: #e1e4dc;
+      --shadow: 0 8px 30px rgba(38, 62, 51, 0.05);
+      --serif: 'Newsreader', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+      --xs: .75rem;
+      --sm: .875rem;
+      --base: 1rem;
+      --lg: 1.125rem;
+      --xl: 1.375rem;
+      --s1: .25rem;
+      --s2: .5rem;
+      --s3: .75rem;
+      --s4: 1rem;
+      --s5: 1.25rem;
+      --s6: 1.5rem;
+      --s8: 2rem;
+      --radius: 6px;
+      --radius-card: 10px;
+      --pill: 100px;
+      --fast: 160ms;
+      --ease: cubic-bezier(.22, 1, .36, 1);
     }
-    .sanctuary-card {
-      box-shadow: 0 12px 38px -8px rgba(20, 51, 22, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: var(--base)/1.6 var(--sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    input:focus, .StripeElement--focus {
-      border-color: #1e4620 !important;
-      box-shadow: 0 0 0 3px rgba(30, 70, 32, 0.12) !important;
+    ::selection { background: var(--sage); color: var(--ink); }
+    :focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 2px; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.03em; line-height: 1.15; }
+
+    /* Site Masthead */
+    .site-header {
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      min-height: 64px;
+      display: flex;
+      align-items: center;
     }
-    ::selection {
-      background-color: #1e4620;
-      color: #ffffff;
+    .header-inner {
+      width: min(1200px, calc(100% - var(--s6)));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s4);
     }
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s2);
+      text-decoration: none;
+      font: 500 1.5rem/1 var(--serif);
+      letter-spacing: -.03em;
+      color: var(--ink);
     }
-    .live-dot {
-      animation: pulse-glow 2s ease-in-out infinite;
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      stroke-width: 1.6;
+      color: var(--green);
     }
-    #tip-buttons-group { user-select: none; -webkit-tap-highlight-color: transparent; }
-    @keyframes scaleIn {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .brand-sub {
+      display: block;
+      margin-top: 2px;
+      font: 600 .5625rem/1.2 var(--sans);
+      letter-spacing: .18em;
+      color: var(--muted);
     }
-    @keyframes drawCheck {
-      to { stroke-dashoffset: 0; }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--s3);
     }
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+    .docket-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: var(--xs);
+      font-weight: 600;
+      color: var(--sage-ink);
+      background: var(--sage);
+      border: 1px solid var(--line);
+      padding: 5px 12px;
+      border-radius: var(--pill);
     }
-    .success-animate { animation: fadeSlideUp 0.5s ease forwards; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s1);
+      font-size: var(--xs);
+      font-weight: 600;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: var(--pill);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      transition: color var(--fast), border-color var(--fast);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      color: var(--ink);
+      border-color: var(--control-line);
+    }
+
+    /* Checkout Main Layout */
+    .checkout-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--s5) var(--s3) var(--s8);
+    }
+    .checkout-wrap {
+      width: min(450px, 100%);
+      margin: 0 auto;
+    }
+    .action-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .journey {
+      display: flex;
+      gap: var(--s4);
+      margin: 0;
+      padding: var(--s3) var(--s5);
+      background: var(--sage);
+      list-style: none;
+      border-bottom: 1px solid var(--line);
+      font-size: .6875rem;
+    }
+    .journey li {
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .journey li[aria-current="step"] {
+      color: var(--green);
+      font-weight: 700;
+    }
+    .journey li > span {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--control-line);
+      border-radius: 50%;
+      font-size: var(--xs);
+    }
+    .journey li.completed > span {
+      background: var(--green);
+      color: var(--surface);
+      border-color: var(--green);
+    }
+    .journey li[aria-current="step"] > span {
+      background: var(--green);
+      color: var(--surface);
+      border-color: var(--green);
+    }
+    .panel {
+      padding: var(--s5) var(--s5);
+    }
+    .receipt {
+      display: inline-flex;
+      gap: var(--s2);
+      align-items: center;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #1e7e34;
+      margin-bottom: var(--s3);
+      background: #eef8f1;
+      padding: 4px 10px;
+      border-radius: var(--radius-card);
+    }
+    .receipt .icon {
+      width: 13px;
+      height: 13px;
+    }
+    .panel h1, .panel h2 {
+      font-family: var(--serif);
+      font-size: 1.875rem;
+      font-weight: 400;
+      letter-spacing: -.03em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: var(--s2);
+    }
+    .panel-copy {
+      color: var(--muted);
+      font-size: var(--sm);
+      line-height: 1.5;
+      margin-bottom: var(--s4);
+    }
+
+    /* Sponsorship Summary Bar */
+    .sponsorship-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s3) var(--s4);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: var(--s3);
+    }
+    .sponsorship-amt-block {
+      display: flex;
+      align-items: baseline;
+      gap: var(--s2);
+    }
+    .sponsorship-amt {
+      font-size: 1.625rem;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: -.02em;
+      line-height: 1;
+    }
+    .sponsorship-cadence {
+      font-size: var(--xs);
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .sponsorship-edit-link {
+      font-size: var(--xs);
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Purpose Card */
+    .gift-purpose {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--s2);
+      padding: var(--s3);
+      margin-bottom: var(--s4);
+      background: var(--paper);
+      border-radius: var(--radius);
+      font-size: var(--xs);
+      line-height: 1.45;
+      color: var(--ink);
+    }
+    .gift-purpose .icon {
+      width: 20px;
+      height: 20px;
+      color: var(--green);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Tip Module */
+    .tip-section {
+      margin-bottom: var(--s4);
+      padding-top: var(--s3);
+      border-top: 1px solid var(--line);
+    }
+    .tip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .tip-label {
+      font-size: var(--xs);
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .tip-badge {
+      font-size: .625rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 2px 6px;
+      border-radius: var(--pill);
+    }
+    .tip-explainer {
+      font-size: var(--xs);
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: var(--s2);
+    }
+    .tip-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+    }
+    .tip-btn {
+      padding: 7px 2px;
+      text-align: center;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      transition: all var(--fast);
+      cursor: pointer;
+    }
+    .tip-btn:hover {
+      border-color: var(--control-line);
+      background: var(--paper);
+    }
+    .tip-btn.active {
+      background: var(--sage);
+      border-color: var(--green);
+      color: var(--green);
+      font-weight: 700;
+    }
+    .tip-pct {
+      display: block;
+      font-size: var(--xs);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .tip-sub {
+      display: block;
+      font-size: .5625rem;
+      line-height: 1.2;
+      margin-top: 2px;
+      opacity: 0.85;
+      white-space: pre-line;
+    }
+    .custom-tip-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-top: var(--s2);
+    }
+    .custom-prefix {
+      position: absolute;
+      left: var(--s3);
+      font-size: var(--xs);
+      font-weight: 700;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .custom-tip-input {
+      width: 100%;
+      min-height: 40px;
+      padding: 0.4rem var(--s3) 0.4rem calc(var(--s3) + 12px);
+      color: var(--ink);
+      background: var(--surface);
+      border: 1.5px solid var(--control-line);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    /* Form Fields */
+    .name-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s2);
+      margin-top: var(--s4);
+      margin-bottom: var(--s3);
+    }
+    .field {
+      min-width: 0;
+    }
+    .field label {
+      display: block;
+      font-size: var(--xs);
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+    .field input {
+      width: 100%;
+      min-height: 42px;
+      min-width: 0;
+      padding: 0.45rem var(--s3);
+      color: var(--ink);
+      background: var(--surface);
+      border: 1.5px solid var(--control-line);
+      border-radius: var(--radius);
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    .field input:focus, .custom-tip-input:focus, .StripeElement--focus {
+      border-color: var(--green) !important;
+      outline: none !important;
+      box-shadow: 0 0 0 2px rgba(45, 81, 64, 0.15) !important;
+    }
+
+    /* Payment Element Area */
+    .payment-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: var(--s4) 0 var(--s3);
+    }
+    .payment-divider::before, .payment-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--line);
+    }
+    .payment-divider span {
+      padding: 0 var(--s3);
+      font-size: .625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+    }
+    .payment-loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--s6) 0;
+    }
+    .clean-loader-ring {
+      width: 32px;
+      height: 32px;
+      border: 2.5px solid var(--sage);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: cleanSpin 0.9s linear infinite;
+      margin-bottom: var(--s2);
+    }
+    @keyframes cleanSpin { to { transform: rotate(360deg); } }
+
+    /* Action Buttons */
+    .button {
+      min-height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--s2);
+      width: 100%;
+      padding: var(--s2) var(--s4);
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      font-size: var(--sm);
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      transition: background var(--fast), transform var(--fast);
+      cursor: pointer;
+    }
+    .button.primary {
+      background: var(--green);
+      color: var(--surface);
+      margin-top: var(--s4);
+    }
+    .button.primary:hover:not(:disabled) {
+      background: var(--green-hover);
+      transform: translateY(-1px);
+    }
+    .button.primary:active:not(:disabled) {
+      background: var(--green-active);
+    }
+    .button.primary:disabled {
+      background: var(--disabled);
+      color: var(--muted);
+      cursor: not-allowed;
+      transform: none;
+    }
+    .button.quiet {
+      background: transparent;
+      color: var(--muted);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-top: var(--s2);
+      font-size: var(--xs);
+      font-weight: 500;
+    }
+    .button.quiet:hover {
+      color: var(--green);
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      animation: cleanSpin 0.9s linear infinite;
+    }
+    .spinner-track { opacity: 0.25; }
+    .spinner-head { opacity: 0.75; }
+
+    /* Reassurance row */
+    .reassurance {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s2);
+      color: var(--muted);
+      font-size: .6875rem;
+      line-height: 1.4;
+      margin-top: var(--s3);
+      text-align: center;
+    }
+    .reassurance .icon {
+      width: 13px;
+      height: 13px;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    /* Error Box */
+    .payment-error-box {
+      margin-top: var(--s3);
+      padding: var(--s3);
+      background: #fdf2f2;
+      border: 1px solid #f8b4b4;
+      border-radius: var(--radius);
+      color: #9b1c1c;
+      font-size: var(--xs);
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    .checkout-footer {
+      text-align: center;
+      margin-top: var(--s4);
+      padding: 0 var(--s2);
+    }
+    .legal-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--s2);
+      font-size: var(--xs);
+      color: var(--muted);
+      margin-bottom: var(--s2);
+    }
+    .legal-links button {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--muted);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+      font-size: var(--xs);
+    }
+    .legal-links button:hover {
+      color: var(--ink);
+    }
+    .checkout-footer p {
+      font-size: .6875rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Success Screen */
+    .success-header {
+      background: var(--sage);
+      padding: var(--s6) var(--s5) var(--s5);
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .completion-mark {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--surface);
+      margin: 0 auto var(--s3);
+    }
+    .completion-mark .icon {
+      width: 24px;
+      height: 24px;
+    }
+    .success-summary-box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: var(--s4);
+      margin-bottom: var(--s3);
+    }
+    .success-docket-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: var(--s2);
+    }
+    .success-amount-display {
+      font-family: var(--serif);
+      font-size: 2.25rem;
+      font-weight: 400;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .notice {
+      font-size: var(--xs);
+      color: var(--muted);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: var(--s3);
+      border-radius: var(--radius);
+      line-height: 1.5;
+    }
+    .success-tip-note {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: var(--s3);
+      margin-top: var(--s3);
+      font-size: var(--xs);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .success-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s2);
+      margin-top: var(--s4);
+    }
+
+    /* Legal Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(38, 62, 51, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--s4);
+    }
+    .modal-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-card);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+      width: min(500px, 100%);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s3) var(--s4);
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+    .modal-header h3 {
+      font-size: var(--sm);
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--sage);
+      border: none;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--ink);
+    }
+    .modal-body {
+      padding: var(--s4);
+      overflow-y: auto;
+      font-size: var(--xs);
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 440px) {
+      .panel { padding: var(--s4) var(--s3); }
+      .name-grid { grid-template-columns: 1fr; }
+      .tip-grid { gap: 3px; }
+      .tip-sub { font-size: .5rem; }
+      .header-actions .docket-badge { display: none; }
+    }
   </style>
 </head>
-<body class="font-sans antialiased flex flex-col min-h-screen">
+<body>
 
-  <!-- TOP ADMINISTRATIVE UTILITY BAR (DESKTOP ONLY) -->
-  <div id="top-admin-bar" class="bg-[#0f1c11] text-[#a7f3d0] text-[10.5px] font-semibold tracking-wider py-1.5 px-4 border-b border-white/10 hidden sm:block">
-    <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#34d399] live-dot"></span>
-        <span>OFFICIAL CITIZEN ADVOCACY DOCKET • 2026 FARM BILL AMENDMENT</span>
-      </div>
-      <div class="flex items-center gap-2 text-[10px] text-gray-400">
-        <span>CONGRESSIONAL DOCKET #AGR-2026-884</span>
-        <span>•</span>
-        <span>100% DIRECT CARE PLEDGE</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMPACT MASTHEAD -->
-  <header class="bg-white border-b border-[#e5e2da] py-2 sm:py-3.5 px-3 sm:px-6 shadow-xs">
-    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2 sm:gap-3">
-        <button onclick="if(history.length>1){history.back()}else{window.close()}" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center flex-shrink-0 transition-colors active:scale-95" aria-label="Back to petition">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 19l-7-7 7-7"/>
-          </svg>
+  <!-- CLEAN SITE HEADER (Exact match to petition) -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="<%= campaignOrigin ? (campaignOrigin + '/petition') : '#' %>" class="brand" aria-label="Frontline Calf Rescue home">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 28V12M16 20C4 20 4 6 4 6s12 0 12 14ZM16 15C16 5 28 5 28 5s0 10-12 10Z"/>
+        </svg>
+        <span>Frontline<span class="brand-sub">CALF RESCUE</span></span>
+      </a>
+      <div class="header-actions">
+        <span class="docket-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Docket #AGR-2026-884
+        </span>
+        <% if (campaignOrigin) { %>
+        <a href="<%= campaignOrigin %>/petition#action" class="back-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Return to petition</span>
+        </a>
+        <% } else { %>
+        <button onclick="if(history.length>1){history.back()}else{window.close()}" class="back-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Back</span>
         </button>
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-[#eef7ee] border border-[#1e4620]/25 flex items-center justify-center text-[#1e4620] flex-shrink-0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="m9 12 2 2 4-4"/>
-          </svg>
-        </div>
-        <div>
-          <span class="font-serif text-[15px] sm:text-xl font-bold text-[#143316] tracking-tight block leading-tight">
-            Frontline Calf Rescue
-          </span>
-          <span class="text-[9px] sm:text-[10px] text-[#64748b] tracking-wider uppercase font-semibold block leading-tight">
-            Frontline Animal Rescue • Field Veterinary Care • Legal Advocacy
-          </span>
-        </div>
-      </div>
-      <div class="hidden md:flex items-center gap-1.5 text-xs font-bold text-[#1e4620] bg-[#eef7ee] border border-[#1e4620]/25 px-3 py-1.5 rounded-full">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span>Congressional Docket #AGR-2026-884</span>
+        <% } %>
       </div>
     </div>
   </header>
 
-  <!-- MAIN DOCKET CHECKOUT CONTAINER -->
-  <main class="flex-1 flex items-center justify-center px-3 sm:p-6 py-3 sm:py-8">
-    <div id="checkout-form-wrapper" class="w-full max-w-xl">
+  <!-- MAIN CHECKOUT AREA -->
+  <main class="checkout-main">
+    <div class="checkout-wrap">
 
-      <div class="bg-white rounded-2xl sanctuary-card border border-[#e2ded5] overflow-hidden">
+      <!-- STEP 2 CHECKOUT CARD -->
+      <div class="action-card sanctuary-card" id="checkout-form-wrapper">
 
-        <!-- CARD HEADER: BADGE + TITLE + AMOUNT -->
-        <div class="bg-[#f9f8f5] px-3.5 sm:px-6 py-2.5 sm:py-3.5 border-b border-[#e8e5de]">
-          <div class="flex items-center justify-between gap-2 mb-1">
-            <div class="inline-flex items-center gap-1 bg-[#eef7ee] border border-[#1e4620]/30 text-[#143316] text-[9.5px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full tracking-wide uppercase">
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Certified Citizen Sponsorship</span>
-            </div>
-            <span class="text-[9.5px] text-[#64748b] font-mono hidden sm:inline">Docket #AGR-2026-884</span>
-          </div>
+        <div class="panel">
 
-          <div class="flex items-center justify-between gap-2">
-            <div class="min-w-0">
-              <h1 class="font-serif text-[17px] sm:text-xl font-bold text-[#0f172a] leading-tight truncate">
-                Emergency Calf Sponsorship
-              </h1>
-              <p class="text-[10.5px] text-[#64748b] mt-0.5 truncate">
-                <% if (donorName) { %>Constituent: <strong><%= donorName %></strong> • <% } %>Direct nursery &amp; formula care
-              </p>
-            </div>
-            <div class="text-right flex-shrink-0">
-              <span id="header-total-display" class="text-xl sm:text-3xl font-extrabold text-[#143316] block leading-none">
-                <%= formattedTotal %>
-              </span>
-              <span class="text-[9.5px] font-semibold text-[#64748b] block mt-0.5">
-                <%= cadence === 'monthly' ? 'per month' : 'one-time gift' %>
-              </span>
+          <!-- Official Recorded Receipt Badge -->
+          <p class="receipt">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Official Signature Recorded · Docket #AGR-2026-884
+          </p>
+
+          <!-- Headline in Newsreader 400 -->
+          <h1>A little kindness.<br>A gentler tomorrow.</h1>
+          <p class="panel-copy">
+            <% if (donorName) { %>Thank you for caring, <strong><%= donorName.split(' ')[0] %></strong>! <% } else { %>Thank you for standing with them! <% } %>Sponsoring neonatal formula and nursery care.
+          </p>
+
+          <!-- Selected Gift Summary Bar -->
+          <div class="sponsorship-summary">
+            <div class="sponsorship-amt-block">
+              <span class="sponsorship-amt" id="header-total-display"><%= formattedTotal %></span>
+              <span class="sponsorship-cadence"><%= cadence === 'monthly' ? '/ month' : 'one-time gift' %></span>
             </div>
           </div>
-        </div>
 
-        <div class="p-3.5 sm:p-6">
-
-          <!-- DONATION PURPOSE — WHERE YOUR MONEY GOES -->
-          <div class="mb-3 sm:mb-4 bg-[#eef7ee] rounded-xl p-3 border border-[#1e4620]/15">
-            <div class="flex items-center gap-1.5 mb-1.5">
-              <span class="text-[9.5px] font-bold uppercase tracking-wider text-[#1e4620]">Where Your Sponsorship Goes</span>
-              <span class="text-[9px] text-[#64748b] ml-auto">100% Direct Care</span>
-            </div>
-            <p class="text-[11.5px] text-[#143316] leading-relaxed">
-              <strong>100% of your <%= formattedTotal %></strong> goes directly to emergency calf rescue, warm colostrum formula, thermal nursery bedding, and round-the-clock veterinary care for newborns like Barnaby who were separated from their mothers within hours of birth.
+          <!-- 100% Direct Care Purpose Box -->
+          <div class="gift-purpose">
+            <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M16 28V12M16 20C4 20 4 6 4 6s12 0 12 14ZM16 15C16 5 28 5 28 5s0 10-12 10Z"/>
+            </svg>
+            <p id="sponsorship-impact-text">
+              <strong>100% direct care:</strong> 100% of your <%= formattedTotal %> goes straight to daily warm colostrum formula bottles, electrolyte hydration, dry thermal straw bedding, and around-the-clock veterinary attention for rescued calves like baby Barnaby.
             </p>
-            <div class="flex items-start gap-3 mt-2 pt-2 border-t border-[#1e4620]/10">
-              <div class="flex-1">
-                <span class="text-[9.5px] font-bold text-[#143316] block">Designation</span>
-                <span class="text-[10px] text-[#64748b]">Direct Care for Barnaby, Clover &amp; Rescued Calves</span>
-              </div>
-              <div class="flex-1">
-                <span class="text-[9.5px] font-bold text-[#143316] block">Includes</span>
-                <span class="text-[10px] text-[#64748b]">Warm milk formula, nursery bedding &amp; field transport</span>
-              </div>
-            </div>
           </div>
 
-          <!-- OPTIONAL OUTREACH TIP -->
-          <div class="mb-3 sm:mb-4" id="tip-upsell-module">
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <div class="flex items-center gap-1.5">
-                <span class="w-5 h-5 rounded-full bg-[#f0fdf4] border border-[#1e4620]/20 flex items-center justify-center flex-shrink-0">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1e4620" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                </span>
-                <span class="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">Optional Awareness &amp; Outreach Sponsorship</span>
-              </div>
-              <span class="text-[9px] text-[#64748b] border border-[#dcd8cf] rounded-full px-1.5 py-0.5">100% Optional</span>
+          <!-- Optional Awareness & Outreach Tip Module -->
+          <div class="tip-section" id="tip-upsell-module">
+            <div class="tip-header">
+              <span class="tip-label">Optional outreach tip</span>
+              <span class="tip-badge">100% Optional</span>
             </div>
-            <p class="text-[10.5px] text-[#334155] leading-snug mb-1.5">
-              100% of your <strong><%= formattedTotal %></strong> goes to calf rescue &amp; warm formula. Optional tips fund digital ads to build congressional pressure.
+            <p class="tip-explainer">
+              100% of your <%= formattedTotal %> funds direct calf rescue &amp; formula bottles. Optional tips underwrite digital advocacy to mobilize more citizens and build congressional pressure.
             </p>
-            <p class="text-[9.5px] text-[#64748b] leading-snug mb-2 italic">
-              Commercial dairy lobbyists spend millions suppressing this issue. If you choose to add an optional outreach tip, every cent funds digital awareness ads to show this investigation to more citizens and build congressional petition pressure.
-            </p>
-            <div class="grid grid-cols-5 gap-1.5" id="tip-buttons-group">
-              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border-2 transition-all border-[#1e4620] bg-[#eef7ee] text-[#143316]" data-pct="0" id="default-tip-btn">
-                <span class="block text-[11px] font-bold">No tip</span>
-                <span class="block text-[8.5px] text-[#64748b] mt-0.5">direct care only</span>
+            <div class="tip-grid" id="tip-buttons-group">
+              <button type="button" class="tip-btn active" data-pct="0" id="default-tip-btn">
+                <span class="tip-pct">No tip</span>
+                <span class="tip-sub">direct care</span>
               </button>
-              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="10">
-                <span class="block text-[11px] font-bold">10%</span>
-                <span class="block text-[8.5px] text-[#64748b] mt-0.5" id="tip-label-10"></span>
+              <button type="button" class="tip-btn" data-pct="10">
+                <span class="tip-pct">10%</span>
+                <span class="tip-sub" id="tip-label-10">+10%</span>
               </button>
-              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="15">
-                <span class="block text-[11px] font-bold">15%</span>
-                <span class="block text-[8.5px] text-[#64748b] mt-0.5" id="tip-label-15"></span>
+              <button type="button" class="tip-btn" data-pct="15">
+                <span class="tip-pct">15%</span>
+                <span class="tip-sub" id="tip-label-15">+15%</span>
               </button>
-              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="20">
-                <span class="block text-[11px] font-bold">20%</span>
-                <span class="block text-[8.5px] text-[#64748b] mt-0.5" id="tip-label-20"></span>
+              <button type="button" class="tip-btn" data-pct="20">
+                <span class="tip-pct">20%</span>
+                <span class="tip-sub" id="tip-label-20">+20%</span>
               </button>
-              <button type="button" class="tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40" data-pct="custom">
-                <span class="block text-[11px] font-bold">Custom</span>
-                <span class="block text-[8.5px] text-[#64748b] mt-0.5">any amount</span>
+              <button type="button" class="tip-btn" data-pct="custom">
+                <span class="tip-pct">Custom</span>
+                <span class="tip-sub">any amount</span>
               </button>
             </div>
-            <div id="custom-tip-wrapper" class="hidden mt-1.5">
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-xs font-bold text-[#64748b]"><%= symbol %></span>
-                <input type="number" id="custom-tip-input" min="0" step="1" placeholder="0.00"
-                  class="w-full bg-white border border-[#dcd8cf] rounded-lg pl-6 pr-3 py-1.5 text-[16px] text-[#0f172a] focus:outline-none focus:border-[#1e4620]">
+            <div id="custom-tip-wrapper" style="display: none;">
+              <div class="custom-tip-wrap">
+                <span class="custom-prefix"><%= symbol %></span>
+                <input type="number" id="custom-tip-input" min="0" step="1" placeholder="0.00" class="custom-tip-input">
               </div>
             </div>
-            <div id="tip-impact-banner" class="mt-1.5 text-[10px] text-[#64748b] leading-snug"></div>
-            <div id="tip-summary-row" class="mt-1.5 flex items-center justify-between text-[10.5px] font-bold text-[#143316]">
-              <span>Rescue: <%= formattedTotal %> + Outreach Tip: <span id="summary-tip-display"><%= symbol %>0.00</span></span>
-              <span>Total: <span id="summary-total-amt"><%= formattedTotal %></span></span>
-            </div>
-            <input type="hidden" id="summary-base-amt-val" value="<%= formattedDonation %>">
-            <input type="hidden" id="summary-tip-amt-val" value="0.00">
+            <div id="tip-impact-banner" style="margin-top: var(--s2);"></div>
           </div>
 
-          <!-- SIGNER CONTACT DETAILS -->
-          <div class="grid grid-cols-2 gap-2.5 mb-3 sm:mb-5">
-            <div>
-              <label for="billing-email" class="block text-[10.5px] font-bold text-[#334155] mb-0.5">
-                Constituent Email
-              </label>
-              <input type="email" id="billing-email" value="<%= donor.email || '' %>" placeholder="you@example.com" autocomplete="email"
-                class="w-full bg-[#faf9f6] border border-[#dcd8cf] rounded-lg px-2.5 py-2 text-[16px] text-[#0f172a] focus:bg-white focus:outline-none transition-all">
+          <!-- Signer Contact Details -->
+          <div class="name-grid">
+            <div class="field">
+              <label for="billing-name">Full name</label>
+              <input type="text" id="billing-name" value="<%= donorName || '' %>" placeholder="Sarah Taylor" autocomplete="name" required>
             </div>
-            <div>
-              <label for="billing-name" class="block text-[10.5px] font-bold text-[#334155] mb-0.5">
-                Legal Name
-              </label>
-              <input type="text" id="billing-name" value="<%= donorName || '' %>" placeholder="Jane Doe" autocomplete="name"
-                class="w-full bg-[#faf9f6] border border-[#dcd8cf] rounded-lg px-2.5 py-2 text-[16px] text-[#0f172a] focus:bg-white focus:outline-none transition-all">
+            <div class="field">
+              <label for="billing-email">Email receipt to</label>
+              <input type="email" id="billing-email" value="<%= donor.email || '' %>" placeholder="sarah@example.com" autocomplete="email" required>
             </div>
           </div>
 
-          <!-- SECURE PAYMENT METHOD DIVIDER -->
-          <div class="flex items-center gap-2 mb-2.5">
-            <div class="flex-1 h-px bg-[#e8e5de]"></div>
-            <span class="text-[9.5px] font-bold text-[#64748b] uppercase tracking-wider">
-              Encrypted Contribution Method
-            </span>
-            <div class="flex-1 h-px bg-[#e8e5de]"></div>
+          <!-- Encrypted Contribution Method Divider -->
+          <div class="payment-divider">
+            <span>Payment method</span>
           </div>
 
-          <!-- STRIPE PAYMENT ELEMENT CONTAINER -->
+          <!-- Payment Element Wrapper -->
           <div id="payment-element-wrapper">
-            <div id="payment-loading" class="flex items-center justify-center py-8">
-              <div class="flex flex-col items-center gap-2.5">
-                <div class="w-8 h-8 rounded-full border-2 border-[#1e4620]/30 border-t-[#1e4620] animate-spin"></div>
-                <p class="text-xs text-[#64748b] font-medium"><%= locale.loading %></p>
-              </div>
+            <div id="payment-loading" class="payment-loader">
+              <div class="clean-loader-ring"></div>
+              <p style="font-size: var(--xs); color: var(--muted);"><%= locale.loading %></p>
             </div>
             <% if (paymentProcessor === 'stripe') { %>
             <div id="payment-element"></div>
             <% } else { %>
-            <div id="apple-pay-container" class="mb-2"></div>
-            <div id="google-pay-container" class="mb-2"></div>
-            <div id="paypal-button-container" class="mb-2"></div>
-            <div id="venmo-button-container" class="mb-2"></div>
-            <div class="flex items-center gap-2 my-3">
-              <div class="flex-1 h-px bg-[#e8e5de]"></div>
-              <span class="text-[10px] font-semibold text-[#64748b] uppercase tracking-wider">or pay with card</span>
-              <div class="flex-1 h-px bg-[#e8e5de]"></div>
+            <div id="apple-pay-container" style="margin-bottom: var(--s2);"></div>
+            <div id="google-pay-container" style="margin-bottom: var(--s2);"></div>
+            <div id="paypal-button-container" style="margin-bottom: var(--s2);"></div>
+            <div id="venmo-button-container" style="margin-bottom: var(--s2);"></div>
+            <div class="name-grid" style="margin-top: var(--s2);">
+              <div id="card-name-field" style="min-height: 42px;"></div>
+              <div id="card-number-field" style="min-height: 42px;"></div>
             </div>
-            <div class="space-y-2.5">
-              <div id="card-name-field" class="w-full min-h-[42px] rounded-lg"></div>
-              <div id="card-number-field" class="w-full min-h-[42px] rounded-lg"></div>
-              <div class="grid grid-cols-2 gap-2.5">
-                <div id="card-expiry-field" class="w-full min-h-[42px] rounded-lg"></div>
-                <div id="card-cvv-field" class="w-full min-h-[42px] rounded-lg"></div>
-              </div>
+            <div class="name-grid">
+              <div id="card-expiry-field" style="min-height: 42px;"></div>
+              <div id="card-cvv-field" style="min-height: 42px;"></div>
             </div>
             <% } %>
           </div>
 
-          <!-- ERROR CONTAINER -->
-          <div id="payment-error" class="hidden text-red-700 text-xs mt-3 p-3 bg-red-50 rounded-lg border border-red-200 leading-normal"></div>
+          <!-- Error Container -->
+          <div id="payment-error" class="payment-error-box" style="display: none;"></div>
 
-          <!-- CONFIRMATION ACTION BUTTON -->
-          <button id="submit-payment" disabled
-            class="w-full bg-[#1e4620] hover:bg-[#143316] text-white py-3 sm:py-4 rounded-xl font-extrabold text-sm transition-all duration-200 hover:shadow-lg hover:shadow-[#1e4620]/25 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-3"
+          <!-- Confirmation Action Button -->
+          <button id="submit-payment" class="button primary" disabled
             data-paytext="<%= cadence === 'monthly' ? ('Confirm ' + formattedTotal + '/mo Sustaining Sponsorship →') : ('Confirm ' + formattedTotal + ' Emergency Gift →') %>"
             data-processing="<%= locale.processing %>">
-            <svg id="payment-spinner" class="hidden animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            <svg id="payment-spinner" class="spinner" viewBox="0 0 24 24" fill="none" style="display: none;">
+              <circle class="spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="spinner-head" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
             </svg>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             <span id="btn-text">
               <%= cadence === 'monthly' ? ('Confirm ' + formattedTotal + '/mo Sustaining Sponsorship →') : ('Confirm ' + formattedTotal + ' Emergency Gift →') %>
             </span>
           </button>
 
-          <!-- 100% DIRECT CARE COMMITMENT -->
-          <div class="mt-3 bg-[#f9f8f5] rounded-xl p-2.5 border border-[#e8e5de]">
-            <div class="flex items-start gap-2">
-              <div class="w-2 h-2 rounded-full bg-[#1e4620] mt-1 flex-shrink-0"></div>
-              <div>
-                <span class="text-[11px] font-bold text-[#0f172a]">100% Direct Care Commitment</span>
-                <p class="text-[10px] text-[#64748b] leading-snug mt-0.5">Every cent received goes straight to veterinary supplies, electrolyte formula, specialized transport haulers, and shelter upkeep for mother cows and rescued calves.</p>
-              </div>
-            </div>
-          </div>
+          <!-- Reassurance -->
+          <p class="reassurance">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Secure 256-bit encrypted checkout. You remain in full control.
+          </p>
 
-          <!-- SECURITY + TRUST (SINGLE COMPACT ROW) -->
-          <div class="flex items-center justify-center gap-3 sm:gap-5 mt-3 pt-2 border-t border-[#e8e5de]">
-            <div class="flex items-center gap-1">
-              <svg class="w-3 h-3 text-[#1e4620]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-              </svg>
-              <span class="text-[9.5px] font-semibold text-[#64748b]">256-Bit SSL</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <svg class="w-3 h-3 text-[#1e4620]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-              </svg>
-              <span class="text-[9.5px] font-semibold text-[#64748b]">PCI Level 1</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <svg class="w-3 h-3 text-[#1e4620]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
-              <span class="text-[9.5px] font-semibold text-[#64748b]"><%= paymentProcessor === 'paypal' ? 'Secured by PayPal' : 'Encrypted Payment' %></span>
-            </div>
-          </div>
         </div>
       </div>
 
-      <!-- STATUTORY DISCLAIMER & LEGAL LINKS -->
-      <div id="checkout-disclaimer" class="text-center mt-3 px-1 space-y-1">
-        <p class="text-[10px] text-[#64748b] leading-snug">
-          Frontline Calf Rescue is an independent citizen advocacy coalition and frontline animal rescue fund. Contributions directly support emergency veterinary rescue units, neonatal calf nursery care, and legislative advocacy in Docket #AGR-2026-884. Contributions are strictly non-tax-deductible.
-        </p>
-        <p class="text-[9.5px] text-[#94a3b8]">
-          By confirming, you agree to our <button onclick="showLegalModal('/terms','<%= locale.terms %>')" class="underline hover:text-[#334155]"><%= locale.terms %></button> and <button onclick="showLegalModal('/privacy','<%= locale.privacy %>')" class="underline hover:text-[#334155]"><%= locale.privacy %></button>.
-        </p>
-      </div>
-
-    </div>
-
-    <!-- SUCCESS / THANK-YOU SCREEN (hidden until payment completes) -->
-    <div id="success-screen" class="w-full max-w-xl hidden">
-      <div class="bg-white rounded-2xl sanctuary-card border border-[#e2ded5] overflow-hidden">
-
-        <div class="bg-[#eef7ee] px-5 pt-7 pb-5 text-center border-b border-[#d4eed4]">
-          <div class="w-16 h-16 rounded-full bg-[#1e4620] mx-auto mb-3 flex items-center justify-center shadow-lg shadow-[#1e4620]/20" style="animation: scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 6L9 17l-5-5" style="stroke-dasharray: 30; stroke-dashoffset: 30; animation: drawCheck 0.6s 0.3s ease forwards"/>
-            </svg>
+      <!-- SUCCESS SCREEN -->
+      <div id="success-screen" class="action-card sanctuary-card" style="display: none;">
+        <div class="success-header">
+          <div class="completion-mark">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h2 class="font-serif text-2xl sm:text-3xl font-extrabold text-[#143316] mb-1">Thank You, <span id="success-donor-name">Friend</span></h2>
-          <p class="text-sm text-[#1e4620]/80 font-medium">Your generosity changes lives today.</p>
+          <h2>Thank You, <span id="success-donor-name">Friend</span></h2>
+          <p class="panel-copy" style="margin-bottom: 0;">Your compassion brings warmth and safety to orphaned calves.</p>
         </div>
 
-        <div class="p-5 sm:p-6 space-y-4">
-
-          <div class="bg-[#f9f8f5] rounded-xl p-4 border border-[#e8e5de]">
-            <div class="flex items-center justify-between mb-2.5">
-              <span class="text-[10px] font-bold text-[#64748b] uppercase tracking-wider">Contribution Confirmed</span>
-              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-[#1e4620] bg-[#eef7ee] px-2 py-0.5 rounded-full border border-[#1e4620]/20">
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                Verified
+        <div class="panel">
+          <div class="success-summary-box">
+            <div class="success-docket-row">
+              <span>Contribution Confirmed</span>
+              <span class="receipt" style="margin-bottom: 0; padding: 2px 8px;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                Docket Verified
               </span>
             </div>
-            <div class="text-3xl font-extrabold text-[#143316] mb-0.5" id="success-amount">$35.00</div>
-            <p class="text-xs text-[#64748b]" id="success-cadence">Monthly sustaining sponsorship</p>
+            <div class="success-amount-display" id="success-amount"><%= formattedTotal %></div>
+            <p class="panel-copy" id="success-cadence" style="margin-bottom: 0;"><%= cadence === 'monthly' ? 'Monthly sustaining sponsorship — cancel anytime' : 'One-time emergency rescue gift' %></p>
           </div>
 
-          <div class="space-y-2.5">
-            <div class="flex items-start gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-[#fef3c7] flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span class="text-base">🍼</span>
-              </div>
-              <div>
-                <p class="text-[12px] font-bold text-[#0f172a]">Neonatal Formula & Colostrum</p>
-                <p class="text-[11px] text-[#64748b] leading-snug">Your gift provides warm bottle feedings, electrolyte supplements, and colostrum replacer for calves separated from their mothers within hours of birth.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-[#dbeafe] flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span class="text-base">🩺</span>
-              </div>
-              <div>
-                <p class="text-[12px] font-bold text-[#0f172a]">Emergency Veterinary Triage</p>
-                <p class="text-[11px] text-[#64748b] leading-snug">Round-the-clock veterinary care including navel infection treatment, dehydration IV drips, and respiratory support for fragile newborns.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-[#fce7f3] flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span class="text-base">🏡</span>
-              </div>
-              <div>
-                <p class="text-[12px] font-bold text-[#0f172a]">Safe Pasture & Permanent Sanctuary</p>
-                <p class="text-[11px] text-[#64748b] leading-snug">Thermal nursery bedding, clean pasture fencing, and lifetime sanctuary placement — these calves will never face an auction ring again.</p>
-              </div>
-            </div>
-          </div>
-
-          <div id="success-tip-section" class="hidden bg-[#fffbeb] rounded-xl p-3.5 border border-[#fcd34d]/30">
-            <div class="flex items-start gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" class="flex-shrink-0 mt-0.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-              <div>
-                <p class="text-[11px] font-bold text-[#92400e]">+ <span id="success-tip-amount">$0</span> Awareness Outreach Tip</p>
-                <p class="text-[10.5px] text-[#b45309] leading-snug">Your tip reaches an estimated <strong id="success-tip-reach">0</strong> people through digital awareness campaigns, building congressional petition pressure to pass the Maternal Herd Protection Amendment.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-[#eef7ee] rounded-xl p-3.5 border border-[#1e4620]/15">
-            <p class="text-[11.5px] text-[#143316] leading-relaxed text-center" id="success-next-steps">
-              <strong>What happens next:</strong> A confirmation receipt will arrive at <strong id="success-email">your inbox</strong> shortly. As a sustaining sponsor, you may receive periodic updates on the calves and advocacy work your contributions are funding.
-            </p>
-            <p class="text-[10px] text-[#64748b] leading-snug text-center mt-2">
-              The charge on your statement will appear as <strong>RISEHOPE</strong>.
+          <div class="gift-purpose">
+            <svg class="icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M16 28V12M16 20C4 20 4 6 4 6s12 0 12 14ZM16 15C16 5 28 5 28 5s0 10-12 10Z"/>
+            </svg>
+            <p>
+              <strong>100% direct care:</strong> 100% of your contribution goes straight to daily colostrum formula bottles, clean straw bedding, and around-the-clock veterinary attention.
             </p>
           </div>
 
-          <div class="flex flex-col sm:flex-row gap-2">
-            <button onclick="handleShareSuccess()" class="flex-1 bg-[#1e4620] hover:bg-[#143316] text-white py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              Share & Help More Calves
-            </button>
-            <button id="success-back-btn" onclick="window.location.href=document.referrer||'/'" class="flex-1 bg-white hover:bg-gray-50 text-[#334155] py-3 rounded-xl font-bold text-sm transition-all border border-[#e2ded5] flex items-center justify-center gap-2">
-              ← Return to Petition
-            </button>
+          <div id="success-tip-section" class="success-tip-note" style="display: none;">
+            <p><strong>+ <span id="success-tip-amount">$0</span> Awareness Outreach Tip:</strong> Reaches an estimated <strong id="success-tip-reach">0</strong> citizens, building pressure in the House Agriculture Committee.</p>
           </div>
 
+          <div class="notice" style="margin-top: var(--s3); text-align: center;">
+            <p id="success-next-steps">An official confirmation receipt has been sent to <strong id="success-email">your inbox</strong>.</p>
+            <p style="font-size: var(--xs); color: var(--muted); margin-top: 4px;">Statement descriptor: <strong>RISEHOPE</strong></p>
+          </div>
+
+          <div class="success-actions">
+            <button onclick="handleShareSuccess()" class="button primary" type="button">
+              <span>Share the petition</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </button>
+            <button id="success-back-btn" onclick="window.location.href=document.referrer||'/'" class="button quiet" type="button">
+              ← Return to petition
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="text-center mt-3 px-1">
-        <p class="text-[10px] text-[#64748b] leading-snug">
-          Frontline Calf Rescue • 100% Direct Care Guarantee • Docket #AGR-2026-884
+      <!-- INSTITUTIONAL FOOTER LINKS -->
+      <footer id="checkout-disclaimer" class="checkout-footer">
+        <div class="legal-links">
+          <button type="button" onclick="showLegalModal('/terms','Terms of Civic Inscription')">Terms of Inscription</button>
+          <span>·</span>
+          <button type="button" onclick="showLegalModal('/privacy','Donor Privacy Protection')">Privacy Policy</button>
+          <span>·</span>
+          <button type="button" onclick="showLegalModal('/about','100% Care Pledge &amp; Governance')">Care Pledge</button>
+        </div>
+        <p>
+          Frontline Calf Rescue • Congressional Docket #AGR-2026-884 • Contributions directly underwrite emergency veterinary rescue.
         </p>
-      </div>
-    </div>
+      </footer>
 
+    </div>
   </main>
 
   <!-- LEGAL MODAL -->
-  <div id="legal-modal" class="fixed inset-0 z-[9999] hidden" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)">
-    <div class="flex items-center justify-center min-h-full p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col overflow-hidden">
-        <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-          <h3 id="legal-modal-title" class="font-bold text-[#143316] text-sm"></h3>
-          <button onclick="document.getElementById('legal-modal').classList.add('hidden')" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-        <div id="legal-modal-body" class="px-5 py-4 overflow-y-auto text-xs text-gray-500 leading-relaxed"></div>
+  <div id="legal-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="legal-modal-title"></h3>
+        <button type="button" class="modal-close" onclick="document.getElementById('legal-modal').style.display='none'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
+      <div id="legal-modal-body" class="modal-body"></div>
     </div>
   </div>
 
@@ -501,22 +1011,24 @@
     var t = document.getElementById('legal-modal-title');
     var b = document.getElementById('legal-modal-body');
     t.textContent = title;
-    b.innerHTML = '<div class="flex justify-center py-8"><div class="w-6 h-6 border-2 border-[#1e4620]/30 border-t-[#1e4620] rounded-full animate-spin"></div></div>';
-    m.classList.remove('hidden');
+    b.innerHTML = '<div style="display:flex;justify-content:center;padding:24px 0;"><div class="clean-loader-ring"></div></div>';
+    m.style.display = 'flex';
     try {
       var r = await fetch(url);
       var html = await r.text();
       var doc = new DOMParser().parseFromString(html, 'text/html');
-      var content = doc.querySelector('.space-y-6');
+      var content = doc.querySelector('.space-y-6') || doc.body;
       b.innerHTML = content ? content.innerHTML : '<p>Content unavailable.</p>';
     } catch(e) { b.innerHTML = '<p>Failed to load content.</p>'; }
   }
-  document.getElementById('legal-modal').addEventListener('click', function(e) { if (e.target === this) this.classList.add('hidden'); });
+  document.getElementById('legal-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
   </script>
 
   <!-- STORE CHECKOUT METADATA & HIDDEN INPUTS -->
   <meta name="store-name" content="<%= store.name %>">
-  <input type="hidden" id="payment-brand-color" value="#1e4620">
+  <input type="hidden" id="payment-brand-color" value="#2d5140">
   <input type="hidden" id="payment-amount" value="<%= paymentAmountUnits %>">
   <input type="hidden" id="payment-currency" value="<%= (donor.currency || 'eur').toLowerCase() %>">
   <input type="hidden" id="payment-decimals" value="<%= currencyDecimals %>">
@@ -542,21 +1054,18 @@
   <input type="hidden" id="payment-donor-email" value="<%= donorEmail %>">
   <% } %>
   <input type="hidden" id="campaign-origin" value="<%= campaignOrigin || '' %>">
+
   <script>
   window.showSuccessScreen = function(opts) {
     opts = opts || {};
     var checkoutWrapper = document.getElementById('checkout-form-wrapper');
     var disclaimer = document.getElementById('checkout-disclaimer');
     var successScreen = document.getElementById('success-screen');
-    var topBar = document.getElementById('top-admin-bar');
-    var header = document.querySelector('header');
 
     if (checkoutWrapper) checkoutWrapper.style.display = 'none';
     if (disclaimer) disclaimer.style.display = 'none';
-    if (topBar) topBar.style.display = 'none';
     if (successScreen) {
-      successScreen.classList.remove('hidden');
-      successScreen.classList.add('success-animate');
+      successScreen.style.display = 'block';
     }
 
     var sym = document.getElementById('currency-symbol')?.value || '$';
@@ -594,13 +1103,12 @@
 
     if (tipAmt > 0) {
       var tipSection = document.getElementById('success-tip-section');
-      if (tipSection) tipSection.classList.remove('hidden');
+      if (tipSection) tipSection.style.display = 'block';
       var tipAmtEl = document.getElementById('success-tip-amount');
       if (tipAmtEl) tipAmtEl.textContent = fmt(tipAmt);
       var tipReachEl = document.getElementById('success-tip-reach');
       if (tipReachEl) {
-        var reach = Math.round(tipAmt * 125);
-        tipReachEl.textContent = reach >= 1000 ? '~' + (reach / 1000).toFixed(1) + 'k' : '~' + reach;
+        tipReachEl.textContent = (window.formatReach ? window.formatReach(tipAmt) : ('~' + Math.round(tipAmt * 100)));
       }
     }
 
@@ -619,7 +1127,7 @@
   };
 
   window.handleShareSuccess = function() {
-    var text = 'I just sponsored an emergency calf rescue through Frontline Calf Rescue. These newborns were separated from their mothers within hours of birth — your help means everything.';
+    var text = 'I just sponsored an emergency calf rescue through Frontline Calf Rescue. Newborn calves deserve their mother\'s milk and gentle care — your help means everything.';
     var url = document.getElementById('campaign-origin')?.value || window.location.origin;
     if (navigator.share) {
       navigator.share({ title: 'Frontline Calf Rescue', text: text, url: url }).catch(function(){});
@@ -661,15 +1169,18 @@
 
     var currentTip = 0;
     var impactBanner = document.getElementById('tip-impact-banner');
-    var tipSummaryDisplay = document.getElementById('summary-tip-display');
+
+    window.formatReach = function(amt) {
+      // Standard advocacy ad metric: ~$10 CPM delivers ~100 petition impressions per dollar
+      var count = Math.round(amt * 100);
+      return count >= 1000 ? ('~' + (count / 1000).toFixed(1) + 'k') : ('~' + count);
+    };
 
     [10, 15, 20].forEach(function(pct) {
       var tipAmt = (baseAmount * pct) / 100;
       var label = document.getElementById('tip-label-' + pct);
       if (label) {
-        var reach = Math.round(tipAmt * 8);
-        label.textContent = '+' + fmt(tipAmt) + '\n~' + reach + ' people';
-        label.style.whiteSpace = 'pre-line';
+        label.textContent = '+' + fmt(tipAmt) + '\n' + window.formatReach(tipAmt) + ' people';
       }
     });
 
@@ -679,11 +1190,6 @@
 
       var headerTotal = document.getElementById('header-total-display');
       if (headerTotal) headerTotal.textContent = fmt(total);
-
-      var summaryTotal = document.getElementById('summary-total-amt');
-      if (summaryTotal) summaryTotal.textContent = fmt(total);
-
-      if (tipSummaryDisplay) tipSummaryDisplay.textContent = fmt(currentTip);
 
       var paytext = cadence === 'monthly'
         ? ('Confirm ' + fmt(total) + '/mo Sustaining Sponsorship →')
@@ -700,11 +1206,10 @@
 
       if (impactBanner) {
         if (currentTip > 0) {
-          var estReach = Math.round(currentTip * 125);
-          var reachStr = estReach >= 1000 ? ('~' + (estReach / 1000).toFixed(1) + 'k') : ('~' + estReach);
-          impactBanner.innerHTML = '<strong class="text-[#143316]">Direct Care Only:</strong> 100% of your contribution is reserved for direct calf veterinary formula, shelter, and trauma triage. Your <strong>' + fmt(currentTip) + '</strong> tip shows this investigation to an estimated <strong>' + reachStr + ' people</strong> through digital awareness campaigns.';
+          var reachStr = window.formatReach(currentTip);
+          impactBanner.innerHTML = '<div style="background:var(--sage);border:1px solid var(--line);border-radius:var(--radius);padding:var(--s2) var(--s3);color:var(--sage-ink);font-size:var(--xs);line-height:1.4;"><strong>Direct Care Reserved:</strong> 100% of your contribution goes to formula, straw, and nursery rescue. Your <strong>' + fmt(currentTip) + '</strong> tip shows this investigation to an estimated <strong>' + reachStr + ' citizens</strong>.</div>';
         } else {
-          impactBanner.innerHTML = '<div class="bg-[#eef7ee] rounded-lg p-2 border border-[#1e4620]/10 flex items-start gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1e4620" stroke-width="2" class="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span><strong class="text-[#143316]">Direct Care Only:</strong> 100% of your contribution is reserved for direct calf veterinary formula, shelter, and trauma triage.</span></div>';
+          impactBanner.innerHTML = '';
         }
       }
 
@@ -718,24 +1223,22 @@
     var tipBtns = document.querySelectorAll('.tip-btn');
     var customWrapper = document.getElementById('custom-tip-wrapper');
     var customInput = document.getElementById('custom-tip-input');
-    var inactiveClass = 'tip-btn py-2 px-1 text-center rounded-lg border border-[#dcd8cf] transition-all text-[#334155] hover:border-[#1e4620]/40';
-    var activeClass = 'tip-btn py-2 px-1 text-center rounded-lg border-2 transition-all border-[#1e4620] bg-[#eef7ee] text-[#143316]';
 
     tipBtns.forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
-        tipBtns.forEach(function(b) { b.className = inactiveClass; });
-        btn.className = activeClass;
+        tipBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
 
         var pct = btn.getAttribute('data-pct');
         if (pct === 'custom') {
-          if (customWrapper) customWrapper.classList.remove('hidden');
+          if (customWrapper) customWrapper.style.display = 'block';
           if (customInput) {
             customInput.focus();
             applyTip(parseFloat(customInput.value) || 0);
           }
         } else {
-          if (customWrapper) customWrapper.classList.add('hidden');
+          if (customWrapper) customWrapper.style.display = 'none';
           applyTip((baseAmount * (parseFloat(pct) || 0)) / 100);
         }
       });

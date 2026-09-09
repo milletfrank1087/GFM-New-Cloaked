@@ -110,6 +110,10 @@ async function initCheckout() {
   const brandPrimaryColor = document.getElementById('payment-brand-color')?.value || '#00b964';
 
   try {
+    var isSanctuaryCheckout = document.querySelector('.sanctuary-card') !== null;
+    var checkoutFont = isSanctuaryCheckout ? "'DM Sans', sans-serif" : 'Inter, system-ui, -apple-system, sans-serif';
+    var checkoutRadius = isSanctuaryCheckout ? '6px' : '8px';
+
     elements = stripe.elements({
       mode: isSubscriptionMode ? 'subscription' : 'payment',
       amount: paymentAmountUnits,
@@ -119,14 +123,14 @@ async function initCheckout() {
         theme: 'stripe',
         variables: {
           colorPrimary: brandPrimaryColor,
-          borderRadius: '8px',
-          fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+          borderRadius: checkoutRadius,
+          fontFamily: checkoutFont,
           spacingUnit: '4px'
         },
         rules: {
-          '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', padding: '10px 12px' },
-          '.Input:focus': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 3px ${brandPrimaryColor}18` },
-          '.Tab': { border: '1px solid #e5e7eb', boxShadow: 'none' },
+          '.Input': { border: '1px solid #828c7c', boxShadow: 'none', padding: '10px 12px' },
+          '.Input:focus': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 2px ${brandPrimaryColor}24` },
+          '.Tab': { border: '1px solid #d8dccf', boxShadow: 'none' },
           '.Tab--selected': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 1px ${brandPrimaryColor}` }
         }
       }
