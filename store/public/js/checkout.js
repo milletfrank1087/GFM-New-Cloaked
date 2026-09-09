@@ -131,20 +131,35 @@ async function initCheckout() {
           '.Input': { border: '1px solid #828c7c', boxShadow: 'none', padding: '10px 12px' },
           '.Input:focus': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 2px ${brandPrimaryColor}24` },
           '.Tab': { border: '1px solid #d8dccf', boxShadow: 'none' },
-          '.Tab--selected': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 1px ${brandPrimaryColor}` }
+          '.Tab--selected': { border: `1px solid ${brandPrimaryColor}`, boxShadow: `0 0 0 1px ${brandPrimaryColor}` },
+          '.TermsText': { display: 'none' }
         }
       }
     });
 
     paymentElement = elements.create('payment', {
       layout: 'tabs',
-      wallets: { applePay: 'auto', googlePay: 'auto' }
+      wallets: { applePay: 'auto', googlePay: 'auto' },
+      terms: {
+        card: 'never',
+        applePay: 'never',
+        googlePay: 'never',
+        bancontact: 'never',
+        ideal: 'never',
+        sepaDebit: 'never',
+        sofort: 'never',
+        auBecsDebit: 'never',
+        usBankAccount: 'never'
+      }
     });
 
     paymentElement.mount('#payment-element');
 
     paymentElement.on('ready', () => {
-      if (loadingEl) loadingEl.classList.add('hidden');
+      if (loadingEl) {
+        loadingEl.classList.add('hidden');
+        loadingEl.style.display = 'none';
+      }
       if (submitBtn) submitBtn.disabled = false;
     });
 
