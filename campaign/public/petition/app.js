@@ -27,7 +27,7 @@
     mobileBar.hidden = currentPanel !== 'sign' || visibleHeight >= 120;
   }
 
-  function showPanel(name) {
+  function showPanel(name, shouldScroll = true) {
     currentPanel = name;
     panels.forEach(panel => {
       const el = $(`${panel}-panel`);
@@ -42,9 +42,11 @@
     const target = name === 'sign' ? $('first-name') : (name === 'loading' ? null : $(`${name}-title`));
     if (target) target.focus({ preventScroll: true });
 
-    const actionEl = $('action');
-    if (actionEl) {
-      actionEl.scrollIntoView({ behavior: reduceMotion.matches ? 'instant' : 'smooth', block: 'start' });
+    if (shouldScroll) {
+      const actionEl = $('action');
+      if (actionEl) {
+        actionEl.scrollIntoView({ behavior: reduceMotion.matches ? 'instant' : 'smooth', block: 'start' });
+      }
     }
     updateMobileBar();
   }
@@ -237,6 +239,20 @@
         }
         updateGift();
         showPanel('give');
+
+        try {
+          const sessionPayload = {
+            signed: true,
+            firstName: first,
+            lastName: last,
+            email: email,
+            zip: zip,
+            step: 'give',
+            timestamp: Date.now()
+          };
+          sessionStorage.setItem('petition_session_state', JSON.stringify(sessionPayload));
+          localStorage.setItem('petition_session_state', JSON.stringify(sessionPayload));
+        } catch (_) {}
       }, 3800);
     });
   }
@@ -374,8 +390,45 @@
     });
   }
 
+  function restorePetitionSession(shouldScroll = false) {
+    try {
+      const raw = sessionStorage.getItem('petition_session_state') || localStorage.getItem('petition_session_state');
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (data && data.signed && data.firstName) {
+        signerState.firstName = data.firstName;
+        signerState.lastName = data.lastName || '';
+        signerState.email = data.email || '';
+        signerState.zip = data.zip || '';
+
+        if ($('first-name')) $('first-name').value = signerState.firstName;
+        if ($('last-name')) $('last-name').value = signerState.lastName;
+        if ($('email')) $('email').value = signerState.email;
+        if ($('zip')) $('zip').value = signerState.zip;
+
+        const thanksEl = $('personal-thanks');
+        if (thanksEl) {
+          thanksEl.textContent = `Thank you for lending your voice, ${signerState.firstName}. Would you like to sponsor a rescued calf with an optional gift?`;
+        }
+
+        const reviewBtn = $('review-gift');
+        if (reviewBtn) {
+          reviewBtn.disabled = false;
+          reviewBtn.style.opacity = '1';
+        }
+
+        updateGift();
+        showPanel('give', shouldScroll);
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
   // BFCACHE / BACK NAVIGATION RESTORATION
   window.addEventListener('pageshow', (event) => {
+    const isBackToAction = window.location.hash.includes('action') || event.persisted;
+    restorePetitionSession(isBackToAction);
     const reviewBtn = $('review-gift');
     if (reviewBtn) {
       reviewBtn.disabled = false;
@@ -439,6 +492,12 @@
   sizeActionColumn();
   if ('ResizeObserver' in window && $('action')) {
     new ResizeObserver(sizeActionColumn).observe($('action'));
+  }
+
+  if (window.location.hash.includes('action')) {
+    restorePetitionSession(true);
+  } else {
+    restorePetitionSession(false);
   }
 
   updateGift();

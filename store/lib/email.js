@@ -121,7 +121,7 @@ const EMAIL_TEMPLATES = {
       'Calves arriving from commercial livestock barns &mdash; including fragile newborns like baby Barnaby who needed intensive incubator care &mdash; receive fresh thermal straw bedding, electrolyte replenishment, and lifetime sanctuary pasture protection where they will never face an auction ring.'
     ],
     signoff: 'With profound gratitude for standing with them,<br><strong>Frontline Calf Rescue Team</strong>',
-    footerText: 'Frontline Calf Rescue is an independent citizen advocacy coalition and frontline animal rescue fund (Docket #AGR-2026-884). Contributions underwrite direct veterinary care and are non-tax-deductible.',
+    footerText: 'Frontline Calf Rescue is an independent citizen advocacy coalition and frontline animal rescue fund (Docket #AGR-2026-884). Contributions directly underwrite emergency veterinary rescue and nursery care.',
     textBody: [
       'Your sponsorship has been recorded in the Frontline Calf Rescue registry and is already being directed toward emergency nursery stalls, warm colostrum formula bottles, and around-the-clock veterinary triage for vulnerable newborn calves across our sanctuary network.',
       'Calves arriving from commercial livestock barns -- including fragile newborns like baby Barnaby who needed intensive incubator care -- receive fresh thermal straw bedding, electrolyte replenishment, and lifetime sanctuary pasture protection where they will never face an auction ring.'
