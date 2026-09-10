@@ -11,7 +11,7 @@ function getRailwayToken() {
     throw new Error(`Missing ${cfgPath} — please run railway login`);
   }
   const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
-  return cfg.user?.token;
+  return cfg.user?.token || cfg.user?.accessToken;
 }
 
 async function gql(query, variables = {}) {
