@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const EVENT_CONFIG = {
   'PageView': { emoji: '👤', type: 'NEW_VISITOR' },
   'ViewContent': { emoji: '👀', type: 'VIEW_CONTENT' },
+  'Lead': { emoji: '✍️', type: 'LEAD' },
   'AddToCart': { emoji: '🛒', type: 'ADD_TO_CART' },
   'InitiateCheckout': { emoji: '💳', type: 'CHECKOUT' },
   'AddPaymentInfo': { emoji: '📝', type: 'PAYMENT_INFO' },

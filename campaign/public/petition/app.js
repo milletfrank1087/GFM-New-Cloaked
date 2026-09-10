@@ -18,6 +18,10 @@
   };
 
   // --- CAPI Tracking Bridge ---
+  let clientLocation = null;
+  let locationPromise = null;
+  let cachedEmailHash = null;
+
   function generateEventId(eventName) {
     return eventName + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
   }
@@ -42,6 +46,38 @@
     };
   }
 
+  function fetchClientLocation() {
+    if (locationPromise) return locationPromise;
+    locationPromise = (async () => {
+      try {
+        const resp = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+        const data = await resp.json();
+        if (data && data.ip) {
+          clientLocation = {
+            ip: data.ip,
+            city: data.city || null,
+            region: data.region || null,
+            country: data.country_name || null,
+            countryCode: data.country_code || null
+          };
+        }
+      } catch (_) {}
+      return clientLocation;
+    })();
+    return locationPromise;
+  }
+
+  async function hashEmail(email) {
+    if (!email || !window.crypto || !window.crypto.subtle) return null;
+    try {
+      const normalized = email.toLowerCase().trim();
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalized));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (_) { return null; }
+  }
+
+  fetchClientLocation();
+
   function sendCAPI(eventName, eventId, data) {
     const cookies = getTrackingCookies();
     fetch('/api/track', {
@@ -52,7 +88,7 @@
         eventId: eventId,
         sourceUrl: window.location.href,
         cookies: cookies,
-        clientLocation: null,
+        clientLocation: clientLocation,
         data: data || {}
       })
     }).catch(() => {});
@@ -73,6 +109,18 @@
     sendCAPI(eventName, eventId, capiData);
     return eventId;
   }
+
+  // Fire PageView + ViewContent on load (matches standard campaign flow)
+  (function fireTopOfFunnel() {
+    const pvId = generateEventId('PageView');
+    try { if (typeof fbq === 'function') fbq('track', 'PageView', {}, { eventID: pvId }); } catch (_) {}
+    sendCAPI('PageView', pvId, {});
+
+    const vcId = generateEventId('ViewContent');
+    try { if (typeof fbq === 'function') fbq('track', 'ViewContent', { content_type: 'petition' }, { eventID: vcId }); } catch (_) {}
+    try { if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('ViewContent', { content_type: 'product', event_id: vcId }); } catch (_) {}
+    sendCAPI('ViewContent', vcId, { contentType: 'petition' });
+  })();
 
   function updateMobileBar() {
     if (!mobileBar) return;
@@ -260,6 +308,8 @@
         { contentName: 'Sanctuary Petition 408' }
       );
 
+      hashEmail(email).then(hash => { cachedEmailHash = hash; });
+
       // Stage 1: Immediate clean loading screen with deliberate steady pacing
       const stageTitle = $('loading-stage-title');
       const stageSub = $('loading-stage-sub');
@@ -393,7 +443,7 @@
         'InitiateCheckout',
         { value: amount, currency: 'USD', content_type: 'product', content_id: 'donation',
           contents: [{ content_id: 'donation', content_type: 'product', content_name: 'Sanctuary Calf Sponsorship', quantity: 1, price: amount }] },
-        { value: amount, currency: 'USD', contentName: 'Sanctuary Calf Sponsorship' }
+        { value: amount, currency: 'USD', contentName: 'Sanctuary Calf Sponsorship', emailHash: cachedEmailHash || undefined }
       );
 
       const searchParams = new URLSearchParams(window.location.search);
