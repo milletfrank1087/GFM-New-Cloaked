@@ -431,7 +431,11 @@ module.exports = function createStripeRouter(ctx) {
         donorName = parts.length >= 2 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : donorNameReal;
       }
 
-      const lineItems = decomposeAmount(parseFloat(donor.amount) + parseFloat(donor.fee || 0), storeConfig.products, donor.currency || 'EUR');
+      const mk = storeConfig.metadataKeys || {};
+      const savedTip = parseFloat(
+        paymentIntent.metadata?.[mk.serviceFee || 'serviceFee'] ?? donor.fee ?? 0
+      );
+      const lineItems = decomposeAmount(parseFloat(donor.amount) + savedTip, storeConfig.products, donor.currency || 'EUR');
 
       let customerId = null;
       const email = donor.email || charge?.billing_details?.email || null;
@@ -506,7 +510,7 @@ module.exports = function createStripeRouter(ctx) {
           stripe_payment_intent_id: paymentIntent.id,
           stripe_charge_id: charge?.id,
           amount: parseFloat(donor.amount),
-          service_fee: parseFloat(donor.fee || 0),
+          service_fee: savedTip,
           total_amount: totalAmount,
           stripe_fee: stripeFee,
           net_amount: totalAmount - stripeFee,

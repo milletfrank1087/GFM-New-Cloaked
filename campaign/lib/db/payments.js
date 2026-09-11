@@ -23,7 +23,7 @@ function transformPaymentRow(p) {
     date: formatTimeAgo(p.created_at),
     rawDate: p.created_at,
     type: p.payment_source || 'card',
-    donationType: 'one-time',
+    donationType: (p.stripe_subscription_id || p.payment_source === 'subscription') ? 'subscription' : 'one-time',
     campaign: p.source_ref,
     storeDomain: p.store_domain,
     color: getRandomGradient(),
@@ -82,7 +82,7 @@ function buildPaymentDetail(p) {
       vaultId: stripeRes.vaultId || null
     },
     metadata: {
-      donationType: 'one-time',
+      donationType: (p.stripe_subscription_id || p.payment_source === 'subscription') ? 'subscription' : 'one-time',
       ipAddress: p.ip_address,
       userAgent: p.user_agent,
       utmSource: p.utm_source,

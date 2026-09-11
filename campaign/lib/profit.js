@@ -31,7 +31,7 @@ function presetDaySpan(preset) {
 const PROFIT_FIELDS =
   'id, amount, service_fee, total_amount, stripe_fee, net_amount, created_at, ' +
   'currency, store_id, store_domain, source_ref, utm_campaign, status, ' +
-  'billing_name, customer_name';
+  'billing_name, customer_name, stripe_subscription_id, payment_source';
 const MAX_PAYMENTS = 5000;
 const adRefreshInFlight = new Map();
 
@@ -372,6 +372,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
 
   const allTransactions = convertedPayments.map((p) => {
     const { donationNative, tipNative, grossNative, feeNative, netNative } = computePaymentAmounts(p.raw);
+    const isSub = Boolean(p.raw.stripe_subscription_id) || p.raw.payment_source === 'subscription';
     return {
       id: p.raw.id,
       name: p.raw.billing_name || p.raw.customer_name || null,
@@ -379,6 +380,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
       storeDomain: p.raw.store_domain || 'unknown',
       currency: p.currency,
       date: p.raw.created_at,
+      isSubscription: isSub,
       amountBase: p.amountBase,
       tipBase: p.tipBase,
       grossBase: p.grossBase,

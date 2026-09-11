@@ -328,11 +328,14 @@
 
       var timeLabel = new Date(p.date).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short', timeZone: window.userTimeZone });
       var donorName = esc(p.name || 'Anonymous');
+      var cadenceBadge = p.isSubscription
+        ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-violet-700 border border-violet-100 ml-1">SUB</span>'
+        : '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-50 text-slate-500 border border-slate-100 ml-1">\u00D71</span>';
 
       return '<tr class="cursor-pointer transition-colors" onclick="showDetail(\'' + p.id + '\', this)">' +
         '<td class="sticky-col font-semibold text-[#061b31] flex items-center gap-2">' +
           '<div class="w-6 h-6 rounded-md bg-slate-100 text-slate-700 font-bold text-[10px] flex items-center justify-center shrink-0">' + donorName.charAt(0).toUpperCase() + '</div>' +
-          '<span class="truncate max-w-[120px] sm:max-w-none">' + donorName + '</span>' +
+          '<span class="truncate max-w-[120px] sm:max-w-none">' + donorName + '</span>' + cadenceBadge +
         '</td>' +
         '<td class="text-left font-mono text-xs text-slate-600">' + esc(p.campaign) + '</td>' +
         '<td class="text-right font-mono">' + fmt(p.amountBase) + amountFx + '</td>' +

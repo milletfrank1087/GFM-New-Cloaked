@@ -283,7 +283,8 @@ module.exports = function createPayPalRouter(ctx) {
         donorName = parts.length >= 2 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : donorNameReal;
       }
 
-      const lineItems = decomposeAmount(parseFloat(donor.amount) + parseFloat(donor.fee || 0), storeConfig.products, donor.currency || 'EUR');
+      const actualTip = totalAmount - parseFloat(donor.amount);
+      const lineItems = decomposeAmount(totalAmount, storeConfig.products, donor.currency || 'EUR');
 
       let customerId = null;
       const email = donor.email || payer?.email_address || null;
@@ -327,7 +328,7 @@ module.exports = function createPayPalRouter(ctx) {
         customer_id: customerId, store_id: ctx.getStoreDbId(), store_domain: STORE_DOMAIN,
         source_ref: donor.ref, payment_method: 'paypal',
         stripe_payment_intent_id: orderID, stripe_charge_id: capture?.id || null,
-        amount: parseFloat(donor.amount), service_fee: parseFloat(donor.fee || 0),
+        amount: parseFloat(donor.amount), service_fee: actualTip > 0 ? actualTip : parseFloat(donor.fee || 0),
         total_amount: totalAmount, stripe_fee: paypalFee, net_amount: totalAmount - paypalFee,
         currency: donor.currency, payment_source: sourceType, status: 'completed',
         line_items: lineItems, customer_name: donorName, billing_name: donorNameReal,
@@ -356,7 +357,7 @@ module.exports = function createPayPalRouter(ctx) {
           name: donorNameReal !== 'Unknown' ? donorNameReal : '',
           currency: donor.currency,
           donationAmount: parseFloat(donor.amount),
-          tip: parseFloat(donor.fee || 0),
+          tip: actualTip > 0 ? actualTip : parseFloat(donor.fee || 0),
           total: totalAmount,
           cardBrand: cardBrand || 'PayPal',
           cardLast4: cardLastDigits || '',
