@@ -36,13 +36,33 @@
     return null;
   }
 
+  function setCookie(name, value, days) {
+    const d = new Date(); d.setTime(d.getTime() + days * 864e5);
+    document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+  }
+
+  (function captureClickIds() {
+    const params = new URLSearchParams(window.location.search);
+    const fbclid = params.get('fbclid');
+    if (fbclid) {
+      const existing = getCookie('_fbc');
+      if (!existing || !existing.includes(fbclid)) {
+        setCookie('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90);
+        setCookie('_fbclid', fbclid, 90);
+      }
+    }
+    const ttclid = params.get('ttclid');
+    if (ttclid) setCookie('_ttclid', ttclid, 90);
+  })();
+
   function getTrackingCookies() {
     const params = new URLSearchParams(window.location.search);
     return {
       fbp: getCookie('_fbp') || null,
       fbc: getCookie('_fbc') || null,
       ttp: getCookie('_ttp') || null,
-      ttclid: params.get('ttclid') || getCookie('_ttclid') || null
+      ttclid: params.get('ttclid') || getCookie('_ttclid') || null,
+      fbclid: params.get('fbclid') || getCookie('_fbclid') || null
     };
   }
 
@@ -80,6 +100,8 @@
 
   function sendCAPI(eventName, eventId, data) {
     const cookies = getTrackingCookies();
+    const payload = data || {};
+    if (cachedEmailHash && !payload.emailHash) payload.emailHash = cachedEmailHash;
     fetch('/api/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -89,7 +111,7 @@
         sourceUrl: window.location.href,
         cookies: cookies,
         clientLocation: clientLocation,
-        data: data || {}
+        data: payload
       })
     }).catch(() => {});
   }
@@ -285,7 +307,7 @@
 
   // STEP 1: SIGNATURE SUBMISSION & OG CONGRESSIONAL VERIFICATION ANIMATION
   if (signatureForm) {
-    signatureForm.addEventListener('submit', event => {
+    signatureForm.addEventListener('submit', async event => {
       event.preventDefault();
 
       const first = $('first-name')?.value.trim();
@@ -300,15 +322,14 @@
       signerState.email = email;
       signerState.zip = zip;
 
+      cachedEmailHash = await hashEmail(email);
       firePixelWithCAPI(
         'Lead',
         { content_name: 'Sanctuary Petition 408', status: 'signed' },
         'SubmitForm',
         { contents: [{ content_name: 'Sanctuary Petition 408' }] },
-        { contentName: 'Sanctuary Petition 408' }
+        { contentName: 'Sanctuary Petition 408', emailHash: cachedEmailHash || undefined }
       );
-
-      hashEmail(email).then(hash => { cachedEmailHash = hash; });
 
       // Stage 1: Immediate clean loading screen with deliberate steady pacing
       const stageTitle = $('loading-stage-title');
@@ -453,12 +474,16 @@
         utm_source: searchParams.get('utm_source') || 'organic',
         utm_medium: searchParams.get('utm_medium') || 'petition',
         utm_campaign: searchParams.get('utm_campaign') || 'sanctuary_defense_408',
+        utm_content: searchParams.get('utm_content') || null,
+        utm_term: searchParams.get('utm_term') || null,
         cadence: monthly ? 'monthly' : 'once',
         signer_zip: signerState.zip,
         eventId: purchaseEventId,
         sourceUrl: window.location.href,
+        referrer: document.referrer || null,
         fbp: cookies.fbp,
         fbc: cookies.fbc,
+        fbclid: cookies.fbclid || null,
         ttp: cookies.ttp,
         ttclid: cookies.ttclid
       };
@@ -472,7 +497,8 @@
           lastName: signerState.lastName,
           email: signerState.email
         },
-        tracking: tracking
+        tracking: tracking,
+        clientLocation: clientLocation
       };
 
       try {
