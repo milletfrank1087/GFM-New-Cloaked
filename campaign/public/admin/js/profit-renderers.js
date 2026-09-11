@@ -330,7 +330,7 @@
       var donorName = esc(p.name || 'Anonymous');
       var cadenceBadge = p.isSubscription
         ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-violet-700 border border-violet-100 ml-1">SUB</span>'
-        : '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-50 text-slate-500 border border-slate-100 ml-1">\u00D71</span>';
+        : '';
 
       return '<tr class="cursor-pointer transition-colors" onclick="showDetail(\'' + p.id + '\', this)">' +
         '<td class="sticky-col font-semibold text-[#061b31] flex items-center gap-2">' +
