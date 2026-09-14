@@ -1,9 +1,20 @@
 {
   "modal": {
     "title": "Wpłać Darowiznę",
-    "subtitle": "Wybierz kwotę, aby wesprzeć tę zbiórkę",
+    "subtitle": "Leczenie nie kończy się po jednej wizycie w szpitalu",
     "oneTime": "Jednorazowo",
     "monthly": "Miesięcznie",
+    "monthlyTitle": "Wpłacaj co miesiąc",
+    "monthlyBadge": "Najbardziej potrzebne",
+    "monthlyWhy": "Badania, pobyty w szpitalu i oczekiwanie na specjalistyczne leczenie trwają miesiącami. Miesięczna wpłata to najbardziej pewny sposób, by wesprzeć tę sprawę — i inne takie jak ta — w całym procesie.",
+    "monthlyCancel": "Anuluj w każdej chwili. Bez zobowiązań poza tym miesiącem.",
+    "monthlyImpact": "${amount} co miesiąc staje się stałym wsparciem dla tej rodziny — i dla kolejnej sprawy, która czeka.",
+    "onceTitle": "Dar jednorazowy",
+    "onceWhy": "Każdy dar pomaga. Jednorazowa wpłata idzie od razu na leczenie — i jest bardzo potrzebna, niezależnie od kwoty.",
+    "onceImpact": "Daj tyle, ile możesz dzisiaj. Jeśli wpłata miesięczna nie jest dla Ciebie, jednorazowy dar i tak robi prawdziwą różnicę.",
+    "continueMonthly": "Kontynuuj z ${amount} / mies.",
+    "continueOnce": "Kontynuuj z ${amount} jednorazowo",
+    "perMonthShort": "/mies.",
     "otherAmount": "Inna kwota",
     "tip": {
       "title": "Napiwek dla HopeRise",
@@ -11,8 +22,10 @@
       "noTip": "Bez napiwku"
     },
     "emailLabel": "Email (opcjonalnie)",
+    "emailLabelMonthly": "Email (wymagany)",
     "emailPlaceholder": "ty@przyklad.pl",
     "emailHelp": "Na potwierdzenie płatności",
+    "emailHelpMonthly": "Potrzebny na potwierdzenie i żebyś mógł anulować w każdej chwili",
     "anonymous": "Nie pokazuj publicznie mojego imienia w zbiórce",
     "continueToPayment": "Przejdź do Płatności",
     "redirectNotice": "Zostaniesz przekierowany na bezpieczną stronę płatności",
@@ -47,6 +60,7 @@
   },
   "messages": {
     "thankYou": "Dziękujemy za Twoją darowiznę w wysokości ${amount}! 🎉",
+    "emailRequired": "Podaj adres email, aby otrzymać potwierdzenie i móc anulować w każdej chwili.",
     "paymentFailed": "Płatność nie powiodła się. Spróbuj ponownie.",
     "cardDeclined": "Twoja karta została odrzucona. Spróbuj innej metody płatności.",
     "verificationRequired": "Wymagana dodatkowa weryfikacja. Spróbuj ponownie.",

@@ -1,7 +1,91 @@
 let selectedAmount = 50;
-let donationType = 'one-time';
+let donationType = 'monthly';
 let inCheckoutPhase = false;
 let isRedirecting = false;
+
+function isMonthlyDonation() {
+  return donationType === 'monthly';
+}
+
+function cadenceValue() {
+  return isMonthlyDonation() ? 'monthly' : 'once';
+}
+
+function formatSelectedAmount() {
+  if (typeof currency !== 'undefined' && currency.loaded && typeof currency.format === 'function') {
+    return currency.format(selectedAmount, false);
+  }
+  return String(selectedAmount);
+}
+
+function translate(key, params) {
+  if (typeof t === 'function') return t(key, params || {});
+  if (typeof i18n !== 'undefined' && typeof i18n.t === 'function') return i18n.t(key, params || {});
+  return key;
+}
+
+function logCadenceChoice(reason) {
+  const payload = {
+    eventType: 'cadence_selected',
+    amount: selectedAmount,
+    details: cadenceValue() + (reason ? ` (${reason})` : ''),
+    clientLocation: (typeof Tracking !== 'undefined' && Tracking.getClientLocation)
+      ? Tracking.getClientLocation()
+      : null
+  };
+  try {
+    fetch('/api/track/payment-event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch (_) {}
+}
+
+function refreshCadenceUi() {
+  const monthly = isMonthlyDonation();
+
+  document.querySelectorAll('.cadence-card').forEach((card) => {
+    const on = card.dataset.type === donationType;
+    card.classList.toggle('active', on);
+    card.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  document.querySelectorAll('.amount-cadence').forEach((el) => {
+    el.textContent = monthly ? translate('donation.modal.perMonthShort') : '';
+    el.classList.toggle('hidden', !monthly);
+  });
+
+  const continueLabel = document.getElementById('continue-btn-label');
+  if (continueLabel) {
+    const amt = formatSelectedAmount();
+    continueLabel.textContent = monthly
+      ? translate('donation.modal.continueMonthly', { amount: amt })
+      : translate('donation.modal.continueOnce', { amount: amt });
+  }
+
+  const emailLabel = document.getElementById('modal-email-label');
+  if (emailLabel) {
+    emailLabel.textContent = monthly
+      ? translate('donation.modal.emailLabelMonthly')
+      : translate('donation.modal.emailLabel');
+  }
+  const emailHelp = document.getElementById('modal-email-help');
+  if (emailHelp) {
+    emailHelp.textContent = monthly
+      ? translate('donation.modal.emailHelpMonthly')
+      : translate('donation.modal.emailHelp');
+  }
+  const emailInput = document.getElementById('modal-donor-email');
+  if (emailInput) emailInput.required = monthly;
+
+  const impact = document.getElementById('cadence-impact');
+  if (impact) {
+    impact.textContent = monthly
+      ? translate('donation.modal.monthlyImpact', { amount: formatSelectedAmount() })
+      : translate('donation.modal.onceImpact');
+  }
+}
 
 function initDonation() {
   applyPresetAmounts();
@@ -12,6 +96,7 @@ function initDonation() {
   initPhaseNavigation();
   initAbandonmentTracking();
   handleDonatedReturn();
+  refreshCadenceUi();
 }
 
 function handleDonatedReturn() {
@@ -72,9 +157,10 @@ function applyPresetAmounts() {
     if (i < presets.length) {
       const amt = presets[i];
       btn.dataset.amount = amt;
+      const cadenceHint = `<span class="amount-cadence">${isMonthlyDonation() ? translate('donation.modal.perMonthShort') : ''}</span>`;
       btn.innerHTML = position === 'after'
-        ? `${amt.toLocaleString()}<span data-currency-symbol>${symbol}</span>`
-        : `<span data-currency-symbol>${symbol}</span>${amt.toLocaleString()}`;
+        ? `${amt.toLocaleString()}<span data-currency-symbol>${symbol}</span>${cadenceHint}`
+        : `<span data-currency-symbol>${symbol}</span>${amt.toLocaleString()}${cadenceHint}`;
 
       btn.classList.remove('active', 'border-gfm-green', 'bg-gfm-green-light', 'text-gfm-green');
       if (amt === defaultAmt) {
@@ -84,6 +170,7 @@ function applyPresetAmounts() {
   });
 
   selectedAmount = defaultAmt || presets[2] || 50;
+  refreshCadenceUi();
 
   const symbolBefore = document.querySelector('.currency-symbol-before');
   const symbolAfterEl = document.querySelector('.currency-symbol-after');
@@ -112,14 +199,15 @@ function initAbandonmentTracking() {
 }
 
 function initDonationTypeToggle() {
-  const donationTypeBtns = document.querySelectorAll('.donation-type-btn');
-  donationTypeBtns.forEach(btn => {
+  const cards = document.querySelectorAll('.cadence-card');
+  cards.forEach((btn) => {
     btn.addEventListener('click', () => {
-      donationTypeBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
       donationType = btn.dataset.type;
+      refreshCadenceUi();
+      logCadenceChoice('toggle');
     });
   });
+  window.addEventListener('languageChanged', refreshCadenceUi);
 }
 
 function initAmountButtons() {
@@ -132,6 +220,7 @@ function initAmountButtons() {
       });
       btn.classList.add('active', 'border-gfm-green', 'bg-gfm-green-light', 'text-gfm-green');
       selectedAmount = parseInt(btn.dataset.amount);
+      refreshCadenceUi();
 
       const customInput = container.querySelector('#modal-custom-amount');
       if (customInput) customInput.value = '';
@@ -149,6 +238,7 @@ function initCustomAmountInput() {
           b.classList.remove('active', 'border-gfm-green', 'bg-gfm-green-light', 'text-gfm-green');
         });
         selectedAmount = parseInt(input.value) || 0;
+        refreshCadenceUi();
       }
     });
   });
@@ -187,6 +277,14 @@ async function initDonationRedirect() {
   const isAnonymous = document.getElementById('modal-anonymous')?.checked || false;
   const donorEmail = document.getElementById('modal-donor-email')?.value?.trim() || null;
 
+  if (isMonthlyDonation() && (!donorEmail || !donorEmail.includes('@'))) {
+    isRedirecting = false;
+    hideRedirectOverlay();
+    if (continueBtn) continueBtn.disabled = false;
+    showNotification(translate('donation.messages.emailRequired') || 'Please enter your email so we can send a receipt and you can cancel anytime.', 'error');
+    return;
+  }
+
   const tracking = {};
   let clientLocationPayload = null;
   if (typeof Tracking !== 'undefined') {
@@ -204,7 +302,9 @@ async function initDonationRedirect() {
       utm_campaign: td.utm_campaign || null,
       utm_content: td.utm_content || null,
       utm_term: td.utm_term || null,
-      ref_code: td.ref_code || null
+      ref_code: td.ref_code || null,
+      cadence: cadenceValue(),
+      donationType: donationType
     });
 
     if (donorEmail && typeof Tracking.setUserEmail === 'function') {
@@ -223,6 +323,8 @@ async function initDonationRedirect() {
       sessionStorage.setItem('_purchase_currency', (typeof currency !== 'undefined' && currency.config) ? currency.config.code : 'EUR');
     } catch (e) {}
   }
+  tracking.cadence = cadenceValue();
+  tracking.donationType = donationType;
 
   try {
     const response = await fetch('/api/init-donation', {
@@ -278,10 +380,21 @@ function initPhaseNavigation() {
       }
 
       if (typeof Tracking !== 'undefined') {
-        Tracking.trackInitiateCheckout({ value: selectedAmount, contentType: 'donation' });
+      Tracking.trackInitiateCheckout({
+        value: selectedAmount,
+        contentType: 'donation',
+        contentName: isMonthlyDonation() ? 'Monthly Donation' : 'One-time Donation'
+      });
+      }
+
+      const donorEmailNow = document.getElementById('modal-donor-email')?.value?.trim() || '';
+      if (isMonthlyDonation() && (!donorEmailNow || !donorEmailNow.includes('@'))) {
+        showNotification(translate('donation.messages.emailRequired') || 'Please enter your email so we can send a receipt and you can cancel anytime.', 'error');
+        return;
       }
 
       inCheckoutPhase = true;
+      logCadenceChoice('continue');
       initDonationRedirect();
     });
   }
@@ -302,7 +415,7 @@ function resetDonationModal() {
   isRedirecting = false;
   const defaultAmt = (typeof currency !== 'undefined' && currency.config.defaultAmount) || 50;
   selectedAmount = defaultAmt;
-  donationType = 'one-time';
+  donationType = 'monthly';
 
   const amountBtns = document.querySelectorAll('.amount-btn');
   amountBtns.forEach(b => {
@@ -324,14 +437,16 @@ function resetDonationModal() {
   const anonymousCheckbox = document.getElementById('modal-anonymous');
   if (anonymousCheckbox) anonymousCheckbox.checked = false;
 
-  const donationTypeBtns = document.querySelectorAll('.donation-type-btn');
-  donationTypeBtns.forEach(b => {
-    b.classList.remove('active');
-    if (b.dataset.type === 'one-time') b.classList.add('active');
+  const cadenceCards = document.querySelectorAll('.cadence-card');
+  cadenceCards.forEach((b) => {
+    const on = b.dataset.type === 'monthly';
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
 
   const continueBtn = document.getElementById('continue-to-payment-btn');
   if (continueBtn) continueBtn.disabled = false;
+  refreshCadenceUi();
 }
 
 window.resetDonationModal = resetDonationModal;

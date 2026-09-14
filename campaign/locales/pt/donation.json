@@ -1,9 +1,20 @@
 {
   "modal": {
     "title": "Fazer um Donativo",
-    "subtitle": "Escolha um valor para apoiar esta angariação de fundos",
+    "subtitle": "O tratamento não acaba depois de uma visita ao hospital",
     "oneTime": "Único",
     "monthly": "Mensal",
+    "monthlyTitle": "Dar todos os meses",
+    "monthlyBadge": "O mais necessário",
+    "monthlyWhy": "Exames, internamentos e a espera por tratamento especializado duram meses. Um donativo mensal é a forma mais fiável de manter este caso — e outros como este — apoiado ao longo do caminho.",
+    "monthlyCancel": "Cancele quando quiser. Sem compromisso para além deste mês.",
+    "monthlyImpact": "${amount} todos os meses torna-se um apoio constante para esta família — e para o próximo caso à espera.",
+    "onceTitle": "Donativo único",
+    "onceWhy": "Cada donativo ajuda. Um contributo único vai logo para os cuidados — e é profundamente apreciado, seja qual for o valor.",
+    "onceImpact": "Dê o que puder hoje. Se o mensal não for para si, um donativo único continua a fazer uma diferença real.",
+    "continueMonthly": "Continuar com ${amount} / mês",
+    "continueOnce": "Continuar com ${amount} uma vez",
+    "perMonthShort": "/mês",
     "otherAmount": "Outro valor",
     "tip": {
       "title": "Gorjeta para a HopeRise",
@@ -11,8 +22,10 @@
       "noTip": "Sem gorjeta"
     },
     "emailLabel": "Email (opcional)",
+    "emailLabelMonthly": "Email (obrigatório)",
     "emailPlaceholder": "tu@exemplo.com",
     "emailHelp": "Para o recibo de pagamento",
+    "emailHelpMonthly": "Necessário para o recibo e para poder cancelar a qualquer momento",
     "anonymous": "Não mostrar publicamente o meu nome na angariação de fundos",
     "continueToPayment": "Continuar para o Pagamento",
     "redirectNotice": "Será redirecionado para uma página de pagamento segura",
@@ -47,6 +60,7 @@
   },
   "messages": {
     "thankYou": "Obrigado pelo seu donativo de ${amount}! 🎉",
+    "emailRequired": "Introduza o seu email para o recibo e para poder cancelar a qualquer momento.",
     "paymentFailed": "Pagamento falhou. Por favor tente novamente.",
     "cardDeclined": "O seu cartão foi recusado. Tente outro método de pagamento.",
     "verificationRequired": "Verificação adicional necessária. Por favor tente novamente.",

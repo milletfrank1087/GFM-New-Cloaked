@@ -17,7 +17,8 @@ const PAYMENT_EVENT_CONFIG = {
   'modal_close': { emoji: '🚪', type: 'MODAL_CLOSED', msg: 'Modal closed without payment' },
   'checkout_abandon': { emoji: '🏃', type: 'ABANDONED', msg: 'Left during checkout' },
   'session_timeout': { emoji: '⏱️', type: 'TIMEOUT', msg: 'Session timed out' },
-  'redirect_initiated': { emoji: '🔀', type: 'REDIRECT', msg: 'Redirecting to checkout' }
+  'redirect_initiated': { emoji: '🔀', type: 'REDIRECT', msg: 'Redirecting to checkout' },
+  'cadence_selected': { emoji: '🔁', type: 'CADENCE', msg: 'Chose gift frequency' }
 };
 
 function getTimestamp() {

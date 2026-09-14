@@ -239,6 +239,9 @@
   <input type="hidden" id="payment-amount" value="<%= paymentAmountUnits %>">
   <input type="hidden" id="payment-currency" value="<%= (donor.currency || 'eur').toLowerCase() %>">
   <input type="hidden" id="payment-decimals" value="<%= currencyDecimals %>">
+  <input type="hidden" id="cadence-type" value="<%= typeof cadence !== 'undefined' ? cadence : 'once' %>">
+  <input type="hidden" id="locale-per-month" value="<%= locale.perMonth || '/ month' %>">
+  <input type="hidden" id="locale-monthly-note" value="<%= locale.monthlyNote || 'Monthly gift · cancel anytime' %>">
   <input type="hidden" id="locale-email-error" value="<%= locale.emailError %>">
   <% if (metaPixelId) { %>
   <input type="hidden" id="payment-pixel-id" value="<%= metaPixelId %>">

@@ -1,9 +1,20 @@
 {
   "modal": {
     "title": "Fai una Donazione",
-    "subtitle": "Scegli un importo per sostenere questa raccolta fondi",
+    "subtitle": "Le cure non finiscono dopo una sola visita in ospedale",
     "oneTime": "Una tantum",
     "monthly": "Mensile",
+    "monthlyTitle": "Dona ogni mese",
+    "monthlyBadge": "Il più necessario",
+    "monthlyWhy": "Visite, ricoveri e l’attesa per le cure specialistiche durano mesi. Un dono mensile è il modo più affidabile per sostenere questo caso — e altri come questo — lungo il percorso.",
+    "monthlyCancel": "Disdici quando vuoi. Nessun vincolo oltre questo mese.",
+    "monthlyImpact": "${amount} ogni mese diventa un sostegno costante per questa famiglia — e per il prossimo caso in attesa.",
+    "onceTitle": "Dono una tantum",
+    "onceWhy": "Ogni dono aiuta. Un contributo unico va subito alle cure — ed è prezioso, qualunque cifra tu possa dare.",
+    "onceImpact": "Dai quello che puoi oggi. Se il mensile non fa per te, un dono una tantum fa comunque la differenza.",
+    "continueMonthly": "Continua con ${amount} / mese",
+    "continueOnce": "Continua con ${amount} una tantum",
+    "perMonthShort": "/mese",
     "otherAmount": "Altro importo",
     "tip": {
       "title": "Mancia per HopeRise",
@@ -11,8 +22,10 @@
       "noTip": "Nessuna mancia"
     },
     "emailLabel": "Email (opzionale)",
+    "emailLabelMonthly": "Email (obbligatoria)",
     "emailPlaceholder": "tu@esempio.com",
     "emailHelp": "Per la ricevuta di pagamento",
+    "emailHelpMonthly": "Serve per la ricevuta e per disdire in qualsiasi momento",
     "anonymous": "Non mostrare pubblicamente il mio nome nella raccolta fondi",
     "continueToPayment": "Continua al Pagamento",
     "redirectNotice": "Verrai reindirizzato a una pagina di pagamento sicura",
@@ -47,6 +60,7 @@
   },
   "messages": {
     "thankYou": "Grazie per la tua donazione di ${amount}! 🎉",
+    "emailRequired": "Inserisci la tua email per la ricevuta e per poter disdire in qualsiasi momento.",
     "paymentFailed": "Pagamento fallito. Riprova per favore.",
     "cardDeclined": "La tua carta è stata rifiutata. Prova un altro metodo di pagamento.",
     "verificationRequired": "Verifica aggiuntiva richiesta. Riprova per favore.",

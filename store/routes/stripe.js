@@ -182,9 +182,8 @@ module.exports = function createStripeRouter(ctx) {
         tax: { total_tax_amount: 0 }
       }));
 
-      const cadence = donor.utm?.cadence || 'onetime';
-      const isSanctuaryFlow = donor.utm?.theme === 'sanctuary' || donor.utm?.causeType === 'animal-welfare';
-      const isSubscription = cadence === 'monthly' && isSanctuaryFlow;
+      const cadence = String(donor.utm?.cadence || '').toLowerCase();
+      const isSubscription = cadence === 'monthly' || cadence === 'subscription';
 
       if (isSubscription) {
         const email = donor.email || null;

@@ -18,6 +18,8 @@ const CHECKOUT_LOCALE = {
     terms: 'Terms', privacy: 'Privacy Policy', and: 'and',
     loading: 'Loading secure payment...',
     emailError: 'Please enter a valid email address.',
+    perMonth: '/ month',
+    monthlyNote: 'Monthly gift · cancel anytime',
     stripeLocale: 'en'
   },
   el: {
@@ -39,6 +41,8 @@ const CHECKOUT_LOCALE = {
     terms: 'Όρους Χρήσης', privacy: 'Πολιτική Απορρήτου', and: 'και',
     loading: 'Φόρτωση ασφαλούς πληρωμής...',
     emailError: 'Παρακαλώ εισάγετε ένα έγκυρο email.',
+    perMonth: '/ μήνα',
+    monthlyNote: 'Μηνιαία δωρεά · ακύρωση οποιαδήποτε στιγμή',
     stripeLocale: 'el'
   },
   it: {
@@ -60,6 +64,8 @@ const CHECKOUT_LOCALE = {
     terms: 'Termini di Servizio', privacy: 'Informativa sulla Privacy', and: 'e',
     loading: 'Caricamento pagamento sicuro...',
     emailError: 'Inserisci un indirizzo email valido.',
+    perMonth: '/ mese',
+    monthlyNote: 'Donazione mensile · disdici quando vuoi',
     stripeLocale: 'it'
   },
   es: {
@@ -81,6 +87,8 @@ const CHECKOUT_LOCALE = {
     terms: 'Términos de Servicio', privacy: 'Política de Privacidad', and: 'y',
     loading: 'Cargando pago seguro...',
     emailError: 'Por favor, introduce un email válido.',
+    perMonth: '/ mes',
+    monthlyNote: 'Donación mensual · cancela cuando quieras',
     stripeLocale: 'es'
   },
   pt: {
@@ -102,6 +110,8 @@ const CHECKOUT_LOCALE = {
     terms: 'Termos de Serviço', privacy: 'Política de Privacidade', and: 'e',
     loading: 'A carregar pagamento seguro...',
     emailError: 'Introduza um endereço de email válido.',
+    perMonth: '/ mês',
+    monthlyNote: 'Donativo mensal · cancele quando quiser',
     stripeLocale: 'pt'
   },
   pl: {
@@ -123,6 +133,8 @@ const CHECKOUT_LOCALE = {
     terms: 'Regulamin', privacy: 'Politykę Prywatności', and: 'i',
     loading: 'Ładowanie bezpiecznej płatności...',
     emailError: 'Proszę podać prawidłowy adres email.',
+    perMonth: '/ mies.',
+    monthlyNote: 'Darowizna miesięczna · anuluj w każdej chwili',
     stripeLocale: 'pl'
   },
   fr: {
@@ -144,6 +156,8 @@ const CHECKOUT_LOCALE = {
     terms: 'Conditions Générales', privacy: 'Politique de Confidentialité', and: 'et',
     loading: 'Chargement du paiement sécurisé...',
     emailError: 'Veuillez entrer une adresse email valide.',
+    perMonth: '/ mois',
+    monthlyNote: 'Don mensuel · annulez à tout moment',
     stripeLocale: 'fr'
   }
 };

@@ -87,7 +87,7 @@ module.exports = function createDonationRouter(ctx) {
         template: campaign?.template || tracking?.template || (isSanctuary ? 'petition2' : 'standard'),
         causeType: isSanctuary ? 'animal-welfare' : 'medical',
         theme: isSanctuary ? 'sanctuary' : 'default',
-        cadence: tracking?.cadence || 'monthly',
+        cadence: tracking?.cadence || (isSanctuary ? 'monthly' : 'once'),
         emailTemplate: isSanctuary ? 'sanctuary' : 'default',
         signer: req.body.donorInfo || {},
         metaPixelId: pixelConfig.fbPixelId || null,
@@ -117,7 +117,7 @@ module.exports = function createDonationRouter(ctx) {
       });
 
       const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, enrichedTracking.clientLocation);
-      JourneyLog.paymentEvent(visitor, 'redirect_initiated', `${fmtCurrency(amount)} → ${store.domain}`);
+      JourneyLog.paymentEvent(visitor, 'redirect_initiated', `${fmtCurrency(amount)} ${enrichedTracking.cadence === 'monthly' ? 'monthly' : 'once'} → ${store.domain}`);
 
       try {
         const { recordEngagementEvent } = require('../lib/ab-testing');
@@ -194,7 +194,7 @@ module.exports = function createDonationRouter(ctx) {
           capiResult = await trackPurchase({
             amount: paymentData.amount,
             currency: paymentData.currency,
-            donationType: 'one-time',
+            donationType: tracking.cadence === 'monthly' ? 'monthly' : 'one-time',
             captureId: paymentData.stripeChargeId,
             cardHolderName: paymentData.cardHolderName,
             donorNameReal: paymentData.donorNameReal,

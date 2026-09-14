@@ -14,6 +14,40 @@ const localizedEmailError = document.getElementById('locale-email-error')?.value
 const cadenceType = document.getElementById('cadence-type')?.value || 'onetime';
 const isSubscriptionMode = cadenceType === 'monthly';
 
+function applyCadenceChrome() {
+  if (!isSubscriptionMode) return;
+  if (document.querySelector('.sanctuary-card')) return;
+  const perMonth = document.getElementById('locale-per-month')?.value || '/ month';
+  const note = document.getElementById('locale-monthly-note')?.value || 'Monthly gift · cancel anytime';
+
+  document.querySelectorAll('.text-2xl.font-bold.text-brand-primary').forEach((el) => {
+    if (el.querySelector('.cadence-suffix')) return;
+    const suffix = document.createElement('span');
+    suffix.className = 'cadence-suffix text-sm font-semibold text-brand-primary/70 ml-1';
+    suffix.textContent = perMonth;
+    el.appendChild(suffix);
+  });
+
+  const submitBtn = document.getElementById('submit-payment');
+  const btnText = document.getElementById('btn-text');
+  if (submitBtn && submitBtn.dataset.paytext && !submitBtn.dataset.paytext.includes(perMonth)) {
+    submitBtn.dataset.paytext = submitBtn.dataset.paytext + ' ' + perMonth;
+  }
+  if (btnText && btnText.textContent && !btnText.textContent.includes(perMonth)) {
+    btnText.textContent = btnText.textContent + ' ' + perMonth;
+  }
+
+  if (!document.getElementById('cadence-checkout-note')) {
+    const noteEl = document.createElement('p');
+    noteEl.id = 'cadence-checkout-note';
+    noteEl.className = 'text-center text-[11px] text-gray-500 mt-2';
+    noteEl.textContent = note;
+    if (submitBtn && submitBtn.parentNode) {
+      submitBtn.insertAdjacentElement('afterend', noteEl);
+    }
+  }
+}
+
 let elements, paymentElement;
 let addPaymentInfoFired = false;
 let consecutiveServerFailures = 0;
@@ -108,6 +142,7 @@ async function initCheckout() {
   const loadingEl = document.getElementById('payment-loading');
 
   const brandPrimaryColor = document.getElementById('payment-brand-color')?.value || '#00b964';
+  applyCadenceChrome();
 
   try {
     var isSanctuaryCheckout = document.querySelector('.sanctuary-card') !== null;

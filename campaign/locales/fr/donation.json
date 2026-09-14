@@ -1,9 +1,20 @@
 {
   "modal": {
     "title": "Faire un Don",
-    "subtitle": "Choisissez un montant pour soutenir cette collecte de fonds",
+    "subtitle": "Les soins ne s’arrêtent pas après une seule visite à l’hôpital",
     "oneTime": "Unique",
     "monthly": "Mensuel",
+    "monthlyTitle": "Donner chaque mois",
+    "monthlyBadge": "Le plus utile",
+    "monthlyWhy": "Examens, hospitalisations et attente d’un traitement spécialisé s’étalent sur des mois. Un don mensuel est le moyen le plus fiable de soutenir ce dossier — et d’autres comme lui — tout au long du chemin.",
+    "monthlyCancel": "Annulez à tout moment. Aucun engagement au-delà de ce mois.",
+    "monthlyImpact": "${amount} chaque mois devient un soutien régulier pour cette famille — et pour le prochain dossier en attente.",
+    "onceTitle": "Don unique",
+    "onceWhy": "Chaque don compte. Un don unique aide immédiatement — et est profondément apprécié, quel que soit le montant.",
+    "onceImpact": "Donnez ce que vous pouvez aujourd’hui. Si le mensuel ne vous convient pas, un don unique fait tout de même une vraie différence.",
+    "continueMonthly": "Continuer avec ${amount} / mois",
+    "continueOnce": "Continuer avec ${amount} une fois",
+    "perMonthShort": "/mois",
     "otherAmount": "Autre montant",
     "tip": {
       "title": "Pourboire pour HopeRise",
@@ -11,8 +22,10 @@
       "noTip": "Pas de pourboire"
     },
     "emailLabel": "Email (optionnel)",
+    "emailLabelMonthly": "Email (obligatoire)",
     "emailPlaceholder": "vous@exemple.fr",
     "emailHelp": "Pour le reçu de paiement",
+    "emailHelpMonthly": "Nécessaire pour le reçu et pour pouvoir annuler à tout moment",
     "anonymous": "Ne pas afficher publiquement mon nom sur la collecte de fonds",
     "continueToPayment": "Continuer vers le Paiement",
     "redirectNotice": "Vous serez redirigé vers une page de paiement sécurisée",
@@ -47,6 +60,7 @@
   },
   "messages": {
     "thankYou": "Merci pour votre don de ${amount} ! 🎉",
+    "emailRequired": "Veuillez entrer votre email pour le reçu et pour pouvoir annuler à tout moment.",
     "paymentFailed": "Le paiement a échoué. Veuillez réessayer.",
     "cardDeclined": "Votre carte a été refusée. Essayez un autre moyen de paiement.",
     "verificationRequired": "Vérification supplémentaire requise. Veuillez réessayer.",

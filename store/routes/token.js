@@ -139,7 +139,7 @@ module.exports = function createTokenRouter(ctx) {
         const signer = donor.utm?.signer || {};
         const donorName = ((signer.firstName || '') + ' ' + (signer.lastName || '')).trim();
         const signerZip = donor.utm?.signer_zip || signer.zip || '';
-        const cadence = donor.utm?.cadence || 'monthly';
+        const cadence = donor.utm?.cadence || 'once';
 
         let campaignOrigin = '';
         try {

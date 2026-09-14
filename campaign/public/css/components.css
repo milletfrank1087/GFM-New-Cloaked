@@ -5,13 +5,67 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Donation Button Styles */
-.donation-type-btn {
-  color: #767676;
+/* Donation cadence cards */
+.cadence-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #fff;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
-.donation-type-btn.active {
-  background-color: #00b964;
-  color: white;
+.cadence-card:hover {
+  border-color: #00b964;
+}
+.cadence-card.active[data-type="monthly"] {
+  border-color: #00b964;
+  background: #e8f8f0;
+  box-shadow: 0 0 0 3px rgba(0, 185, 100, 0.14);
+}
+.cadence-card.active[data-type="one-time"] {
+  border-color: #6b7280;
+  background: #f9fafb;
+}
+.cadence-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid #d1d5db;
+  flex-shrink: 0;
+  position: relative;
+  background: #fff;
+}
+.cadence-card.active .cadence-radio {
+  border-color: #00b964;
+}
+.cadence-card.active .cadence-radio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 999px;
+  background: #00b964;
+}
+.cadence-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #00b964;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.amount-cadence {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 1px;
 }
 
 .amount-btn.active {

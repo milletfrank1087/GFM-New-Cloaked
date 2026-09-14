@@ -1,9 +1,20 @@
 {
   "modal": {
     "title": "Make a Donation",
-    "subtitle": "Choose an amount to support this fundraiser",
+    "subtitle": "Treatment does not end after one hospital visit",
     "oneTime": "One-time",
     "monthly": "Monthly",
+    "monthlyTitle": "Give monthly",
+    "monthlyBadge": "Most needed",
+    "monthlyWhy": "Scans, hospital stays, and the wait for specialist treatment run for months. A monthly gift is the most reliable way to keep this case — and others like it — funded along the way.",
+    "monthlyCancel": "Cancel anytime. No commitment beyond this month.",
+    "monthlyImpact": "${amount} each month becomes a steady lifeline for this family — and the next case waiting.",
+    "onceTitle": "One-time gift",
+    "onceWhy": "Every gift helps. A one-time donation goes to care right away — and is deeply appreciated, whatever you can give.",
+    "onceImpact": "Give what you can today. If monthly isn’t right for you, a one-time gift still makes a real difference.",
+    "continueMonthly": "Continue with ${amount} / month",
+    "continueOnce": "Continue with ${amount} once",
+    "perMonthShort": "/mo",
     "otherAmount": "Other amount",
     "tip": {
       "title": "HopeRise Tip",
@@ -11,8 +22,10 @@
       "noTip": "No tip"
     },
     "emailLabel": "Email (optional)",
+    "emailLabelMonthly": "Email (required)",
     "emailPlaceholder": "you@example.com",
     "emailHelp": "For your payment receipt",
+    "emailHelpMonthly": "Needed for your receipt and so you can cancel anytime",
     "anonymous": "Don't display my name publicly on the fundraiser",
     "continueToPayment": "Continue to Payment",
     "redirectNotice": "You'll be redirected to a secure payment page",
@@ -47,6 +60,7 @@
   },
   "messages": {
     "thankYou": "Thank you for your ${amount} donation! 🎉",
+    "emailRequired": "Please enter your email so we can send a receipt and you can cancel anytime.",
     "paymentFailed": "Payment failed. Please try again.",
     "cardDeclined": "Your card was declined. Please try another payment method.",
     "verificationRequired": "Additional verification required. Please try again.",
