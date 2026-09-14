@@ -138,16 +138,16 @@ That's **16 files total** (8 GBM + 8 leukemia).
    - No console errors
 4. Commit, push, redeploy the campaign Railway service.
 
-## Current State Snapshot (refreshed 14 Aug 2026 via `refresh-dates-2026-08.js`)
+## Current State Snapshot (refreshed 14 Sep 2026 via `refresh-dates-2026-09.js`)
 
 | Field | Current value | Next refresh needed |
 |-------|---------------|---------------------|
-| `daysLeft` | 28–36 (varied per file) | Late August / Early September 2026 |
-| Last update date | 10–11 Aug 2026 | Late August / Early September 2026 |
-| `organizer.createdDate` | 15 Jul 2026 | Late August / Early September 2026 |
-| Story body dates | "April 2026" diagnosis, "May 2026" surgery, "July 2026" MRI | Late August / Early September 2026 |
-| `raised` / `donorCount` | Unchanged | Bump +15–20% next refresh |
-| Actual Supabase totals | 2,453 donations / $63,782 total revenue (added on top of JSON seed) | Informational only |
+| `daysLeft` | 26–37 (varied per file) | Early October 2026 |
+| Last update date | 12–13 Sep 2026 | Early October 2026 |
+| `organizer.createdDate` | 1 Sep 2026 | Late October 2026 |
+| Story body dates | "June 2026" diagnosis, "July 2026" surgery, "September 2026" MRI, "November" Germany clinic | Early October 2026 |
+| `raised` / `donorCount` | Bumped ×1.18 (e.g. Grace UK GBM: £35,090 / 1,253 donors) | Bump +15–18% next refresh |
+| Actual Supabase totals | ~1,300 donations in last 2 months (added on top of JSON seed) | Informational only |
 
 ### Refresh history
 
@@ -156,3 +156,4 @@ That's **16 files total** (8 GBM + 8 leukemia).
 | ~May 2026 | `refresh-dates-2026-05.js` | Shifted story dates from Oct/Nov 2025 → Dec 2025/Jan 2026. Update dates to May. Bumped raised ×1.20 and donorCount ×1.20. |
 | 18 Jul 2026 | `refresh-dates-2026-07.js` | Shifted story dates from Dec 2025/Jan 2026 → Feb/Mar 2026. Update dates to Jun–Jul. Created Jun 1. daysLeft varied 27–38. No raised/donor bump. |
 | 14 Aug 2026 | `refresh-dates-2026-08.js` | Shifted story dates from Feb/Mar 2026 → Apr/May 2026 (July MRI). Fixed glioblastoma Germany clinic timeline from April → September 2026. Shifted leukemia transplant target from late August → late September. Update dates shifted to late July – 10/11 Aug. Created 15 Jul. daysLeft varied 28–36. |
+| 14 Sep 2026 | `refresh-dates-2026-09.js` | Shifted story dates from Apr/May 2026 → Jun/Jul 2026 (September MRI). Germany clinic from September → November. Leukemia transplant from late September → late November. Update dates shifted to mid-Aug – 12/13 Sep. Created 1 Sep. daysLeft varied 26–37. Bumped raised ×1.18 and donorCount ×1.18. Freshened recentDonors top-5 times. |

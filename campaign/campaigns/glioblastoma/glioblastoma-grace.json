@@ -7,12 +7,12 @@
     "initials": "EC",
     "location": "Manchester, UK",
     "verified": true,
-    "createdDate": "15 Jul 2026"
+    "createdDate": "1 Sep 2026"
   },
   "goal": 90000,
-  "raised": 29740,
-  "donorCount": 1062,
-  "daysLeft": 29,
+  "raised": 35090,
+  "donorCount": 1253,
+  "daysLeft": 31,
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-grace/1.jpg",
@@ -41,12 +41,12 @@
       {
         "title": "The Diagnosis",
         "icon": "diagnosis",
-        "content": "It all started in April 2026, when Grace began experiencing persistent morning headaches accompanied by nausea and blurred vision in her left eye. On 20th April, after a seizure during a lecture at the University of Manchester Medical School, she was rushed to the Manchester Centre for Clinical Neurosciences at Salford Royal Hospital.\n\nThe MRI revealed a 4.2 cm mass in her right frontal lobe with characteristic ring enhancement and perilesional oedema. Stereotactic biopsy and molecular analysis confirmed the diagnosis: Glioblastoma Multiforme, IDH-wildtype, WHO grade IV, with unmethylated MGMT promoter — the most unfavourable molecular subtype, meaning reduced response to chemotherapy."
+        "content": "It all started in June 2026, when Grace began experiencing persistent morning headaches accompanied by nausea and blurred vision in her left eye. On 20th June, after a seizure during a lecture at the University of Manchester Medical School, she was rushed to the Manchester Centre for Clinical Neurosciences at Salford Royal Hospital.\n\nThe MRI revealed a 4.2 cm mass in her right frontal lobe with characteristic ring enhancement and perilesional oedema. Stereotactic biopsy and molecular analysis confirmed the diagnosis: Glioblastoma Multiforme, IDH-wildtype, WHO grade IV, with unmethylated MGMT promoter — the most unfavourable molecular subtype, meaning reduced response to chemotherapy."
       },
       {
         "title": "Standard Treatment and Its Limits",
         "icon": "treatment",
-        "content": "Grace underwent partial surgical resection (subtotal resection) on 10th May 2026 at Salford Royal — complete removal was not possible due to the tumour's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in July 2026 showed residual tumour stable in size, but her doctors warned that recurrence is almost certain."
+        "content": "Grace underwent partial surgical resection (subtotal resection) on 10th July 2026 at Salford Royal — complete removal was not possible due to the tumour's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in September 2026 showed residual tumour stable in size, but her doctors warned that recurrence is almost certain."
       },
       {
         "title": "The Hope: Dendritic Cell Immunotherapy",
@@ -108,25 +108,25 @@
   },
   "updates": [
     {
-      "date": "10 Aug 2026",
+      "date": "12 Sep 2026",
       "title": "Follow-up MRI results are in 📋",
-      "content": "The follow-up MRI after completing radiotherapy shows stable residual tumour with no new lesions. Her doctors at Salford Royal say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in September, if we secure the funding.",
+      "content": "The follow-up MRI after completing radiotherapy shows stable residual tumour with no new lesions. Her doctors at Salford Royal say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in November, if we secure the funding.",
       "isNew": true
     },
     {
-      "date": "4 Aug 2026",
+      "date": "5 Sep 2026",
       "title": "We've passed 500 donors! 🙏",
       "content": "Your support has been overwhelming. Grace has finished her maintenance temozolomide cycles and is feeling strong. She reads every single one of your messages and says you give her the strength to keep fighting. Every pound brings us closer to Germany.",
       "isNew": false
     },
     {
-      "date": "25 Jul 2026",
+      "date": "27 Aug 2026",
       "title": "Treatment update",
       "content": "Grace has completed concurrent chemoradiation at Salford Royal. She experienced fatigue and nausea, but her mental strength is incredible. Her neuro-oncologist explained that with unmethylated MGMT, temozolomide alone isn't enough — which is why immunotherapy is critical.",
       "isNew": false
     },
     {
-      "date": "15 Jul 2026",
+      "date": "16 Aug 2026",
       "title": "The campaign has launched",
       "content": "With heavy hearts but determination, we're launching this appeal. After three months of intensive treatment on the NHS, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it isn't funded by the NHS. We believe in the power of community.",
       "isNew": false
@@ -181,7 +181,7 @@
     {
       "name": "Olivia H.",
       "amount": 25,
-      "time": "8 min ago",
+      "time": "2 min ago",
       "initials": "OH",
       "color": "from-rose-400 to-rose-500",
       "message": "Stay strong, Grace!"
@@ -189,7 +189,7 @@
     {
       "name": "Anonymous",
       "amount": 50,
-      "time": "23 min ago",
+      "time": "8 min ago",
       "initials": "?",
       "color": "from-gray-400 to-gray-500",
       "message": ""
@@ -197,7 +197,7 @@
     {
       "name": "Jack T.",
       "amount": 20,
-      "time": "47 min ago",
+      "time": "14 min ago",
       "initials": "JT",
       "color": "from-blue-400 to-blue-500",
       "message": "From a fellow Manchester student"
@@ -205,7 +205,7 @@
     {
       "name": "Sophie R.",
       "amount": 75,
-      "time": "1 hour ago",
+      "time": "22 min ago",
       "initials": "SR",
       "color": "from-violet-400 to-violet-500",
       "message": "Praying for you x"
@@ -213,7 +213,7 @@
     {
       "name": "Harry W.",
       "amount": 30,
-      "time": "1 hour ago",
+      "time": "35 min ago",
       "initials": "HW",
       "color": "from-emerald-400 to-emerald-500",
       "message": ""

@@ -29,6 +29,15 @@ Read docs/CAMPAIGN-SCALING-TRACKER.md. Query the latest Meta Ads insights (via F
 
 ## 📊 Historical Performance Log & Baselines
 
+### Latest Review (Sep 7 – Sep 14, 2026)
+
+* **Meta Ad Spend:** $2,520.48 ($1,375.10 UK / $979.03 US / $166.35 FCR)
+* **Stripe Confirmed Revenue:** **$3,926.40 USD** (UK $2,529 / US $1,288 / FCR $110)
+* **Confirmed Donors:** **157 donors** (UK 107 / US 43 / FCR 3 + 8 partial today)
+* **True Blended ROAS:** **1.56x** | **True Blended CPA:** **$16.05**
+* **Average Donation:** **$25.01** (UK $23.89 / US $28.35 / FCR $36.67)
+* **Audience Health:** UK Volume CTR 6.48%, Freq 1.20, CPC $0.93 | US CTR 5.60%, Freq 1.19, CPC $1.78 | FCR OFFSITE CTR 15.78%, CPC $1.19
+
 ### Week 1 Baseline (Aug 17 – Aug 23, 2026)
 
 * **Meta Ad Spend:** $1,759.25 ($1,237.16 UK / $522.09 US)
@@ -43,18 +52,53 @@ Read docs/CAMPAIGN-SCALING-TRACKER.md. Query the latest Meta Ads insights (via F
 
 ## 🛠️ Active Ad Set Registry & Budget History
 
-| Campaign | Ad Set Name | Ad Set ID | Aug 24 Level | Aug 30 Cut | Sep 2 Status | Optimization Goal |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **GBM Emily - USA** | `($145/day) US - Broad - Volume - New Creative` | `120247166773850464` | $145.00/day | $145.00/day | **ACTIVE ($145/d)** | Offsite Conversions |
-| **GBM Emily - USA** | `($100/day) US - Broad - Value` | `120247961202480464` | $100.00/day | — | **PAUSED** | Value |
-| **GBM Grace - UK** | `($95/day) UK - Broad - Value - Fixed` | `120247791368750464` | $95.00/day | $95.00/day | **ACTIVE ($95/d)** | Value |
-| **GBM Grace - UK** | `($65/day) UK - Broad - Volume - Fixed` | `120247466901930464` | $80.00/day | $65.00/day | **PAUSED (Sep 2)** | Offsite Conversions |
-| **GBM Grace - UK** | `($105/day) UK - Broad - Volume` | `120247843570680464` | $130.00/day | $105.00/day | **ACTIVE ($105/d)** | Offsite Conversions |
-| **TOTALS (active)** | | | **$550.00/day** | **$410.00/day** | **$345.00/day** | *(−37.3% total reduction)* |
+| Campaign | Ad Set Name | Ad Set ID | Aug 24 Level | Aug 30 Cut | Sep 2 Status | Sep 14 Status | Optimization Goal |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **GBM Emily - USA** | `($145/day) US - Broad - Volume - New Creative` | `120247166773850464` | $145.00/day | $145.00/day | **ACTIVE ($145/d)** | **ACTIVE ($145/d)** | Offsite Conversions |
+| **GBM Emily - USA** | `($100/day) US - Broad - Value` | `120247961202480464` | $100.00/day | — | **PAUSED** | **PAUSED** | Value |
+| **GBM Grace - UK** | `($95/day) UK - Broad - Value - Fixed` | `120247791368750464` | $95.00/day | $95.00/day | **ACTIVE ($95/d)** | **ACTIVE ($95/d)** | Value |
+| **GBM Grace - UK** | `($65/day) UK - Broad - Volume - Fixed` | `120247466901930464` | $80.00/day | $65.00/day | **PAUSED (Sep 2)** | **PAUSED** | Offsite Conversions |
+| **GBM Grace - UK** | `($105/day) UK - Broad - Volume` | `120247843570680464` | $130.00/day | $105.00/day | **ACTIVE ($105/d)** | **ACTIVE ($105/d)** | Offsite Conversions |
+| **FCR Clover - USA** | `($50/day) US - Broad - Volume [OFFSITE]` | `120248193185110464` | — | — | — | **ACTIVE ($50/d)** | Offsite Conversions |
+| **FCR Clover - USA** | `($50/day) US - Broad - Volume - Comments` | *(original)* | — | — | — | **ACTIVE ($50/d)** | Value |
+| **TOTALS (active)** | | | **$550.00/day** | **$410.00/day** | **$345.00/day** | **$445.00/day** | *(+$100/d FCR)* |
 
 ---
 
 ## 📝 Change Log & Decision History
+
+### 2026-09-14 (Monday) — 12-Day Review, FCR Petition Launch Assessment & Efficiency Alert
+
+* **Scope & Method:** Meta Marketing API (last_7d + last_30d, campaign + ad-set level) via fb-ads-manager proxy + Supabase Stripe ledger (weekly aggregates Aug 24 – Sep 14).
+* **Last 7 Days (Sep 7–14):**
+  * **Meta Ad Spend:** $2,520.48 ($1,375.10 UK / $979.03 US / $166.35 FCR)
+  * **Stripe Gross Revenue:** $3,926.40 (UK $2,529 / US $1,288 / FCR $110)
+  * **True Blended ROAS:** **1.56x** (down from 2.05x on Sep 2, 2.99x Week 1)
+  * **True Blended CPA:** **$16.05** (was $16.31 Sep 2 — held steady but not improving)
+  * **Confirmed Donors:** 157 (UK 107 / US 43 / FCR 3 + 8 today partial)
+* **30-Day Meta Totals (for context):**
+  * GBM Grace UK: $6,740 spend, 584 Meta purchases, 2.32x Meta ROAS, $11.54 Meta CPA
+  * GBM Emily US: $4,195 spend, 230 Meta purchases, 1.63x Meta ROAS, $18.24 Meta CPA
+  * FCR Clover US: $166 spend, 0 Meta purchases (attribution lag on petition funnel)
+* **Per-Ad-Set 7-Day Drill-down:**
+  * `UK Volume ($105/d)`: $714.51 spend, 82 purchases, **2.42x Meta ROAS**, $8.71 CPA. **Only set above all thresholds.** CTR 6.48%, CPC $0.93.
+  * `UK Value Fixed ($95/d)`: $660.59 spend, 38 purchases, **2.54x Meta ROAS**, $17.38 CPA. ROAS looks good but CPA **fails the $12 UK threshold** and volume is half of UK Volume at similar spend.
+  * `US Volume ($145/d)`: $979.03 spend, 46 purchases, **1.15x Meta ROAS**, $21.28 CPA. **Fails 72h rule** (ROAS < 2.00x for 2+ weeks). CPM $91.81.
+  * `FCR OFFSITE ($50/d)`: $103.25 spend, 0 Meta purchases, 87 clicks, **15.78% CTR**, $1.19 CPC, 160 LPV, 5 InitiateCheckout. Strong engagement but petition→donation funnel is long.
+  * `FCR Comments/Value ($50/d)`: $63.10 spend, 0 Meta purchases, 31 clicks, 36 LPV, 1 IC. **$178 CPM**. VALUE optimization mismatched with uniform $25/$50 petition amounts — can't exit learning phase.
+* **Week-over-Week Stripe Revenue Decline:**
+  * Aug 24–30: $5,316 gross (220 donors, $24.16 avg)
+  * Aug 31–Sep 6: $5,017 gross (175 donors, $28.67 avg)
+  * Sep 7–13: $3,677 gross (145 donors, $25.36 avg) ← **−27% WoW**
+* **Tips & Subscriptions:** Total tips in 14d window: $766.30. Tip averages: UK $1.96/donor, US $2.74/donor, FCR $3.33/donor. No subscriptions detected.
+* **Recommended Actions (not yet executed):**
+  1. US Emily: Cut to $95/day or pause — 1.15x ROAS at $145/day is net-negative (~$60/day burn).
+  2. UK Value Fixed: Cut to $65/day — $17.38 CPA vs $12 threshold. Redirect $30/day to UK Volume.
+  3. FCR Comments (VALUE): Pause — VALUE optimization with uniform petition amounts can't optimize. OFFSITE ad set is delivering 4x the LPVs at lower CPC.
+  4. FCR OFFSITE: Hold at $50/day for another 7 days to accumulate Purchase events.
+  5. No scaling — blended 1.56x ROAS is far below the 2.20x hold band. Priority is cutting losses.
+
+---
 
 ### 2026-09-02 (Wednesday) — 72h Post-Cut Re-evaluation & UK Overlap Pruning
 * **Scope & Method:** Meta Marketing API (Aug 30 – Sep 2 daily & aggregated) + live Supabase Stripe ledger (`www.larkwellhome.online`).

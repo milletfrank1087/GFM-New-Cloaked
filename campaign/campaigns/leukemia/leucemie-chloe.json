@@ -7,12 +7,12 @@
     "initials": "IM",
     "location": "Lyon, France",
     "verified": true,
-    "createdDate": "15 Juil 2026"
+    "createdDate": "1 Sep 2026"
   },
   "goal": 85000,
-  "raised": 29710,
-  "donorCount": 825,
-  "daysLeft": 29,
+  "raised": 35060,
+  "donorCount": 974,
+  "daysLeft": 30,
   "images": [
     {
       "url": "/images/campaigns/leucemie-chloe/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "Le Diagnostic",
-        "content": "Tout a commencé en mai 2026, lorsque Chloé a commencé à ressentir une fatigue intense, à présenter des pétéchies sur les jambes et à avoir des épisodes fébriles fréquents. Le 18 mai, après un hémogramme révélant une pancytopénie et des cellules blastiques suspectes, elle a été transférée en urgence au Service d'Hématologie des Hospices Civils de Lyon (HCL).\n\nLa biopsie de moelle osseuse et l'analyse moléculaire ont confirmé le diagnostic : Leucémie Lymphoblastique Aiguë à cellules B (LLA-B), avec présence du gène de fusion BCR-ABL1 (chromosome Philadelphie positif). Il s'agit d'une forme agressive de leucémie qui nécessite un traitement intensif et une greffe pour une survie à long terme.",
+        "content": "Tout a commencé en juillet 2026, lorsque Chloé a commencé à ressentir une fatigue intense, à présenter des pétéchies sur les jambes et à avoir des épisodes fébriles fréquents. Le 18 juillet, après un hémogramme révélant une pancytopénie et des cellules blastiques suspectes, elle a été transférée en urgence au Service d'Hématologie des Hospices Civils de Lyon (HCL).\n\nLa biopsie de moelle osseuse et l'analyse moléculaire ont confirmé le diagnostic : Leucémie Lymphoblastique Aiguë à cellules B (LLA-B), avec présence du gène de fusion BCR-ABL1 (chromosome Philadelphie positif). Il s'agit d'une forme agressive de leucémie qui nécessite un traitement intensif et une greffe pour une survie à long terme.",
         "icon": "diagnosis"
       },
       {
@@ -105,25 +105,25 @@
   },
   "updates": [
     {
-      "date": "11 Août 2026",
+      "date": "13 Sep 2026",
       "title": "Nouvelles positives du contrôle moléculaire ! 💪",
-      "content": "Les résultats du dernier RT-PCR sont encourageants — les niveaux de BCR-ABL sont en dessous de 0,01 % ! Les médecins sont très satisfaits de la réponse au traitement. La greffe est programmée pour fin septembre. Sa sœur Manon effectue déjà les examens préliminaires en tant que donneuse.",
+      "content": "Les résultats du dernier RT-PCR sont encourageants — les niveaux de BCR-ABL sont en dessous de 0,01 % ! Les médecins sont très satisfaits de la réponse au traitement. La greffe est programmée pour fin novembre. Sa sœur Manon effectue déjà les examens préliminaires en tant que donneuse.",
       "isNew": true
     },
     {
-      "date": "5 Août 2026",
+      "date": "6 Sep 2026",
       "title": "Nous avons dépassé les 700 donateurs ! 🙏",
       "content": "Nous n'avons pas de mots pour exprimer notre gratitude. Chloé a terminé le deuxième cycle de chimiothérapie et les médecins ont confirmé une rémission hématologique complète. Chaque euro nous rapproche de la greffe.",
       "isNew": false
     },
     {
-      "date": "26 Juil 2026",
+      "date": "28 Août 2026",
       "title": "Nouvelles de l'hôpital",
       "content": "Chloé a terminé le premier cycle de chimiothérapie aux HCL de Lyon. Elle a eu une neutropénie après le traitement, mais elle souriait en lisant vos messages. Les infirmières lui ont organisé une petite fête dans sa chambre. Votre soutien nous touche profondément.",
       "isNew": false
     },
     {
-      "date": "15 Juil 2026",
+      "date": "16 Août 2026",
       "title": "La campagne est lancée",
       "content": "Le cœur lourd mais rempli d'espoir, nous lançons cet appel à l'aide. Après deux mois de thérapie intensive, les médecins ont confirmé que la greffe est la seule option pour une guérison à long terme. Nous croyons en la solidarité.",
       "isNew": false
@@ -178,7 +178,7 @@
     {
       "name": "Camille T.",
       "amount": 15,
-      "time": "il y a 8 min",
+      "time": "2 min ago",
       "initials": "CT",
       "color": "from-rose-400 to-rose-500",
       "message": "Courage ma belle !"
@@ -186,7 +186,7 @@
     {
       "name": "Anonyme",
       "amount": 20,
-      "time": "il y a 23 min",
+      "time": "8 min ago",
       "initials": "?",
       "color": "from-gray-400 to-gray-500",
       "message": ""
@@ -194,7 +194,7 @@
     {
       "name": "Antoine R.",
       "amount": 10,
-      "time": "il y a 47 min",
+      "time": "14 min ago",
       "initials": "AR",
       "color": "from-blue-400 to-blue-500",
       "message": "D'un étudiant pour une camarade"
@@ -202,7 +202,7 @@
     {
       "name": "Léa V.",
       "amount": 35,
-      "time": "il y a 1 heure",
+      "time": "22 min ago",
       "initials": "LV",
       "color": "from-violet-400 to-violet-500",
       "message": "Bon rétablissement"
@@ -210,7 +210,7 @@
     {
       "name": "Mathieu C.",
       "amount": 25,
-      "time": "il y a 1 heure",
+      "time": "35 min ago",
       "initials": "MC",
       "color": "from-emerald-400 to-emerald-500",
       "message": ""

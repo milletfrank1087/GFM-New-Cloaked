@@ -7,12 +7,12 @@
     "initials": "SM",
     "location": "Boston, MA",
     "verified": true,
-    "createdDate": "15 Jul 2026"
+    "createdDate": "1 Sep 2026"
   },
   "goal": 125000,
-  "raised": 41240,
-  "donorCount": 1031,
-  "daysLeft": 28,
+  "raised": 48660,
+  "donorCount": 1217,
+  "daysLeft": 35,
   "images": [
     {
       "url": "/images/campaigns/leukemia-emily/1.jpg",
@@ -40,7 +40,7 @@
     "sections": [
       {
         "title": "The Diagnosis",
-        "content": "It all started in May 2026, when Emily began experiencing intense weakness, petechiae on her legs, and frequent febrile episodes. On May 18th, after a blood panel showed pancytopenia and suspicious blast cells, she was rushed to the Hematology Department at Dana-Farber Cancer Institute in Boston.\n\nBone marrow biopsy and molecular analysis confirmed the diagnosis: B-cell Acute Lymphoblastic Leukemia (B-ALL), with the BCR-ABL1 fusion gene (Philadelphia chromosome positive). This is an aggressive form of leukemia that requires intensive therapy and transplant for long-term survival.",
+        "content": "It all started in July 2026, when Emily began experiencing intense weakness, petechiae on her legs, and frequent febrile episodes. On July 18th, after a blood panel showed pancytopenia and suspicious blast cells, she was rushed to the Hematology Department at Dana-Farber Cancer Institute in Boston.\n\nBone marrow biopsy and molecular analysis confirmed the diagnosis: B-cell Acute Lymphoblastic Leukemia (B-ALL), with the BCR-ABL1 fusion gene (Philadelphia chromosome positive). This is an aggressive form of leukemia that requires intensive therapy and transplant for long-term survival.",
         "icon": "diagnosis"
       },
       {
@@ -109,25 +109,25 @@
   },
   "updates": [
     {
-      "date": "11 Aug 2026",
+      "date": "13 Sep 2026",
       "title": "Positive news from molecular testing! 💪",
-      "content": "The latest RT-PCR results are encouraging — BCR-ABL levels are below 0.01%! Her doctors at Dana-Farber are very pleased with the treatment response. The transplant is scheduled for late September. Her sister Kate is already completing preliminary donor testing.",
+      "content": "The latest RT-PCR results are encouraging — BCR-ABL levels are below 0.01%! Her doctors at Dana-Farber are very pleased with the treatment response. The transplant is scheduled for late November. Her sister Kate is already completing preliminary donor testing.",
       "isNew": true
     },
     {
-      "date": "5 Aug 2026",
+      "date": "6 Sep 2026",
       "title": "We've passed 700 donors! 🙏",
       "content": "We have no words to express our gratitude. Emily has completed the second cycle of chemotherapy and her doctors have confirmed complete hematologic remission. Every dollar brings us closer to the transplant.",
       "isNew": false
     },
     {
-      "date": "26 Jul 2026",
+      "date": "28 Aug 2026",
       "title": "Update from the hospital",
       "content": "Emily has completed the first cycle of chemotherapy at Dana-Farber. She had neutropenia after treatment, but she was smiling while reading your messages. The nurses brought her a small celebration in her room. Your response has moved us deeply.",
       "isNew": false
     },
     {
-      "date": "15 Jul 2026",
+      "date": "16 Aug 2026",
       "title": "The campaign has launched",
       "content": "With heavy hearts but also with hope, we're launching this appeal for help. After two months of intensive therapy, her doctors have confirmed that the transplant is the only option for long-term cure. Even with insurance, the financial toll on our family has been devastating. We believe in the power of community.",
       "isNew": false
@@ -182,7 +182,7 @@
     {
       "name": "Jessica M.",
       "amount": 25,
-      "time": "8 min ago",
+      "time": "2 min ago",
       "initials": "JM",
       "color": "from-rose-400 to-rose-500",
       "message": "Stay strong girl!"
@@ -190,7 +190,7 @@
     {
       "name": "Anonymous",
       "amount": 30,
-      "time": "23 min ago",
+      "time": "8 min ago",
       "initials": "?",
       "color": "from-gray-400 to-gray-500",
       "message": ""
@@ -198,7 +198,7 @@
     {
       "name": "David P.",
       "amount": 15,
-      "time": "47 min ago",
+      "time": "14 min ago",
       "initials": "DP",
       "color": "from-blue-400 to-blue-500",
       "message": "From one student to another"
@@ -206,7 +206,7 @@
     {
       "name": "Karen W.",
       "amount": 50,
-      "time": "1 hour ago",
+      "time": "22 min ago",
       "initials": "KW",
       "color": "from-violet-400 to-violet-500",
       "message": "Get well soon sweetheart"
@@ -214,7 +214,7 @@
     {
       "name": "Michael A.",
       "amount": 30,
-      "time": "1 hour ago",
+      "time": "35 min ago",
       "initials": "MA",
       "color": "from-emerald-400 to-emerald-500",
       "message": ""
