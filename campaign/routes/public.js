@@ -10,8 +10,7 @@ module.exports = function createPublicRouter(ctx) {
     getTrackingConfig,
     loadCampaignFromFile,
     getAllCampaignFiles,
-    getRecentRealDonations,
-    getCampaignRealStats
+    getCachedCampaignJSON
   } = ctx;
 
   router.get('/api/language/config', (req, res) => {
@@ -41,58 +40,38 @@ module.exports = function createPublicRouter(ctx) {
     }
   });
 
-  router.get('/api/campaign', async (req, res) => {
+  router.get('/api/campaign', (req, res) => {
     try {
+      const cached = typeof getCachedCampaignJSON === 'function' ? getCachedCampaignJSON() : null;
+      if (cached) {
+        res.type('application/json').send(cached);
+        return;
+      }
+
       const campaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
       if (!campaign) {
         return res.status(404).json({ error: 'Campaign not found' });
       }
-
-      let realStats = { realRaised: 0, realDonorCount: 0 };
-      try {
-        const [, stats] = await Promise.race([
-          Promise.all([
-            getRecentRealDonations(ACTIVE_CAMPAIGN, 20),
-            getCampaignRealStats(ACTIVE_CAMPAIGN)
-          ]),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
-        ]);
-        realStats = stats;
-      } catch (e) {
-        console.warn('⚠️ Supabase stats timed out, serving cached campaign data');
-      }
-
-      res.json({
-        ...campaign,
-        raised: (campaign.raised || 0) + realStats.realRaised,
-        donorCount: (campaign.donorCount || 0) + realStats.realDonorCount,
-        _realStats: {
-          realRaised: realStats.realRaised,
-          realDonorCount: realStats.realDonorCount
-        }
-      });
+      res.json(campaign);
     } catch (error) {
       console.error('Error loading campaign:', error);
       res.status(500).json({ error: 'Failed to load campaign data' });
     }
   });
 
-  router.get('/api/campaigns', async (req, res) => {
+  router.get('/api/campaigns', (req, res) => {
     try {
+      const fs = require('fs');
       const files = getAllCampaignFiles();
-
-      const campaigns = await Promise.all(files.map(async filePath => {
-        const fs = require('fs');
+      const campaigns = files.map(filePath => {
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        const realStats = await getCampaignRealStats(data.id);
         return {
           id: data.id,
           title: data.title,
-          raised: (data.raised || 0) + realStats.realRaised,
+          raised: data.raised || 0,
           goal: data.goal
         };
-      }));
-
+      });
       res.json({ active: ACTIVE_CAMPAIGN, campaigns });
     } catch (error) {
       console.error('Error listing campaigns:', error);

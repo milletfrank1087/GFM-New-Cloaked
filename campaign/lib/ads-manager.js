@@ -300,9 +300,22 @@ async function syncAll() {
   return { ok: true, campaigns, spend, at: new Date().toISOString() };
 }
 
+function shouldRunAdsSyncWorker() {
+  const flag = String(process.env.ADS_SYNC_ENABLED || '').toLowerCase();
+  if (flag === '0' || flag === 'false' || flag === 'off') return false;
+  if (flag === '1' || flag === 'true' || flag === 'on') return true;
+  const service = String(process.env.RAILWAY_SERVICE_NAME || '').toLowerCase();
+  if (!service) return false;
+  return /uk\s*campaign/.test(service);
+}
+
 /* Background Synchronizer Daemon */
 function startBackgroundSyncWorker() {
   if (backgroundWorkerTimer) return;
+  if (!shouldRunAdsSyncWorker()) {
+    console.log('[ads-sync] Worker skipped on this service (UK Campaign is the leader; set ADS_SYNC_ENABLED=true to override).');
+    return;
+  }
   console.log('[ads-sync] Background sync worker started (auto-seeding all presets).');
 
   // Initial non-blocking staggered warmup

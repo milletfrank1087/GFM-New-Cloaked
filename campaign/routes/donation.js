@@ -100,7 +100,7 @@ module.exports = function createDonationRouter(ctx) {
       const targetCurrency = req.body.currency || campaign?.currency || (isSanctuary ? 'USD' : ACTIVE_CURRENCY.code);
       const targetLanguage = req.body.language || campaign?.language || (isSanctuary ? 'en' : ctx.DEFAULT_LANGUAGE);
 
-      await createDonationToken({
+      const session = await createDonationToken({
         token,
         amount: parseFloat(amount),
         currency: targetCurrency,
@@ -115,6 +115,10 @@ module.exports = function createDonationRouter(ctx) {
         userAgent: clientInfo.userAgent,
         expiresAt
       });
+
+      if (!session) {
+        return res.status(503).json({ error: 'Failed to initialize donation' });
+      }
 
       const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, enrichedTracking.clientLocation);
       JourneyLog.paymentEvent(visitor, 'redirect_initiated', `${fmtCurrency(amount)} ${enrichedTracking.cadence === 'monthly' ? 'monthly' : 'once'} → ${store.domain}`);

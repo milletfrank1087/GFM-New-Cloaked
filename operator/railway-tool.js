@@ -21,7 +21,7 @@ async function gql(query, variables = {}) {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'User-Agent': 'Railway-CLI/3.0.0'
+      'User-Agent': 'Railway-CLI/4.5.0'
     },
     body: JSON.stringify({ query, variables })
   });

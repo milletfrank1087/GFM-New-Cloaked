@@ -40,7 +40,8 @@ async function getCampaignRealStats(campaignSlug) {
       .from('payments')
       .select('amount, customer_id, currency')
       .eq('source_ref', campaignSlug)
-      .eq('status', 'completed');
+      .eq('status', 'completed')
+      .limit(5000);
 
     if (error) return { realRaised: 0, realDonorCount: 0 };
 

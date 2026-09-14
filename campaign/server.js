@@ -223,9 +223,17 @@ app.use(createDonationRouter(ctx));
 app.use(createAdminRouter(ctx));
 app.use(createPagesRouter(ctx));
 
+function seedCampaignCacheFromFile() {
+  const campaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
+  if (campaign && !cachedCampaignJSON) {
+    cachedCampaignJSON = JSON.stringify(campaign);
+  }
+  return campaign;
+}
+
 async function refreshCampaignCache() {
   try {
-    const campaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
+    const campaign = seedCampaignCacheFromFile();
     if (!campaign) return;
 
     let realStats = { realRaised: 0, realDonorCount: 0 };
@@ -247,10 +255,7 @@ async function refreshCampaignCache() {
       _realStats: { realRaised: realStats.realRaised, realDonorCount: realStats.realDonorCount }
     });
   } catch (e) {
-    if (!cachedCampaignJSON) {
-      const campaign = loadCampaignFromFile(ACTIVE_CAMPAIGN);
-      if (campaign) cachedCampaignJSON = JSON.stringify(campaign);
-    }
+    seedCampaignCacheFromFile();
   }
 }
 
@@ -262,8 +267,12 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('[CAMPAIGN UNHANDLED REJECTION]', reason);
 });
 
-refreshCampaignCache();
-setInterval(refreshCampaignCache, 60000);
+seedCampaignCacheFromFile();
+const cacheJitterMs = 8000 + Math.floor(Math.random() * 20000);
+setTimeout(() => {
+  refreshCampaignCache();
+  setInterval(refreshCampaignCache, 60000);
+}, cacheJitterMs);
 startBackgroundSyncWorker();
 
 app.listen(PORT, () => {
