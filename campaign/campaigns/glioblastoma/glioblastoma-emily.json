@@ -7,7 +7,7 @@
     "initials": "SM",
     "location": "Boston, MA",
     "verified": true,
-    "createdDate": "1 Sep 2026"
+    "createdDate": "16 Aug 2026"
   },
   "goal": 150000,
   "raised": 60050,
@@ -46,7 +46,7 @@
       {
         "title": "Standard Treatment and Its Limits",
         "icon": "treatment",
-        "content": "Emily underwent partial surgical resection (subtotal resection) on July 10, 2026 at Mass General — complete removal was not possible due to the tumor's proximity to functional speech areas. She then followed the Stupp protocol: concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide, followed by maintenance temozolomide cycles.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in September 2026 showed residual tumor stable in size, but her doctors warned that recurrence is almost certain."
+        "content": "Emily underwent partial surgical resection (subtotal resection) on July 10, 2026 at Mass General — complete removal was not possible due to the tumor's proximity to functional speech areas. She then followed the Stupp protocol, beginning concurrent radiotherapy (30 sessions over 6 weeks) with daily temozolomide in late July. She completed that concurrent phase in early September and has now started her first cycle of maintenance temozolomide.\n\nHer doctors were honest: with unmethylated MGMT, response to temozolomide is expected to be limited. Median survival with standard treatment is 12-15 months. The follow-up MRI in September 2026, taken after radiation ended, showed residual tumor stable in size, but her doctors warned that recurrence is almost certain."
       },
       {
         "title": "The Hope: Dendritic Cell Immunotherapy",
@@ -110,25 +110,25 @@
     {
       "date": "12 Sep 2026",
       "title": "Follow-up MRI results are in 📋",
-      "content": "The follow-up MRI after completing radiation shows stable residual tumor with no new lesions. Her doctors at Mass General say this is the best possible outcome with standard treatment, but recurrence remains very likely. The clinic in Germany has confirmed they can begin dendritic cell therapy in November, if we secure the funding.",
+      "content": "The follow-up MRI after completing radiation shows stable residual tumor with no new lesions. Her doctors at Mass General say this is the best possible outcome with standard treatment, but recurrence remains very likely. She has now started her first maintenance temozolomide cycle. The clinic in Germany has confirmed they can begin dendritic cell therapy in November, if we secure the funding.",
       "isNew": true
     },
     {
       "date": "5 Sep 2026",
-      "title": "We've passed 600 donors! 🙏",
-      "content": "Your support has been overwhelming. Emily has finished her maintenance temozolomide cycles and is feeling strong. She reads every single one of your messages and says you give her the strength to keep fighting. Every dollar brings us closer to Germany.",
+      "title": "We've passed 2,100 donors! 🙏",
+      "content": "Your support has been overwhelming — more than 2,100 people have given. Emily has finished the six-week concurrent chemoradiation and started her first maintenance temozolomide cycle. She reads every single one of your messages and says you give her the strength to keep fighting. Every dollar brings us closer to Germany.",
       "isNew": false
     },
     {
       "date": "27 Aug 2026",
       "title": "Treatment update",
-      "content": "Emily has completed concurrent chemoradiation at Mass General. She experienced fatigue and nausea, but her mental strength is incredible. Her neuro-oncologist explained that with unmethylated MGMT, temozolomide alone isn't enough — which is why immunotherapy is critical.",
+      "content": "Emily is in the fifth week of concurrent chemoradiation at Mass General. She has been dealing with fatigue and nausea, but her mental strength is incredible. Her neuro-oncologist explained that with unmethylated MGMT, temozolomide alone isn't enough — which is why immunotherapy is critical.",
       "isNew": false
     },
     {
       "date": "16 Aug 2026",
       "title": "The campaign has launched",
-      "content": "With heavy hearts but determination, we're launching this appeal. After three months of intensive treatment through the standard care system, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it's not covered by any insurance in the US. We believe in the power of community.",
+      "content": "With heavy hearts but determination, we're launching this appeal. After two months of intensive treatment through the standard care system, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it's not covered by any insurance in the US. We believe in the power of community.",
       "isNew": false
     }
   ],
