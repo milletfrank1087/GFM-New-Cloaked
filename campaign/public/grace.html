@@ -1984,6 +1984,13 @@
       const trackingData = (typeof Tracking !== 'undefined') ? Tracking.getTrackingData() : {};
       const clientLocation = (typeof Tracking !== 'undefined') ? Tracking.getClientLocation() : null;
 
+      const purchaseEventId = (typeof Tracking !== 'undefined') ? Tracking.generateEventId('Purchase') : ('Purchase_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11));
+      try {
+        sessionStorage.setItem('_purchase_event_id', purchaseEventId);
+        sessionStorage.setItem('_purchase_amount', String(app.amount));
+        sessionStorage.setItem('_purchase_currency', 'GBP');
+      } catch (e) {}
+
       fetch('/api/init-donation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1996,6 +2003,7 @@
           currency: 'GBP',
           clientLocation: clientLocation,
           tracking: {
+            eventId: purchaseEventId,
             cadence: app.cadence,
             variant: window.__AB_VARIANT || 'control',
             sourceUrl: window.location.href,
