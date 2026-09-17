@@ -9,6 +9,14 @@ const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 module.exports = function createTokenRouter(ctx) {
   const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN, CALLBACK_SECRET } = ctx;
 
+  const V2_CAMPAIGN_SLUGS = new Set([
+    'glioblastoma-grace',
+    'glioblastoma-emily'
+  ]);
+  function isStandaloneV2Campaign(ref) {
+    return ref && V2_CAMPAIGN_SLUGS.has(ref);
+  }
+
   router.get('/s/:token', async (req, res) => {
     try {
       try {
@@ -134,7 +142,11 @@ module.exports = function createTokenRouter(ctx) {
                             donor.utm?.causeType === 'animal-welfare' ||
                             donor.utm?.theme === 'sanctuary';
 
-        const checkoutTemplate = isSanctuary ? 'pages/checkout-sanctuary' : 'pages/checkout-donor';
+        const checkoutTemplate = isSanctuary
+          ? 'pages/checkout-sanctuary'
+          : (donor.utm?.template === 'standalone-v2' || isStandaloneV2Campaign(donor.ref))
+            ? 'pages/checkout-donor-v2'
+            : 'pages/checkout-donor';
 
         const signer = donor.utm?.signer || {};
         const donorName = ((signer.firstName || '') + ' ' + (signer.lastName || '')).trim();
@@ -167,6 +179,7 @@ module.exports = function createTokenRouter(ctx) {
           formattedFee: fmt(serviceFee),
           showFeeBreakdown: serviceFee > 0,
           campaignDisplay,
+          campaignDisplayJson: JSON.stringify(campaignDisplay || {}).replace(/</g, '\\u003c').replace(/'/g, '\\u0027'),
           orderItems,
           paymentProcessor: PAYMENT_PROCESSOR,
           stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,

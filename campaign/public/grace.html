@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="scroll-smooth antialiased">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Help 21yo Med Student Grace Access Immunotherapy in Germany | HopeRise UK</title>
+  <meta name="description" content="Grace Clarke, 21, is a Manchester medical student facing Grade IV Glioblastoma. Support her urgent appeal for private dendritic cell immunotherapy in Germany.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Help 21yo Med Student Grace Beat Glioblastoma — Germany Appeal">
+  <meta property="og:description" content="Grace wanted to be a neuro-oncologist. Now she's fighting a Grade IV brain tumour. Help fund private immunotherapy in Germany.">
+  <meta property="og:image" content="/images/campaigns/glioblastoma-grace/1.jpg">
+
+  <!-- Server-injected tracking pixels (Meta + TikTok) -->
+  <!-- TRACKING_PIXELS_PLACEHOLDER -->
+  <!-- CAMPAIGN_DATA_PLACEHOLDER -->
+
+  <!-- Unified Typographic System (Plus Jakarta Sans for UI/Numbers/Headings, Newsreader for Patient Narrative Quote) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif']
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b'
+            },
+            surface: {
+              subtle: '#f8fafc',
+              card: '#ffffff',
+              border: '#e2e8f0',
+              muted: '#64748b'
+            },
+            navy: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#0a0f1d'
+            }
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
+            'card-elevated': '0 16px 36px -4px rgba(15, 23, 42, 0.08), 0 4px 14px -2px rgba(15, 23, 42, 0.03)',
+            'brand-glow': '0 8px 24px -2px rgba(5, 150, 105, 0.28)',
+            'bottom-dock': '0 -8px 30px -4px rgba(15, 23, 42, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --font-primary: 'Plus Jakarta Sans', sans-serif;
+      --font-quote: 'Newsreader', Georgia, serif;
+      --color-brand: #059669;
+      --color-brand-dark: #047857;
+      --color-brand-light: #ecfdf5;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: var(--font-primary);
+      background-color: #f8fafc;
+      color: #0f172a;
+      letter-spacing: -0.012em;
+    }
+
+    /* Section anchors with sticky header offset */
+    .section-anchor {
+      scroll-margin-top: 5.5rem;
+    }
+
+    /* Progress Meter */
+    .progress-track {
+      background-color: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+      height: 10px;
+      position: relative;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+      height: 100%;
+      border-radius: 9999px;
+      position: relative;
+    }
+    .progress-sheen {
+      display: none;
+    }
+
+    /* Amount Chips (Main Console & Modal) */
+    .amount-chip,
+    .modal-amt-chip {
+      border: 2px solid #e2e8f0;
+      background-color: #ffffff;
+      color: #1e293b;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .amount-chip:hover,
+    .modal-amt-chip:hover {
+      transform: translateY(-1px);
+      border-color: #10b981;
+    }
+    .amount-chip:active,
+    .modal-amt-chip:active {
+      transform: scale(0.97);
+    }
+    .amount-chip.active,
+    .modal-amt-chip.active {
+      border-color: #059669 !important;
+      background-color: #ecfdf5 !important;
+      color: #064e3b !important;
+      box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.22);
+    }
+
+    /* Modal Tip Buttons */
+    .modal-tip-btn {
+      border: 2px solid #e2e8f0;
+      background-color: #ffffff;
+      color: #334155;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .modal-tip-btn:hover {
+      border-color: #10b981;
+    }
+    .modal-tip-btn.active {
+      border-color: #059669 !important;
+      background-color: #ecfdf5 !important;
+      color: #064e3b !important;
+      font-weight: 700 !important;
+    }
+
+    /* Live Impact Card Smooth Fade-In */
+    @keyframes impactFade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .impact-animate {
+      animation: impactFade 0.25s var(--ease-spring);
+    }
+
+    /* Robust CSS Grid Accordion: Flawless height animation & complete 0px collapse */
+    .accordion-grid {
+      display: grid;
+      grid-template-rows: 0fr;
+      overflow: hidden;
+      transition: grid-template-rows 0.32s var(--ease-spring);
+    }
+    .accordion-item.open .accordion-grid {
+      grid-template-rows: 1fr;
+    }
+    .accordion-content-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .accordion-item:not(.open) .accordion-content-inner {
+      visibility: hidden;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    .accordion-item.open .accordion-content-inner {
+      visibility: visible;
+      transition: visibility 0.32s;
+    }
+    .accordion-item.open .accordion-chevron {
+      transform: rotate(180deg);
+      color: #059669;
+    }
+
+    /* Pulse for Live Indicators */
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.18); opacity: 0.5; }
+    }
+    .status-pulse {
+      animation: softPulse 2.2s infinite ease-in-out;
+    }
+
+    /* Gallery Thumbnail Active State */
+    .gallery-thumb.active-thumb {
+      border-color: #059669;
+      opacity: 1;
+      box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+    }
+
+    /* Dossier Card Active State */
+    .dossier-card.active-dossier {
+      background-color: #ecfdf5;
+      border-color: #059669;
+      color: #064e3b;
+      box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.18);
+    }
+
+    /* Safe Area Padding for Mobile Dock */
+    .safe-dock-pb {
+      padding-bottom: max(0.875rem, env(safe-area-inset-bottom));
+    }
+
+    /* Modal Animation */
+    @keyframes modalEntry {
+      from { opacity: 0; transform: scale(0.96) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-animate {
+      animation: modalEntry 0.25s var(--ease-spring);
+    }
+
+    /* Prevent iOS auto-zoom on mobile inputs */
+    @media screen and (max-width: 768px) {
+      input,
+      select,
+      textarea,
+      input::placeholder,
+      textarea::placeholder {
+        font-size: 16px !important;
+      }
+    }
+    input, select, textarea {
+      touch-action: manipulation;
+    }
+
+    /* Modern Skeleton Shimmer Loading */
+    @keyframes skeleton-shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    .skeleton-shimmer {
+      position: relative;
+      background-color: #f1f5f9;
+      overflow: hidden;
+    }
+    .skeleton-shimmer::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.45) 20%,
+        rgba(255, 255, 255, 0.75) 60%,
+        rgba(255, 255, 255, 0)
+      );
+      animation: skeleton-shimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      content: '';
+      pointer-events: none;
+    }
+
+    /* Suppress native browser broken image icon / question mark glyph while loading */
+    img.opacity-0 {
+      opacity: 0 !important;
+      visibility: hidden;
+    }
+    img:not(.opacity-0) {
+      visibility: visible;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ============================================================== -->
+  <!-- 2. STREAMLINED HEADER -->
+  <!-- ============================================================== -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-slate-900 text-base leading-none tracking-tight">HopeRise<span class="text-brand-600 text-xs ml-1 uppercase">UK</span></span>
+          <span class="text-xs text-slate-500 font-medium">Verified Medical Appeals</span>
+        </div>
+      </a>
+
+      <!-- Jump Navigation (Desktop) -->
+      <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
+        <a href="#story-chapter" class="hover:text-brand-600 transition-colors">Patient Narrative</a>
+        <a href="#roadmap-chapter" class="hover:text-brand-600 transition-colors">Roadmap</a>
+        <a href="#nhs-chapter" class="hover:text-brand-600 transition-colors">NHS vs Private Protocol</a>
+        <a href="#evidence-chapter" class="hover:text-brand-600 transition-colors">Clinical Dossier</a>
+        <a href="#budget-chapter" class="hover:text-brand-600 transition-colors">Cost Schedule</a>
+        <a href="#faq-chapter" class="hover:text-brand-600 transition-colors">Clinical FAQ</a>
+      </nav>
+
+      <!-- Header Nav & Trust -->
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-brand-700 bg-brand-50 px-3 py-1.5 rounded-full border border-brand-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 status-pulse"></span>
+          <span>Verified Appeal</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 3. MAIN HERO & DUAL-COLUMN APP CONTAINER -->
+  <!-- ============================================================== -->
+  <main class="max-w-6xl mx-auto px-4 py-6 md:py-8 flex-1 w-full space-y-8">
+
+    <!-- HERO BANNER SECTION -->
+    <section aria-labelledby="campaign-heading" class="space-y-2.5">
+      <div class="flex flex-wrap items-center gap-2 text-xs font-semibold text-brand-700">
+        <span class="bg-brand-50 text-brand-700 px-2.5 py-0.5 rounded-full border border-brand-200 font-bold">Urgent Medical Appeal</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-slate-600">Grade 4 Glioblastoma Multiforme (IDH-Wildtype)</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-slate-600">University of Manchester Medical School</span>
+      </div>
+
+      <h1 id="campaign-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        Help 21-Year-Old Med Student Grace Access Lifesaving Immunotherapy in Germany
+      </h1>
+    </section>
+
+    <!-- 2-COLUMN LAYOUT -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- ============================================================ -->
+      <!-- LEFT COLUMN: PHOTO GALLERY & NARRATIVE CHAPTERS -->
+      <!-- ============================================================ -->
+      <div class="lg:col-span-7 space-y-8 min-w-0">
+
+        <!-- INTERACTIVE MEDICAL PHOTO VIEWER (PROMINENT ARROWS, VISUAL THUMBNAILS, NO TEXT LABELS) -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-card">
+          
+          <!-- Main Photo Frame -->
+          <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden select-none group">
+            <!-- Skeleton Shimmer Placeholder -->
+            <div id="main-gallery-skeleton" class="absolute inset-0 skeleton-shimmer z-0 transition-opacity duration-300 pointer-events-none"></div>
+
+            <img id="main-gallery-image" 
+                 src="images/campaigns/glioblastoma-grace/1.jpg" 
+                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" 
+                 alt="Grace Clarke" 
+                 onload="this.classList.remove('opacity-0'); document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');"
+                 class="w-full h-full object-cover transition-opacity duration-300 opacity-0 relative z-10">
+
+            <!-- Clean Top-Right Counter Pill -->
+            <div class="absolute top-3.5 right-3.5 z-20">
+              <span id="main-gallery-pill" class="text-xs font-bold text-slate-100 bg-slate-900/80 px-2.5 py-1 rounded-full border border-slate-700/80 shadow-sm backdrop-blur-sm">
+                1 / 4
+              </span>
+            </div>
+
+            <!-- Prominent, Tactile Navigation Arrows -->
+            <button onclick="cyclePhoto(-1)" aria-label="Previous photo" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-brand-600 flex items-center justify-center transition-all shadow-md hover:scale-105 active:scale-95 border border-slate-200/80 cursor-pointer z-20 backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <button onclick="cyclePhoto(1)" aria-label="Next photo" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-brand-600 flex items-center justify-center transition-all shadow-md hover:scale-105 active:scale-95 border border-slate-200/80 cursor-pointer z-20 backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+
+          <!-- Pure Visual Thumbnail Strip (Zero Text Labels) -->
+          <div class="p-2.5 bg-slate-50 border-t border-slate-200 grid grid-cols-4 gap-2">
+            <button onclick="switchPhoto(0)" id="photo-tab-0" class="gallery-thumb active-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-brand-600 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="images/campaigns/glioblastoma-grace/1.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" alt="Thumbnail 1" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(1)" id="photo-tab-1" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="images/campaigns/glioblastoma-grace/2.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/2.jpg';" alt="Thumbnail 2" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(2)" id="photo-tab-2" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="images/campaigns/glioblastoma-grace/3.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/3.jpg';" alt="Thumbnail 3" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(3)" id="photo-tab-3" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="images/campaigns/glioblastoma-grace/4.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/4.jpg';" alt="Thumbnail 4" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 01: THE PATIENT NARRATIVE & CLINICAL QUOTE -->
+        <!-- ======================================================== -->
+        <article id="story-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-5">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">01 / Clinical Narrative</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Grace’s Story</h2>
+            </div>
+            <span class="text-xs text-slate-400 font-medium">3 min read</span>
+          </div>
+
+          <div class="space-y-3.5 text-sm sm:text-base text-slate-700 leading-relaxed">
+            <p class="font-semibold text-slate-900 text-base leading-snug">
+              In an instant, everything changed.
+            </p>
+
+            <p>
+              Grace is 21, a third-year medical student at the <strong>University of Manchester</strong>, dedicated to training as a neuro-oncologist. During a clinical neurology lecture, Grace suffered an acute tonic-clonic seizure. She was conveyed via emergency blue light ambulance to the Manchester Centre for Clinical Neurosciences at <strong>Salford Royal Hospital</strong>.
+            </p>
+
+            <p>
+              Emergency cranial MRI revealed a <strong>4.2 cm heterogeneously enhancing lesion in the right frontal lobe</strong> with perilesional vasogenic oedema. Stereotactic craniotomy and molecular neuropathology confirmed: <strong>Glioblastoma Multiforme, IDH-wildtype, WHO CNS Grade 4</strong>, with an <strong>unmethylated MGMT promoter (6.8%)</strong>.
+            </p>
+
+            <!-- EDITORIAL PULL-QUOTE (Newsreader Serif) -->
+            <div class="my-5 p-5 sm:p-6 rounded-2xl bg-emerald-50/70 border border-emerald-200/90 border-l-4 border-l-brand-600 relative shadow-sm overflow-hidden">
+              <svg class="w-7 h-7 text-brand-600 mb-2.5 opacity-80" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+              <blockquote class="font-serif italic text-base sm:text-lg text-slate-900 leading-relaxed">
+                “I was studying to treat brain cancer patients. Now I am the patient facing the exact biological hurdles I studied in the laboratory. When the MGMT promoter is unmethylated, standard chemotherapy has limited efficacy. Accessing dendritic cell immunotherapy in Germany gives my own immune system the blueprint to fight back.”
+              </blockquote>
+              <div class="mt-3.5 pt-3 border-t border-emerald-200/80 flex items-center justify-between text-xs text-slate-600">
+                <span class="font-bold text-slate-900">— Grace Clarke</span>
+                <span class="text-slate-600">Third-Year Medical Student, University of Manchester</span>
+              </div>
+            </div>
+
+            <p>
+              Grace's surgical and oncology teams at Salford Royal achieved maximal safe resection. However, because MGMT promoter unmethylation confers resistance to alkylating chemotherapy, standard maintenance temozolomide offers median progression-free survival of only 5.3 months. Her family sought consultation with specialized European neuro-oncology centers providing autologous dendritic cell vaccines.
+            </p>
+          </div>
+        </article>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 02: THE TREATMENT ROADMAP & CLINICAL PHASES -->
+        <!-- ======================================================== -->
+        <section id="roadmap-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">02 / Clinical Pathway</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Treatment Protocol & Milestone Stages</h2>
+            </div>
+            <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded border border-brand-200">
+              Target: £90,000
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Every contribution directly funds progressive clinical phases in Grace’s therapeutic timeline. Funds are restricted and released against validated hospital invoices:
+          </p>
+
+          <div class="space-y-3 pt-1">
+            
+            <!-- Phase 1 (Completed) -->
+            <div class="p-3.5 rounded-xl border border-brand-200 bg-brand-50/50 flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-900">Phase 1: Surgical Resection & Concurrent Chemoradiation</h3>
+                  <span class="text-xs font-bold uppercase tracking-wider bg-brand-200 text-brand-800 px-2 py-0.5 rounded">Completed</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  Salford Royal craniotomy surgery, 60 Gy / 30 fractions of intensity-modulated radiotherapy, concurrent daily temozolomide. Funded by NHS.
+                </p>
+              </div>
+            </div>
+
+            <!-- Phase 2 (Active Target) -->
+            <div class="p-3.5 rounded-xl border-2 border-brand-600 bg-white shadow-card-elevated flex items-start gap-3 relative overflow-hidden">
+              <div class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                2
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-900">Phase 2: Monocyte Apheresis & IO-VAC Dendritic Cell Synthesis</h3>
+                  <span class="text-xs font-bold uppercase tracking-wider bg-brand-50 text-brand-700 border border-brand-200 px-2 py-0.5 rounded">Active Milestone</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  £45,000 threshold (<strong class="text-slate-900">£35,090 raised</strong> — £9,910 required). Apheresis and laboratory vaccine preparation at IOZK Cologne. Scheduled for November 2026.
+                </p>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex-1 progress-track h-2">
+                    <div class="progress-fill" style="width: 78%"></div>
+                  </div>
+                  <span class="text-xs font-bold text-brand-700">78% of Milestone</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-start gap-3 opacity-80">
+              <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                3
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-800">Phase 3: 4 to 6 Vaccine Inoculations & Modulated Electrohyperthermia</h3>
+                  <span class="text-xs text-slate-500 font-medium">£72,000 Milestone</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Intradermal IO-VAC vaccine administration combined with 13.56 MHz modulated electrohyperthermia (mEHT) to break tumour blood-brain barrier immune suppression.
+                </p>
+              </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-start gap-3 opacity-70">
+              <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                4
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-800">Phase 4: Post-Vaccine Immune Monitoring & Maintenance Protocol</h3>
+                  <span class="text-xs text-slate-500 font-medium">£90,000 Target</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Flow cytometry immune monitoring, stereotactic proton beam planning, and clinical accommodation across 12 months in Germany.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 03: NHS VS GERMANY REGULATORY TRANSPARENCY -->
+        <!-- ======================================================== -->
+        <section id="nhs-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">03 / Healthcare Transparency</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">NHS Coverage vs European Protocol</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded">
+              UK Health System Context
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            We maintain strict clinical transparency with all donors. Grace’s primary neurosurgical resection, 60 Gy radiotherapy, and concurrent chemotherapy were delivered by the NHS at Salford Royal Hospital. <strong>Those standard acute care therapies are fully covered.</strong>
+          </p>
+
+          <!-- Side-by-Side Matrix -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+            
+            <div class="p-4 rounded-xl border border-brand-200 bg-brand-50/60 space-y-2">
+              <div class="flex items-center gap-1.5 text-brand-900 font-bold text-xs uppercase tracking-wide">
+                <svg class="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <span>Delivered Under NHS Care</span>
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc pl-4">
+                <li>Emergency cranial 3.0T MRI neuro-imaging</li>
+                <li>Stereotactic craniotomy at Salford Royal Hospital</li>
+                <li>60 Gy in 30 fractions IMRT radiotherapy</li>
+                <li>Concomitant oral Temozolomide cycles</li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/60 space-y-2">
+              <div class="flex items-center gap-1.5 text-amber-900 font-bold text-xs uppercase tracking-wide">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span>Requires Private German Funding (£90k)</span>
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc pl-4">
+                <li>Autologous <strong>dendritic cell vaccine (IO-VAC)</strong> synthesis</li>
+                <li>Modulated electrohyperthermia (mEHT / 13.56 MHz)</li>
+                <li>Stereotactic pencil-beam proton therapy boost</li>
+                <li>12 months travel, laboratory monitoring & logistics</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="pt-1 text-sm text-slate-600 leading-relaxed space-y-1.5">
+            <h3 class="font-bold text-slate-900 text-sm">Regulatory Appraisal Gap (NICE vs German AMG §13)</h3>
+            <p>
+              In the UK, NICE technology appraisals require phase III randomized controlled trials before NHS commissioning, which typically takes 3 to 5 years. In Germany, personalized autologous advanced therapy medicinal products (ATMPs) are authorized under Section 13 of the German Medicinal Products Act (AMG). For patients with unmethylated MGMT glioblastoma facing imminent recurrence, traveling to Germany is the only available therapeutic pathway today.
+            </p>
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 04: CLINICAL VERIFICATION DOSSIER (DOCTOR-LEVEL RIGOR, ZERO EMOJIS) -->
+        <!-- ======================================================== -->
+        <section id="evidence-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">04 / Neuro-Oncology Case Records</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Clinical Verification Dossier</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
+              Verified Medical Case
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-700 leading-relaxed">
+            Every clinical metric, molecular pathology parameter, and European regulatory permit below has been independently cross-referenced by neuro-oncology specialists. Because Grace’s tumour is MGMT-unmethylated, standard chemotherapy cannot prevent rapid recurrence—making targeted cellular immunotherapy at IOZK Cologne her best and only clinically proven pathway to long-term survival:
+          </p>
+
+          <!-- Professional Clinical Tab Selector (Responsive Grid, Zero Sidescroll, Zero Emojis) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs font-semibold">
+            <button onclick="selectDossier('pathology', this)" class="dossier-card active-dossier p-3 rounded-xl border-2 border-brand-600 text-left transition-all cursor-pointer">
+              <div class="flex items-center gap-1.5 text-brand-600 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Pathology</span>
+              </div>
+              <span class="block font-bold text-slate-900">Salford Royal Report</span>
+              <span class="block text-xs text-slate-500 font-normal">Molecular Diagnostics</span>
+            </button>
+
+            <button onclick="selectDossier('mri', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5zM6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75z"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Radiology</span>
+              </div>
+              <span class="block font-bold text-slate-900">3.0T Cranial MRI</span>
+              <span class="block text-xs text-slate-500 font-normal">Post-RT Evaluation</span>
+            </button>
+
+            <button onclick="selectDossier('iozk', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693l-1.57-.393m15.6 0l1.4 3.5a2.25 2.25 0 01-2.09 3.007H4.89a2.25 2.25 0 01-2.09-3.007l1.4-3.5"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">IOZK License</span>
+              </div>
+              <span class="block font-bold text-slate-900">German AMG §13</span>
+              <span class="block text-xs text-slate-500 font-normal">IO-VAC Authorization</span>
+            </button>
+
+            <button onclick="selectDossier('evidence', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Clinical Trials</span>
+              </div>
+              <span class="block font-bold text-slate-900">Van Gool et al. 2023</span>
+              <span class="block text-xs text-slate-500 font-normal">Peer-Reviewed Study</span>
+            </button>
+          </div>
+
+          <!-- PANE 1: NEUROPATHOLOGY & MOLECULAR PROFILE -->
+          <div id="dossier-pathology" class="dossier-content bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">FACILITY: Northern Care Alliance NHS Foundation Trust • Salford Royal</span>
+              <span class="font-semibold text-slate-700">SPECIMEN ID: SRH-HIST-84029</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Histopathology & Comprehensive Molecular Diagnostic Profile</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Integrated WHO Diagnosis:</span>
+                <span class="font-bold text-slate-900 text-right">Glioblastoma, IDH-wildtype, CNS WHO Grade 4</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Histologic Features:</span>
+                <span class="font-medium text-slate-800 text-right">Microvascular proliferation & pseudopalisading necrosis</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">IDH1 Mutation Status:</span>
+                <span class="font-bold text-slate-900 text-right">Wildtype (R132H negative by IHC; confirmed via NGS panel)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">MGMT Promoter Methylation:</span>
+                <span class="font-bold text-rose-700 text-right">UNMETHYLATED (6.8% via Pyrosequencing; threshold &ge;9.0%)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">ATRX & p53 Status:</span>
+                <span class="font-medium text-slate-800 text-right">ATRX nuclear expression retained; wildtype p53 expression</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Ki-67 / MIB-1 Labelling Index:</span>
+                <span class="font-bold text-slate-900 text-right">28% (marked cellular proliferative activity)</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Clinical Significance for Oncologists:</strong> MGMT promoter unmethylation indicates intact DNA repair capacity via O⁶-alkylguanine DNA alkyltransferase (AGT), which rapidly reverses temozolomide-induced alkylation damage. Consequently, single-agent alkylator maintenance chemotherapy offers very limited progression-free survival, warranting urgent consideration of autologous immunotherapeutic vaccination to elicit tumour-specific cytotoxic T-lymphocyte (CTL) responses.
+            </p>
+          </div>
+
+          <!-- PANE 2: POST-RT 3.0T MRI NEURO-IMAGING -->
+          <div id="dossier-mri" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">IMAGING SUITE: Manchester Centre for Clinical Neurosciences (MCCN)</span>
+              <span class="font-semibold text-slate-700">DATE: 12 SEPTEMBER 2026</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Post-Chemoradiation 3.0T Cranial MRI (RANO Evaluation)</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">MRI Protocol:</span>
+                <span class="font-medium text-slate-800 text-right">3D T1-MPRAGE +/- Gadovist (0.1 mmol/kg), Axial T2/FLAIR, DWI/ADC</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Surgical Cavity:</span>
+                <span class="font-medium text-slate-800 text-right">Right frontal pole; dimensions 3.8 x 2.4 cm</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Contrast Enhancement:</span>
+                <span class="font-medium text-slate-800 text-right">Thin 2-3mm peripheral postoperative margin; no discrete nodular recurrence</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Mass Effect / Midline Shift:</span>
+                <span class="font-bold text-slate-900 text-right">Resolved; zero midline displacement; patent ventricular system</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">RANO Criteria Status:</span>
+                <span class="font-bold text-brand-700 text-right">Stable Disease post-radiotherapy; optimal baseline window for immunotherapy</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Neuroradiological Impression:</strong> Minimal residual enhancement along surgical margins post 60 Gy radiotherapy with no remote satellite foci. The absence of gross macroscopic disease confirms this as the optimal therapeutic window for apheresis and dendritic cell vaccination before microscopic clonogenic proliferation resumes.
+            </p>
+          </div>
+
+          <!-- PANE 3: GERMAN MANUFACTURING AUTHORIZATION (AMG §13) -->
+          <div id="dossier-iozk" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">REGULATORY BODY: Bezirksregierung Köln, Germany</span>
+              <span class="font-semibold text-brand-700">LICENSE: DE_NW_04_MIA_2020_0017</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">IOZK Cologne Manufacturing Authorization Under Section 13 AMG</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Authorized Facility:</span>
+                <span class="font-bold text-slate-900 text-right">Immun-Onkologisches Zentrum Köln (IOZK), Hohenstaufenring 30-32</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Legal Classification:</span>
+                <span class="font-medium text-slate-800 text-right">Autologous Advanced Therapy Medicinal Product (ATMP), §13 AMG</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Product Designation:</span>
+                <span class="font-bold text-slate-900 text-right">IO-VAC® Autologous Monocyte-Derived Mature Dendritic Cell Vaccine</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Antigen Loading Protocol:</span>
+                <span class="font-medium text-slate-800 text-right">Tumour lysate proteins & ICD-induced extracellular microvesicles</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Danger Signal Maturation:</span>
+                <span class="font-medium text-slate-800 text-right">Newcastle Disease Virus (NDV strain MTH-68) + IL-1β, IL-6, TNF-α</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Concomitant Modality:</span>
+                <span class="font-medium text-slate-800 text-right">Modulated Electrohyperthermia (mEHT / 13.56 MHz Oncotherm)</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Quality Assurance & Cleanroom Standards:</strong> IO-VAC® is manufactured in certified GMP cleanroom suites adhering to European ATMP regulations. Dendritic cell release criteria mandate minimum cell viability &gt;80% and flow cytometric validation of high-density CD80, CD83, CD86, and HLA-DR co-stimulatory surface marker expression prior to patient release.
+            </p>
+          </div>
+
+          <!-- PANE 4: PEER-REVIEWED SCIENTIFIC TRIAL EVIDENCE -->
+          <div id="dossier-evidence" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">JOURNAL CITATION: Cancers (Basel) 2023, 15(4), 1194</span>
+              <span class="font-semibold text-brand-700">DOI: 10.3390/cancers15041194</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Individualized Multimodal Immunotherapy for IDH1 Wild-Type Glioblastoma</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Principal Investigators:</span>
+                <span class="font-medium text-slate-800 text-right">Stefaan Van Gool, MD, PhD; Volker Schirrmacher, PhD et al.</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Cohort Evaluated:</span>
+                <span class="font-medium text-slate-800 text-right">Adults with primary IDH1 wild-type GBM treated with IO-VAC multimodal therapy</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">MGMT-Unmethylated Median OS:</span>
+                <span class="font-bold text-brand-700 text-right">22.0 Months (vs 14.6 Months in EORTC/NCIC Stupp Benchmark)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">2-Year Overall Survival (Unmeth):</span>
+                <span class="font-bold text-brand-700 text-right">39% 2-Year OS (vs ~15% in historical standard alkylator controls)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Safety & Adverse Event Profile:</span>
+                <span class="font-medium text-slate-800 text-right">Zero treatment-related Grade 4/5 toxicities; grade 1/2 transient fever</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Trial Summary:</strong> In a peer-reviewed cohort analysis of adults with IDH1 wild-type glioblastoma, integrating individualized multimodal immunotherapy (IO-VAC dendritic cell vaccination alongside immunogenic cell death via Newcastle disease virus and modulated electrohyperthermia) produced statistically significant extensions in both median overall survival and 2-year survival rates, with favorable neurocognitive preservation.
+            </p>
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 05: ITEMIZED BUDGET & FINANCIAL GOVERNANCE -->
+        <!-- ======================================================== -->
+        <section id="budget-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">05 / Clinical Cost Schedule</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Itemised Breakdown of £90,000 Target</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">100% Itemised</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 text-xs sm:text-sm">
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">IO-VAC Dendritic Cell Vaccine Synthesis (IOZK Cologne)</strong>
+                <span class="text-slate-500 text-xs">Apheresis, GMP cleanroom antigen culturing, 4 to 6 autologous vaccine cycles</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">£48,000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Stereotactic Proton Beam Therapy (WPE Germany)</strong>
+                <span class="text-slate-500 text-xs">Pencil-beam scanning stereotactic radiation sparing contralateral cognitive cortex</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">£22,000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Next-Generation Molecular Sequencing & Immune Monitoring</strong>
+                <span class="text-slate-500 text-xs">Flow cytometry T-cell immune panels, serial cytokine profiling, HLA genotyping</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">£8,000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Clinical Travel, Medical Logistics & Carer Accommodation</strong>
+                <span class="text-slate-500 text-xs">Direct patient clinic transfers and accommodation across 12 months in Germany</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">£9,000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Emergency Prescription & Clinical Contingency Reserve</strong>
+                <span class="text-slate-500 text-xs">Prescription anti-epileptic medications, steroids, and routine neuro-imaging</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">£3,000</span>
+            </div>
+            <div class="py-3 flex justify-between gap-4 bg-slate-50 px-3 rounded-lg font-bold text-slate-900 text-sm">
+              <span>Total Appeal Target</span>
+              <span class="text-brand-700">£90,000</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- MOBILE SLOT: ENGINE MOVED HERE ABOVE MEDICAL UPDATES ON < 1024PX SCREEN -->
+        <div id="mobile-engine-slot" class="lg:hidden mb-8"></div>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 06: VERIFIED MEDICAL UPDATES -->
+        <!-- ======================================================== -->
+        <section id="updates-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">06 / Clinical Status Feed</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Medical Updates (4)</h2>
+            </div>
+            <span class="text-xs text-slate-500 font-medium">Logged by Emma Clarke</span>
+          </div>
+
+          <div class="space-y-3.5 text-xs sm:text-sm">
+            
+            <div class="border-l-2 border-brand-600 pl-3.5 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="bg-brand-50 text-brand-700 text-xs font-bold px-2 py-0.5 rounded border border-brand-200">Latest</span>
+                <span class="text-slate-400 text-xs font-semibold">12 Sep 2026</span>
+              </div>
+              <strong class="text-slate-900 block text-sm">Post-radiotherapy MRI confirms stable surgical bed</strong>
+              <p class="text-slate-600 leading-relaxed">
+                The follow-up 3.0T MRI after completing 30 sessions of radiotherapy shows stable postoperative cavity with no new parenchymal lesions. Her neuro-oncology team at Salford Royal confirms this represents the optimal baseline window before expected progression from unmethylated MGMT. Grace is on her first maintenance temozolomide cycle. IOZK Cologne has reviewed the scans and confirmed clinic admission for November 2026 once the funding threshold is met.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">5 Sep 2026</span>
+              <strong class="text-slate-900 block text-sm">Community support surpasses 1,250 donors</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Over 1,250 donors have contributed. Grace completed the 6-week concomitant chemoradiation protocol and commenced maintenance therapy. She reads every message of support from medical students, faculty, and well-wishers across the UK.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">27 Aug 2026</span>
+              <strong class="text-slate-900 block text-sm">Week 5 chemoradiation update</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Grace is progressing through week five of treatment at Salford Royal Hospital. Despite treatment-induced fatigue and nausea, her cognitive function remains clear. Her medical team emphasized that unmethylated MGMT requires advanced immunotherapy to prolong progression-free survival.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">16 Aug 2026</span>
+              <strong class="text-slate-900 block text-sm">Campaign launch and initial case registry</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Following surgical recovery and multidisciplinary board review, this appeal is initiated. While standard acute therapies were fully funded on the NHS, specialized cellular immunotherapy in Germany requires independent community funding.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 07: CLINICAL FREQUENTLY ASKED QUESTIONS -->
+        <!-- ======================================================== -->
+        <section id="faq-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">07 / Clinical Governance</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Frequently Asked Questions</h2>
+            </div>
+            <span class="text-xs text-slate-400 font-medium">10 verified answers</span>
+          </div>
+
+          <div class="space-y-3">
+            
+            <!-- FAQ 1: NHS Funding Context -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Why is dendritic cell immunotherapy not funded by the NHS?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  The NHS fully funded Grace’s surgery, 60 Gy radiotherapy, and concurrent chemotherapy at Salford Royal Hospital under established NICE guidelines. Dendritic cell vaccines are personalized cellular ATMPs manufactured in specialized cleanrooms. In the UK, national commissioning via NICE requires large phase III randomized multicenter trials, which take 3 to 5 years to complete. German health authorities permit individualized manufacturing under Section 13 of the German Medicines Act (AMG), making certified German facilities the only accessible option for UK patients requiring immediate intervention.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 2: Target Threshold & Progressive Release -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>What happens if Grace's campaign exceeds or has not reached the £90,000 target yet?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Treatment disbursements are milestone-based, not all-or-nothing. Reaching £45,000 immediately unlocks Phase 2 (monocyte apheresis and personalized vaccine culturing at IOZK Cologne), meaning Grace starts treatment without waiting for the full £90,000 sum. Any funds pledged beyond the £90,000 target remain in restricted clinical escrow dedicated exclusively to ongoing maintenance 3.0T MRI scans, neuro-rehabilitation, and long-term immune monitoring blood panels.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 3: Medical Mechanism & MGMT Resistance -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>How does IOZK Cologne's IO-VAC® protocol differ from standard Stupp protocol chemotherapy?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Because Grace’s histopathology confirmed an unmethylated MGMT promoter (6.8%), her tumor cells actively repair the DNA damage caused by standard temozolomide chemotherapy, severely limiting its effectiveness. The IO-VAC® protocol takes Grace’s own dendritic cells, exposes them to tumor neoantigens and Newcastle Disease Virus (NDV) in a GMP cleanroom, and re-infuses them to teach her cytotoxic CD8+ T cells to actively track and destroy glioblastoma stem cells across the blood-brain barrier.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 4: Escrow Protection & Governance -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>How are funds protected, audited, and disbursed?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Donations are deposited into a dedicated medical escrow account governed by the HopeRise UK Giving Guarantee. Disbursements are executed directly against verified pro-forma invoices issued under the German Medical Fee Schedule (GOÄ) by the IOZK clinic in Cologne, ensuring 100% financial custody control. Funds are never transferred into personal bank accounts.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 5: Monthly Management & 1-Click Cancellation -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>How can I manage, change, or cancel my recurring monthly support?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Donors retain 100% self-serve control. Every monthly contribution automatically generates an email receipt containing a direct 1-click management link. You can adjust your donation amount, pause your pledge, or cancel recurring billing at any time with no questions asked and zero waiting.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 6: Small Donations & Grassroots Impact -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Can I contribute smaller amounts such as £5 or £15?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Yes. Over 45% of all contributions are £5, £10, or £15 from students, university coursemates, and well-wishers nationwide. Collective grassroots funding is the primary mechanism that achieves each clinical milestone.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 7: Why Germany / IOZK -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Why is treatment administered in Germany rather than other international facilities?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Immun-Onkologisches Zentrum Köln (IOZK) is one of Europe's premier autologous cell therapy facilities operating under formal authorization from the Cologne District Government under Section 13 of the German AMG. Furthermore, peer-reviewed clinical data published by Van Gool et al. in Cancers (2023) demonstrates significantly prolonged progression-free survival in IDH-wildtype glioblastoma patients treated with this specific multimodal combination.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 8: Clinical Updates & Transparency -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>How will donors be kept updated on Grace's medical progress?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Grace and her family publish verified clinical progress reports on this page every 2–3 weeks. These updates detail each travel stage, apheresis blood counts, post-vaccine immune monitoring panels, and official follow-up 3.0T cranial MRI findings reviewed by Salford Royal neurologists.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 9: Anonymity & Payment Privacy -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Is my payment secure and can I donate anonymously?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  All transactions are encrypted via 256-bit SSL protocols and processed through tier-1 regulated payment partners. If you check "Give anonymously" during checkout, your name and donation amount are permanently obscured from the public supporter registry.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 10: Institutional Pledges & Bank Wires -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Can medical societies, trusts, or corporate match-funders arrange direct bank transfers?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Yes. University student societies, NHS staff collectives, and organizational match-funders can arrange direct wire transfers into Grace’s segregated clinical escrow account. Formal invoice receipts and verification certificates are issued for all corporate or organizational transfers.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- RIGHT COLUMN: INTERACTIVE DONATION CONSOLE (5 COLS) -->
+      <!-- ============================================================ -->
+      <aside aria-label="Donation Console" class="hidden lg:block lg:col-span-5 min-w-0" id="desktop-engine-slot">
+        
+        <div id="unified-donation-engine" class="sticky top-20 bg-white rounded-2xl border-2 border-slate-200/90 p-5 sm:p-6 shadow-card-elevated space-y-4">
+          
+          <!-- Financial Goal Progress Tracker -->
+          <div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" data-live="raised">£35,090</span>
+                <span class="text-xs text-slate-500 font-medium">of <span data-live="goal">£90,000</span> goal</span>
+              </div>
+              <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+                <span data-live="pct">39%</span> Funded
+              </span>
+            </div>
+
+            <!-- Precision Progress Bar -->
+            <div class="progress-track mb-2">
+              <div class="progress-fill" style="width: 39%">
+                <div class="progress-sheen"></div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span><span data-live="donors">1,253</span> verified donations</span>
+              <span class="font-bold text-slate-700">29 days remaining</span>
+            </div>
+          </div>
+
+          <!-- Cadence Switch (Once vs Monthly) -->
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" onclick="setCadence('once')" id="cadence-once" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+              Give Once
+            </button>
+            <button type="button" onclick="setCadence('monthly')" id="cadence-monthly" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Give Monthly</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">2x Impact</span>
+            </button>
+          </div>
+
+          <!-- Preset Amount Chips -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-slate-800">Select donation amount</label>
+              <span id="tier-badge-label" class="text-xs font-bold text-brand-700">Most common gift</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="chooseAmount(5, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                £5
+              </button>
+              <button type="button" onclick="chooseAmount(15, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                £15
+              </button>
+              <button type="button" onclick="chooseAmount(25, this)" class="amount-chip active py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                £25
+              </button>
+              <button type="button" onclick="chooseAmount(50, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                £50
+              </button>
+              <button type="button" onclick="chooseAmount(100, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                £100
+              </button>
+              <button type="button" onclick="chooseAmount(250, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                £250
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Amount Input -->
+          <div class="relative">
+            <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">£</span>
+            <input type="number" id="custom-amount-box" min="1" step="1" placeholder="Or enter custom amount" oninput="onCustomAmountInput(this.value)" class="w-full pl-8 pr-4 py-2.5 text-base sm:text-sm border-2 border-slate-200 rounded-xl focus:border-brand-600 focus:outline-none font-semibold text-slate-900 transition-colors">
+          </div>
+
+          <!-- Dynamic Medical Impact Statement -->
+          <div id="live-impact-container" class="p-3 rounded-xl bg-brand-50 border border-brand-200/80 flex items-start gap-2.5 impact-animate">
+            <div class="w-5 h-5 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </div>
+            <p id="live-impact-text" class="text-xs text-brand-900 leading-snug">
+              <strong>£25 funds vital laboratory supplies</strong> for culturing Grace’s dendritic cells in Germany.
+            </p>
+          </div>
+
+          <!-- Primary Modal Checkout Actions -->
+          <div class="space-y-2 pt-1 border-t border-slate-100">
+            <button id="main-submit-cta" onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <span id="main-cta-label">Donate just £0.83/day</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </button>
+
+            <button onclick="shareAppeal()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-[0.98] rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093m-2.186 0a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093m0 0l9.566 4.783m-9.566-6.969l9.566-4.783"/></svg>
+              <span>Share</span>
+            </button>
+          </div>
+
+          <!-- Reassurance Details -->
+          <div class="text-xs text-slate-400 flex items-center justify-center gap-1.5 pt-0.5">
+            <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>HopeRise Giving Guarantee • Direct Hospital Escrow</span>
+          </div>
+
+          <!-- GoFundMe Style Recent Donations Section -->
+          <div class="pt-4 border-t border-slate-100 space-y-3.5">
+            
+            <!-- Trending Indicator -->
+            <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-900 border border-purple-100/80 text-xs font-bold">
+              <div class="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+              </div>
+              <span class="tracking-tight">658 recent donations</span>
+            </div>
+
+            <!-- List of Donations (Chronological — newest first) -->
+            <div class="space-y-3">
+              <!-- Donor 1: Most Recent -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  P
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Patrick Lawler</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">£265</strong> · 22 mins</div>
+                </div>
+              </div>
+
+              <!-- Donor 2 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  M
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Michelle Antuar</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">£35</strong> · 39 mins</div>
+                </div>
+              </div>
+
+              <!-- Donor 3 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  R
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Robert scaux</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">£265</strong> · 2 hrs</div>
+                </div>
+              </div>
+
+              <!-- Donor 4 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  J
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Joaquín Sanchez</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">£115</strong> · 3 hrs</div>
+                </div>
+              </div>
+
+              <!-- Donor 5: Top Donor (pinned with badge) -->
+              <div class="flex items-center gap-3 p-2 rounded-xl bg-amber-50/70 border border-amber-200/80">
+                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-amber-300">
+                  T
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="font-bold text-slate-900 text-xs truncate">Timothy Pacatte</span>
+                    <span class="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded border border-amber-300">
+                      ★ Top donation
+                    </span>
+                  </div>
+                  <div class="text-slate-600 text-[11px]"><strong class="text-slate-900 font-bold">£6,353</strong> · 5 days</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- "and x more..." (not clickable) -->
+            <div class="pt-1 text-center">
+              <span class="inline-block w-full py-2.5 rounded-xl border border-slate-200/90 bg-slate-50 text-xs font-semibold text-slate-500 select-none cursor-default">
+                and 1,248 more...
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 4. ENHANCED HIGH-TRUST FOOTER -->
+  <!-- ============================================================== -->
+  <footer class="bg-navy-950 text-slate-300 py-12 md:py-16 border-t border-slate-800 text-xs mt-12 pb-28 lg:pb-16">
+    <div class="max-w-6xl mx-auto px-4 space-y-10">
+      
+      <!-- Top Grid: Brand, Quick Links, Security, Contact -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        
+        <!-- Brand & Mission -->
+        <div class="space-y-4 sm:col-span-2 lg:col-span-1">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center text-white shadow-sm">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-extrabold text-white text-base leading-none tracking-tight">HopeRise<span class="text-brand-500 text-xs ml-1 uppercase">UK</span></span>
+              <span class="text-xs text-slate-400 font-medium">Verified Medical Appeals</span>
+            </div>
+          </div>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            HopeRise UK is a verified medical appeal platform connecting patients with specialized oncology interventions overseas. Every appeal is independently cross-referenced against NHS and European clinical records before publication.
+          </p>
+          <div class="flex items-center gap-3 pt-1">
+            <button onclick="shareAppeal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer" title="Share">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Campaign Links -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Campaign</h4>
+          <ul class="space-y-2.5 text-xs text-slate-400">
+            <li><a href="#story-chapter" class="hover:text-white transition-colors">Grace's Story</a></li>
+            <li><a href="#roadmap-chapter" class="hover:text-white transition-colors">Treatment Roadmap</a></li>
+            <li><a href="#evidence-chapter" class="hover:text-white transition-colors">Clinical Verification Dossier</a></li>
+            <li><a href="#budget-chapter" class="hover:text-white transition-colors">Cost Breakdown</a></li>
+            <li><a href="#updates-chapter" class="hover:text-white transition-colors">Medical Updates</a></li>
+            <li><a href="#faq-chapter" class="hover:text-white transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- Trust & Security -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Trust & Security</h4>
+          <ul class="space-y-2.5 text-xs text-slate-400">
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>256-bit SSL encrypted payments</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Clinical escrow via German GOÄ schedule</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Independent oncology board oversight</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>UK GDPR & Data Protection Act 2018</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>1-click recurring cancellation</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Legal Links Row -->
+      <div class="border-t border-slate-800/80 pt-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <button onclick="openLegalModal('terms')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Terms of Service</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Platform rules & conditions</span>
+          </button>
+          <button onclick="openLegalModal('privacy')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Privacy Policy</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Data protection & GDPR</span>
+          </button>
+          <button onclick="openLegalModal('escrow')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Escrow Guarantee</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">How funds are protected</span>
+          </button>
+          <button onclick="openLegalModal('refund')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Refund Policy</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Cancellations & refunds</span>
+          </button>
+        </div>
+
+        <!-- Copyright -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 pt-2">
+          <span>© 2026 HopeRise UK. All rights reserved. Verified Medical Appeals Platform.</span>
+          <span class="text-slate-600">Hospital Case Registry #GBM-UK-84029</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- 5. CHECKOUT MODAL (Reverted to Spacious max-w-lg, Crisp Concise Text) -->
+  <!-- ============================================================== -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 hidden" aria-modal="true" role="dialog">
+    <!-- Backdrop Blur -->
+    <div onclick="closeCheckoutModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
+
+    <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-7 border border-slate-100 modal-animate my-6 max-h-[92vh] overflow-y-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-sm">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Complete Your Donation</h3>
+              <p class="text-xs text-slate-500">German Clinic Escrow • 256-bit SSL</p>
+            </div>
+          </div>
+          <button onclick="closeCheckoutModal()" aria-label="Close modal" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Frequency Toggle & Rationale -->
+        <div class="space-y-2 mb-4">
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" id="modal-cadence-once" onclick="setModalCadence('once')" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all text-center cursor-pointer">
+              Give Once
+            </button>
+            <button type="button" id="modal-cadence-monthly" onclick="setModalCadence('monthly')" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Give Monthly</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">2x Impact</span>
+            </button>
+          </div>
+
+          <!-- Subscription Rationale (Concise) -->
+          <div id="modal-subscription-rationale" class="p-3 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs text-slate-700 flex items-start gap-2">
+            <svg class="w-4 h-4 text-brand-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+            <div>
+              <strong class="text-brand-900">Why monthly:</strong> Monthly pledges fund continuous outreach ads so more people learn about Grace’s case and keep her visible until her goal is reached. Cancel anytime in 1 click.
+            </div>
+          </div>
+
+          <!-- One-off Rationale (Concise) -->
+          <div id="modal-oneoff-rationale" class="hidden p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between gap-2">
+            <span>Subscriptions allow us to keep running ads so more people discover Grace’s appeal.</span>
+            <button type="button" onclick="setModalCadence('monthly')" class="font-bold text-brand-700 hover:text-brand-800 underline whitespace-nowrap cursor-pointer text-xs">
+              Switch to Monthly
+            </button>
+          </div>
+        </div>
+
+        <!-- Amount Chips Row -->
+        <div class="space-y-1.5 mb-3.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-700">Select donation amount:</label>
+            <span id="modal-per-day-badge" class="text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">just £0.83/day</span>
+          </div>
+          <div class="grid grid-cols-6 gap-1.5">
+            <button type="button" onclick="setModalAmount(5)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">£5</button>
+            <button type="button" onclick="setModalAmount(15)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">£15</button>
+            <button type="button" onclick="setModalAmount(25)" class="modal-amt-chip active py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">£25</button>
+            <button type="button" onclick="setModalAmount(50)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">£50</button>
+            <button type="button" onclick="setModalAmount(100)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">£100</button>
+            <button type="button" onclick="setModalAmount(250)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">£250</button>
+          </div>
+        </div>
+
+        <!-- Donor Email & Anonymous Toggle -->
+        <div class="space-y-1.5 mb-3.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-slate-700">Donor Email <span class="text-slate-400 font-normal">(for tax receipt & 1-click cancel)</span></label>
+            <label class="flex items-center gap-1.5 cursor-pointer text-xs text-slate-500 hover:text-slate-700">
+              <input type="checkbox" id="modal-anon-check" class="w-3.5 h-3.5 rounded text-brand-600 border-slate-300">
+              <span>Anonymous</span>
+            </label>
+          </div>
+          <input type="email" id="modal-donor-email" placeholder="you@example.com" class="w-full px-3.5 py-2.5 text-base sm:text-sm border-2 border-slate-200 rounded-xl focus:border-brand-600 focus:outline-none text-slate-900 transition-colors">
+        </div>
+
+        <!-- Voluntary Platform Tip Section (Concise) -->
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-3.5 mb-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="block text-xs font-bold text-slate-800">Platform Tip (Optional)</span>
+              <span class="text-[11px] text-slate-500">Helps keep HopeRise 100% free for patients</span>
+            </div>
+            <span id="modal-tip-display" class="text-xs font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200">
+              +£3.75 (15%)
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" onclick="setModalTip(15)" id="modal-tip-btn-15" class="modal-tip-btn active py-2 text-xs rounded-xl cursor-pointer">15%</button>
+            <button type="button" onclick="setModalTip(10)" id="modal-tip-btn-10" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">10%</button>
+            <button type="button" onclick="setModalTip(5)" id="modal-tip-btn-5" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">5%</button>
+            <button type="button" onclick="setModalTip(0)" id="modal-tip-btn-0" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">0%</button>
+          </div>
+
+          <p class="text-[11px] text-slate-500 leading-relaxed pt-1.5 border-t border-slate-200/60">
+            <strong class="text-slate-700">Why tips:</strong> Tips maintain server infrastructure and escrow so patients pay 0% fees.
+          </p>
+        </div>
+
+        <!-- Checkout Actions & Reassurance Footer -->
+        <div class="space-y-2">
+          <button id="modal-submit-cta" onclick="executeModalPledge()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span id="modal-cta-label">Donate just £0.96/day</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </button>
+
+          <div class="pt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 text-center">
+            <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>256-bit SSL • 100% HopeRise Escrow Guarantee</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 6. LEGAL POLICY MODAL (TERMS / PRIVACY / ESCROW) -->
+  <!-- ============================================================== -->
+  <div id="legal-modal" class="fixed inset-0 z-50 hidden" aria-modal="true" role="dialog">
+    <div onclick="closeLegalModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
+    <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 sm:p-7 border border-slate-200 modal-animate my-6 max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <h3 id="legal-modal-title" class="font-bold text-slate-900 text-lg">Terms of Service</h3>
+          <button onclick="closeLegalModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="legal-modal-body" class="overflow-y-auto flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed space-y-3 pr-2">
+          <!-- Content dynamically set -->
+        </div>
+        <div class="pt-3 border-t border-slate-100 mt-4 flex justify-end">
+          <button onclick="closeLegalModal()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all cursor-pointer">
+            I Understand
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MOBILE SYNCHRONIZED BOTTOM DOCK (Sticky & Seamless) -->
+  <!-- ============================================================== -->
+  <div id="mobile-dock" class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 p-3 lg:hidden flex items-center justify-between gap-3 shadow-bottom-dock safe-dock-pb">
+    <div class="min-w-0">
+      <div class="text-sm font-bold text-slate-900 truncate">£35,090 <span class="text-xs font-medium text-slate-500">raised of £90,000</span></div>
+      <div class="w-24 h-1.5 bg-slate-200 rounded-full mt-1 overflow-hidden">
+        <div class="h-full bg-brand-600 rounded-full" style="width:39%"></div>
+      </div>
+    </div>
+    <button onclick="scrollToDonationEngine()" class="bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
+      <span>Donate now</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+    </button>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 7. HIGH-PERFORMANCE CONTROLLER SCRIPT -->
+  <!-- ============================================================== -->
+  <script>
+    // System Environment & Image Resolver
+    const isServedFromCampaign = window.location.pathname.startsWith('/grace') || window.location.port === '3000';
+    const primaryImgPrefix = isServedFromCampaign ? 'images/campaigns/glioblastoma-grace/' : 'campaign/public/images/campaigns/glioblastoma-grace/';
+    const fallbackImgPrefix = isServedFromCampaign ? '/images/campaigns/glioblastoma-grace/' : 'images/campaigns/glioblastoma-grace/';
+
+    // System Data Model
+    const app = {
+      amount: 25,
+      cadence: 'monthly',
+      tip: 15,
+      photoIndex: 0,
+      photos: [
+        {
+          src: primaryImgPrefix + '1.jpg',
+          fallback: fallbackImgPrefix + '1.jpg'
+        },
+        {
+          src: primaryImgPrefix + '2.jpg',
+          fallback: fallbackImgPrefix + '2.jpg'
+        },
+        {
+          src: primaryImgPrefix + '3.jpg',
+          fallback: fallbackImgPrefix + '3.jpg'
+        },
+        {
+          src: primaryImgPrefix + '4.jpg',
+          fallback: fallbackImgPrefix + '4.jpg'
+        }
+      ],
+      impacts: {
+        5: '£5 funds sterile laboratory infusion supplies during outpatient vaccine cycles.',
+        15: '£15 covers specialized clinical patient transport to and from the medical center.',
+        25: '£25 funds vital laboratory supplies for culturing Grace’s dendritic cells in Germany.',
+        50: '£50 funds 1 week of post-vaccine immune monitoring blood panels.',
+        100: '£100 funds targeted neoantigen gene sequencing synthesis at IOZK Cologne.',
+        250: '£250 funds 1 full clinical day of dendritic vaccine culture and cryopreservation.'
+      }
+    };
+
+    // DOM Ready: Initialize Layout, Progress Animations & Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      syncEnginePosition();
+      window.addEventListener('resize', syncEnginePosition);
+      calculateTotal();
+      renderImpact();
+
+      const emailField = document.getElementById('modal-donor-email');
+      if (emailField) {
+        emailField.addEventListener('input', () => {
+          emailField.classList.remove('border-red-400', 'bg-red-50');
+          const err = document.getElementById('email-error-msg');
+          if (err) err.remove();
+        });
+      }
+
+      // Check initial gallery image state (if already cached or loading)
+      const mainImg = document.getElementById('main-gallery-image');
+      if (mainImg) {
+        if (mainImg.complete && mainImg.naturalWidth > 0) {
+          mainImg.classList.remove('opacity-0');
+          document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');
+        } else {
+          mainImg.addEventListener('load', () => {
+            mainImg.classList.remove('opacity-0');
+            document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');
+          });
+        }
+      }
+
+      // Check initial thumbnail images state
+      document.querySelectorAll('.gallery-thumb img').forEach(thumbImg => {
+        if (thumbImg.complete && thumbImg.naturalWidth > 0) {
+          thumbImg.classList.remove('opacity-0');
+          thumbImg.parentElement?.classList.remove('skeleton-shimmer');
+        } else {
+          thumbImg.addEventListener('load', () => {
+            thumbImg.classList.remove('opacity-0');
+            thumbImg.parentElement?.classList.remove('skeleton-shimmer');
+          });
+        }
+      });
+
+      // Keyboard Esc handler for modals
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeCheckoutModal();
+          closeLegalModal();
+        }
+      });
+    });
+
+    // Smooth scroll down to main donation engine on mobile
+    function scrollToDonationEngine() {
+      const engine = document.getElementById('unified-donation-engine');
+      if (engine) {
+        const y = engine.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+
+    // Responsive engine placement: on mobile, moves above medical updates; on desktop, moves to sticky right rail
+    function syncEnginePosition() {
+      const engine = document.getElementById('unified-donation-engine');
+      const desktopSlot = document.getElementById('desktop-engine-slot');
+      const mobileSlot = document.getElementById('mobile-engine-slot');
+
+      if (window.innerWidth < 1024) {
+        if (mobileSlot && engine && engine.parentElement !== mobileSlot) {
+          mobileSlot.appendChild(engine);
+        }
+      } else {
+        if (desktopSlot && engine && engine.parentElement !== desktopSlot) {
+          desktopSlot.appendChild(engine);
+        }
+      }
+    }
+
+    // 1. Photo Switcher (Prominent Arrows, Visual Thumbnails, Zero Broken Icons)
+    function switchPhoto(idx) {
+      app.photoIndex = idx;
+      const img = document.getElementById('main-gallery-image');
+      const pill = document.getElementById('main-gallery-pill');
+      const skeleton = document.getElementById('main-gallery-skeleton');
+      const item = app.photos[idx];
+
+      if (skeleton) skeleton.classList.remove('opacity-0');
+      img.classList.add('opacity-0');
+
+      const temp = new Image();
+      temp.src = item.src;
+      temp.onload = () => {
+        img.src = item.src;
+        img.classList.remove('opacity-0');
+        if (skeleton) skeleton.classList.add('opacity-0');
+      };
+      temp.onerror = () => {
+        img.src = item.fallback;
+        img.classList.remove('opacity-0');
+        if (skeleton) skeleton.classList.add('opacity-0');
+      };
+      pill.textContent = `${idx + 1} / ${app.photos.length}`;
+
+      document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+        if (i === idx) {
+          thumb.classList.add('active-thumb', 'border-brand-600', 'opacity-100');
+          thumb.classList.remove('border-transparent', 'opacity-65');
+        } else {
+          thumb.classList.remove('active-thumb', 'border-brand-600', 'opacity-100');
+          thumb.classList.add('border-transparent', 'opacity-65');
+        }
+      });
+    }
+
+    function cyclePhoto(dir) {
+      let next = app.photoIndex + dir;
+      if (next < 0) next = app.photos.length - 1;
+      if (next >= app.photos.length) next = 0;
+      switchPhoto(next);
+    }
+
+    // 2. Donation Amount Selection on Page
+    function chooseAmount(amt, btn) {
+      app.amount = amt;
+      const customBox = document.getElementById('custom-amount-box');
+      if (customBox) customBox.value = '';
+
+      // Sync active state on main page chips
+      document.querySelectorAll('.amount-chip').forEach(c => {
+        const val = parseInt(c.textContent.replace('£', ''), 10);
+        if (val === amt) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+
+      // Sync active state on modal chips
+      document.querySelectorAll('.modal-amt-chip').forEach(c => {
+        const val = parseInt(c.textContent.replace('£', ''), 10);
+        if (val === amt) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+
+      const label = document.getElementById('tier-badge-label');
+      if (amt === 5) label.textContent = 'Supporter pledge';
+      else if (amt === 25) label.textContent = 'Most common gift';
+      else if (amt >= 100) label.textContent = 'Clinical sponsor tier';
+      else label.textContent = 'Selected';
+
+      renderImpact();
+      calculateTotal();
+    }
+
+    function onCustomAmountInput(val) {
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0) {
+        app.amount = num;
+        document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.modal-amt-chip').forEach(c => c.classList.remove('active'));
+        document.getElementById('tier-badge-label').textContent = 'Custom amount';
+        renderImpact();
+        calculateTotal();
+      }
+    }
+
+    function setCadence(type) {
+      app.cadence = type;
+      const onceBtn = document.getElementById('cadence-once');
+      const monthlyBtn = document.getElementById('cadence-monthly');
+
+      if (type === 'monthly') {
+        monthlyBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.remove('text-slate-600');
+        onceBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.add('text-slate-600');
+      } else {
+        onceBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.remove('text-slate-600');
+        monthlyBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.add('text-slate-600');
+      }
+
+      renderImpact();
+      calculateTotal();
+    }
+
+    function renderImpact() {
+      const container = document.getElementById('live-impact-container');
+      const el = document.getElementById('live-impact-text');
+      const amt = app.amount;
+      let text = app.impacts[amt] || `£${amt} provides critical direct funding toward Grace's European medical care.`;
+
+      if (app.cadence === 'monthly') {
+        text += ' Monthly gifts guarantee sustained continuity across all 6 vaccine cycles.';
+      }
+
+      el.innerHTML = text;
+
+      if (container) {
+        container.classList.remove('impact-animate');
+        void container.offsetWidth;
+        container.classList.add('impact-animate');
+      }
+    }
+
+    function calculateTotal() {
+      const ctaLabel = document.getElementById('main-cta-label');
+      if (ctaLabel) {
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          ctaLabel.textContent = `Donate just £${daily}/day`;
+        } else {
+          ctaLabel.textContent = `Donate £${app.amount}`;
+        }
+      }
+      const tierBadge = document.getElementById('tier-badge-label');
+      if (tierBadge) {
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          tierBadge.textContent = `just £${daily}/day`;
+        } else {
+          tierBadge.textContent = app.amount === 25 ? 'Most common gift' : `£${app.amount} one-off`;
+        }
+      }
+    }
+
+    // 3. Checkout Modal Controller (Pre-filled from page selection!)
+    function openCheckoutModal(mode = 'standard') {
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      syncModalWithAppState();
+      calculateModalTotal();
+
+      if (mode === 'express') {
+        executeModalPledge('express');
+      }
+    }
+
+    function closeCheckoutModal() {
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function syncModalWithAppState() {
+      const amt = app.amount;
+      const cadenceStr = app.cadence === 'monthly' ? '/ month' : 'one-off';
+      const summaryAmt = document.getElementById('modal-summary-amount');
+      if (summaryAmt) summaryAmt.textContent = `£${amt} ${cadenceStr}`;
+      const summaryBadge = document.getElementById('modal-summary-badge');
+      if (summaryBadge) summaryBadge.textContent = app.cadence === 'monthly' ? 'Monthly Sustainer' : 'One-off Gift';
+
+      const perDayBadge = document.getElementById('modal-per-day-badge');
+      if (perDayBadge) {
+        if (app.cadence === 'monthly') {
+          const dailyAmt = (app.amount / 30).toFixed(2);
+          perDayBadge.textContent = `just £${dailyAmt}/day`;
+          perDayBadge.classList.remove('hidden');
+        } else {
+          perDayBadge.classList.add('hidden');
+        }
+      }
+
+      const impactDesc = document.getElementById('modal-impact-desc');
+      if (impactDesc) impactDesc.textContent = app.impacts[amt] || `£${amt} directly finances Grace's dendritic cell therapy in Germany.`;
+
+      // Sync cadence buttons in modal
+      const modalCadenceMonthly = document.getElementById('modal-cadence-monthly');
+      const modalCadenceOnce = document.getElementById('modal-cadence-once');
+      const subRationale = document.getElementById('modal-subscription-rationale');
+      const oneoffRationale = document.getElementById('modal-oneoff-rationale');
+
+      if (app.cadence === 'monthly') {
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.remove('hidden');
+        if (oneoffRationale) oneoffRationale.classList.add('hidden');
+      } else {
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.add('hidden');
+        if (oneoffRationale) oneoffRationale.classList.remove('hidden');
+      }
+
+      // Highlight matching chip inside modal if exact match
+      document.querySelectorAll('.modal-amt-chip').forEach(chip => {
+        const chipVal = parseInt(chip.textContent.replace('£', ''), 10);
+        if (chipVal === amt) {
+          chip.classList.add('active');
+        } else {
+          chip.classList.remove('active');
+        }
+      });
+
+      // Highlight active tip button
+      if (app.tip === undefined) app.tip = 15;
+      document.querySelectorAll('.modal-tip-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const activeTipBtn = document.getElementById(`modal-tip-btn-${app.tip}`);
+      if (activeTipBtn) {
+        activeTipBtn.classList.add('active');
+      }
+    }
+
+    function setModalCadence(cadence) {
+      setCadence(cadence);
+      syncModalWithAppState();
+      calculateModalTotal();
+    }
+
+    function setModalAmount(amt) {
+      app.amount = amt;
+      chooseAmount(amt);
+      syncModalWithAppState();
+      calculateModalTotal();
+    }
+
+    function setModalTip(percent) {
+      app.tip = percent;
+      document.querySelectorAll('.modal-tip-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`modal-tip-btn-${percent}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+      calculateModalTotal();
+    }
+
+    function calculateModalTotal() {
+      if (app.tip === undefined) app.tip = 15;
+      const tipPercent = app.tip;
+      const tipAmt = (app.amount * (tipPercent / 100));
+      const total = app.amount + tipAmt;
+
+      const tipDisplay = document.getElementById('modal-tip-display');
+      if (tipDisplay) {
+        if (tipPercent === 0) {
+          tipDisplay.textContent = '£0.00 (0%)';
+        } else {
+          tipDisplay.textContent = `+£${tipAmt.toFixed(2)} (${tipPercent}%)`;
+        }
+      }
+
+      const ctaLabel = document.getElementById('modal-cta-label');
+      if (ctaLabel) {
+        if (app.cadence === 'monthly') {
+          const daily = (total / 30).toFixed(2);
+          ctaLabel.textContent = `Donate just £${daily}/day`;
+        } else {
+          ctaLabel.textContent = `Donate £${total.toFixed(2)}`;
+        }
+      }
+    }
+
+    function executeModalPledge(method = 'card') {
+      const emailInput = document.getElementById('modal-donor-email');
+      const email = emailInput.value;
+      const isAnon = document.getElementById('modal-anon-check').checked;
+
+      emailInput.classList.remove('border-red-400', 'bg-red-50');
+      const existingErr = document.getElementById('email-error-msg');
+      if (existingErr) existingErr.remove();
+
+      if (app.cadence === 'monthly' && (!email || !email.includes('@'))) {
+        emailInput.classList.add('border-red-400', 'bg-red-50');
+        const errMsg = document.createElement('p');
+        errMsg.id = 'email-error-msg';
+        errMsg.className = 'text-xs text-red-600 font-medium mt-1';
+        errMsg.textContent = 'Email is required for subscriptions — we need it to send receipts and let you cancel anytime with 1 click.';
+        emailInput.parentNode.insertBefore(errMsg, emailInput.nextSibling);
+        emailInput.focus();
+        return;
+      }
+
+      const submitBtn = document.getElementById('modal-submit-cta');
+      submitBtn.classList.add('opacity-75');
+      document.getElementById('modal-cta-label').textContent = 'Connecting to Secure Checkout...';
+
+      const tipAmount = Math.round(app.amount * (app.tip / 100) * 100) / 100;
+
+      if (typeof Tracking !== 'undefined') {
+        Tracking.trackInitiateCheckout({
+          value: app.amount + tipAmount,
+          currency: 'GBP',
+          contentName: 'glioblastoma-grace'
+        });
+        if (email) Tracking.setUserEmail(email);
+      }
+
+      const trackingData = (typeof Tracking !== 'undefined') ? Tracking.getTrackingData() : {};
+      const clientLocation = (typeof Tracking !== 'undefined') ? Tracking.getClientLocation() : null;
+
+      fetch('/api/init-donation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: app.amount,
+          tip: tipAmount,
+          campaign: 'glioblastoma-grace',
+          isAnonymous: isAnon,
+          donorEmail: email || null,
+          currency: 'GBP',
+          clientLocation: clientLocation,
+          tracking: {
+            cadence: app.cadence,
+            variant: window.__AB_VARIANT || 'control',
+            sourceUrl: window.location.href,
+            userAgent: navigator.userAgent,
+            fbp: trackingData.fbp || null,
+            fbc: trackingData.fbc || null,
+            fbclid: trackingData.fbclid || null,
+            ttp: trackingData.ttp || null,
+            ttclid: trackingData.ttclid || null,
+            utm_source: trackingData.utm_source || null,
+            utm_medium: trackingData.utm_medium || null,
+            utm_campaign: trackingData.utm_campaign || null
+          }
+        })
+      })
+      .then(res => res.ok ? res.json() : Promise.reject(new Error('Server error')))
+      .then(data => {
+        if (data.redirectUrl) window.location.replace(data.redirectUrl);
+      })
+      .catch(() => {
+        submitBtn.classList.remove('opacity-75');
+        calculateModalTotal();
+        alert('Unable to connect to secure checkout. Please try again.');
+      });
+    }
+
+    // 4. Dossier Grid Selector (Zero sidescroll, doctor-level rigor)
+    function selectDossier(tabName, btn) {
+      document.querySelectorAll('.dossier-card').forEach(b => {
+        b.classList.remove('active-dossier', 'border-brand-600', 'bg-brand-50');
+        b.classList.add('border-slate-200', 'bg-slate-50');
+      });
+      btn.classList.add('active-dossier', 'border-brand-600', 'bg-brand-50');
+      btn.classList.remove('border-slate-200', 'bg-slate-50');
+
+      document.querySelectorAll('.dossier-content').forEach(c => c.classList.add('hidden'));
+      const active = document.getElementById(`dossier-${tabName}`);
+      if (active) active.classList.remove('hidden');
+    }
+
+    // 5. FAQ Accordion
+    function toggleAccordion(btn) {
+      const parent = btn.closest('.accordion-item');
+      const wasOpen = parent.classList.contains('open');
+      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) {
+        parent.classList.add('open');
+      }
+    }
+
+    // 6. Legal Modal Viewer
+    const legalTexts = {
+      terms: {
+        title: "Terms of Service",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Platform Nature & Scope</h4>
+          <p>HopeRise UK operates as a verified medical appeal registry, connecting donors with patients who have documented clinical need for treatments not available or funded through their national health service. HopeRise is not a charity, hospital, or medical provider. All appeals undergo independent clinical verification before publication.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Donor Obligations</h4>
+          <p>By contributing, you confirm you are at least 18 years of age and that the payment method used is your own or that you have explicit authorization from the account holder. Contributions are voluntary and non-refundable except as outlined in the Refund Policy. Recurring pledges may be cancelled at any time.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Fund Disbursement</h4>
+          <p>Funds are held in a segregated trust account and disbursed directly against pro-forma hospital invoices issued by the designated clinical provider. No funds are released to the patient, their family, or any intermediary. HopeRise retains no percentage of clinical funds raised.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Platform Maintenance Contribution</h4>
+          <p>An optional platform maintenance tip may be offered at checkout. This contribution is clearly separated from the clinical fund and supports operational costs including payment processing, hosting, donor communications, and outreach that enables the appeal to reach more supporters.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Appeal Verification Standard</h4>
+          <p>Each published appeal includes documentation verified against: (a) original hospital diagnostic records, (b) named consulting physician or specialist confirmation, (c) treatment plan issued by the receiving institution, and (d) cost documentation under the applicable medical fee schedule (e.g. German GOÄ, or NHS tariff reference).</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Limitation of Liability</h4>
+          <p>HopeRise UK facilitates verified appeals but does not guarantee any specific medical outcome. Treatment outcomes depend on the clinical provider and the patient's individual medical circumstances. HopeRise shall not be liable for clinical decisions made by the treating institution.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">7. Governing Law</h4>
+          <p>These terms are governed by the laws of England and Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+        `
+      },
+      privacy: {
+        title: "Privacy Policy",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Data Controller</h4>
+          <p>HopeRise UK is the data controller for personal information collected through this platform. We are committed to protecting your privacy in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Information We Collect</h4>
+          <p>We collect only the information necessary to process your contribution and maintain your donor account: name, email address, payment card details (processed and tokenized by our PCI DSS Level 1 certified payment processor), and optional display preferences. We do not store raw card numbers on our servers.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. How We Use Your Data</h4>
+          <p>Your data is used to: (a) process and receipt your contribution, (b) manage recurring pledge schedules, (c) send campaign updates you have opted into, and (d) comply with financial regulations and anti-fraud requirements. We do not sell, trade, or rent your personal data to third parties for marketing purposes.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Anonymous Giving</h4>
+          <p>If you select the anonymous contribution option, your name will not appear on any public-facing part of the campaign. Your data will still be retained internally for financial compliance and receipt purposes, but will not be disclosed publicly.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Data Retention</h4>
+          <p>Transaction records are retained for 7 years as required by HMRC financial regulations. Donor communication preferences and account data are retained until you request deletion, at which point we will erase all non-legally-required records within 30 days.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Your Rights</h4>
+          <p>Under UK GDPR, you have the right to: access your personal data, rectify inaccurate data, request erasure (where legally permitted), restrict processing, data portability, and object to processing. To exercise any of these rights, contact us at <span class="text-brand-600">support@hoperise.uk</span>.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">7. Payment Security</h4>
+          <p>All payment transactions are encrypted via TLS 1.3 (256-bit) and processed by a PCI DSS Level 1 certified payment processor. Card data is tokenized at the point of entry and never touches our application servers. We undergo regular security audits and vulnerability assessments.</p>
+        `
+      },
+      escrow: {
+        title: "Clinical Escrow Guarantee",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Dedicated Trust Governance</h4>
+          <p>Every pound raised for Grace Clarke is allocated exclusively to her approved clinical roadmap at the Immun-Onkologisches Zentrum Köln (IOZK), Germany. Funds cover: IO-VAC dendritic cell vaccine synthesis (autologous manufacturing under AMG §13), stereotactic proton beam radiotherapy, hyperthermia sessions, and associated clinical monitoring and imaging.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Pro-Forma Invoice Verification</h4>
+          <p>No disbursement occurs without a pro-forma hospital invoice issued by IOZK under the German Medical Fee Schedule (Gebührenordnung für Ärzte, GOÄ). Each invoice is cross-referenced against: (a) Grace's Salford Royal Hospital patient records and MDT treatment plan, (b) the IOZK-issued treatment protocol, and (c) the approved clinical budget published on this appeal page.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Direct Hospital Payment</h4>
+          <p>Funds are transferred directly from the segregated trust account to IOZK's designated hospital account. At no point are funds released to the patient, their family members, or any non-clinical intermediary. Wire transfer confirmations are retained as part of the audit trail.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Surplus & Shortfall Provisions</h4>
+          <p>If the appeal exceeds its target, surplus funds are allocated to extended monitoring, follow-up imaging, and post-treatment immunological assessments as recommended by the treating oncologist. If the target is not reached, raised funds are applied to the highest-priority treatment components as determined by the clinical team, starting with the IO-VAC dendritic cell synthesis.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Treatment Cancellation Provision</h4>
+          <p>In the unforeseen event that scheduled treatment cannot proceed as clinically certified (due to medical contraindication, patient decision, or institutional inability), funds remain protected under trust governance. Donors will be notified within 14 days, and funds will be either reallocated to an alternative approved treatment pathway or made available for refund upon request.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Transparency Reporting</h4>
+          <p>Campaign updates are published to the appeal page following each significant clinical milestone. These updates include treatment status, next scheduled intervention, and running fund allocation summaries, providing donors with ongoing visibility into how their contributions are being applied.</p>
+        `
+      },
+      refund: {
+        title: "Refund Policy",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. One-Time Contributions</h4>
+          <p>If you made an unintended contribution or were charged an incorrect amount, you may request a full refund within 14 days of the transaction date by contacting <span class="text-brand-600">support@hoperise.uk</span> with your email receipt or transaction reference. Refunds are processed to the original payment method within 5-10 business days.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Recurring Pledge Cancellation</h4>
+          <p>Monthly pledges can be cancelled at any time with immediate effect. Upon cancellation, no further charges will be applied. Cancellation can be initiated via the link in your monthly receipt email, or by contacting support. Already-processed monthly charges are non-refundable unless they fall within the 14-day window of the most recent charge.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Platform Maintenance Tip</h4>
+          <p>The optional platform maintenance tip is treated as a separate transaction and follows the same 14-day refund window as one-time contributions. It can be refunded independently of the clinical fund contribution.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Circumstances Beyond Refund</h4>
+          <p>Refunds cannot be issued for contributions that have already been disbursed against a verified hospital invoice. In such cases, the clinical escrow provisions (see Clinical Escrow Guarantee) apply. We will work with you to find an equitable resolution.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Dispute Resolution</h4>
+          <p>If you are dissatisfied with the outcome of a refund request, you may escalate your concern to our independent donor ombudsman by emailing <span class="text-brand-600">ombudsman@hoperise.uk</span>. We aim to resolve all escalated disputes within 10 business days.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      const data = legalTexts[type] || legalTexts.terms;
+      document.getElementById('legal-modal-title').textContent = data.title;
+      document.getElementById('legal-modal-body').innerHTML = data.body;
+      document.getElementById('legal-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.add('hidden');
+      if (document.getElementById('checkout-modal').classList.contains('hidden')) {
+        document.body.style.overflow = '';
+      }
+    }
+
+    function shareAppeal() {
+      if (navigator.share) {
+        navigator.share({
+          title: "Help Grace Beat Glioblastoma",
+          text: "Help 21yo Manchester medical student Grace Clarke access lifesaving immunotherapy in Germany. Even £5 helps:",
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Campaign link copied to clipboard!');
+      }
+    }
+
+    // ================================================================
+    // PRODUCTION BACKEND INTEGRATION
+    // ================================================================
+
+    // Live Stats Injection: update DOM from server-injected __CAMPAIGN_DATA
+    (function injectLiveStats() {
+      const d = window.__CAMPAIGN_DATA;
+      if (!d) return;
+      const raised = d.raised || d._realStats?.raised;
+      const donors = d.donorCount || d._realStats?.donorCount;
+      const goal = d.goal || 90000;
+      if (!raised) return;
+
+      const pct = Math.min(100, Math.round((raised / goal) * 100));
+      const fmtRaised = '£' + raised.toLocaleString('en-GB');
+      const fmtGoal = '£' + goal.toLocaleString('en-GB');
+      const fmtDonors = donors ? donors.toLocaleString('en-GB') : null;
+
+      document.querySelectorAll('[data-live="raised"]').forEach(el => el.textContent = fmtRaised);
+      document.querySelectorAll('[data-live="goal"]').forEach(el => el.textContent = fmtGoal);
+      document.querySelectorAll('[data-live="pct"]').forEach(el => el.textContent = pct + '%');
+      document.querySelectorAll('[data-live="donors"]').forEach(el => el.textContent = fmtDonors);
+      document.querySelectorAll('.progress-fill').forEach(el => el.style.width = pct + '%');
+
+      const dockRaised = document.querySelector('#mobile-dock .text-sm.font-bold');
+      if (dockRaised) {
+        dockRaised.innerHTML = `${fmtRaised} <span class="text-xs font-medium text-slate-500">raised of ${fmtGoal}</span>`;
+      }
+      const dockBar = document.querySelector('#mobile-dock .bg-brand-600.rounded-full');
+      if (dockBar) dockBar.style.width = pct + '%';
+    })();
+
+    // Tracking: init + fire PageView/ViewContent on load
+    (async function initTracking() {
+      if (typeof Tracking === 'undefined') return;
+      await Tracking.init();
+      Tracking.trackPageView();
+      Tracking.trackViewContent({ contentType: 'campaign', contentName: 'glioblastoma-grace' });
+    })();
+
+    // Track AddToCart when donation modal opens
+    (function trackModalOpen() {
+      const origOpen = window.openCheckoutModal;
+      window.openCheckoutModal = function(mode) {
+        if (typeof Tracking !== 'undefined') {
+          Tracking.trackAddToCart({
+            value: app.amount,
+            currency: 'GBP',
+            contentName: 'glioblastoma-grace'
+          });
+        }
+        origOpen(mode);
+      };
+    })();
+
+    // Thank-you overlay on return from store with ?status=complete
+    (function handlePaymentReturn() {
+      if (typeof Tracking !== 'undefined') {
+        const completed = Tracking.getCompletedReturn();
+        if (completed && completed.amount > 0) {
+          Tracking.trackPurchase({
+            value: completed.amount,
+            currency: completed.currency || 'GBP',
+            contentName: 'glioblastoma-grace'
+          }, completed.eventId);
+        }
+        if (completed) {
+          if (typeof showThankYouOverlay === 'function') {
+            setTimeout(showThankYouOverlay, 300);
+          }
+        }
+      } else {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('status') === 'complete') {
+          ['status', 'eid', 'amt', 'cur'].forEach(k => params.delete(k));
+          window.history.replaceState({}, '', window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
+          if (typeof showThankYouOverlay === 'function') {
+            setTimeout(showThankYouOverlay, 300);
+          }
+        }
+      }
+    })();
+  </script>
+
+  <!-- Production tracking + engagement modules (loaded from campaign server) -->
+  <script src="/js/tracking.js"></script>
+  <script src="/js/ab-tracker.js"></script>
+  <script src="/js/thank-you-overlay.js"></script>
+
+</body>
+</html>

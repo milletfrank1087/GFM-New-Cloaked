@@ -652,7 +652,7 @@ module.exports = function createStripeRouter(ctx) {
       const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
 
       StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
-      res.json({ success: true, redirectUrl });
+      res.json({ success: true, redirectUrl, sessionId: donor.sid || null });
     } catch (error) {
       const ref = (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
       StoreLog.error('confirm_failed', ref, `${error.code || 'ERROR'}: ${error.message}`);
@@ -755,6 +755,104 @@ module.exports = function createStripeRouter(ctx) {
     } catch (error) {
       StoreLog.error('store_checkout', '---', `${error.code || 'ERROR'}: ${error.message}`);
       res.status(500).json({ error: 'Payment setup failed' });
+    }
+  });
+
+  router.post('/api/create-subscription-upsell', async (req, res) => {
+    try {
+      if (!stripe) return res.status(400).json({ error: 'Stripe not configured' });
+
+      const { monthlyAmount, sessionId } = req.body;
+      if (!sessionId) return res.status(400).json({ error: 'Missing session', success: false });
+      if (!monthlyAmount || monthlyAmount < 1) return res.status(400).json({ error: 'Invalid amount', success: false });
+
+      const { data: session, error: sessErr } = await supabase
+        .from('checkout_sessions')
+        .select('*')
+        .eq('id', sessionId)
+        .single();
+
+      if (sessErr || !session) return res.status(400).json({ error: 'Session not found', success: false });
+
+      const donorCurrency = (session.currency || 'EUR').toLowerCase();
+      const decimals = getDecimals(donorCurrency.toUpperCase());
+      const multiplier = Math.pow(10, decimals);
+      const amountInUnits = Math.round(monthlyAmount * multiplier);
+
+      const email = session.email || '';
+      const mk = storeConfig.metadataKeys || {};
+
+      let customerId = session.stripe_customer_id || null;
+
+      if (!customerId && email) {
+        const existing = await stripe.customers.list({ email, limit: 1 });
+        if (existing.data.length > 0) customerId = existing.data[0].id;
+      }
+
+      if (!customerId) {
+        const customer = await stripe.customers.create({
+          email: email || undefined,
+          metadata: { [mk.sessionRef || 'sessionRef']: sessionId.substring(0, 12), upsell: 'true' }
+        });
+        customerId = customer.id;
+      }
+
+      if (session.stripe_payment_intent_id) {
+        try {
+          const pi = await stripe.paymentIntents.retrieve(session.stripe_payment_intent_id);
+          if (pi.payment_method) {
+            const pmId = typeof pi.payment_method === 'string' ? pi.payment_method : pi.payment_method.id;
+            try {
+              await stripe.paymentMethods.attach(pmId, { customer: customerId });
+            } catch (attachErr) {
+              if (!attachErr.message?.includes('already been attached')) throw attachErr;
+            }
+            await stripe.customers.update(customerId, {
+              invoice_settings: { default_payment_method: pmId }
+            });
+          }
+        } catch (pmErr) {
+          StoreLog.error('upsell_pm', session.campaign_ref || '---', pmErr.message);
+        }
+      }
+
+      const price = await stripe.prices.create({
+        unit_amount: amountInUnits,
+        currency: donorCurrency,
+        recurring: { interval: 'month' },
+        product_data: { name: storeConfig.products?.[0]?.name || 'Monthly Support' }
+      });
+
+      const subscription = await stripe.subscriptions.create({
+        customer: customerId,
+        items: [{ price: price.id }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        metadata: {
+          [mk.referenceCode || 'referenceCode']: 'UPSELL-' + sessionId.substring(0, 8),
+          cadence: 'monthly',
+          upsell: 'true',
+          original_session: sessionId
+        },
+        expand: ['latest_invoice.payment_intent']
+      });
+
+      const inv = subscription.latest_invoice;
+      const pi = inv?.payment_intent;
+
+      if (pi && pi.status === 'requires_payment_method') {
+        const customer = await stripe.customers.retrieve(customerId);
+        const defaultPm = customer.invoice_settings?.default_payment_method;
+        if (defaultPm) {
+          await stripe.paymentIntents.confirm(pi.id, { payment_method: defaultPm });
+        }
+      }
+
+      StoreLog.event('upsell_created', session.campaign_ref || '---', `${subscription.id} - ${fmtAmount(monthlyAmount, donorCurrency.toUpperCase())} ${donorCurrency.toUpperCase()}/mo`);
+      res.json({ success: true, subscriptionId: subscription.id });
+    } catch (error) {
+      StoreLog.error('upsell_failed', '---', error.message);
+      res.status(500).json({ error: 'Subscription setup failed', success: false });
     }
   });
 

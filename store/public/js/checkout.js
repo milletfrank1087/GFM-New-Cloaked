@@ -146,8 +146,11 @@ async function initCheckout() {
 
   try {
     var isSanctuaryCheckout = document.querySelector('.sanctuary-card') !== null;
-    var checkoutFont = isSanctuaryCheckout ? "'DM Sans', sans-serif" : 'Inter, system-ui, -apple-system, sans-serif';
-    var checkoutRadius = isSanctuaryCheckout ? '6px' : '8px';
+    var isV2Checkout = document.body.dataset.checkoutVersion === 'v2';
+    var checkoutFont = isSanctuaryCheckout ? "'DM Sans', sans-serif"
+      : isV2Checkout ? "'Plus Jakarta Sans', system-ui, sans-serif"
+      : 'Inter, system-ui, -apple-system, sans-serif';
+    var checkoutRadius = isSanctuaryCheckout ? '6px' : isV2Checkout ? '10px' : '8px';
 
     elements = stripe.elements({
       mode: isSanctuaryCheckout ? 'payment' : (isSubscriptionMode ? 'subscription' : 'payment'),

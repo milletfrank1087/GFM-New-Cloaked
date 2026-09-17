@@ -84,10 +84,46 @@ module.exports = function createPagesRouter(ctx) {
     return handlePetition(req, res, pixelScripts, assignedVariant);
   });
 
-  router.get('*', (req, res) => {
+  function serveStandaloneCampaign(templateFile, req, res) {
+    const templatePath = path.join(__dirname, '..', 'public', templateFile);
+    if (!fs.existsSync(templatePath)) {
+      return null;
+    }
     const pixelScripts = buildPixelScripts();
     const assignedVariant = resolveVariant(req, res);
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
+    const ua = req.headers['user-agent'] || '';
+    const activeSlug = typeof ACTIVE_CAMPAIGN === 'string' ? ACTIVE_CAMPAIGN : (ACTIVE_CAMPAIGN?.id || 'unknown');
+    try { recordImpression(assignedVariant, ua, ip, activeSlug, req, res); } catch (_) {}
+
+    let html = fs.readFileSync(templatePath, 'utf8');
+    html = html.replace('<!-- TRACKING_PIXELS_PLACEHOLDER -->', pixelScripts);
+
+    const cachedCampaignJSON = getCachedCampaignJSON();
+    if (cachedCampaignJSON) {
+      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__CAMPAIGN_DATA=${cachedCampaignJSON};window.__AB_VARIANT="${assignedVariant}";</script>`);
+    } else {
+      html = html.replace('<!-- CAMPAIGN_DATA_PLACEHOLDER -->', `<script>window.__AB_VARIANT="${assignedVariant}";</script>`);
+    }
+    return res.send(html);
+  }
+
+  const STANDALONE_CAMPAIGN_MAP = {
+    'glioblastoma-grace': 'grace.html',
+    'glioblastoma-emily': 'emily.html'
+  };
+
+  router.get('*', (req, res) => {
     const activeSlug = typeof ACTIVE_CAMPAIGN === 'string' ? ACTIVE_CAMPAIGN : (ACTIVE_CAMPAIGN?.id || 'leukemia-sofia');
+
+    const standaloneFile = STANDALONE_CAMPAIGN_MAP[activeSlug];
+    if (standaloneFile) {
+      const result = serveStandaloneCampaign(standaloneFile, req, res);
+      if (result) return;
+    }
+
+    const pixelScripts = buildPixelScripts();
+    const assignedVariant = resolveVariant(req, res);
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
     const ua = req.headers['user-agent'] || '';
     try { recordImpression(assignedVariant, ua, ip, activeSlug, req, res); } catch (_) {}

@@ -46,6 +46,7 @@ const ALLOWLIST = [
   /^stores[\\/][^\\/]+[\\/]views[\\/]pages[\\/]checkout-donor\.ejs$/,
   /^stores[\\/][^\\/]+[\\/]views[\\/]pages[\\/]checkout-sanctuary\.ejs$/,
   /^views[\\/]pages[\\/]checkout-sanctuary\.ejs$/,
+  /^views[\\/]pages[\\/]checkout-donor-v2\.ejs$/,
 ];
 
 function shouldSkipDir(name) {
