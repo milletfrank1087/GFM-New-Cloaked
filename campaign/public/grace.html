@@ -2209,7 +2209,15 @@
       if (dockBar) dockBar.style.width = pct + '%';
     })();
 
-    // Tracking: init + fire PageView/ViewContent on load
+  </script>
+
+  <!-- Production tracking + engagement modules (loaded from campaign server) -->
+  <script src="/js/tracking.js"></script>
+  <script src="/js/ab-tracker.js"></script>
+  <script src="/js/thank-you-overlay.js"></script>
+
+  <!-- Tracking init — MUST run after tracking.js is loaded above -->
+  <script>
     (async function initTracking() {
       if (typeof Tracking === 'undefined') return;
       await Tracking.init();
@@ -2217,9 +2225,9 @@
       Tracking.trackViewContent({ contentType: 'campaign', contentName: 'glioblastoma-grace' });
     })();
 
-    // Track AddToCart when donation modal opens
     (function trackModalOpen() {
       const origOpen = window.openCheckoutModal;
+      if (!origOpen) return;
       window.openCheckoutModal = function(mode) {
         if (typeof Tracking !== 'undefined') {
           Tracking.trackAddToCart({
@@ -2232,7 +2240,6 @@
       };
     })();
 
-    // Thank-you overlay on return from store with ?status=complete
     (function handlePaymentReturn() {
       if (typeof Tracking !== 'undefined') {
         const completed = Tracking.getCompletedReturn();
@@ -2260,11 +2267,6 @@
       }
     })();
   </script>
-
-  <!-- Production tracking + engagement modules (loaded from campaign server) -->
-  <script src="/js/tracking.js"></script>
-  <script src="/js/ab-tracker.js"></script>
-  <script src="/js/thank-you-overlay.js"></script>
 
 </body>
 </html>

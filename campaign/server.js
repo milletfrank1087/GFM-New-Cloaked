@@ -250,7 +250,7 @@ async function refreshCampaignCache() {
 
     cachedCampaignJSON = JSON.stringify({
       ...campaign,
-      raised: (campaign.raised || 0) + realStats.realRaised,
+      raised: Math.round((campaign.raised || 0) + realStats.realRaised),
       donorCount: (campaign.donorCount || 0) + realStats.realDonorCount,
       _realStats: { realRaised: realStats.realRaised, realDonorCount: realStats.realDonorCount }
     });

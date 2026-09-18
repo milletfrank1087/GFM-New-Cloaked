@@ -2208,6 +2208,13 @@
       if (dockBar) dockBar.style.width = pct + '%';
     })();
 
+  </script>
+
+  <script src="/js/tracking.js"></script>
+  <script src="/js/ab-tracker.js"></script>
+  <script src="/js/thank-you-overlay.js"></script>
+
+  <script>
     (async function initTracking() {
       if (typeof Tracking === 'undefined') return;
       await Tracking.init();
@@ -2217,6 +2224,7 @@
 
     (function trackModalOpen() {
       const origOpen = window.openCheckoutModal;
+      if (!origOpen) return;
       window.openCheckoutModal = function(mode) {
         if (typeof Tracking !== 'undefined') {
           Tracking.trackAddToCart({
@@ -2256,10 +2264,6 @@
       }
     })();
   </script>
-
-  <script src="/js/tracking.js"></script>
-  <script src="/js/ab-tracker.js"></script>
-  <script src="/js/thank-you-overlay.js"></script>
 
 </body>
 </html>
