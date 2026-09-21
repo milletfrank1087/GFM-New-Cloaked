@@ -1,6 +1,7 @@
 const { supabase } = require('./db/client');
 
 const ADS_MANAGER_URL = process.env.ADS_MANAGER_URL || 'https://fb-ads-manager.up.railway.app';
+const ADDITIONAL_AD_ACCOUNTS = (process.env.ADDITIONAL_AD_ACCOUNT_IDS || '').split(',').map(s => s.trim()).filter(Boolean);
 const SYNC_PRESETS = ['today', 'yesterday', 'last_7d', 'last_14d', 'last_28d', 'last_30d', 'last_90d'];
 const PREFERRED_PRESET = 'last_7d';
 const DEFAULT_FETCH_TIMEOUT = 25000;
@@ -137,28 +138,29 @@ async function postToManager(path, body = {}) {
 let refreshChain = Promise.resolve();
 
 async function refreshPreset(preset) {
-  // Chain refreshes sequentially so fb-ads-manager proxy connections never collide
-  const runRefresh = async () => {
+  const runRefreshForAccount = async (accountId) => {
     try {
-      const result = await postToManager('/api/refresh', {
-        date_preset: preset,
-        level: 'campaign',
-        only_had_delivery: false,
-      });
+      const body = { date_preset: preset, level: 'campaign', only_had_delivery: false };
+      if (accountId) body.account_id = accountId;
+      const result = await postToManager('/api/refresh', body);
       if (!result.ok) {
-        console.warn(`[ads-sync] upstream refresh note for ${preset}:`, result.error || result.message || 'unknown');
+        console.warn(`[ads-sync] upstream refresh note for ${preset} (${accountId || 'primary'}):`, result.error || result.message || 'unknown');
       }
       return result;
     } catch (err) {
-      console.warn(`[ads-sync] upstream refresh note for ${preset}:`, err.message);
+      console.warn(`[ads-sync] upstream refresh note for ${preset} (${accountId || 'primary'}):`, err.message);
       return { ok: false, error: err.message };
     }
   };
 
   const nextTask = refreshChain.then(async () => {
-    // 1.5s pace between upstream Meta API calls
     await new Promise(r => setTimeout(r, 1500));
-    return runRefresh();
+    const primary = await runRefreshForAccount(null);
+    for (const acct of ADDITIONAL_AD_ACCOUNTS) {
+      await new Promise(r => setTimeout(r, 1500));
+      await runRefreshForAccount(acct);
+    }
+    return primary;
   });
 
   refreshChain = nextTask.catch(() => {});
@@ -166,19 +168,31 @@ async function refreshPreset(preset) {
 }
 
 async function syncCampaigns() {
-  const data = await fetchFromManager('/api/dashboard', { date_preset: PREFERRED_PRESET, level: 'campaign' });
-  if (!data || !data.campaigns || !Array.isArray(data.campaigns)) {
-    throw new Error('no campaigns in fb-ads-manager response');
+  const allRows = [];
+
+  const fetchAccount = async (accountId) => {
+    const params = { date_preset: PREFERRED_PRESET, level: 'campaign' };
+    if (accountId) params.account_id = accountId;
+    const data = await fetchFromManager('/api/dashboard', params);
+    if (data?.campaigns && Array.isArray(data.campaigns)) {
+      allRows.push(...data.campaigns.map(normalizeCampaign));
+    }
+  };
+
+  await fetchAccount(null);
+  for (const acct of ADDITIONAL_AD_ACCOUNTS) {
+    try { await fetchAccount(acct); } catch (err) {
+      console.warn(`[ads-sync] campaign sync for ${acct}:`, err.message);
+    }
   }
-  const accountId = data.account?.id || null;
-  const rows = data.campaigns.map(normalizeCampaign);
-  if (!rows.length) return { ok: true, synced: 0, accountId };
+
+  if (!allRows.length) return { ok: true, synced: 0 };
 
   const { error } = await supabase
     .from('ad_campaigns')
-    .upsert(rows, { onConflict: 'id' });
+    .upsert(allRows, { onConflict: 'id' });
   if (error) throw new Error(`campaign upsert failed: ${error.message}`);
-  return { ok: true, synced: rows.length, accountId };
+  return { ok: true, synced: allRows.length };
 }
 
 async function syncPreset(preset, { force = false, refresh = true } = {}) {
@@ -223,11 +237,27 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
         }
       }
 
-      const data = await fetchFromManager('/api/dashboard', { date_preset: preset, level: 'campaign' });
-      if (!data || !Array.isArray(data.rows)) throw new Error(`no rows for preset ${preset}`);
+      const allAccountIds = [null, ...ADDITIONAL_AD_ACCOUNTS];
+      const allDataRows = [];
+      for (const acctId of allAccountIds) {
+        try {
+          const params = { date_preset: preset, level: 'campaign' };
+          if (acctId) params.account_id = acctId;
+          const data = await fetchFromManager('/api/dashboard', params);
+          if (data?.rows && Array.isArray(data.rows)) {
+            for (const r of data.rows) {
+              r._source_account_id = acctId || data.account?.id || data.account_id || null;
+            }
+            allDataRows.push(...data.rows);
+          }
+        } catch (err) {
+          console.warn(`[ads-sync] dashboard fetch for ${acctId || 'primary'} preset ${preset}:`, err.message);
+        }
+      }
+      if (!allDataRows.length) throw new Error(`no rows for preset ${preset}`);
 
       let byId = new Map(campaigns.map(c => [c.id, c]));
-      const hasUnseen = data.rows.some(r => {
+      const hasUnseen = allDataRows.some(r => {
         const id = String(r.id || r.campaign_id || '');
         return id && !byId.has(id);
       });
@@ -243,13 +273,13 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
       }
 
       const rows = [];
-      for (const r of data.rows) {
+      for (const r of allDataRows) {
         const id = String(r.id || r.campaign_id || '');
         const campaign = byId.get(id);
         if (campaign) {
           rows.push(normalizeSpendRow(campaign.id, campaign.account_id, preset, r));
         } else if (id) {
-          const accId = String(r.account_id || r.ad_account_id || data.account_id || 'act_default');
+          const accId = String(r.account_id || r.ad_account_id || r._source_account_id || 'act_default');
           rows.push(normalizeSpendRow(id, accId, preset, r));
         }
       }

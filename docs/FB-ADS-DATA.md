@@ -16,6 +16,7 @@ All credentials live in `C:\Users\iakwv\Downloads\FB ads manager\.env`. Read at 
 | `FB_APP_SECRET` | Required for `appsecret_proof` HMAC |
 | `FB_APP_ID` | `974273918718391` |
 | `FB_PRIMARY_ACCOUNT_ID` | `act_1622353565055773` (GFM Greece) |
+| `FB_ADDITIONAL_ACCOUNT_IDS` | `act_1388808955587972` (GFM Italy) — comma-separated list for multi-account monitoring |
 | `PROXY_HOST/PORT/USER/PASS` | Residential proxy for stable egress IP |
 | `GRAPH_API_VERSION` | `v25.0` |
 
