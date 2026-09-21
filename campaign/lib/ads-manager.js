@@ -285,9 +285,16 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
       }
 
       if (rows.length > 0) {
+        const deduped = new Map();
+        for (const r of rows) {
+          const key = `${r.campaign_id}::${r.date_preset}`;
+          const existing = deduped.get(key);
+          if (!existing || (r.spend > existing.spend)) deduped.set(key, r);
+        }
+        const uniqueRows = [...deduped.values()];
         const { error } = await supabase
           .from('ad_spend')
-          .upsert(rows, { onConflict: 'campaign_id,date_preset' });
+          .upsert(uniqueRows, { onConflict: 'campaign_id,date_preset' });
         if (error) throw new Error(`preset ${preset} upsert failed: ${error.message}`);
       }
 
