@@ -22,6 +22,9 @@ apple-developer-merchantid-domain-association*
 secrets/
 secrets/**
 
+# MCP config (contains API tokens)
+.cursor/mcp.json
+
 # Local timed agent session state
 .agent-session/
 dev-runner.js

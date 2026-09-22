@@ -7,12 +7,12 @@
     "initials": "EC",
     "location": "Milano, Italia",
     "verified": true,
-    "createdDate": "1 Set 2026"
+    "createdDate": "16 Ago 2026"
   },
   "goal": 90000,
-  "raised": 36670,
-  "donorCount": 894,
-  "daysLeft": 34,
+  "raised": 38420,
+  "donorCount": 947,
+  "daysLeft": 29,
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-serafina/1.jpg",
@@ -36,22 +36,22 @@
     }
   ],
   "story": {
-    "intro": "Serafina è una studentessa di Medicina di 21 anni di Milano, a cui è stato diagnosticato un Glioblastoma Multiforme (GBM) di grado IV — il tumore cerebrale maligno più aggressivo. Il trattamento standard (chirurgia, radioterapia, temozolomide) offre una sopravvivenza mediana di 14-16 mesi. L’unico trattamento che può aumentare significativamente la sua sopravvivenza — l’immunoterapia con cellule dendritiche — è disponibile solo in centri specializzati in Germania e non è coperto da nessun sistema sanitario pubblico in Europa.",
+    "intro": "Serafina è una studentessa di Medicina di 21 anni di Milano, a cui è stato diagnosticato un Glioblastoma Multiforme (GBM) di grado IV — il tumore cerebrale maligno più aggressivo. Il trattamento standard (chirurgia, radioterapia, temozolomide) offre una sopravvivenza mediana di 14-16 mesi. L'unico trattamento che può aumentare significativamente la sua sopravvivenza — l'immunoterapia con cellule dendritiche — è disponibile solo in centri specializzati in Germania e non è coperto da nessun sistema sanitario pubblico in Europa.",
     "sections": [
       {
         "title": "La Diagnosi",
         "icon": "diagnosis",
-        "content": "Tutto è iniziato nel giugno 2026, quando Serafina ha cominciato a soffrire di cefalee persistenti, soprattutto mattutine, accompagnate da nausea e visione offuscata all’occhio sinistro. Il 20 giugno, dopo un episodio di convulsioni durante una lezione alla Facoltà di Medicina dell’Università Statale di Milano, è stata trasferita d’urgenza al Dipartimento di Neurochirurgia della Fondazione IRCCS Istituto Neurologico Carlo Besta.\\n\\nLa risonanza magnetica (RM) ha rivelato una massa di 4,2 cm nel lobo frontale destro con captazione ad anello caratteristica e edema perilesionale. La biopsia stereotassica e l’analisi molecolare hanno confermato la diagnosi: Glioblastoma Multiforme, IDH-wildtype, grado IV secondo l’OMS, con promotore MGMT non metilato — il sottotipo molecolare più sfavorevole, che implica una risposta ridotta alla chemioterapia."
+        "content": "Tutto è iniziato nell'ottobre 2025, quando Serafina ha cominciato a soffrire di cefalee persistenti, soprattutto mattutine, accompagnate da nausea e visione offuscata all'occhio sinistro. Il 20 ottobre, dopo un episodio di convulsioni durante una lezione alla Facoltà di Medicina dell'Università Statale di Milano, è stata trasferita d'urgenza al Dipartimento di Neurochirurgia della Fondazione IRCCS Istituto Neurologico Carlo Besta.\\n\\nLa risonanza magnetica (RM) ha rivelato una massa di 4,2 cm nel lobo frontale destro con captazione ad anello caratteristica e edema perilesionale. La biopsia stereotassica e l'analisi molecolare hanno confermato la diagnosi: Glioblastoma Multiforme, IDH-wildtype, grado IV secondo l'OMS, con promotore MGMT non metilato — il sottotipo molecolare più sfavorevole, che implica una risposta ridotta alla chemioterapia."
       },
       {
         "title": "Il Trattamento Standard e i Suoi Limiti",
         "icon": "treatment",
-        "content": "Serafina è stata sottoposta a resezione chirurgica parziale del tumore (exeresi subtotale) il 10 luglio 2026 all’Istituto Besta — una resezione completa non era possibile a causa della prossimità del tumore alle aree funzionali del linguaggio. Ha poi seguito il protocollo Stupp: radioterapia concomitante (30 sedute in 6 settimane) con temozolomide giornaliera, seguita da cicli di mantenimento con temozolomide.\\n\\nI medici sono stati onesti: con il MGMT non metilato, la risposta alla temozolomide è attesa come limitata. La sopravvivenza mediana con il trattamento standard è di 12-15 mesi. La RM di controllo di settembre 2026 ha mostrato un tumore residuo stabile in dimensioni, ma i medici hanno avvertito che la recidiva è quasi certa."
+        "content": "Serafina è stata sottoposta a resezione chirurgica parziale del tumore (exeresi subtotale) il 15 novembre 2025 all'Istituto Besta — una resezione completa non era possibile a causa della prossimità del tumore alle aree funzionali del linguaggio. Ha poi seguito il protocollo Stupp: radioterapia concomitante (30 sedute in 6 settimane) con temozolomide giornaliera, seguita da cicli di mantenimento con temozolomide.\\n\\nI medici sono stati onesti: con il MGMT non metilato, la risposta alla temozolomide è attesa come limitata. La sopravvivenza mediana con il trattamento standard è di 12-15 mesi. La RM di controllo di settembre 2026 ha mostrato un tumore residuo stabile in dimensioni, ma i medici hanno avvertito che la recidiva è quasi certa."
       },
       {
         "title": "La Speranza: Immunoterapia con Cellule Dendritiche",
         "icon": "hope",
-        "content": "Dopo una ricerca approfondita, la famiglia di Serafina ha individuato un programma specializzato di immunoterapia con cellule dendritiche in un centro oncologico certificato in Germania. Uno studio clinico recente (Nature Communications, agosto 2024) ha dimostrato un aumento del 68% nella sopravvivenza globale mediana nei pazienti con glioblastoma ricorrente che hanno ricevuto vaccini a cellule dendritiche.\\n\\nIl trattamento funziona così: vengono prelevate cellule dal sangue di Serafina, trasformate in cellule dendritiche in laboratorio, «addestrate» con antigeni del suo stesso tumore, e reiniettate per attivare il sistema immunitario contro il cancro. Sono necessari 4-6 cicli nell’arco di 12 mesi.\\n\\nQuesto trattamento NON è coperto da NESSUN sistema sanitario pubblico in Europa — né il SSN italiano, né l’AIFA, né alcuna altra cassa europea. È classificato come «terapia innovativa» ed è disponibile esclusivamente in forma privata."
+        "content": "Dopo una ricerca approfondita, la famiglia di Serafina ha individuato un programma specializzato di immunoterapia con cellule dendritiche in un centro oncologico certificato in Germania. Uno studio clinico recente (Nature Communications, agosto 2024) ha dimostrato un aumento del 68% nella sopravvivenza globale mediana nei pazienti con glioblastoma ricorrente che hanno ricevuto vaccini a cellule dendritiche.\\n\\nIl trattamento funziona così: vengono prelevate cellule dal sangue di Serafina, trasformate in cellule dendritiche in laboratorio, «addestrate» con antigeni del suo stesso tumore, e reiniettate per attivare il sistema immunitario contro il cancro. Sono necessari 4-6 cicli nell'arco di 12 mesi.\\n\\nQuesto trattamento NON è coperto da NESSUN sistema sanitario pubblico in Europa — né il SSN italiano, né l'AIFA, né alcuna altra cassa europea. È classificato come «terapia innovativa» ed è disponibile esclusivamente in forma privata."
       },
       {
         "title": "Perché Abbiamo Bisogno del Vostro Aiuto",
@@ -109,27 +109,27 @@
   },
   "updates": [
     {
-      "date": "12 Set 2026",
+      "date": "20 Set 2026",
       "title": "Risultati della RM di controllo 📋",
-      "content": "La RM di controllo dopo la fine della radioterapia mostra un tumore residuo stabile senza nuove lesioni. I medici al Besta dicono che è il miglior risultato possibile con il trattamento standard, ma la recidiva resta molto probabile. La clinica in Germania ci ha confermato che possono iniziare l’immunoterapia con cellule dendritiche a novembre, se otteniamo il finanziamento.",
+      "content": "La RM di controllo dopo la fine della radioterapia mostra un tumore residuo stabile senza nuove lesioni. I medici al Besta dicono che è il miglior risultato possibile con il trattamento standard, ma la recidiva resta molto probabile. La clinica in Germania ci ha confermato che possono iniziare l'immunoterapia con cellule dendritiche a novembre, se otteniamo il finanziamento.",
       "isNew": true
     },
     {
-      "date": "5 Set 2026",
-      "title": "Abbiamo superato i 600 donatori! 🙏",
+      "date": "10 Set 2026",
+      "title": "Abbiamo superato i 900 donatori! 🙏",
       "content": "Il vostro sostegno ci commuove profondamente. Serafina ha terminato i cicli di mantenimento con temozolomide e si sente forte. Legge ogni vostro messaggio e dice che le date la forza di andare avanti. Ogni euro ci avvicina alla Germania.",
       "isNew": false
     },
     {
       "date": "27 Ago 2026",
-      "title": "Aggiornamento dall’ospedale",
-      "content": "Serafina ha terminato la radiochemioterapia concomitante al Besta. Ha avuto stanchezza e nausea, ma la sua forza mentale è incredibile. La sua oncologa ci ha spiegato che con il MGMT non metilato, la temozolomide da sola non basta — ecco perché l’immunoterapia è cruciale.",
+      "title": "Aggiornamento dall'ospedale",
+      "content": "Serafina ha terminato la radiochemioterapia concomitante al Besta. Ha avuto stanchezza e nausea, ma la sua forza mentale è incredibile. La sua oncologa ci ha spiegato che con il MGMT non metilato, la temozolomide da sola non basta — ecco perché l'immunoterapia è cruciale.",
       "isNew": false
     },
     {
       "date": "16 Ago 2026",
       "title": "La campagna è partita",
-      "content": "Con il cuore pesante ma con determinazione, lanciamo questo appello. Dopo tre mesi di trattamento intensivo nel sistema pubblico, i medici ci hanno detto chiaramente: il trattamento standard dà tempo, ma l’immunoterapia può dare vita. Purtroppo, non è coperta in nessun paese d’Europa. Crediamo nella solidarietà.",
+      "content": "Con il cuore pesante ma con determinazione, lanciamo questo appello. Dopo mesi di trattamento intensivo nel sistema pubblico, i medici ci hanno detto chiaramente: il trattamento standard dà tempo, ma l'immunoterapia può dare vita. Purtroppo, non è coperta in nessun paese d'Europa. Crediamo nella solidarietà.",
       "isNew": false
     }
   ],
@@ -141,7 +141,7 @@
     },
     {
       "amount": 45000,
-      "label": "50% — Inizio dell’immunoterapia con cellule dendritiche",
+      "label": "50% — Inizio dell'immunoterapia con cellule dendritiche",
       "reached": false
     },
     {
@@ -182,7 +182,7 @@
     {
       "name": "Giulia C.",
       "amount": 20,
-      "time": "2 min ago",
+      "time": "2 min fa",
       "initials": "GC",
       "color": "from-rose-400 to-rose-500",
       "message": "Forza, piccola!"
@@ -190,7 +190,7 @@
     {
       "name": "Anonimo",
       "amount": 25,
-      "time": "8 min ago",
+      "time": "8 min fa",
       "initials": "?",
       "color": "from-gray-400 to-gray-500",
       "message": ""
@@ -198,7 +198,7 @@
     {
       "name": "Marco R.",
       "amount": 15,
-      "time": "14 min ago",
+      "time": "14 min fa",
       "initials": "MR",
       "color": "from-blue-400 to-blue-500",
       "message": "Da un collega di corso"
@@ -206,7 +206,7 @@
     {
       "name": "Valentina V.",
       "amount": 40,
-      "time": "22 min ago",
+      "time": "22 min fa",
       "initials": "VV",
       "color": "from-violet-400 to-violet-500",
       "message": "Buona guarigione"
@@ -214,7 +214,7 @@
     {
       "name": "Luca G.",
       "amount": 30,
-      "time": "35 min ago",
+      "time": "35 min fa",
       "initials": "LG",
       "color": "from-emerald-400 to-emerald-500",
       "message": ""
