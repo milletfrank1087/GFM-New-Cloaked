@@ -13,7 +13,7 @@
     "onceWhy": "Every gift helps. A one-time donation goes to care right away — and is deeply appreciated, whatever you can give.",
     "onceImpact": "Give what you can today. If monthly isn’t right for you, a one-time gift still makes a real difference.",
     "continueMonthly": "Continue with ${amount} / month",
-    "continueOnce": "Continue with ${amount} once",
+    "continueOnce": "Continue with ${amount}",
     "perMonthShort": "/mo",
     "otherAmount": "Other amount",
     "tip": {

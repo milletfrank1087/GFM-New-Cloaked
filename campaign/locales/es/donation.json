@@ -13,7 +13,7 @@
     "onceWhy": "Cada donación ayuda. Un aporte único va de inmediato a los cuidados — y se agradece de verdad, sea cual sea la cantidad.",
     "onceImpact": "Da lo que puedas hoy. Si lo mensual no te encaja, una donación puntual sigue marcando una diferencia real.",
     "continueMonthly": "Continuar con ${amount} / mes",
-    "continueOnce": "Continuar con ${amount} una vez",
+    "continueOnce": "Continuar con ${amount}",
     "perMonthShort": "/mes",
     "otherAmount": "Otro importe",
     "tip": {

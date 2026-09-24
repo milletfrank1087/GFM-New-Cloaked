@@ -17,8 +17,16 @@ module.exports = function createPublicRouter(ctx) {
     res.json({ defaultLanguage: DEFAULT_LANGUAGE });
   });
 
+  // Optional per-campaign override: "donationPresets": { "EUR": { "amounts": [...], "default": 25 } }
+  const campaignPresets = loadCampaignFromFile(ACTIVE_CAMPAIGN)?.donationPresets?.[ACTIVE_CURRENCY.code];
+  const currencyConfig = { ...ACTIVE_CURRENCY };
+  if (Array.isArray(campaignPresets?.amounts) && campaignPresets.amounts.length) {
+    currencyConfig.presetAmounts = campaignPresets.amounts;
+    currencyConfig.defaultAmount = campaignPresets.default ?? campaignPresets.amounts[0];
+  }
+
   router.get('/api/currency/config', (req, res) => {
-    res.json({ ...ACTIVE_CURRENCY, countryCode: MERCHANT_COUNTRY });
+    res.json({ ...currencyConfig, countryCode: MERCHANT_COUNTRY });
   });
 
   router.get('/api/tracking/config', (req, res) => {

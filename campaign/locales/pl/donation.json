@@ -13,7 +13,7 @@
     "onceWhy": "Każdy dar pomaga. Jednorazowa wpłata idzie od razu na leczenie — i jest bardzo potrzebna, niezależnie od kwoty.",
     "onceImpact": "Daj tyle, ile możesz dzisiaj. Jeśli wpłata miesięczna nie jest dla Ciebie, jednorazowy dar i tak robi prawdziwą różnicę.",
     "continueMonthly": "Kontynuuj z ${amount} / mies.",
-    "continueOnce": "Kontynuuj z ${amount} jednorazowo",
+    "continueOnce": "Kontynuuj z ${amount}",
     "perMonthShort": "/mies.",
     "otherAmount": "Inna kwota",
     "tip": {

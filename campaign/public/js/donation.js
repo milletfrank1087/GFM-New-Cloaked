@@ -1,5 +1,5 @@
 let selectedAmount = 50;
-let donationType = 'monthly';
+let donationType = 'one-time';
 let inCheckoutPhase = false;
 let isRedirecting = false;
 
@@ -415,7 +415,7 @@ function resetDonationModal() {
   isRedirecting = false;
   const defaultAmt = (typeof currency !== 'undefined' && currency.config.defaultAmount) || 50;
   selectedAmount = defaultAmt;
-  donationType = 'monthly';
+  donationType = 'one-time';
 
   const amountBtns = document.querySelectorAll('.amount-btn');
   amountBtns.forEach(b => {
@@ -439,7 +439,7 @@ function resetDonationModal() {
 
   const cadenceCards = document.querySelectorAll('.cadence-card');
   cadenceCards.forEach((b) => {
-    const on = b.dataset.type === 'monthly';
+    const on = b.dataset.type === 'one-time';
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
   });

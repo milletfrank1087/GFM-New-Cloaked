@@ -13,7 +13,7 @@
     "onceWhy": "Chaque don compte. Un don unique aide immédiatement — et est profondément apprécié, quel que soit le montant.",
     "onceImpact": "Donnez ce que vous pouvez aujourd’hui. Si le mensuel ne vous convient pas, un don unique fait tout de même une vraie différence.",
     "continueMonthly": "Continuer avec ${amount} / mois",
-    "continueOnce": "Continuer avec ${amount} une fois",
+    "continueOnce": "Continuer avec ${amount}",
     "perMonthShort": "/mois",
     "otherAmount": "Autre montant",
     "tip": {

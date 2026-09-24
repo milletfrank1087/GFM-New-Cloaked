@@ -13,7 +13,7 @@
     "onceWhy": "Ogni dono aiuta. Un contributo unico va subito alle cure — ed è prezioso, qualunque cifra tu possa dare.",
     "onceImpact": "Dai quello che puoi oggi. Se il mensile non fa per te, un dono una tantum fa comunque la differenza.",
     "continueMonthly": "Continua con ${amount} / mese",
-    "continueOnce": "Continua con ${amount} una tantum",
+    "continueOnce": "Continua con ${amount}",
     "perMonthShort": "/mese",
     "otherAmount": "Altro importo",
     "tip": {

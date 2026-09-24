@@ -13,6 +13,9 @@
   "raised": 38420,
   "donorCount": 947,
   "daysLeft": 29,
+  "donationPresets": {
+    "EUR": { "amounts": [10, 20, 25, 50, 100, 250], "default": 25 }
+  },
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-serafina/1.jpg",

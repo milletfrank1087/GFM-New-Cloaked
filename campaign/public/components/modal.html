@@ -13,32 +13,6 @@
           <h3 class="text-xl font-bold text-gfm-dark mb-1" data-i18n="donation.modal.title">Make a Donation</h3>
           <p class="text-gfm-gray text-sm mb-4" data-i18n="donation.modal.subtitle">Treatment does not end after one hospital visit</p>
 
-          <div class="space-y-2.5 mb-4" role="radiogroup" aria-label="Donation frequency">
-            <button type="button" class="cadence-card active" data-type="monthly" role="radio" aria-pressed="true">
-              <div class="flex items-start gap-3">
-                <span class="cadence-radio mt-0.5" aria-hidden="true"></span>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2 flex-wrap mb-1">
-                    <span class="font-bold text-gfm-dark text-sm" data-i18n="donation.modal.monthlyTitle">Give monthly</span>
-                    <span class="cadence-badge" data-i18n="donation.modal.monthlyBadge">Most needed</span>
-                  </div>
-                  <p class="text-[12px] text-gfm-gray leading-snug" data-i18n="donation.modal.monthlyWhy">Scans, hospital stays, and the wait for specialist treatment run for months. A monthly gift is the most reliable way to keep this case — and others like it — funded along the way.</p>
-                  <p class="text-[11px] font-semibold text-gfm-green mt-1.5" data-i18n="donation.modal.monthlyCancel">Cancel anytime. No commitment beyond this month.</p>
-                </div>
-              </div>
-            </button>
-            <button type="button" class="cadence-card" data-type="one-time" role="radio" aria-pressed="false">
-              <div class="flex items-start gap-3">
-                <span class="cadence-radio mt-0.5" aria-hidden="true"></span>
-                <div class="flex-1 min-w-0">
-                  <span class="font-semibold text-gfm-dark text-sm" data-i18n="donation.modal.onceTitle">One-time gift</span>
-                  <p class="text-[12px] text-gfm-gray leading-snug mt-1" data-i18n="donation.modal.onceWhy">Every gift helps. A one-time donation goes to care right away — and is deeply appreciated, whatever you can give.</p>
-                </div>
-              </div>
-            </button>
-          </div>
-          <p id="cadence-impact" class="text-[12px] text-gfm-dark font-medium leading-snug mb-4 px-0.5">Every gift helps. Monthly is the most reliable way to stay with this family.</p>
-          
           <div class="grid grid-cols-3 gap-2.5 mb-3">
             <button class="amount-btn py-2.5 rounded-xl border-2 border-gray-200 font-bold hover:border-gfm-green hover:bg-gfm-green-light transition-all duration-300" data-amount="10"><span data-currency-symbol>$</span>10</button>
             <button class="amount-btn py-2.5 rounded-xl border-2 border-gray-200 font-bold hover:border-gfm-green hover:bg-gfm-green-light transition-all duration-300" data-amount="25"><span data-currency-symbol>$</span>25</button>
@@ -55,9 +29,9 @@
           </div>
           
           <div class="mb-4">
-            <label id="modal-email-label" class="block text-xs font-medium text-gfm-dark mb-1" data-i18n="donation.modal.emailLabelMonthly">Email (required)</label>
-            <input type="email" id="modal-donor-email" autocomplete="email" required class="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:ring-0 focus:outline-none transition-colors" placeholder="you@example.com" data-i18n-placeholder="donation.modal.emailPlaceholder">
-            <p id="modal-email-help" class="text-[10px] text-gfm-gray mt-0.5" data-i18n="donation.modal.emailHelpMonthly">Needed for your receipt and so you can cancel anytime</p>
+            <label id="modal-email-label" class="block text-xs font-medium text-gfm-dark mb-1" data-i18n="donation.modal.emailLabel">Email (optional)</label>
+            <input type="email" id="modal-donor-email" autocomplete="email" class="w-full px-3 py-2 text-sm border-2 border-gray-200 rounded-xl focus:border-gfm-green focus:ring-0 focus:outline-none transition-colors" placeholder="you@example.com" data-i18n-placeholder="donation.modal.emailPlaceholder">
+            <p id="modal-email-help" class="text-[10px] text-gfm-gray mt-0.5" data-i18n="donation.modal.emailHelp">For your payment receipt</p>
           </div>
 
           <div class="bg-gfm-green-light/50 rounded-xl p-3 mb-4">
@@ -90,7 +64,7 @@
           </label>
           
           <button id="continue-to-payment-btn" class="w-full bg-gfm-green hover:bg-gfm-green-dark text-white py-3.5 rounded-xl font-bold text-base transition-all duration-300 hover:shadow-lg hover:shadow-gfm-green/30 flex items-center justify-center gap-2">
-            <span id="continue-btn-label">Continue with monthly gift</span>
+            <span id="continue-btn-label">Continue</span>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
