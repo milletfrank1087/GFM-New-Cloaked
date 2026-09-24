@@ -119,19 +119,35 @@ function loadCampaignFromFile(campaignSlug) {
   return JSON.parse(fs.readFileSync(match, 'utf-8'));
 }
 
+let geoip = null;
+try { geoip = require('geoip-lite'); } catch (e) { console.warn('[geo] geoip-lite unavailable:', e.message); }
+
+// Offline GeoIP lookup on the connection IP. Replaces the browser's ipapi.co call,
+// whose free tier answers 429 to a large share of requests.
+function lookupLocation(ip) {
+  if (!geoip || !ip || ip === 'unknown') return null;
+  const hit = geoip.lookup(ip);
+  if (!hit || !hit.country) return null;
+  return { ip, city: hit.city || null, region: hit.region || null, country: null, countryCode: hit.country };
+}
+
 function getClientInfo(req) {
-  let ip = req.body?.clientLocation?.ip ||
-           req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+  let ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
            req.ip ||
            req.connection?.remoteAddress ||
+           req.body?.clientLocation?.ip ||
            'unknown';
   ip = ip.replace(/^::ffff:/, '');
+
+  const clientLocation = req.body?.clientLocation?.countryCode
+    ? req.body.clientLocation
+    : lookupLocation(ip);
 
   return {
     ipAddress: ip,
     userAgent: req.headers['user-agent'] || 'unknown',
     referer: req.headers.referer || req.headers.referrer || 'direct',
-    clientLocation: req.body?.clientLocation || null
+    clientLocation
   };
 }
 

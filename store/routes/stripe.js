@@ -622,7 +622,7 @@ module.exports = function createStripeRouter(ctx) {
               secret: CALLBACK_SECRET,
               tokenId: donor.sid,
               paymentData: {
-                amount: parseFloat(donor.amount), currency: donor.currency,
+                amount: parseFloat(donor.amount), tip: savedTip, totalAmount, currency: donor.currency,
                 storeDomain: STORE_DOMAIN, stripeChargeId: charge?.id,
                 cardHolderName, donorNameReal, donorEmail: email,
                 customerId, ipAddress: donor.ip, userAgent: donor.ua,
@@ -647,7 +647,8 @@ module.exports = function createStripeRouter(ctx) {
       } catch (_) {}
       if (!campaignOrigin) campaignOrigin = campaignUrl || '';
       const eidParam = donor.utm?.eventId ? `&eid=${encodeURIComponent(donor.utm.eventId)}` : '';
-      const amtParam = donor.amount ? `&amt=${encodeURIComponent(donor.amount)}` : '';
+      // Purchase value for Meta = what the donor paid (donation + tip)
+      const amtParam = totalAmount ? `&amt=${encodeURIComponent(totalAmount)}` : '';
       const curParam = donor.currency ? `&cur=${encodeURIComponent(donor.currency)}` : '';
       const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
 

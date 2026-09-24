@@ -52,19 +52,46 @@
     });
   }
 
+  // All ranges are Europe/Athens calendar days, whatever the viewer's browser timezone.
+  // fb-ads-manager buckets Meta spend into the same Athens days (lib/adInsights.js).
+  var REPORT_TZ = 'Europe/Athens';
+
+  function athensOffsetMinutes(ms) {
+    var name = new Intl.DateTimeFormat('en-US', { timeZone: REPORT_TZ, timeZoneName: 'longOffset' })
+      .formatToParts(new Date(ms)).find(function(p) { return p.type === 'timeZoneName'; });
+    var m = /GMT([+-])(\d{2}):?(\d{2})?/.exec(name ? name.value : '');
+    return m ? (m[1] === '-' ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3] || 0)) : 0;
+  }
+
+  function athensYmd(ms) {
+    return new Intl.DateTimeFormat('en-CA', { timeZone: REPORT_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(ms));
+  }
+
+  function shiftYmd(ymd, days) {
+    return new Date(Date.parse(ymd + 'T00:00:00Z') + days * 86400000).toISOString().slice(0, 10);
+  }
+
+  // UTC instant of 00:00 Athens time on that date.
+  function athensMidnight(ymd) {
+    var utcMidnight = Date.parse(ymd + 'T00:00:00Z');
+    return new Date(utcMidnight - athensOffsetMinutes(utcMidnight - 3 * 3600000) * 60000);
+  }
+
   function getDateRanges() {
     var now = new Date();
-    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    var startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    var today = athensYmd(now.getTime());
+    var monthStart = today.slice(0, 8) + '01';
+    var lastMonthStart = shiftYmd(monthStart, -1).slice(0, 8) + '01';
+    var start = function(ymd) { return athensMidnight(ymd).toISOString(); };
+    var endOf = function(ymd) { return new Date(athensMidnight(shiftYmd(ymd, 1)).getTime() - 1).toISOString(); };
     return {
-      today: { startDate: today.toISOString(), endDate: now.toISOString() },
-      yesterday: { startDate: new Date(today.getTime() - 86400000).toISOString(), endDate: new Date(today.getTime() - 1).toISOString() },
-      last7days: { startDate: new Date(today.getTime() - 6 * 86400000).toISOString(), endDate: now.toISOString() },
-      last30days: { startDate: new Date(today.getTime() - 29 * 86400000).toISOString(), endDate: now.toISOString() },
-      thisMonth: { startDate: startOfThisMonth.toISOString(), endDate: now.toISOString() },
-      lastMonth: { startDate: startOfLastMonth.toISOString(), endDate: new Date(startOfThisMonth.getTime() - 1).toISOString() },
-      thisYear: { startDate: new Date(now.getFullYear(), 0, 1).toISOString(), endDate: now.toISOString() }
+      today: { startDate: start(today), endDate: now.toISOString() },
+      yesterday: { startDate: start(shiftYmd(today, -1)), endDate: endOf(shiftYmd(today, -1)) },
+      last7days: { startDate: start(shiftYmd(today, -6)), endDate: now.toISOString() },
+      last30days: { startDate: start(shiftYmd(today, -29)), endDate: now.toISOString() },
+      thisMonth: { startDate: start(monthStart), endDate: now.toISOString() },
+      lastMonth: { startDate: start(lastMonthStart), endDate: endOf(shiftYmd(monthStart, -1)) },
+      thisYear: { startDate: start(today.slice(0, 4) + '-01-01'), endDate: now.toISOString() }
     };
   }
 
@@ -83,7 +110,7 @@
     var campaign = document.getElementById('filter-campaign')?.value;
     if (campaign && campaign !== 'all') params.set('campaign', campaign);
     params.set('range', window.currentRange);
-    params.set('tzOffset', new Date().getTimezoneOffset());
+    params.set('tzOffset', -athensOffsetMinutes(Date.now())); // getTimezoneOffset() sign convention
     var ranges = getDateRanges();
     var r = ranges[window.currentRange];
     if (window.currentRange !== 'allTime' && r) {

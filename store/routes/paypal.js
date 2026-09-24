@@ -381,7 +381,8 @@ module.exports = function createPayPalRouter(ctx) {
             body: JSON.stringify({
               secret: CALLBACK_SECRET, tokenId: donor.sid,
               paymentData: {
-                amount: parseFloat(donor.amount), currency: donor.currency, paymentMethod: 'paypal',
+                amount: parseFloat(donor.amount), tip: totalAmount - parseFloat(donor.amount), totalAmount,
+                currency: donor.currency, paymentMethod: 'paypal',
                 storeDomain: STORE_DOMAIN, stripeChargeId: capture?.id || orderID,
                 cardHolderName, donorNameReal, donorEmail: email, customerId,
                 ipAddress: donor.ip, userAgent: donor.ua, tracking: donor.utm || {}
@@ -405,7 +406,8 @@ module.exports = function createPayPalRouter(ctx) {
       } catch (_) {}
       if (!campaignOrigin) campaignOrigin = campaignUrl || '';
       const eidParam = donor.utm?.eventId ? `&eid=${encodeURIComponent(donor.utm.eventId)}` : '';
-      const amtParam = donor.amount ? `&amt=${encodeURIComponent(donor.amount)}` : '';
+      // Purchase value for Meta = what the donor paid (donation + tip)
+      const amtParam = totalAmount ? `&amt=${encodeURIComponent(totalAmount)}` : '';
       const curParam = donor.currency ? `&cur=${encodeURIComponent(donor.currency)}` : '';
       const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
 

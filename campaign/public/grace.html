@@ -1848,7 +1848,7 @@
       const purchaseEventId = (typeof Tracking !== 'undefined') ? Tracking.generateEventId('Purchase') : ('Purchase_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11));
       try {
         sessionStorage.setItem('_purchase_event_id', purchaseEventId);
-        sessionStorage.setItem('_purchase_amount', String(app.amount));
+        sessionStorage.setItem('_purchase_amount', String(app.amount + (tipAmount || 0)));
         sessionStorage.setItem('_purchase_currency', 'GBP');
       } catch (e) {}
 

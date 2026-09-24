@@ -139,32 +139,12 @@ const Tracking = (function() {
   let locationPromise = null;
   
   /**
-   * Fetch client IP and location from ipapi.co
+   * Location is resolved server-side from the connection IP (geoip-lite).
+   * The old ipapi.co call was rate-limited (HTTP 429) for many visitors, so the
+   * browser no longer looks it up; clientLocation stays null and the server fills it.
    */
   async function fetchClientLocation() {
-    if (locationPromise) return locationPromise;
-    
-    locationPromise = (async () => {
-      try {
-        const response = await fetch('https://ipapi.co/json/', {
-          signal: AbortSignal.timeout(3000)
-        });
-        const data = await response.json();
-        if (data && data.ip) {
-          clientLocation = {
-            ip: data.ip,
-            city: data.city || null,
-            region: data.region || null,
-            country: data.country_name || null,
-            countryCode: data.country_code || null
-          };
-        }
-      } catch (error) {
-        // Silent fail - location is optional
-      }
-      return clientLocation;
-    })();
-    
+    if (!locationPromise) locationPromise = Promise.resolve(clientLocation);
     return locationPromise;
   }
 
@@ -218,6 +198,20 @@ const Tracking = (function() {
     
     const utmData = hasUrlUtms ? urlUtms : storedUtmData;
     
+    // _fbc can be missing (cookie blocked, or checkout before init finished) even though
+    // fbclid is in the URL. Build it the way the pixel does, keeping the first-seen time.
+    let fbc = getCookie('_fbc');
+    const fbclid = urlParams.get('fbclid') || getCookie('_fbclid');
+    if (!fbc && fbclid) {
+      let ts = null;
+      try { ts = sessionStorage.getItem('_fbclid_ts'); } catch (_) {}
+      if (!ts) {
+        ts = String(Date.now());
+        try { sessionStorage.setItem('_fbclid_ts', ts); } catch (_) {}
+      }
+      fbc = `fb.1.${ts}.${fbclid}`;
+    }
+
     let fbp = getCookie('_fbp');
     if (!fbp && typeof config !== 'undefined' && config && config.fbp) {
       fbp = config.fbp;
@@ -225,8 +219,8 @@ const Tracking = (function() {
     
     return {
       fbp: fbp || null,
-      fbc: getCookie('_fbc') || null,
-      fbclid: urlParams.get('fbclid') || getCookie('_fbclid') || null,
+      fbc: fbc || null,
+      fbclid: fbclid || null,
       ttp: getCookie('_ttp') || null,
       ttclid: urlParams.get('ttclid') || getCookie('_ttclid') || null,
       sourceUrl: window.location.href,
@@ -463,7 +457,10 @@ const Tracking = (function() {
       hashedEmail = getUserEmailHash();
     }
     if (hashedEmail) {
-      metaParams.em = hashedEmail;
+      // Advanced matching: re-init with user data. As an event param Meta treats it as custom data.
+      if (typeof fbq !== 'undefined' && config && config.fbPixelId) {
+        try { fbq('init', config.fbPixelId, { em: hashedEmail }); } catch (_) {}
+      }
       tiktokParams.email = hashedEmail;
     }
 
@@ -503,6 +500,7 @@ const Tracking = (function() {
     if (initialized) return;
 
     scrubCompletionQuery();
+    captureClickIds();
 
     try {
       const response = await fetch('/api/tracking/config');
@@ -513,7 +511,6 @@ const Tracking = (function() {
       console.warn('Failed to load tracking config');
     }
 
-    captureClickIds();
     fetchClientLocation();
     initialized = true;
     console.log('📊 Tracking initialized');

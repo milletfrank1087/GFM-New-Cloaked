@@ -193,7 +193,7 @@ module.exports = function createDonationRouter(ctx) {
           eventId: tracking.eventId,
           sourceUrl,
           fbp: tracking.fbp || null,
-          fbc: tracking.fbc || null,
+          fbc: tracking.fbc || (tracking.fbclid ? `fb.1.${Date.now()}.${tracking.fbclid}` : null), // cookie missed; rebuild from the click id
           ttp: tracking.ttp || null,
           ttclid: tracking.ttclid || null
         };
@@ -201,7 +201,7 @@ module.exports = function createDonationRouter(ctx) {
         let capiResult = { meta: '-', tiktok: '-' };
         try {
           capiResult = await trackPurchase({
-            amount: paymentData.amount,
+            amount: paymentData.totalAmount ?? paymentData.amount, // donation + tip
             currency: paymentData.currency,
             donationType: tracking.cadence === 'monthly' ? 'monthly' : 'one-time',
             captureId: paymentData.stripeChargeId,
@@ -310,7 +310,7 @@ module.exports = function createDonationRouter(ctx) {
       }
 
       logFunnelEvent({
-        campaignSlug: data?.contentName || ACTIVE_CAMPAIGN,
+        campaignSlug: ACTIVE_CAMPAIGN, // contentName is 'One-time Donation' on checkout events, not a slug
         eventType: event,
         visitor,
         amount: data?.value,

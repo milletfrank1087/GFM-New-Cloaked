@@ -13,8 +13,8 @@ const PRESET_BY_RANGE = {
   yesterday: 'yesterday',
   last7days: 'last_7d',
   last30days: 'last_30d',
-  thisMonth: 'last_30d',
-  lastMonth: 'last_30d',
+  thisMonth: 'this_month',
+  lastMonth: 'last_month',
   thisYear: 'last_90d',
   allTime: 'last_90d',
 };

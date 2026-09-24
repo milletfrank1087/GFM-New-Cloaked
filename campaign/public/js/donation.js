@@ -319,7 +319,7 @@ async function initDonationRedirect() {
     tracking.eventId = purchaseEventId;
     try {
       sessionStorage.setItem('_purchase_event_id', purchaseEventId);
-      sessionStorage.setItem('_purchase_amount', String(selectedAmount));
+      sessionStorage.setItem('_purchase_amount', String(selectedAmount + tipAmount));
       sessionStorage.setItem('_purchase_currency', (typeof currency !== 'undefined' && currency.config) ? currency.config.code : 'EUR');
     } catch (e) {}
   }
