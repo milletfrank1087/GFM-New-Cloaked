@@ -13,6 +13,9 @@
   "raised": 33740,
   "donorCount": 804,
   "daysLeft": 27,
+  "donationPresets": {
+    "EUR": { "amounts": [10, 20, 25, 50, 100, 250], "default": 25 }
+  },
   "images": [
     {
       "url": "/images/campaigns/leucemia-mariana/1.jpg",
