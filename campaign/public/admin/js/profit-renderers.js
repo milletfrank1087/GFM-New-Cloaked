@@ -117,9 +117,11 @@
 
     /* Signals */
     setText('signal-aov', t.count ? fmt(t.gross / t.count) : '€0.00');
-    setText('signal-roas', t.spend > 0 && t.metaPurchaseValue > 0 ? (t.metaPurchaseValue / t.spend).toFixed(2) + 'x' : '—');
-    setHtml('signal-cpa', (t.metaPurchases > 0 ? fmt(t.spend / t.metaPurchases) : '—') + (t.metaPurchases > 0 && t.spendNative > 0 ? fxMarkupSpend(t.spendNative / t.metaPurchases, t.spend / t.metaPurchases, data.adSync?.fx) : ''));
-    setText('signal-cpa-sub', t.metaPurchases ? t.metaPurchases + ' purchases' : 'no purchases');
+    // Real = Supabase donations; Meta = what Ads Manager attributes (usually fewer).
+    setText('signal-roas', t.spend > 0 && t.gross > 0 ? (t.gross / t.spend).toFixed(2) + 'x' : '—');
+    setText('signal-roas-sub', t.spend > 0 && t.metaPurchaseValue > 0 ? 'Meta: ' + (t.metaPurchaseValue / t.spend).toFixed(2) + 'x' : 'gross / spend');
+    setHtml('signal-cpa', (t.count > 0 && t.spend > 0 ? fmt(t.spend / t.count) : '—') + (t.count > 0 && t.spendNative > 0 ? fxMarkupSpend(t.spendNative / t.count, t.spend / t.count, data.adSync?.fx) : ''));
+    setText('signal-cpa-sub', (t.count ? t.count + ' donations' : 'no donations') + (t.metaPurchases ? ' · Meta: ' + t.metaPurchases + ' (' + fmt(t.spend / t.metaPurchases) + ')' : ''));
     setHtml('signal-tips', fmt(t.tips) + tipsFxMarkup);
     setText('signal-tips-pct', t.gross > 0 ? ((t.tips / t.gross) * 100).toFixed(1) + '% of gross' : '0%');
     setHtml('signal-fee-drag', (t.gross > 0 ? ((t.fees / t.gross) * 100).toFixed(1) + '%' : '0.0%') + feesFxMarkup);
