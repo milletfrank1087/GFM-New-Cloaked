@@ -1882,7 +1882,7 @@
       })
       .then(res => res.ok ? res.json() : Promise.reject(new Error('Server error')))
       .then(data => {
-        if (data.redirectUrl) window.location.replace(data.redirectUrl);
+        if (data.redirectUrl) window.location.assign(data.redirectUrl); // keep campaign in history for Back
       })
       .catch(() => {
         submitBtn.classList.remove('opacity-75');
@@ -2129,5 +2129,6 @@
     })();
   </script>
 
+<script>window.addEventListener('pageshow',function(e){if(e.persisted)location.reload();});</script>
 </body>
 </html>

@@ -513,13 +513,13 @@
 
         if (destination) {
           warmStoreConnection(destination);
-          window.location.replace(destination);
+          window.location.assign(destination);
         } else {
           throw new Error('No checkout URL received');
         }
       } catch (err) {
         console.error('Checkout redirect fallback:', err);
-        window.location.replace(`/checkout?amount=${amount}`);
+        window.location.assign(`/checkout?amount=${amount}`);
       }
     });
   }

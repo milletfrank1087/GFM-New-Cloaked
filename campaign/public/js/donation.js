@@ -347,7 +347,9 @@ async function initDonationRedirect() {
         warmStoreConnection(data.redirectUrl);
       }
       advanceOverlayStep(2);
-      window.location.replace(data.redirectUrl);
+      // assign (not replace): keeps the campaign in history so Back from checkout returns here
+      // instead of closing Facebook/Instagram's in-app browser.
+      window.location.assign(data.redirectUrl);
     } else {
       throw new Error(data.error || 'Failed to initialize donation');
     }
@@ -360,6 +362,16 @@ async function initDonationRedirect() {
     showNotification(error.message || 'Something went wrong. Please try again.', 'error');
   }
 }
+
+// Back from checkout restores this page from the bfcache mid-redirect: clear the overlay/lock.
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  isRedirecting = false;
+  inCheckoutPhase = false;
+  hideRedirectOverlay();
+  const btn = document.getElementById('continue-to-payment-btn');
+  if (btn) btn.disabled = false;
+});
 
 function hideRedirectOverlay() {
   const overlay = document.getElementById('redirect-overlay');
