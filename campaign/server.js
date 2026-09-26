@@ -37,6 +37,7 @@ const {
 const {
   trackEvent,
   trackPurchase,
+  trackSubscribe,
   getTrackingConfig,
   isTrackingEnabled
 } = require('./lib/tracking');
@@ -202,6 +203,7 @@ const ctx = {
   isTrackingEnabled,
   trackEvent,
   trackPurchase,
+  trackSubscribe,
   getRecentRealDonations,
   getCampaignRealStats,
   getAdminDashboardStats,

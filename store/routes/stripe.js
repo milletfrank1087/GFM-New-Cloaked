@@ -4,11 +4,42 @@ const { toSmallestUnit, fromSmallestUnit, getDecimals, formatAmount } = require(
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { classifyStripeError, getDonorMessage } = require('../lib/stripe-errors');
-const { sendDonationConfirmation } = require('../lib/email');
+const { sendDonationConfirmation, sendSubscriptionConfirmation } = require('../lib/email');
+const upsell = require('../lib/upsell');
+const { CHECKOUT_LOCALE } = require('../lib/locale');
 
 module.exports = function createStripeRouter(ctx) {
   const { stripe, supabase, storeConfig, STORE_DOMAIN, CALLBACK_SECRET, paymentState, emitAlert } = ctx;
   const router = express.Router();
+
+  // supabase-js query builders are thenables without .catch(); await them inside try instead.
+  async function dbSafe(label, ref, query) {
+    try {
+      const { data, error } = await query;
+      if (error) StoreLog.error('db_failed', ref, `${label}: ${error.message}`);
+      return data;
+    } catch (err) {
+      StoreLog.error('db_failed', ref, `${label}: ${err.message}`);
+      return null;
+    }
+  }
+
+  // subscriptions.status has a CHECK constraint: active|canceled|past_due|incomplete|unpaid|paused.
+  // A trial (upsell before its first charge) counts as active; test mode lives in metadata.livemode.
+  function dbSubStatus(stripeStatus) {
+    const map = { trialing: 'active', incomplete_expired: 'canceled' };
+    const s = map[stripeStatus] || stripeStatus;
+    return ['active', 'canceled', 'past_due', 'incomplete', 'unpaid', 'paused'].includes(s) ? s : 'incomplete';
+  }
+
+  // Newer Stripe API versions moved invoice.subscription under invoice.parent.
+  function invoiceSubscription(invoice) {
+    const viaParent = invoice.parent && invoice.parent.subscription_details;
+    return {
+      id: invoice.subscription || (viaParent && viaParent.subscription) || null,
+      metadata: (invoice.subscription_details && invoice.subscription_details.metadata) || (viaParent && viaParent.metadata) || {},
+    };
+  }
 
   router.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
     if (!stripe) {
@@ -30,97 +61,137 @@ module.exports = function createStripeRouter(ctx) {
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    const ref = event.data.object?.metadata?.basket_ref || event.data.object?.id?.substring(0, 12) || '---';
+    const obj = event.data.object || {};
+    const ref = obj.metadata?.campaign || obj.metadata?.basket_ref || obj.id?.substring(0, 12) || '---';
 
-    switch (event.type) {
-      case 'payment_intent.succeeded': {
-        const pi = event.data.object;
-        StoreLog.event('webhook_ok', ref, `Payment succeeded ${pi.id} - ${fromSmallestUnit(pi.amount, pi.currency)} ${pi.currency.toUpperCase()}`);
-        break;
-      }
-      case 'payment_intent.payment_failed': {
-        const pi = event.data.object;
-        StoreLog.error('webhook_fail', ref, `Payment failed ${pi.id} - ${pi.last_payment_error?.message || 'unknown'}`);
-        if (supabase) {
-          await supabase.from('payment_failures').insert({
-            store_id: ctx.getStoreDbId(),
-            endpoint: 'webhook',
-            stripe_payment_intent_id: pi.id,
-            error_type: 'PAYMENT_FAILED',
-            error_code: pi.last_payment_error?.code || 'UNKNOWN',
-            error_message: pi.last_payment_error?.message || 'Payment failed',
-            request_amount: fromSmallestUnit(pi.amount, pi.currency)
-          }).catch(() => {});
+    try {
+      switch (event.type) {
+        case 'payment_intent.succeeded': {
+          StoreLog.event('webhook_ok', ref, `Payment succeeded ${obj.id} - ${fromSmallestUnit(obj.amount, obj.currency)} ${obj.currency.toUpperCase()}`);
+          break;
         }
-        break;
-      }
-      case 'charge.dispute.created': {
-        const dispute = event.data.object;
-        StoreLog.error('webhook_dispute', ref, `DISPUTE ${dispute.id} - ${fromSmallestUnit(dispute.amount, dispute.currency)} ${dispute.currency} - ${dispute.reason}`);
-        break;
-      }
-      case 'charge.refunded': {
-        const charge = event.data.object;
-        StoreLog.event('webhook_refund', ref, `Refund ${charge.id} - ${fromSmallestUnit(charge.amount_refunded, charge.currency)} ${charge.currency}`);
-        break;
-      }
-      case 'invoice.payment_succeeded': {
-        const invoice = event.data.object;
-        if (invoice.billing_reason === 'subscription_cycle') {
-          const subId = invoice.subscription;
-          const amt = fromSmallestUnit(invoice.amount_paid, invoice.currency);
-          StoreLog.event('subscription_renewal', ref, `Recurring payment ${invoice.id} - ${amt} ${invoice.currency.toUpperCase()} (sub: ${subId})`);
+        case 'payment_intent.payment_failed': {
+          StoreLog.error('webhook_fail', ref, `Payment failed ${obj.id} - ${obj.last_payment_error?.message || 'unknown'}`);
           if (supabase) {
-            const subMeta = invoice.subscription_details?.metadata || {};
-            const mk = storeConfig.metadataKeys || {};
-            await supabase.from('payments').insert({
+            await dbSafe('payment_failures insert', ref, supabase.from('payment_failures').insert({
+              store_id: ctx.getStoreDbId(),
+              endpoint: 'webhook',
+              stripe_payment_intent_id: obj.id,
+              error_type: 'PAYMENT_FAILED',
+              error_code: obj.last_payment_error?.decline_code || obj.last_payment_error?.code || 'UNKNOWN',
+              error_message: obj.last_payment_error?.message || 'Payment failed',
+              request_amount: fromSmallestUnit(obj.amount, obj.currency)
+            }));
+          }
+          break;
+        }
+        case 'charge.dispute.created': {
+          StoreLog.error('webhook_dispute', ref, `DISPUTE ${obj.id} - ${fromSmallestUnit(obj.amount, obj.currency)} ${obj.currency} - ${obj.reason}`);
+          if (emitAlert) {
+            emitAlert({ key: `dispute-${obj.id}`, title: `Stripe dispute: ${obj.reason}`, severity: 'critical',
+              context: { dispute: obj.id, amount: fromSmallestUnit(obj.amount, obj.currency), currency: obj.currency, charge: obj.charge } });
+          }
+          break;
+        }
+        case 'charge.refunded': {
+          StoreLog.event('webhook_refund', ref, `Refund ${obj.id} - ${fromSmallestUnit(obj.amount_refunded, obj.currency)} ${obj.currency}`);
+          break;
+        }
+        case 'invoice.payment_succeeded':
+        case 'invoice.paid': {
+          const sub = invoiceSubscription(obj);
+          // subscription_cycle = monthly renewals, including the first charge after the upsell's 30-day trial.
+          if (!sub.id || obj.billing_reason !== 'subscription_cycle' || !(obj.amount_paid > 0)) break;
+          const amt = fromSmallestUnit(obj.amount_paid, obj.currency);
+          StoreLog.event('subscription_renewal', ref, `Recurring payment ${obj.id} - ${amt} ${obj.currency.toUpperCase()} (sub: ${sub.id})`);
+          if (!supabase) break;
+
+          const existingSub = await dbSafe('subscriptions select', ref, supabase.from('subscriptions')
+            .select('source_ref, renewal_count, total_collected, customer_id, customer_email, customer_name')
+            .eq('stripe_subscription_id', sub.id).maybeSingle());
+
+          // Charge id + Stripe fee for the renewal (field names differ across API versions).
+          let chargeId = obj.charge || null;
+          let piId = obj.payment_intent || null;
+          let fee = 0;
+          try {
+            if (!chargeId && piId) chargeId = (await stripe.paymentIntents.retrieve(piId)).latest_charge;
+            if (chargeId) {
+              const ch = await stripe.charges.retrieve(chargeId, { expand: ['balance_transaction'] });
+              piId = piId || ch.payment_intent;
+              const bt = ch.balance_transaction;
+              if (bt && typeof bt === 'object') {
+                const feeSettle = fromSmallestUnit(bt.fee, bt.currency);
+                fee = bt.exchange_rate ? feeSettle / bt.exchange_rate : feeSettle;
+              }
+            }
+          } catch (feeErr) {
+            StoreLog.error('subscription_renewal', ref, `fee lookup: ${feeErr.message}`);
+          }
+
+          // Stripe retries webhooks; one payments row per renewal payment.
+          const dupe = piId ? await dbSafe('payments dedupe', ref, supabase.from('payments').select('id').eq('stripe_payment_intent_id', piId).maybeSingle()) : null;
+          if (!dupe) {
+            await dbSafe('renewal insert', ref, supabase.from('payments').insert({
               store_id: ctx.getStoreDbId(),
               store_domain: STORE_DOMAIN,
-              source_ref: subMeta[mk.sessionRef || 'sessionRef'] || 'subscription',
+              customer_id: existingSub?.customer_id || null,
+              source_ref: sub.metadata.campaign || existingSub?.source_ref || 'subscription',
               payment_method: 'stripe',
-              stripe_payment_intent_id: invoice.payment_intent,
-              stripe_charge_id: invoice.charge,
-              stripe_subscription_id: subId,
+              stripe_payment_intent_id: piId,
+              stripe_charge_id: chargeId,
+              stripe_subscription_id: sub.id,
               amount: amt,
               service_fee: 0,
               total_amount: amt,
-              currency: invoice.currency.toUpperCase(),
+              stripe_fee: fee,
+              net_amount: amt - fee,
+              currency: obj.currency.toUpperCase(),
               payment_source: 'subscription',
-              status: 'completed'
-            }).catch(() => {});
-
-            const { data: existingSub } = await supabase
-              .from('subscriptions')
-              .select('renewal_count, total_collected')
-              .eq('stripe_subscription_id', subId)
-              .maybeSingle();
-
-            if (existingSub) {
-              await supabase.from('subscriptions')
-                .update({
-                  renewal_count: (existingSub.renewal_count || 0) + 1,
-                  total_collected: parseFloat(existingSub.total_collected || 0) + amt,
-                  status: 'active',
-                  updated_at: new Date().toISOString()
-                })
-                .eq('stripe_subscription_id', subId)
-                .catch(() => {});
-            }
+              customer_email: existingSub?.customer_email || obj.customer_email || null,
+              billing_name: existingSub?.customer_name || obj.customer_name || null,
+              status: obj.livemode ? 'completed' : 'test'
+            }));
           }
+
+          if (existingSub && !dupe) { // retried events must not count a renewal twice
+            await dbSafe('subscriptions renewal update', ref, supabase.from('subscriptions')
+              .update({
+                renewal_count: (existingSub.renewal_count || 0) + 1,
+                total_collected: parseFloat(existingSub.total_collected || 0) + amt,
+                status: 'active',
+                updated_at: new Date().toISOString()
+              })
+              .eq('stripe_subscription_id', sub.id));
+          }
+          break;
         }
-        break;
-      }
-      case 'customer.subscription.deleted': {
-        const sub = event.data.object;
-        StoreLog.event('subscription_cancelled', ref, `Subscription ${sub.id} cancelled (status: ${sub.status})`);
-        if (supabase) {
-          await supabase.from('subscriptions')
-            .update({ status: 'canceled', canceled_at: new Date().toISOString(), updated_at: new Date().toISOString() })
-            .eq('stripe_subscription_id', sub.id)
-            .catch(() => {});
+        case 'invoice.payment_failed': {
+          const sub = invoiceSubscription(obj);
+          StoreLog.error('subscription_payment_failed', ref, `${obj.id} (sub: ${sub.id || '-'}) attempt ${obj.attempt_count || 1}`);
+          if (supabase && sub.id) {
+            await dbSafe('subscriptions past_due', ref, supabase.from('subscriptions')
+              .update({ status: 'past_due', updated_at: new Date().toISOString() })
+              .eq('stripe_subscription_id', sub.id));
+          }
+          break;
         }
-        break;
+        case 'customer.subscription.updated':
+        case 'customer.subscription.deleted': {
+          const status = event.type === 'customer.subscription.deleted' ? 'canceled' : obj.status;
+          StoreLog.event('subscription_status', ref, `Subscription ${obj.id} → ${status}`);
+          if (supabase) {
+            const patch = { status: dbSubStatus(status), updated_at: new Date().toISOString() };
+            if (status === 'canceled') patch.canceled_at = new Date().toISOString();
+            if (obj.current_period_end) patch.current_period_end = new Date(obj.current_period_end * 1000).toISOString();
+            await dbSafe('subscriptions status', ref, supabase.from('subscriptions').update(patch).eq('stripe_subscription_id', obj.id));
+          }
+          break;
+        }
       }
+    } catch (err) {
+      // Log and still acknowledge: a 500 would make Stripe retry an event we can't process anyway.
+      StoreLog.error('webhook_error', ref, `${event.type}: ${err.message}`);
     }
 
     res.status(200).json({ received: true });
@@ -244,6 +315,21 @@ module.exports = function createStripeRouter(ctx) {
           isSubscription: true
         });
       } else {
+        // Save the card (setup_future_usage) so the thank-you screen can offer a one-tap monthly gift.
+        // Must match the Payment Element's setupFutureUsage option in public/js/checkout.js.
+        const payerEmail = String(req.body?.email || donor.email || '').trim() || undefined;
+        const payerName = String(req.body?.name || '').trim() || undefined;
+        let customerId = null;
+        try {
+          const customer = await stripe.customers.create({
+            email: payerEmail, name: payerName,
+            metadata: { [mk.sessionRef || 'sessionRef']: (donor.sid || '').substring(0, 12) }
+          });
+          customerId = customer.id;
+        } catch (custErr) {
+          StoreLog.error('payment_created', donor.ref || '---', `customer create (non-critical): ${custErr.message}`);
+        }
+
         const intentParams = {
           amount: amountInUnits,
           currency: donorCurrency.toLowerCase(),
@@ -251,7 +337,9 @@ module.exports = function createStripeRouter(ctx) {
           description: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
           statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
           payment_details: { order_reference: refCode },
-          amount_details: { line_items: stripeLineItems }
+          amount_details: { line_items: stripeLineItems },
+          setup_future_usage: 'off_session',
+          ...(customerId ? { customer: customerId } : {})
         };
 
         let paymentIntent;
@@ -439,8 +527,10 @@ module.exports = function createStripeRouter(ctx) {
       let customerId = null;
       const email = donor.email || charge?.billing_details?.email || null;
 
-      let stripeCustomerId = null;
-      if (email) {
+      let stripeCustomerId = typeof paymentIntent.customer === 'string'
+        ? paymentIntent.customer
+        : (paymentIntent.customer && paymentIntent.customer.id) || null;
+      if (!stripeCustomerId && email) {
         try {
           const existingCustomers = await stripe.customers.list({ email, limit: 1 });
           if (existingCustomers.data.length > 0) {
@@ -515,7 +605,7 @@ module.exports = function createStripeRouter(ctx) {
           net_amount: totalAmount - stripeFee,
           currency: donor.currency,
           payment_source: paymentSource,
-          status: 'completed',
+          status: paymentIntent.livemode ? 'completed' : 'test',
           line_items: lineItems,
           customer_name: donorName,
           billing_name: donorNameReal,
@@ -653,7 +743,31 @@ module.exports = function createStripeRouter(ctx) {
       const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
 
       StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
-      res.json({ success: true, redirectUrl, sessionId: donor.sid || null });
+
+      // Post-donation monthly upsell: only for one-time card/wallet payments whose card was saved.
+      let upsellOffer = null;
+      const pmId = pm && pm.id;
+      const reusable = pmId && (pm.type === 'card' || pm.type === 'link') && paymentIntent.setup_future_usage === 'off_session';
+      if (!isSubscription && reusable && stripeCustomerId) {
+        const t = donor.utm || {};
+        res.cookie('__upsell', upsell.makeOfferToken({
+          pi: paymentIntent.id, pm: pmId, cus: stripeCustomerId,
+          ref: donor.ref, sid: donor.sid, cur: donor.currency || 'EUR', don: parseFloat(donor.amount),
+          email, name: donorNameReal !== 'Unknown' ? donorNameReal : '', lang: donor.lang || 'en',
+          ip: donor.ip, ua: donor.ua, live: paymentIntent.livemode,
+          trk: { sourceUrl: t.sourceUrl || null, fbp: t.fbp || null, fbc: t.fbc || null, fbclid: t.fbclid || null,
+                 ttp: t.ttp || null, ttclid: t.ttclid || null, clientLocation: t.clientLocation || null, campaignOrigin: t.campaignOrigin || null }
+        }), { httpOnly: true, secure: req.secure || req.headers['x-forwarded-proto'] === 'https', sameSite: 'lax', maxAge: 30 * 60 * 1000, path: '/' });
+        upsellOffer = {
+          amounts: upsell.suggestAmounts(parseFloat(donor.amount)),
+          currency: donor.currency || 'EUR',
+          firstCharge: upsell.firstChargeDate().toISOString(),
+          donation: parseFloat(donor.amount),
+          donorFirstName: donorNameReal !== 'Unknown' ? donorNameReal.trim().split(/\s+/)[0] : ''
+        };
+      }
+
+      res.json({ success: true, redirectUrl, sessionId: donor.sid || null, upsell: upsellOffer });
     } catch (error) {
       const ref = (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
       StoreLog.error('confirm_failed', ref, `${error.code || 'ERROR'}: ${error.message}`);
@@ -759,101 +873,163 @@ module.exports = function createStripeRouter(ctx) {
     }
   });
 
-  router.post('/api/create-subscription-upsell', async (req, res) => {
+  // One-tap monthly gift after a one-time donation. Reads the signed __upsell cookie set by
+  // /api/confirm-payment (valid 30 min, single use) — the body only carries the chosen amount.
+  async function subscribeUpsell(req, res) {
+    const offer = upsell.readOfferToken(req.cookies.__upsell);
+    if (!stripe || !offer) {
+      return res.status(410).json({ success: false, error: 'offer_expired' });
+    }
+    const ref = offer.ref || '---';
+    const monthly = Math.round(Number(req.body?.monthlyAmount) * 100) / 100;
+    if (!Number.isFinite(monthly) || monthly < 1 || monthly > 1000) {
+      return res.status(400).json({ success: false, error: 'invalid_amount' });
+    }
+
     try {
-      if (!stripe) return res.status(400).json({ error: 'Stripe not configured' });
+      const productId = await upsell.getMonthlyProduct(stripe, storeConfig);
+      const pmObj = await stripe.paymentMethods.retrieve(offer.pm);
+      if (!pmObj.customer) await stripe.paymentMethods.attach(offer.pm, { customer: offer.cus });
 
-      const { monthlyAmount, sessionId } = req.body;
-      if (!sessionId) return res.status(400).json({ error: 'Missing session', success: false });
-      if (!monthlyAmount || monthlyAmount < 1) return res.status(400).json({ error: 'Invalid amount', success: false });
-
-      const { data: session, error: sessErr } = await supabase
-        .from('checkout_sessions')
-        .select('*')
-        .eq('id', sessionId)
-        .single();
-
-      if (sessErr || !session) return res.status(400).json({ error: 'Session not found', success: false });
-
-      const donorCurrency = (session.currency || 'EUR').toLowerCase();
-      const decimals = getDecimals(donorCurrency.toUpperCase());
-      const multiplier = Math.pow(10, decimals);
-      const amountInUnits = Math.round(monthlyAmount * multiplier);
-
-      const email = session.email || '';
-      const mk = storeConfig.metadataKeys || {};
-
-      let customerId = session.stripe_customer_id || null;
-
-      if (!customerId && email) {
-        const existing = await stripe.customers.list({ email, limit: 1 });
-        if (existing.data.length > 0) customerId = existing.data[0].id;
-      }
-
-      if (!customerId) {
-        const customer = await stripe.customers.create({
-          email: email || undefined,
-          metadata: { [mk.sessionRef || 'sessionRef']: sessionId.substring(0, 12), upsell: 'true' }
-        });
-        customerId = customer.id;
-      }
-
-      if (session.stripe_payment_intent_id) {
-        try {
-          const pi = await stripe.paymentIntents.retrieve(session.stripe_payment_intent_id);
-          if (pi.payment_method) {
-            const pmId = typeof pi.payment_method === 'string' ? pi.payment_method : pi.payment_method.id;
-            try {
-              await stripe.paymentMethods.attach(pmId, { customer: customerId });
-            } catch (attachErr) {
-              if (!attachErr.message?.includes('already been attached')) throw attachErr;
-            }
-            await stripe.customers.update(customerId, {
-              invoice_settings: { default_payment_method: pmId }
-            });
-          }
-        } catch (pmErr) {
-          StoreLog.error('upsell_pm', session.campaign_ref || '---', pmErr.message);
-        }
-      }
-
-      const price = await stripe.prices.create({
-        unit_amount: amountInUnits,
-        currency: donorCurrency,
-        recurring: { interval: 'month' },
-        product_data: { name: storeConfig.products?.[0]?.name || 'Monthly Support' }
-      });
-
+      const firstCharge = upsell.firstChargeDate();
       const subscription = await stripe.subscriptions.create({
-        customer: customerId,
-        items: [{ price: price.id }],
-        payment_behavior: 'default_incomplete',
-        payment_settings: { save_default_payment_method: 'on_subscription' },
-        metadata: {
-          [mk.referenceCode || 'referenceCode']: 'UPSELL-' + sessionId.substring(0, 8),
-          cadence: 'monthly',
-          upsell: 'true',
-          original_session: sessionId
-        },
-        expand: ['latest_invoice.payment_intent']
-      });
+        customer: offer.cus,
+        items: [{ price_data: {
+          currency: offer.cur.toLowerCase(),
+          product: productId,
+          unit_amount: toSmallestUnit(monthly, offer.cur),
+          recurring: { interval: 'month' }
+        } }],
+        default_payment_method: offer.pm,
+        trial_end: Math.floor(firstCharge.getTime() / 1000), // first charge in 30 days, not today
+        off_session: true,
+        metadata: { campaign: offer.ref || '', lang: offer.lang || 'en', upsell: 'true', sessionRef: String(offer.sid || '').substring(0, 12), source_pi: offer.pi }
+      }, { idempotencyKey: `upsell-${offer.pi}` });
 
-      const inv = subscription.latest_invoice;
-      const pi = inv?.payment_intent;
+      res.clearCookie('__upsell', { path: '/' });
+      StoreLog.event('upsell_created', ref, `${subscription.id} - ${fmtAmount(monthly, offer.cur)} ${offer.cur}/mo, first charge ${firstCharge.toISOString().slice(0, 10)}`);
 
-      if (pi && pi.status === 'requires_payment_method') {
-        const customer = await stripe.customers.retrieve(customerId);
-        const defaultPm = customer.invoice_settings?.default_payment_method;
-        if (defaultPm) {
-          await stripe.paymentIntents.confirm(pi.id, { payment_method: defaultPm });
-        }
+      if (supabase) {
+        const { error: subErr } = await supabase.from('subscriptions').insert({
+          store_id: ctx.getStoreDbId(),
+          stripe_subscription_id: subscription.id,
+          stripe_customer_id: offer.cus,
+          stripe_price_id: subscription.items?.data?.[0]?.price?.id || null,
+          stripe_product_id: productId,
+          source_ref: offer.ref,
+          amount: monthly,
+          currency: offer.cur,
+          interval: 'month',
+          status: dbSubStatus(subscription.status),
+          current_period_end: firstCharge.toISOString(),
+          renewal_count: 0,
+          total_collected: 0,
+          customer_email: offer.email || null,
+          customer_name: offer.name || null,
+          metadata: { ref: offer.ref, sid: offer.sid, upsell: true, source_pi: offer.pi, first_charge_at: firstCharge.toISOString(), trial: subscription.status === 'trialing', livemode: subscription.livemode }
+        });
+        if (subErr) StoreLog.error('subscription_save_failed', ref, subErr.message);
       }
 
-      StoreLog.event('upsell_created', session.campaign_ref || '---', `${subscription.id} - ${fmtAmount(monthlyAmount, donorCurrency.toUpperCase())} ${donorCurrency.toUpperCase()}/mo`);
-      res.json({ success: true, subscriptionId: subscription.id });
+      const host = req.get('host') || STORE_DOMAIN;
+      const proto = /^(localhost|127\.)/.test(host) ? 'http' : 'https';
+      const manageUrl = `${proto}://${host}/donation/manage?s=${subscription.id}&t=${upsell.cancelToken(subscription.id)}`;
+      if (offer.email) {
+        sendSubscriptionConfirmation({
+          to: offer.email, name: offer.name, lang: offer.lang, currency: offer.cur,
+          monthly, firstCharge, manageUrl, subscriptionId: subscription.id
+        });
+      }
+
+      // Meta/TikTok "Subscribe" (server-side) via the campaign that owns the pixel.
+      const campaignUrl = resolveCampaignCallbackUrl({ utm: offer.trk }, offer.ref);
+      if (campaignUrl) {
+        fetch(`${campaignUrl}/api/subscription-callback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(5000),
+          body: JSON.stringify({
+            secret: CALLBACK_SECRET,
+            subscription: { id: subscription.id, monthly, currency: offer.cur, campaign: offer.ref, livemode: subscription.livemode },
+            donor: { email: offer.email, name: offer.name, ipAddress: offer.ip, userAgent: offer.ua },
+            tracking: offer.trk
+          })
+        }).then((r) => {
+          if (!r.ok) StoreLog.error('callback_failed', ref, `subscription-callback HTTP ${r.status}`);
+        }).catch((err) => StoreLog.error('callback_failed', ref, `subscription-callback: ${err.message}`));
+      }
+
+      res.json({ success: true, subscriptionId: subscription.id, monthly, currency: offer.cur, firstCharge: firstCharge.toISOString() });
     } catch (error) {
-      StoreLog.error('upsell_failed', '---', error.message);
-      res.status(500).json({ error: 'Subscription setup failed', success: false });
+      StoreLog.error('upsell_failed', ref, `${error.code || 'ERROR'}: ${error.message}`);
+      res.status(error.type === 'StripeCardError' ? 402 : 500).json({ success: false, error: 'subscription_failed' });
+    }
+  }
+
+  router.post('/api/upsell/subscribe', subscribeUpsell);
+  router.post('/api/create-subscription-upsell', subscribeUpsell); // legacy path used by checkout-donor-v2
+
+  // Self-serve management page linked from the confirmation email (HMAC token, no login).
+  function managePage(res, { title, body, lang }) {
+    res.set('Cache-Control', 'no-store').send(`<!DOCTYPE html><html lang="${lang || 'en'}"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>${title}</title><meta name="robots" content="noindex"></head>
+<body style="margin:0;background:#f4f6f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1f2937">
+<div style="max-width:440px;margin:0 auto;padding:40px 16px"><div style="background:#fff;border:1px solid #e8ebee;border-radius:16px;padding:28px 22px;text-align:center">
+${body}</div></div></body></html>`);
+  }
+
+  function manageStrings(lang) {
+    const l = (CHECKOUT_LOCALE[lang] || CHECKOUT_LOCALE.en).upsell || CHECKOUT_LOCALE.en.upsell;
+    return l.manage;
+  }
+
+  router.get('/donation/manage', async (req, res) => {
+    const { s, t } = req.query;
+    if (!stripe || !s || !upsell.checkCancelToken(String(s), String(t || ''))) {
+      return res.status(404).send('Not found');
+    }
+    try {
+      const sub = await stripe.subscriptions.retrieve(String(s));
+      const lang = sub.metadata?.lang || 'en';
+      const m = manageStrings(lang);
+      const amount = fmtAmount(fromSmallestUnit(sub.items.data[0].price.unit_amount, sub.currency), sub.currency.toUpperCase());
+      if (sub.status === 'canceled') {
+        return managePage(res, { title: m.title, lang, body: `<h1 style="font-size:20px;margin:0 0 8px">${m.alreadyCanceled}</h1><p style="color:#6b7280;font-size:14px;margin:0">${m.noMoreCharges}</p>` });
+      }
+      const next = new Date((sub.trial_end || sub.current_period_end) * 1000).toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' });
+      managePage(res, { title: m.title, lang, body: `
+<h1 style="font-size:20px;margin:0 0 8px">${m.title}</h1>
+<p style="color:#4b5563;font-size:15px;margin:0 0 4px"><strong>${amount}</strong> ${m.perMonth}</p>
+<p style="color:#6b7280;font-size:13px;margin:0 0 22px">${m.nextCharge} ${next}</p>
+<form method="post" action="/donation/manage">
+<input type="hidden" name="s" value="${String(s).replace(/[^\w]/g, '')}"><input type="hidden" name="t" value="${String(t).replace(/[^\w-]/g, '')}">
+<button style="width:100%;padding:14px;border:0;border-radius:12px;background:#dc2626;color:#fff;font-weight:700;font-size:15px;cursor:pointer">${m.cancelButton}</button>
+</form>` });
+    } catch (err) {
+      StoreLog.error('subscription_manage', String(s).substring(0, 12), err.message);
+      res.status(404).send('Not found');
+    }
+  });
+
+  router.post('/donation/manage', express.urlencoded({ extended: false }), async (req, res) => {
+    const s = String(req.body?.s || '');
+    const t = String(req.body?.t || '');
+    if (!stripe || !s || !upsell.checkCancelToken(s, t)) return res.status(404).send('Not found');
+    try {
+      const sub = await stripe.subscriptions.retrieve(s);
+      const lang = sub.metadata?.lang || 'en';
+      const m = manageStrings(lang);
+      if (sub.status !== 'canceled') await stripe.subscriptions.cancel(s);
+      StoreLog.event('subscription_cancelled', sub.metadata?.campaign || '---', `${s} cancelled by donor`);
+      if (supabase) {
+        await dbSafe('subscriptions cancel', s, supabase.from('subscriptions')
+          .update({ status: 'canceled', canceled_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+          .eq('stripe_subscription_id', s));
+      }
+      managePage(res, { title: m.title, lang, body: `<h1 style="font-size:20px;margin:0 0 8px">${m.canceled}</h1><p style="color:#6b7280;font-size:14px;margin:0">${m.noMoreCharges}</p>` });
+    } catch (err) {
+      StoreLog.error('subscription_manage', s.substring(0, 12), err.message);
+      res.status(500).send('Something went wrong. Please reply to your confirmation email and we will cancel it for you.');
     }
   });
 

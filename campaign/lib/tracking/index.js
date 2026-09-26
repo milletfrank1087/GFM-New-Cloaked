@@ -39,7 +39,8 @@ const EVENT_MAP = {
   AddToCart: { meta: 'AddToCart', tiktok: 'AddToCart' },
   InitiateCheckout: { meta: 'InitiateCheckout', tiktok: 'InitiateCheckout' },
   AddPaymentInfo: { meta: 'AddPaymentInfo', tiktok: 'AddPaymentInfo' },
-  Purchase: { meta: 'Purchase', tiktok: 'CompletePayment' }
+  Purchase: { meta: 'Purchase', tiktok: 'CompletePayment' },
+  Subscribe: { meta: 'Subscribe', tiktok: 'Subscribe' }
 };
 
 async function trackEvent(eventName, eventData, userData, clientInfo) {
@@ -144,6 +145,32 @@ async function trackPurchase(paymentData, trackingData, clientInfo) {
   return trackEvent('Purchase', eventData, userData, clientInfo);
 }
 
+// Monthly gift accepted on the post-donation upsell. Server-side only (the checkout domain can't
+// fire the pixel); value = monthly amount. Renewals are not sent: they aren't new ad conversions.
+async function trackSubscribe(sub, donor, trackingData, clientInfo) {
+  const { firstName, lastName } = parseName(donor.name);
+  const userData = {
+    email: donor.email || null,
+    firstName,
+    lastName,
+    externalId: sub.id,
+    fbp: trackingData.fbp || null,
+    fbc: trackingData.fbc || (trackingData.fbclid ? `fb.1.${Date.now()}.${trackingData.fbclid}` : null),
+    ttp: trackingData.ttp || null,
+    ttclid: trackingData.ttclid || null
+  };
+  const eventData = {
+    eventId: `Subscribe_${sub.id}`,
+    sourceUrl: trackingData.sourceUrl,
+    value: sub.monthly,
+    currency: sub.currency || 'EUR',
+    contentName: 'Monthly Donation',
+    contentType: 'product',
+    orderId: sub.id
+  };
+  return trackEvent('Subscribe', eventData, userData, clientInfo);
+}
+
 function getTrackingConfig() {
   const { TRACKING_ENABLED, FB_PIXEL_ID, TIKTOK_PIXEL_ID } = getConfig();
   return {
@@ -161,6 +188,7 @@ function isTrackingEnabled() {
 module.exports = {
   trackEvent,
   trackPurchase,
+  trackSubscribe,
   getTrackingConfig,
   isTrackingEnabled
 };

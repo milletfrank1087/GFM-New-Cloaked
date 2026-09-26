@@ -290,4 +290,51 @@ async function sendDonationConfirmation(opts) {
   }
 }
 
-module.exports = { sendDonationConfirmation, buildEmail };
+// Monthly gift confirmation (post-donation upsell): amount, first charge date, one-click cancel link.
+async function sendSubscriptionConfirmation(opts) {
+  const { to, name, lang, currency, monthly, firstCharge, manageUrl, subscriptionId } = opts || {};
+  const ref = subscriptionId ? subscriptionId.substring(0, 12) : '---';
+  try {
+    if (!resend || !to) {
+      StoreLog.error('email_failed', ref, !resend ? 'RESEND_API_KEY not set; skipping subscription email' : 'no recipient');
+      return;
+    }
+    const { CHECKOUT_LOCALE } = require('./locale');
+    const u = ((CHECKOUT_LOCALE[lang] || CHECKOUT_LOCALE.en).upsell || CHECKOUT_LOCALE.en.upsell).email;
+    const greeting = firstNameOf(name);
+    const heading = u.heading.replace('{name}', greeting ? ', ' + escapeHtml(greeting) : '');
+    const amount = formatAmount(Number(monthly), currency || 'EUR');
+    const dateStr = new Date(firstCharge).toLocaleDateString(lang || 'en', { day: 'numeric', month: 'long', year: 'numeric' });
+    const rows = [[u.amount, amount, true], [u.first, dateStr, false]];
+
+    const html = `<!DOCTYPE html><html lang="${escapeHtml(lang || 'en')}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f6f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1f2937;">
+  <div style="max-width:540px;margin:0 auto;padding:32px 20px;">
+    <div style="text-align:center;margin-bottom:18px;font-size:22px;font-weight:700;color:#00a85a;">${escapeHtml(BRAND_NAME)}</div>
+    <div style="background:#ffffff;border:1px solid #e8ebee;border-radius:14px;overflow:hidden;padding:28px;">
+      <h1 style="margin:0 0 14px 0;font-size:20px;font-weight:700;color:#111827;">${heading}</h1>
+      <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:#4b5563;">${escapeHtml(u.body)}</p>
+      <div style="background:#f7faf8;border:1px solid #e4efe9;border-radius:10px;padding:14px 20px;margin-bottom:20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#374151;">${rowsToHtml(rows)}</table>
+      </div>
+      <p style="margin:0 0 12px 0;font-size:14px;color:#4b5563;">${escapeHtml(u.cancel)}</p>
+      <a href="${escapeHtml(manageUrl)}" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#111827;color:#ffffff;font-weight:700;font-size:14px;text-decoration:none;">${escapeHtml(u.cancelButton)}</a>
+    </div>
+  </div>
+</body></html>`;
+    const text = [heading.replace(/&[a-z#0-9]+;/g, ''), '', u.body, '', rowsToText(rows), '', u.cancel, manageUrl].join('\n');
+
+    const payload = { from: FROM_ADDRESS, to: [to], subject: u.subject, html, text };
+    if (REPLY_TO) payload.replyTo = REPLY_TO;
+    const { data, error } = await resend.emails.send(payload, { idempotencyKey: `subscription-confirmation-${subscriptionId}` });
+    if (error) {
+      StoreLog.error('email_failed', ref, `Resend: ${error.message || JSON.stringify(error)}`);
+      return;
+    }
+    StoreLog.event('email_sent', ref, `subscription → ${to} (${data && data.id ? data.id : 'no-id'})`);
+  } catch (err) {
+    StoreLog.error('email_failed', ref, err && err.message ? err.message : String(err));
+  }
+}
+
+module.exports = { sendDonationConfirmation, sendSubscriptionConfirmation, buildEmail };

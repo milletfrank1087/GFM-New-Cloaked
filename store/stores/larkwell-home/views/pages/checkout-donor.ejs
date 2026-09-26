@@ -143,6 +143,9 @@
           <svg class="w-4 h-4 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
           <span id="btn-text"><%= locale.pay %> <%= formattedTotal %></span>
         </button>
+        <% if (paymentProcessor === 'stripe' && locale.upsell && cadence !== 'monthly') { %>
+        <p class="mt-2 text-center text-[10.5px] leading-snug text-gray-400"><%= locale.upsell.saveCardNote %></p>
+        <% } %>
 
         <div class="mt-4 bg-gray-50 rounded-xl p-3 border border-gray-100">
           <div class="flex items-center gap-2 mb-2">
@@ -180,7 +183,7 @@
       </div>
     </div>
 
-    <p class="text-center text-[10px] text-gray-400 mt-3">
+    <p class="text-center text-[10px] text-gray-400 mt-3" data-hide-on-success>
       <%= locale.consent %> <button onclick="showLegalModal('/terms','<%= locale.terms %>')" class="underline hover:text-gray-600"><%= locale.terms %></button> <%= locale.and %> <button onclick="showLegalModal('/privacy','<%= locale.privacy %>')" class="underline hover:text-gray-600"><%= locale.privacy %></button>.
     </p>
 
@@ -243,6 +246,12 @@
   <% if (paymentProcessor === 'stripe') { %>
   <input type="hidden" id="stripe-key" value="<%= stripePublishableKey %>">
   <input type="hidden" id="payment-locale" value="<%= locale.stripeLocale || donor.lang || 'auto' %>">
+  <script type="application/json" id="upsell-config"><%- JSON.stringify({
+    lang: donor.lang || 'en',
+    beneficiary: (campaignDisplay && campaignDisplay.beneficiary) || '',
+    strings: locale.upsell || {}
+  }).replace(/</g, '<') %></script>
+  <script src="/js/upsell-screen.js"></script>
   <script src="/js/checkout.js"></script>
   <% } else { %>
   <script src="https://pay.google.com/gp/p/js/pay.js"></script>

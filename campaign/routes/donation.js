@@ -41,6 +41,7 @@ module.exports = function createDonationRouter(ctx) {
     getTrackingConfig,
     trackEvent,
     trackPurchase,
+    trackSubscribe,
     getNextStore,
     createDonationToken,
     loadCampaignFromFile
@@ -235,6 +236,42 @@ module.exports = function createDonationRouter(ctx) {
         });
       } catch (error) {
         console.error('Payment callback async error:', error);
+      }
+    });
+  });
+
+  // Store → campaign: donor accepted the post-donation monthly upsell (store/routes/stripe.js).
+  router.post('/api/subscription-callback', async (req, res) => {
+    const { secret, subscription, donor = {}, tracking = {} } = req.body || {};
+    if (secret !== CALLBACK_SECRET) return res.status(403).json({ error: 'Invalid callback secret' });
+    if (!subscription || !subscription.id) return res.status(400).json({ error: 'Missing subscription' });
+    res.json({ success: true });
+
+    setImmediate(async () => {
+      try {
+        const { visitor } = getOrCreateVisitor(donor.ipAddress || 'unknown', tracking.clientLocation || null);
+        const label = `${fmtCurrency(subscription.monthly)}/mo (first charge in 30 days)`;
+        let capiStatus = { meta: '-', tiktok: '-' };
+        if (isTrackingEnabled() && subscription.livemode !== false && tracking.sourceUrl) {
+          capiStatus = await trackSubscribe(subscription, donor, tracking, {
+            ipAddress: donor.ipAddress || 'unknown',
+            userAgent: donor.userAgent || 'unknown',
+            clientLocation: tracking.clientLocation || null
+          });
+        }
+        JourneyLog.paymentEvent(visitor, 'subscribed', `${label} | Meta ${capiStatus.meta || '-'}`);
+        logFunnelEvent({
+          campaignSlug: subscription.campaign || ACTIVE_CAMPAIGN,
+          eventType: 'Subscribe',
+          visitor,
+          amount: subscription.monthly,
+          currency: subscription.currency,
+          cadence: 'monthly',
+          eventId: `Subscribe_${subscription.id}`,
+          capiStatus
+        });
+      } catch (err) {
+        console.error('Subscription callback async error:', err.message);
       }
     });
   });

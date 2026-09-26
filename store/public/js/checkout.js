@@ -152,10 +152,13 @@ async function initCheckout() {
       : 'Inter, system-ui, -apple-system, sans-serif';
     var checkoutRadius = isSanctuaryCheckout ? '6px' : isV2Checkout ? '10px' : '8px';
 
+    var elementsMode = isSanctuaryCheckout ? 'payment' : (isSubscriptionMode ? 'subscription' : 'payment');
     elements = stripe.elements({
-      mode: isSanctuaryCheckout ? 'payment' : (isSubscriptionMode ? 'subscription' : 'payment'),
+      mode: elementsMode,
       amount: paymentAmountUnits,
       currency: paymentCurrency,
+      // Must match the PaymentIntent (routes/stripe.js): the card is saved for the one-tap monthly upsell.
+      ...(elementsMode === 'payment' ? { setupFutureUsage: 'off_session' } : {}),
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',
@@ -274,7 +277,7 @@ async function initCheckout() {
         const response = await fetch('/api/create-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(tipVal !== undefined ? { tip: tipVal } : {})
+          body: JSON.stringify(Object.assign({ email: email, name: name }, tipVal !== undefined ? { tip: tipVal } : {}))
         });
 
         const data = await response.json();

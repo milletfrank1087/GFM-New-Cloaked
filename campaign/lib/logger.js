@@ -18,7 +18,8 @@ const PAYMENT_EVENT_CONFIG = {
   'checkout_abandon': { emoji: '🏃', type: 'ABANDONED', msg: 'Left during checkout' },
   'session_timeout': { emoji: '⏱️', type: 'TIMEOUT', msg: 'Session timed out' },
   'redirect_initiated': { emoji: '🔀', type: 'REDIRECT', msg: 'Redirecting to checkout' },
-  'cadence_selected': { emoji: '🔁', type: 'CADENCE', msg: 'Chose gift frequency' }
+  'cadence_selected': { emoji: '🔁', type: 'CADENCE', msg: 'Chose gift frequency' },
+  'subscribed': { emoji: '💚', type: 'SUBSCRIBED', msg: 'Started monthly gift' }
 };
 
 function getTimestamp() {

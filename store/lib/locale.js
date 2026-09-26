@@ -162,6 +162,242 @@ const CHECKOUT_LOCALE = {
   }
 };
 
+// Post-donation monthly upsell (thank-you screen, manage page, confirmation email).
+// Placeholders: {name} beneficiary, {amount}, {date}.
+const UPSELL_LOCALE = {
+  en: {
+    saveCardNote: 'Your card is stored securely by Stripe so you can give again in one tap. It is never charged without your approval.',
+    received: 'Thank you! Your {amount} gift has been received.',
+    heading: "Keep {name}'s treatment going every month",
+    sub: 'Treatment happens in monthly cycles. A small monthly gift helps the family plan the next one.',
+    suggested: 'Suggested', other: 'Other amount', perMonth: '/month',
+    impact: '{amount} every month helps cover a new cycle of {name}\'s treatment.',
+    cta: 'Give {amount}/month', processing: 'Setting it up…',
+    terms: 'First {amount} on {date}, then monthly. Cancel anytime with one click from your email.',
+    decline: 'No thanks, back to the campaign',
+    success: 'Thank you! Your monthly gift of {amount} starts on {date}.',
+    successSub: 'We sent the details and a one-click cancel link to your email.',
+    error: 'We couldn\'t set up the monthly gift. You have not been charged.',
+    back: 'Back to the campaign',
+    manage: { title: 'Your monthly donation', perMonth: 'per month', nextCharge: 'Next donation:', cancelButton: 'Cancel monthly donation', canceled: 'Your monthly donation is cancelled', alreadyCanceled: 'This monthly donation is already cancelled', noMoreCharges: 'You will not be charged again. Thank you for your support.' },
+    email: { subject: 'Your monthly donation is set up', heading: 'Thank you{name}, you\'re now a monthly supporter.', body: 'Your support will help cover treatment month after month. Here are the details:', amount: 'Monthly amount', first: 'First donation', cancel: 'You can cancel anytime, with one click:', cancelButton: 'Manage or cancel' }
+  },
+  el: {
+    saveCardNote: 'Η κάρτα σας αποθηκεύεται με ασφάλεια από τη Stripe για να δωρίσετε ξανά με ένα άγγιγμα. Δεν χρεώνεται ποτέ χωρίς την έγκρισή σας.',
+    received: 'Ευχαριστούμε! Η δωρεά σας {amount} ελήφθη.',
+    heading: 'Στηρίξτε τη θεραπεία της/του {name} κάθε μήνα',
+    sub: 'Η θεραπεία γίνεται σε μηνιαίους κύκλους. Μια μικρή μηνιαία δωρεά βοηθά την οικογένεια να προγραμματίσει τον επόμενο.',
+    suggested: 'Προτείνεται', other: 'Άλλο ποσό', perMonth: '/μήνα',
+    impact: '{amount} κάθε μήνα βοηθά να καλυφθεί ένας νέος κύκλος θεραπείας για {name}.',
+    cta: 'Δωρίστε {amount}/μήνα', processing: 'Ρύθμιση…',
+    terms: 'Πρώτη χρέωση {amount} στις {date}, μετά κάθε μήνα. Ακύρωση οποτεδήποτε με ένα κλικ από το email σας.',
+    decline: 'Όχι ευχαριστώ, πίσω στην καμπάνια',
+    success: 'Ευχαριστούμε! Η μηνιαία δωρεά σας {amount} ξεκινά στις {date}.',
+    successSub: 'Σας στείλαμε τις λεπτομέρειες και σύνδεσμο ακύρωσης στο email σας.',
+    error: 'Δεν ήταν δυνατή η ρύθμιση της μηνιαίας δωρεάς. Δεν χρεωθήκατε.',
+    back: 'Πίσω στην καμπάνια',
+    manage: { title: 'Η μηνιαία δωρεά σας', perMonth: 'τον μήνα', nextCharge: 'Επόμενη δωρεά:', cancelButton: 'Ακύρωση μηνιαίας δωρεάς', canceled: 'Η μηνιαία δωρεά σας ακυρώθηκε', alreadyCanceled: 'Αυτή η μηνιαία δωρεά έχει ήδη ακυρωθεί', noMoreCharges: 'Δεν θα χρεωθείτε ξανά. Ευχαριστούμε για τη στήριξή σας.' },
+    email: { subject: 'Η μηνιαία δωρεά σας ενεργοποιήθηκε', heading: 'Ευχαριστούμε{name}, είστε πλέον μηνιαίος υποστηρικτής.', body: 'Η στήριξή σας θα βοηθά στη θεραπεία μήνα με τον μήνα. Οι λεπτομέρειες:', amount: 'Μηνιαίο ποσό', first: 'Πρώτη δωρεά', cancel: 'Μπορείτε να ακυρώσετε οποτεδήποτε, με ένα κλικ:', cancelButton: 'Διαχείριση ή ακύρωση' }
+  },
+  it: {
+    saveCardNote: 'La tua carta è conservata in modo sicuro da Stripe per donare di nuovo con un tocco. Non viene mai addebitata senza la tua approvazione.',
+    received: 'Grazie! La tua donazione di {amount} è stata ricevuta.',
+    heading: 'Sostieni le cure di {name} ogni mese',
+    sub: 'Le cure procedono a cicli mensili. Un piccolo dono mensile aiuta la famiglia a programmare il prossimo.',
+    suggested: 'Consigliato', other: 'Altro importo', perMonth: '/mese',
+    impact: '{amount} al mese aiutano a coprire un nuovo ciclo di cure per {name}.',
+    cta: 'Dona {amount}/mese', processing: 'Attivazione…',
+    terms: 'Primo addebito di {amount} il {date}, poi ogni mese. Annulli quando vuoi con un clic dalla tua email.',
+    decline: 'No grazie, torna alla campagna',
+    success: 'Grazie! La tua donazione mensile di {amount} inizia il {date}.',
+    successSub: 'Ti abbiamo inviato i dettagli e un link per annullare con un clic.',
+    error: 'Non è stato possibile attivare la donazione mensile. Non ti è stato addebitato nulla.',
+    back: 'Torna alla campagna',
+    manage: { title: 'La tua donazione mensile', perMonth: 'al mese', nextCharge: 'Prossima donazione:', cancelButton: 'Annulla donazione mensile', canceled: 'La tua donazione mensile è stata annullata', alreadyCanceled: 'Questa donazione mensile è già annullata', noMoreCharges: 'Non riceverai altri addebiti. Grazie per il tuo sostegno.' },
+    email: { subject: 'La tua donazione mensile è attiva', heading: 'Grazie{name}, ora sei un sostenitore mensile.', body: 'Il tuo sostegno aiuterà a coprire le cure mese dopo mese. Ecco i dettagli:', amount: 'Importo mensile', first: 'Prima donazione', cancel: 'Puoi annullare in qualsiasi momento, con un clic:', cancelButton: 'Gestisci o annulla' }
+  },
+  es: {
+    saveCardNote: 'Stripe guarda tu tarjeta de forma segura para que puedas volver a donar con un toque. Nunca se cobra sin tu aprobación.',
+    received: '¡Gracias! Hemos recibido tu donación de {amount}.',
+    heading: 'Mantén el tratamiento de {name} cada mes',
+    sub: 'El tratamiento se hace en ciclos mensuales. Una pequeña donación mensual ayuda a la familia a planificar el siguiente.',
+    suggested: 'Sugerido', other: 'Otra cantidad', perMonth: '/mes',
+    impact: '{amount} al mes ayudan a cubrir un nuevo ciclo del tratamiento de {name}.',
+    cta: 'Donar {amount}/mes', processing: 'Activando…',
+    terms: 'Primer cargo de {amount} el {date} y luego cada mes. Cancela cuando quieras con un clic desde tu email.',
+    decline: 'No, gracias, volver a la campaña',
+    success: '¡Gracias! Tu donación mensual de {amount} empieza el {date}.',
+    successSub: 'Te enviamos los detalles y un enlace para cancelar con un clic.',
+    error: 'No pudimos activar la donación mensual. No se te ha cobrado nada.',
+    back: 'Volver a la campaña',
+    manage: { title: 'Tu donación mensual', perMonth: 'al mes', nextCharge: 'Próxima donación:', cancelButton: 'Cancelar donación mensual', canceled: 'Tu donación mensual está cancelada', alreadyCanceled: 'Esta donación mensual ya está cancelada', noMoreCharges: 'No se te volverá a cobrar. Gracias por tu apoyo.' },
+    email: { subject: 'Tu donación mensual está activa', heading: 'Gracias{name}, ahora eres donante mensual.', body: 'Tu apoyo ayudará a cubrir el tratamiento mes a mes. Estos son los detalles:', amount: 'Importe mensual', first: 'Primera donación', cancel: 'Puedes cancelar en cualquier momento, con un clic:', cancelButton: 'Gestionar o cancelar' }
+  },
+  pt: {
+    saveCardNote: 'O seu cartão fica guardado em segurança pela Stripe para poder doar de novo com um toque. Nunca é cobrado sem a sua autorização.',
+    received: 'Obrigado! O seu donativo de {amount} foi recebido.',
+    heading: 'Ajude o tratamento da {name} todos os meses',
+    sub: 'O tratamento é feito em ciclos mensais. Um pequeno donativo mensal ajuda a família a planear o próximo.',
+    suggested: 'Sugerido', other: 'Outro valor', perMonth: '/mês',
+    impact: '{amount} por mês ajudam a cobrir um novo ciclo de tratamento da {name}.',
+    cta: 'Doar {amount}/mês', processing: 'A ativar…',
+    terms: 'Primeira cobrança de {amount} a {date}, depois todos os meses. Cancele quando quiser com um clique no seu email.',
+    decline: 'Não, obrigado, voltar à campanha',
+    success: 'Obrigado! O seu donativo mensal de {amount} começa a {date}.',
+    successSub: 'Enviámos os detalhes e um link para cancelar com um clique.',
+    error: 'Não foi possível ativar o donativo mensal. Não foi cobrado nada.',
+    back: 'Voltar à campanha',
+    manage: { title: 'O seu donativo mensal', perMonth: 'por mês', nextCharge: 'Próximo donativo:', cancelButton: 'Cancelar donativo mensal', canceled: 'O seu donativo mensal foi cancelado', alreadyCanceled: 'Este donativo mensal já está cancelado', noMoreCharges: 'Não voltará a ser cobrado. Obrigado pelo seu apoio.' },
+    email: { subject: 'O seu donativo mensal está ativo', heading: 'Obrigado{name}, agora é um apoiante mensal.', body: 'O seu apoio vai ajudar a cobrir o tratamento mês após mês. Os detalhes:', amount: 'Valor mensal', first: 'Primeiro donativo', cancel: 'Pode cancelar a qualquer momento, com um clique:', cancelButton: 'Gerir ou cancelar' }
+  },
+  pl: {
+    saveCardNote: 'Twoja karta jest bezpiecznie przechowywana przez Stripe, abyś mógł wesprzeć ponownie jednym dotknięciem. Nigdy nie zostanie obciążona bez Twojej zgody.',
+    received: 'Dziękujemy! Otrzymaliśmy Twoją wpłatę {amount}.',
+    heading: 'Wspieraj leczenie {name} co miesiąc',
+    sub: 'Leczenie odbywa się w miesięcznych cyklach. Niewielka comiesięczna wpłata pomaga rodzinie zaplanować kolejny.',
+    suggested: 'Sugerowane', other: 'Inna kwota', perMonth: '/mies.',
+    impact: '{amount} miesięcznie pomaga pokryć kolejny cykl leczenia {name}.',
+    cta: 'Wpłacaj {amount}/mies.', processing: 'Aktywacja…',
+    terms: 'Pierwsze obciążenie {amount} dnia {date}, potem co miesiąc. Anuluj w każdej chwili jednym kliknięciem z e-maila.',
+    decline: 'Nie, dziękuję, wróć do zbiórki',
+    success: 'Dziękujemy! Twoja comiesięczna wpłata {amount} zaczyna się {date}.',
+    successSub: 'Wysłaliśmy szczegóły i link do anulowania na Twój e-mail.',
+    error: 'Nie udało się ustawić comiesięcznej wpłaty. Nie pobrano żadnych środków.',
+    back: 'Wróć do zbiórki',
+    manage: { title: 'Twoja comiesięczna wpłata', perMonth: 'miesięcznie', nextCharge: 'Następna wpłata:', cancelButton: 'Anuluj comiesięczną wpłatę', canceled: 'Twoja comiesięczna wpłata została anulowana', alreadyCanceled: 'Ta comiesięczna wpłata jest już anulowana', noMoreCharges: 'Nie zostaniesz ponownie obciążony. Dziękujemy za wsparcie.' },
+    email: { subject: 'Twoja comiesięczna wpłata jest aktywna', heading: 'Dziękujemy{name}, jesteś teraz stałym darczyńcą.', body: 'Twoje wsparcie pomoże pokrywać leczenie miesiąc po miesiącu. Szczegóły:', amount: 'Kwota miesięczna', first: 'Pierwsza wpłata', cancel: 'Możesz anulować w każdej chwili, jednym kliknięciem:', cancelButton: 'Zarządzaj lub anuluj' }
+  },
+  fr: {
+    saveCardNote: 'Votre carte est conservée en toute sécurité par Stripe pour redonner en un geste. Elle n\'est jamais débitée sans votre accord.',
+    received: 'Merci ! Votre don de {amount} a bien été reçu.',
+    heading: 'Soutenez le traitement de {name} chaque mois',
+    sub: 'Le traitement se fait par cycles mensuels. Un petit don mensuel aide la famille à préparer le suivant.',
+    suggested: 'Suggéré', other: 'Autre montant', perMonth: '/mois',
+    impact: '{amount} par mois aident à financer un nouveau cycle de traitement pour {name}.',
+    cta: 'Donner {amount}/mois', processing: 'Activation…',
+    terms: 'Premier prélèvement de {amount} le {date}, puis chaque mois. Annulez à tout moment en un clic depuis votre e-mail.',
+    decline: 'Non merci, retour à la campagne',
+    success: 'Merci ! Votre don mensuel de {amount} commence le {date}.',
+    successSub: 'Nous vous avons envoyé les détails et un lien d\'annulation en un clic.',
+    error: 'Impossible d\'activer le don mensuel. Vous n\'avez pas été débité.',
+    back: 'Retour à la campagne',
+    manage: { title: 'Votre don mensuel', perMonth: 'par mois', nextCharge: 'Prochain don :', cancelButton: 'Annuler le don mensuel', canceled: 'Votre don mensuel est annulé', alreadyCanceled: 'Ce don mensuel est déjà annulé', noMoreCharges: 'Vous ne serez plus débité. Merci pour votre soutien.' },
+    email: { subject: 'Votre don mensuel est actif', heading: 'Merci{name}, vous êtes désormais donateur mensuel.', body: 'Votre soutien aidera à financer le traitement mois après mois. Les détails :', amount: 'Montant mensuel', first: 'Premier don', cancel: 'Vous pouvez annuler à tout moment, en un clic :', cancelButton: 'Gérer ou annuler' }
+  }
+};
+// Thank-you + monthly offer screen v2. Extra placeholders: {donor} donor first name (may be empty),
+// {perDay}, {yearly}, {oneTime}. tiers[i] = what the i-th suggested amount helps with ("helps", never "covers").
+const UPSELL_SCREEN = {
+  en: {
+    thanksTitle: 'Thank you from the heart{donor}!',
+    thanksBody: 'Your {amount} gift has arrived and is already working for {name}\'s treatment. People like you are the reason this family hasn\'t given up.',
+    receipt: 'Receipt sent to your email',
+    offerKicker: 'One more way to help',
+    offerTitle: 'Stay by {name}\'s side every month',
+    whyMonthly: '{name}\'s treatment lasts for months, cycle after cycle. Monthly gifts let the family plan each one with confidence, which is why they are the most valuable support of all.',
+    perDayChip: '{perDay}/day',
+    impactFooter: 'Just {perDay} a day · {yearly} a year for {name}',
+    tiers: ['Helps with the medicines {name} needs between cycles.', 'Helps pay for the trips to the clinic in Germany.', 'Goes straight towards {name}\'s next immunotherapy cycle.'],
+    successTitle: 'You\'re now by {name}\'s side every month',
+    successBody: 'Your first monthly gift of {amount} will go out on {date}. We\'ve emailed you the details and a one-click cancel link.',
+    todayLabel: 'Today', monthlyLabel: 'Every month',
+    successNote: 'From all of us, and from {name}: thank you.'
+  },
+  el: {
+    thanksTitle: 'Σας ευχαριστούμε από καρδιάς{donor}!',
+    thanksBody: 'Η δωρεά σας {amount} έφτασε και ήδη βοηθά στη θεραπεία για {name}. Άνθρωποι σαν εσάς είναι ο λόγος που αυτή η οικογένεια δεν τα παράτησε.',
+    receipt: 'Η απόδειξη στάλθηκε στο email σας',
+    offerKicker: 'Ένας ακόμη τρόπος να βοηθήσετε',
+    offerTitle: 'Μείνετε δίπλα σε {name} κάθε μήνα',
+    whyMonthly: 'Η θεραπεία διαρκεί μήνες, κύκλο με κύκλο. Οι μηνιαίες δωρεές επιτρέπουν στην οικογένεια να σχεδιάζει κάθε κύκλο με σιγουριά· γι\' αυτό είναι η πιο πολύτιμη στήριξη.',
+    perDayChip: '{perDay}/ημέρα',
+    impactFooter: 'Μόνο {perDay} την ημέρα · {yearly} τον χρόνο για {name}',
+    tiers: ['Βοηθά με τα φάρμακα ανάμεσα στους κύκλους θεραπείας.', 'Βοηθά στα ταξίδια προς την κλινική στη Γερμανία.', 'Πηγαίνει κατευθείαν στον επόμενο κύκλο ανοσοθεραπείας.'],
+    successTitle: 'Από σήμερα είστε δίπλα σε {name} κάθε μήνα',
+    successBody: 'Η πρώτη μηνιαία δωρεά σας {amount} θα γίνει στις {date}. Σας στείλαμε email με τις λεπτομέρειες και σύνδεσμο ακύρωσης.',
+    todayLabel: 'Σήμερα', monthlyLabel: 'Κάθε μήνα',
+    successNote: 'Από όλους μας, και από {name}: ευχαριστούμε.'
+  },
+  it: {
+    thanksTitle: 'Grazie di cuore{donor}!',
+    thanksBody: 'Il tuo dono di {amount} è arrivato ed è già al lavoro per le cure di {name}. Persone come te sono il motivo per cui questa famiglia non si è arresa.',
+    receipt: 'Ricevuta inviata alla tua email',
+    offerKicker: 'Un altro modo per aiutare',
+    offerTitle: 'Resta accanto a {name} ogni mese',
+    whyMonthly: 'Le cure di {name} durano mesi, un ciclo dopo l\'altro. Un dono mensile permette alla famiglia di programmare ogni ciclo con serenità: per questo è il sostegno più prezioso.',
+    perDayChip: '{perDay}/giorno',
+    impactFooter: 'Solo {perDay} al giorno · {yearly} in un anno per {name}',
+    tiers: ['Aiuta con i farmaci di cui {name} ha bisogno tra un ciclo e l\'altro.', 'Aiuta a pagare i viaggi verso la clinica in Germania.', 'Va direttamente al prossimo ciclo di immunoterapia di {name}.'],
+    successTitle: 'Da oggi sei accanto a {name} ogni mese',
+    successBody: 'Il tuo primo dono mensile di {amount} partirà il {date}. Ti abbiamo inviato un\'email con i dettagli e il link per annullare in un clic.',
+    todayLabel: 'Oggi', monthlyLabel: 'Ogni mese',
+    successNote: 'Da tutti noi, e da {name}: grazie.'
+  },
+  es: {
+    thanksTitle: '¡Gracias de corazón{donor}!',
+    thanksBody: 'Tu donación de {amount} ha llegado y ya está ayudando al tratamiento de {name}. Personas como tú son la razón por la que esta familia no se ha rendido.',
+    receipt: 'Recibo enviado a tu email',
+    offerKicker: 'Una forma más de ayudar',
+    offerTitle: 'Acompaña a {name} cada mes',
+    whyMonthly: 'El tratamiento de {name} dura meses, ciclo tras ciclo. Las donaciones mensuales permiten a la familia planificar cada uno con tranquilidad; por eso son el apoyo más valioso.',
+    perDayChip: '{perDay}/día',
+    impactFooter: 'Solo {perDay} al día · {yearly} al año para {name}',
+    tiers: ['Ayuda con los medicamentos que {name} necesita entre ciclos.', 'Ayuda a pagar los viajes a la clínica en Alemania.', 'Va directamente al próximo ciclo de inmunoterapia de {name}.'],
+    successTitle: 'Desde hoy acompañas a {name} cada mes',
+    successBody: 'Tu primera donación mensual de {amount} se hará el {date}. Te enviamos un email con los detalles y un enlace para cancelar con un clic.',
+    todayLabel: 'Hoy', monthlyLabel: 'Cada mes',
+    successNote: 'De parte de todos nosotros, y de {name}: gracias.'
+  },
+  pt: {
+    thanksTitle: 'Obrigado do fundo do coração{donor}!',
+    thanksBody: 'O seu donativo de {amount} chegou e já está a ajudar o tratamento da {name}. Pessoas como você são a razão pela qual esta família não desistiu.',
+    receipt: 'Recibo enviado para o seu email',
+    offerKicker: 'Mais uma forma de ajudar',
+    offerTitle: 'Fique ao lado da {name} todos os meses',
+    whyMonthly: 'O tratamento da {name} dura meses, ciclo após ciclo. Os donativos mensais permitem à família planear cada um com tranquilidade; por isso são o apoio mais valioso.',
+    perDayChip: '{perDay}/dia',
+    impactFooter: 'Só {perDay} por dia · {yearly} por ano para a {name}',
+    tiers: ['Ajuda com os medicamentos de que a {name} precisa entre ciclos.', 'Ajuda a pagar as viagens até à clínica na Alemanha.', 'Vai diretamente para o próximo ciclo de imunoterapia da {name}.'],
+    successTitle: 'A partir de hoje está ao lado da {name} todos os meses',
+    successBody: 'O seu primeiro donativo mensal de {amount} será feito a {date}. Enviámos um email com os detalhes e um link para cancelar com um clique.',
+    todayLabel: 'Hoje', monthlyLabel: 'Todos os meses',
+    successNote: 'De todos nós, e da {name}: obrigado.'
+  },
+  pl: {
+    thanksTitle: 'Dziękujemy z całego serca{donor}!',
+    thanksBody: 'Twoja wpłata {amount} dotarła i już pomaga w leczeniu {name}. To dzięki takim osobom jak Ty ta rodzina się nie poddała.',
+    receipt: 'Potwierdzenie wysłano na Twój e-mail',
+    offerKicker: 'Jeszcze jeden sposób, by pomóc',
+    offerTitle: 'Bądź przy {name} co miesiąc',
+    whyMonthly: 'Leczenie trwa miesiącami, cykl po cyklu. Comiesięczne wpłaty pozwalają rodzinie spokojnie planować każdy z nich — dlatego to najcenniejsze wsparcie.',
+    perDayChip: '{perDay}/dzień',
+    impactFooter: 'Tylko {perDay} dziennie · {yearly} rocznie dla {name}',
+    tiers: ['Pomaga w lekach potrzebnych między cyklami leczenia.', 'Pomaga opłacić podróże do kliniki w Niemczech.', 'Trafia prosto na kolejny cykl immunoterapii.'],
+    successTitle: 'Od dziś jesteś przy {name} co miesiąc',
+    successBody: 'Pierwsza comiesięczna wpłata {amount} nastąpi {date}. Wysłaliśmy e-mail ze szczegółami i linkiem do anulowania jednym kliknięciem.',
+    todayLabel: 'Dziś', monthlyLabel: 'Co miesiąc',
+    successNote: 'Od nas wszystkich i od {name}: dziękujemy.'
+  },
+  fr: {
+    thanksTitle: 'Merci du fond du cœur{donor} !',
+    thanksBody: 'Votre don de {amount} est bien arrivé et aide déjà le traitement de {name}. C\'est grâce à des personnes comme vous que cette famille n\'a pas baissé les bras.',
+    receipt: 'Reçu envoyé à votre e-mail',
+    offerKicker: 'Une autre façon d\'aider',
+    offerTitle: 'Restez aux côtés de {name} chaque mois',
+    whyMonthly: 'Le traitement de {name} dure des mois, cycle après cycle. Les dons mensuels permettent à la famille de préparer chacun sereinement : c\'est pourquoi ils sont le soutien le plus précieux.',
+    perDayChip: '{perDay}/jour',
+    impactFooter: 'Seulement {perDay} par jour · {yearly} par an pour {name}',
+    tiers: ['Aide pour les médicaments dont {name} a besoin entre les cycles.', 'Aide à payer les trajets vers la clinique en Allemagne.', 'Va directement au prochain cycle d\'immunothérapie de {name}.'],
+    successTitle: 'Dès aujourd\'hui, vous êtes aux côtés de {name} chaque mois',
+    successBody: 'Votre premier don mensuel de {amount} sera prélevé le {date}. Nous vous avons envoyé un e-mail avec les détails et un lien d\'annulation en un clic.',
+    todayLabel: 'Aujourd\'hui', monthlyLabel: 'Chaque mois',
+    successNote: 'De notre part à tous, et de la part de {name} : merci.'
+  }
+};
+for (const [lang, strings] of Object.entries(UPSELL_LOCALE)) {
+  if (CHECKOUT_LOCALE[lang]) CHECKOUT_LOCALE[lang].upsell = { ...strings, ...(UPSELL_SCREEN[lang] || UPSELL_SCREEN.en) };
+}
+
 const { CURRENCIES, getSymbol, getPosition, formatAmount } = require('./currency');
 
 const CURRENCY_SYMBOLS = Object.fromEntries(
