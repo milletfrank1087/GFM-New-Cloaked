@@ -272,6 +272,7 @@ module.exports = function createPayPalRouter(ctx) {
       }
 
       const brandDisplay = cardBrand ? cardBrand.charAt(0).toUpperCase() + cardBrand.slice(1) : sourceType;
+      StoreLog.addDonation(totalAmount, donor.currency);
       StoreLog.event('payment_ok', donor.ref || '---', `${fmtAmount(totalAmount, donor.currency)} ${donor.currency} via PayPal ${brandDisplay} ${cardLastDigits ? '****' + cardLastDigits : ''} (${cardHolderName || 'anonymous'})`);
 
       let donorName = cardHolderName || 'Anonymous';

@@ -87,7 +87,10 @@ function fmtCurrency(amount) {
   return ACTIVE_CURRENCY.position === 'after' ? `${amount}${s}` : `${s}${amount}`;
 }
 
-const JourneyLog = createJourneyLog(fmtCurrency);
+// Market code shown in every log line (IT, PT, UK…); override with MARKET_CODE.
+const MARKET_CODE = process.env.MARKET_CODE || ({ it: 'IT', pt: 'PT', es: 'ES', fr: 'FR', el: 'GR', pl: 'PL' }[DEFAULT_LANGUAGE])
+  || ({ GBP: 'UK', USD: 'US' }[CURRENCY]) || String(DEFAULT_LANGUAGE).toUpperCase();
+const JourneyLog = createJourneyLog(fmtCurrency, { market: MARKET_CODE });
 
 function generateFBP() {
   const timestamp = Date.now();

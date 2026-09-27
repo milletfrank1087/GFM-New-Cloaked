@@ -99,6 +99,11 @@ module.exports = function createDonationRouter(ctx) {
         campaignOrigin
       };
 
+      // The campaign's visitor id + market go to the store, so both services log the same donor id.
+      const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, enrichedTracking.clientLocation);
+      enrichedTracking.visitorId = visitor.id;
+      enrichedTracking.market = JourneyLog.market;
+
       const resolvedEmail = donorEmail || req.body.donorInfo?.email || null;
       const targetCurrency = req.body.currency || campaign?.currency || (isSanctuary ? 'USD' : ACTIVE_CURRENCY.code);
       const targetLanguage = req.body.language || campaign?.language || (isSanctuary ? 'en' : ctx.DEFAULT_LANGUAGE);
@@ -123,8 +128,9 @@ module.exports = function createDonationRouter(ctx) {
         return res.status(503).json({ error: 'Failed to initialize donation' });
       }
 
-      const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, enrichedTracking.clientLocation);
-      JourneyLog.paymentEvent(visitor, 'redirect_initiated', `${fmtCurrency(amount)} ${enrichedTracking.cadence === 'monthly' ? 'monthly' : 'once'} → ${store.domain}`);
+      const tipNum = parseFloat(tip) || 0;
+      JourneyLog.paymentEvent(visitor, 'redirect_initiated',
+        `${fmtCurrency(amount)}${tipNum > 0 ? ' + ' + fmtCurrency(tipNum) + ' tip' : ''} → ${String(store.domain).replace(/^www\./, '')}`);
 
       logFunnelEvent({
         campaignSlug: enrichedTracking.campaignSlug || ACTIVE_CAMPAIGN,
@@ -171,7 +177,7 @@ module.exports = function createDonationRouter(ctx) {
         if (!hostMatches(sourceUrl, req)) {
           console.warn(`[payment-callback] Skipping CAPI: sourceUrl host mismatch (src=${sourceUrl}, self=${req.get('host')})`);
           const { visitor } = getOrCreateVisitor(paymentData?.ipAddress || 'unknown', tracking.clientLocation || null);
-          JourneyLog.purchase(visitor, paymentData?.amount || 0, paymentData?.storeDomain || 'unknown', { meta: 'SKIP(host)', tiktok: 'SKIP(host)' });
+          JourneyLog.purchase(visitor, { amount: paymentData?.amount, tip: paymentData?.tip, total: paymentData?.totalAmount, store: paymentData?.storeDomain, name: paymentData?.cardHolderName }, { meta: 'SKIP(host)', tiktok: 'SKIP(host)' });
           logFunnelEvent({ campaignSlug: ACTIVE_CAMPAIGN, eventType: 'Purchase', visitor, amount: paymentData.amount, currency: paymentData.currency, cadence: tracking.cadence, storeDomain: paymentData.storeDomain, capiStatus: { meta: 'SKIP(host)', tiktok: 'SKIP(host)' } });
           return;
         }
@@ -179,7 +185,7 @@ module.exports = function createDonationRouter(ctx) {
         if (!tracking.eventId) {
           console.error(`[payment-callback] Missing tracking.eventId for token ${tokenId}; CAPI Purchase skipped to avoid dedup break.`);
           const { visitor } = getOrCreateVisitor(paymentData?.ipAddress || 'unknown', tracking.clientLocation || null);
-          JourneyLog.purchase(visitor, paymentData?.amount || 0, paymentData?.storeDomain || 'unknown', { meta: 'SKIP(no-eid)', tiktok: 'SKIP(no-eid)' });
+          JourneyLog.purchase(visitor, { amount: paymentData?.amount, tip: paymentData?.tip, total: paymentData?.totalAmount, store: paymentData?.storeDomain, name: paymentData?.cardHolderName }, { meta: 'SKIP(no-eid)', tiktok: 'SKIP(no-eid)' });
           logFunnelEvent({ campaignSlug: ACTIVE_CAMPAIGN, eventType: 'Purchase', visitor, amount: paymentData.amount, currency: paymentData.currency, cadence: tracking.cadence, storeDomain: paymentData.storeDomain, capiStatus: { meta: 'SKIP(no-eid)', tiktok: 'SKIP(no-eid)' } });
           return;
         }
@@ -217,9 +223,8 @@ module.exports = function createDonationRouter(ctx) {
 
         const { visitor } = getOrCreateVisitor(paymentData?.ipAddress || 'unknown', tracking.clientLocation || null);
         JourneyLog.purchase(
-          visitor,
-          paymentData?.amount || 0,
-          paymentData?.storeDomain || 'unknown',
+          tracking.visitorId ? { ...visitor, id: tracking.visitorId } : visitor, // same id as the store's log lines
+          { amount: paymentData?.amount, tip: paymentData?.tip, total: paymentData?.totalAmount, store: paymentData?.storeDomain, name: paymentData?.cardHolderName },
           capiResult
         );
 
@@ -250,7 +255,7 @@ module.exports = function createDonationRouter(ctx) {
     setImmediate(async () => {
       try {
         const { visitor } = getOrCreateVisitor(donor.ipAddress || 'unknown', tracking.clientLocation || null);
-        const label = `${fmtCurrency(subscription.monthly)}/mo (first charge in 30 days)`;
+        const label = `${fmtCurrency(subscription.monthly)}/month · first charge in 30 days`;
         let capiStatus = { meta: '-', tiktok: '-' };
         if (isTrackingEnabled() && subscription.livemode !== false && tracking.sourceUrl) {
           capiStatus = await trackSubscribe(subscription, donor, tracking, {
@@ -259,7 +264,7 @@ module.exports = function createDonationRouter(ctx) {
             clientLocation: tracking.clientLocation || null
           });
         }
-        JourneyLog.paymentEvent(visitor, 'subscribed', `${label} | Meta ${capiStatus.meta || '-'}`);
+        JourneyLog.paymentEvent(tracking.visitorId ? { ...visitor, id: tracking.visitorId } : visitor, 'subscribed', label, capiStatus);
         logFunnelEvent({
           campaignSlug: subscription.campaign || ACTIVE_CAMPAIGN,
           eventType: 'Subscribe',
@@ -334,7 +339,7 @@ module.exports = function createDonationRouter(ctx) {
       if (event === 'ViewContent') {
         let pathname = '/';
         try { pathname = new URL(resolvedSourceUrl).pathname; } catch (_) {}
-        JourneyLog.newVisitor(visitor, pathname, capiStatus);
+        JourneyLog.newVisitor(visitor, resolvedSourceUrl, capiStatus);
       } else {
         const eventMessages = {
           'Lead': 'Petition signed',

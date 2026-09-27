@@ -70,7 +70,9 @@ module.exports = function createTokenRouter(ctx) {
 
       const ref = tokenData.source_ref || '---';
       const origin = extractOriginHost(tokenData.tracking?.sourceUrl);
-      StoreLog.event('token_claimed', ref, `${fmtAmount(tokenData.amount, tokenData.currency)} + ${fmtAmount(tokenData.service_fee, tokenData.currency)} fee from ${origin || 'direct'}`);
+      StoreLog.setDonor(tokenData.tracking);
+      const tipAmt = parseFloat(tokenData.service_fee || 0);
+      StoreLog.event('token_claimed', ref, `opened checkout · ${fmtAmount(tokenData.amount, tokenData.currency)}${tipAmt > 0 ? ' + ' + fmtAmount(tipAmt, tokenData.currency) + ' tip' : ''}${origin ? '' : ' (no campaign origin)'}`);
 
       res.cookie('__session', JSON.stringify(cookieData), {
         httpOnly: true,

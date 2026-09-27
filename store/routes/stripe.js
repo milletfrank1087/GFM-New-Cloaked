@@ -1,7 +1,7 @@
 const express = require('express');
 const { decomposeAmount } = require('../lib/decompose');
 const { toSmallestUnit, fromSmallestUnit, getDecimals, formatAmount } = require('../lib/currency');
-const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
+const { StoreLog, fmtAmount, extractOriginHost, shortName } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { classifyStripeError, getDonorMessage } = require('../lib/stripe-errors');
 const { sendDonationConfirmation, sendSubscriptionConfirmation } = require('../lib/email');
@@ -71,7 +71,7 @@ module.exports = function createStripeRouter(ctx) {
           break;
         }
         case 'payment_intent.payment_failed': {
-          StoreLog.error('webhook_fail', ref, `Payment failed ${obj.id} - ${obj.last_payment_error?.message || 'unknown'}`);
+          StoreLog.error('webhook_fail', ref, `card refused: ${(obj.last_payment_error?.decline_code || obj.last_payment_error?.code || 'unknown').replace(/_/g, ' ')} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())}`);
           if (supabase) {
             await dbSafe('payment_failures insert', ref, supabase.from('payment_failures').insert({
               store_id: ctx.getStoreDbId(),
@@ -86,7 +86,7 @@ module.exports = function createStripeRouter(ctx) {
           break;
         }
         case 'charge.dispute.created': {
-          StoreLog.error('webhook_dispute', ref, `DISPUTE ${obj.id} - ${fromSmallestUnit(obj.amount, obj.currency)} ${obj.currency} - ${obj.reason}`);
+          StoreLog.error('webhook_dispute', ref, `${String(obj.reason || 'unknown').replace(/_/g, ' ')} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())} · ${obj.id}`);
           if (emitAlert) {
             emitAlert({ key: `dispute-${obj.id}`, title: `Stripe dispute: ${obj.reason}`, severity: 'critical',
               context: { dispute: obj.id, amount: fromSmallestUnit(obj.amount, obj.currency), currency: obj.currency, charge: obj.charge } });
@@ -507,7 +507,14 @@ module.exports = function createStripeRouter(ctx) {
       if (pm?.type === 'link') paymentSource = 'link';
 
       const brandDisplay = cardBrand ? cardBrand.charAt(0).toUpperCase() + cardBrand.slice(1) : 'Card';
-      StoreLog.event('payment_ok', donor.ref || '---', `${fmtAmount(totalAmount, donor.currency)} ${donor.currency} via ${brandDisplay} ****${cardLastDigits || '????'} (${cardHolderName || 'anonymous'})`);
+      {
+        const tipPaid = parseFloat(paymentIntent.metadata?.[(storeConfig.metadataKeys || {}).serviceFee || 'serviceFee'] ?? donor.fee ?? 0) || 0;
+        const walletLabel = { apple_pay: 'Apple Pay', google_pay: 'Google Pay', link: 'Link' }[paymentSource];
+        const method = walletLabel ? `${walletLabel}${cardLastDigits ? ' ••' + cardLastDigits : ''}` : `${brandDisplay} ••${cardLastDigits || '????'}`;
+        const breakdown = tipPaid > 0 ? ` (${fmtAmount(totalAmount - tipPaid, donor.currency)} + ${fmtAmount(tipPaid, donor.currency)} tip)` : '';
+        StoreLog.event('payment_ok', donor.ref || '---', `${fmtAmount(totalAmount, donor.currency)}${breakdown} · ${method}${shortName(cardHolderName) ? ' · ' + shortName(cardHolderName) : ''}${paymentIntent.livemode ? '' : ' · TEST MODE'}`);
+        StoreLog.addDonation(totalAmount, donor.currency);
+      }
 
       let donorName = cardHolderName || 'Anonymous';
       if (donor.guest) donorName = 'Anonymous';
@@ -754,9 +761,9 @@ module.exports = function createStripeRouter(ctx) {
           pi: paymentIntent.id, pm: pmId, cus: stripeCustomerId,
           ref: donor.ref, sid: donor.sid, cur: donor.currency || 'EUR', don: parseFloat(donor.amount),
           email, name: donorNameReal !== 'Unknown' ? donorNameReal : '', lang: donor.lang || 'en',
-          ip: donor.ip, ua: donor.ua, live: paymentIntent.livemode,
+          ip: donor.ip, ua: donor.ua, live: paymentIntent.livemode, vid: t.visitorId || null, mkt: t.market || null,
           trk: { sourceUrl: t.sourceUrl || null, fbp: t.fbp || null, fbc: t.fbc || null, fbclid: t.fbclid || null,
-                 ttp: t.ttp || null, ttclid: t.ttclid || null, clientLocation: t.clientLocation || null, campaignOrigin: t.campaignOrigin || null }
+                 ttp: t.ttp || null, ttclid: t.ttclid || null, clientLocation: t.clientLocation || null, campaignOrigin: t.campaignOrigin || null, visitorId: t.visitorId || null }
         }), { httpOnly: true, secure: req.secure || req.headers['x-forwarded-proto'] === 'https', sameSite: 'lax', maxAge: 30 * 60 * 1000, path: '/' });
         upsellOffer = {
           amounts: upsell.suggestAmounts(parseFloat(donor.amount)),
@@ -907,7 +914,7 @@ module.exports = function createStripeRouter(ctx) {
       }, { idempotencyKey: `upsell-${offer.pi}` });
 
       res.clearCookie('__upsell', { path: '/' });
-      StoreLog.event('upsell_created', ref, `${subscription.id} - ${fmtAmount(monthly, offer.cur)} ${offer.cur}/mo, first charge ${firstCharge.toISOString().slice(0, 10)}`);
+      StoreLog.event('upsell_created', ref, `✓ ${fmtAmount(monthly, offer.cur)}/month · first charge ${firstCharge.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} · sub …${subscription.id.slice(-4)}${subscription.livemode ? '' : ' · TEST MODE'}`);
 
       if (supabase) {
         const { error: subErr } = await supabase.from('subscriptions').insert({
@@ -976,8 +983,19 @@ module.exports = function createStripeRouter(ctx) {
     if (!UPSELL_EVENTS.has(type)) return res.status(204).end();
     const offer = upsell.readOfferToken(req.cookies.__upsell);
     const amount = Number(body?.amount);
-    StoreLog.event(`upsell_${type}`, offer?.ref || '---',
-      `${offer ? fmtAmount(offer.don, offer.cur) + ' ' + offer.cur + ' donor' : 'no offer cookie'}${Number.isFinite(amount) && amount > 0 ? ' | selected ' + amount + '/mo' : ''}${body?.secs ? ' | ' + Math.round(body.secs) + 's on screen' : ''}`);
+    const secs = Math.round(Number(body?.secs) || 0);
+    const after = secs >= 60 ? `${Math.floor(secs / 60)}m ${String(secs % 60).padStart(2, '0')}s` : `${secs}s`;
+    const cur = offer?.cur || 'EUR';
+    const chips = offer ? upsell.suggestAmounts(offer.don).map((a, i) => fmtAmount(a, cur) + (i === 1 ? '★' : '')).join(' / ') : '';
+    const msg = {
+      shown: `monthly offer shown (${chips || 'no offer cookie'})`,
+      other_open: `opened "other amount"`,
+      declined: `✗ no thanks after ${after}`,
+      closed: `✗ closed (✕) after ${after}`,
+      left_page: `✗ left the page after ${after}`,
+      accept_click: `tapped yes (${fmtAmount(amount, cur)}/month)`
+    }[type];
+    StoreLog.event(`upsell_${type}`, offer?.ref || '---', msg);
     res.status(204).end();
   });
 

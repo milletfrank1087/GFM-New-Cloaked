@@ -77,6 +77,15 @@ app.set('view engine', 'ejs');
 app.set('views', [path.join(storeDir, 'views'), sharedViewsDir]);
 
 app.use(cookieParser());
+// Log context: which visitor (campaign visitor id) and market each request belongs to.
+app.use(StoreLog.contextMiddleware((req) => {
+  if (req.cookies.__session) {
+    const s = JSON.parse(req.cookies.__session);
+    return { vid: s.utm && s.utm.visitorId, mkt: s.utm && s.utm.market };
+  }
+  const offer = require('./lib/upsell').readOfferToken(req.cookies.__upsell);
+  return offer ? { vid: offer.vid, mkt: offer.mkt } : {};
+}));
 app.use((req, res, next) => {
   if (req.originalUrl === '/webhooks/stripe') return next();
   express.json()(req, res, next);
@@ -94,10 +103,11 @@ app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
     const status = res.statusCode;
-    if (status >= 400) {
+    // 404s are almost all vulnerability scanners (/.env, /.git/config…): counted in the hourly summary.
+    if (status === 404) { StoreLog.scannerHit(); return; }
+    if (status >= 500 || (status >= 400 && req.originalUrl.startsWith('/api/'))) {
       const ms = Date.now() - start;
-      const color = status >= 500 ? '\x1b[31m' : '\x1b[33m';
-      console.log(`[${getTimestamp()}] ${color}${status}\x1b[0m ${req.method} ${req.originalUrl} ${ms}ms`);
+      StoreLog.system(status >= 500 ? '💥' : '⚠️', `HTTP ${status} ${req.method} ${req.originalUrl.split('?')[0]} (${ms}ms)`);
     }
   });
   next();
