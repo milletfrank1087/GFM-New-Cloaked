@@ -53,12 +53,22 @@
     try { return new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'long' }); } catch (_) { return iso.slice(0, 10); }
   }
 
-  var state = { offer: null, redirectUrl: '/', amount: 0, busy: false };
+  var state = { offer: null, redirectUrl: '/', amount: 0, busy: false, shownAt: 0, decided: false };
+
+  // Offer-screen analytics (store logs only): shown / other_open / accept_click / declined / closed / left_page.
+  function track(type) {
+    var body = JSON.stringify({ type: type, amount: state.amount, secs: state.shownAt ? (Date.now() - state.shownAt) / 1000 : 0 });
+    try {
+      if (navigator.sendBeacon && navigator.sendBeacon('/api/upsell/event', new Blob([body], { type: 'application/json' }))) return;
+    } catch (_) {}
+    try { fetch('/api/upsell/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }); } catch (_) {}
+  }
   var HEART = '<svg class="h-7 w-7 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
 
   function $(id) { return document.getElementById(id); }
   function card() { return $('checkout-card') || document.querySelector('.checkout-card'); }
   function goBack() { window.location.href = state.redirectUrl || '/'; }
+  function leave(type) { state.decided = true; track(type); goBack(); }
   function vars(extra) {
     var o = state.offer;
     var base = {
@@ -119,20 +129,25 @@
     }
     c.innerHTML =
       '<div class="upsell-screen relative px-5 pb-6 pt-7 sm:px-7">' +
+        '<button type="button" id="us-close" aria-label="' + esc(t.close) + '" class="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600">' +
+          '<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>' +
         // Hero: stays in place and morphs on success
         '<div class="relative text-center" id="us-hero">' +
           '<div id="us-heart" class="us-heart is-beat mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">' + HEART + '</div>' +
           '<h2 id="us-title" class="us-fade text-[22px] font-extrabold leading-tight text-gray-900">' + esc(fill(t.thanksTitle, v)) + '</h2>' +
-          '<p id="us-body" class="us-fade mx-auto mt-2 max-w-sm text-[15px] leading-relaxed text-gray-600">' + esc(fill(t.thanksBody, v)) + '</p>' +
-          '<p id="us-receipt" class="us-fade mt-3 inline-flex items-center gap-1.5 rounded-full bg-gray-50 px-3 py-1 text-xs text-gray-500">' +
-            '<svg class="h-3.5 w-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' +
-            esc(t.receipt) + '</p>' +
+          '<p id="us-body" class="us-fade mx-auto mt-2 max-w-sm text-[15px] leading-relaxed text-gray-600">' + esc(fill(t.thanksBody, vars({ amount: v.oneTime })))  /* the one-time gift, never the monthly suggestion */ + '</p>' +
+          '<div id="us-receipt" class="us-fade mx-auto mt-4 flex max-w-sm items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-left">' +
+            '<span class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-emerald-600"><svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>' +
+            '<span class="flex-1"><span class="block text-sm font-bold text-emerald-900">' + esc(t.completed) + ' · ' + esc(v.oneTime) + '</span>' +
+            '<span class="block text-xs text-emerald-800/80">' + esc(t.receipt) + '</span></span>' +
+          '</div>' +
         '</div>' +
 
         // Offer: collapses away on success
         '<div id="us-offer" class="us-collapse"><div class="us-inner">' +
           '<div class="mt-6 rounded-3xl border border-emerald-100 bg-gradient-to-b from-emerald-50/70 to-white p-4 sm:p-5">' +
-            '<p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">' + esc(t.offerKicker) + '</p>' +
+            '<p class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-emerald-700">' + esc(t.offerKicker) +
+              '<span class="rounded-full border border-gray-300 bg-white px-2 py-0.5 text-[10px] font-semibold normal-case tracking-normal text-gray-500">' + esc(t.optional) + '</span></p>' +
             '<h3 class="mt-1 text-lg font-extrabold leading-snug text-gray-900">' + esc(fill(t.offerTitle, v)) + '</h3>' +
             '<p class="mt-1.5 text-sm leading-relaxed text-gray-600">' + esc(fill(t.whyMonthly, v)) + '</p>' +
             '<div class="mt-4 grid grid-cols-3 gap-2" role="radiogroup">' + o.amounts.map(chipHtml).join('') + '</div>' +
@@ -147,13 +162,16 @@
               '<div><p id="us-impact-text" class="text-sm font-semibold leading-snug text-gray-900"></p>' +
               '<p id="us-impact-foot" class="mt-0.5 text-xs text-gray-500"></p></div>' +
             '</div>' +
-            '<button type="button" id="us-accept" class="mt-4 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 text-base font-bold text-white shadow-lg shadow-emerald-600/25 transition active:scale-[0.98] disabled:opacity-50">' +
+            '<p class="mt-4 flex items-start gap-2 text-xs leading-snug text-gray-600">' +
+              '<svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+              '<span>' + esc(t.notActive) + '</span></p>' +
+            '<button type="button" id="us-accept" class="mt-3 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 text-base font-bold text-white shadow-lg shadow-emerald-600/25 transition active:scale-[0.98] disabled:opacity-50">' +
               '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>' +
               '<span id="us-cta-label"></span></button>' +
             '<p id="us-terms" class="mt-2.5 text-center text-xs leading-relaxed text-gray-500"></p>' +
             '<p id="us-error" class="mt-3 hidden rounded-xl bg-red-50 px-3 py-2 text-center text-sm text-red-700"></p>' +
           '</div>' +
-          '<button type="button" id="us-decline" class="mt-3 min-h-[48px] w-full text-sm font-medium text-gray-500 underline-offset-2 hover:underline">' + esc(t.decline) + '</button>' +
+          '<button type="button" id="us-decline" class="mt-3 min-h-[52px] w-full rounded-2xl border-2 border-gray-200 bg-white text-[15px] font-semibold text-gray-700 active:scale-[0.98]">' + esc(t.decline) + '</button>' +
         '</div></div>' +
 
         // Success details: expand in on success
@@ -175,7 +193,9 @@
         updateCopy();
       });
     });
+    $('us-close').addEventListener('click', function () { leave('closed'); });
     $('us-other-toggle').addEventListener('click', function () {
+      track('other_open');
       $('us-other').classList.remove('hidden');
       this.classList.add('hidden');
       $('us-other-input').focus();
@@ -186,8 +206,11 @@
       updateCopy();
     });
     $('us-accept').addEventListener('click', accept);
-    $('us-decline').addEventListener('click', goBack);
+    $('us-decline').addEventListener('click', function () { leave('declined'); });
     $('us-back').addEventListener('click', goBack);
+    window.addEventListener('pagehide', function () { if (!state.decided) { state.decided = true; track('left_page'); } });
+    state.shownAt = Date.now();
+    track('shown');
     updateCopy();
     c.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -195,6 +218,8 @@
   function accept() {
     if (state.busy || !(state.amount >= 1)) return;
     state.busy = true;
+    state.decided = true;
+    track('accept_click');
     $('us-error').classList.add('hidden');
     $('us-accept').disabled = true;
     $('us-cta-label').textContent = t.processing || '…';
@@ -222,6 +247,7 @@
     state.offer.firstCharge = d.firstCharge;
     var v = vars();
 
+    $('us-close').onclick = null;
     $('us-offer').classList.add('is-closed');
     ['us-title', 'us-body', 'us-receipt'].forEach(function (id) { $(id).classList.add('is-out'); });
 

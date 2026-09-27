@@ -394,8 +394,20 @@ const UPSELL_SCREEN = {
     successNote: 'De notre part à tous, et de la part de {name} : merci.'
   }
 };
+// Clarity pass (2026-09-27): a donor read the pre-selected monthly amount as already active.
+// The offer is phrased as an optional question, the CTA is an explicit "Yes, start…",
+// and a line states that nothing monthly is active unless they tap it.
+const UPSELL_CLARITY = {
+  en: { completed: 'Donation complete', optional: 'Optional', offerTitle: 'Would you also like to support {name} every month?', notActive: 'No monthly donation is active. It only starts if you tap the green button.', cta: 'Yes, start {amount}/month', decline: 'No thanks, I\'m done', close: 'Close' },
+  el: { completed: 'Η δωρεά ολοκληρώθηκε', optional: 'Προαιρετικό', offerTitle: 'Θα θέλατε να στηρίζετε και κάθε μήνα τη θεραπεία για {name};', notActive: 'Δεν έχει ενεργοποιηθεί μηνιαία δωρεά. Ξεκινά μόνο αν πατήσετε το πράσινο κουμπί.', cta: 'Ναι, ενεργοποίηση {amount}/μήνα', decline: 'Όχι ευχαριστώ, τελείωσα', close: 'Κλείσιμο' },
+  it: { completed: 'Donazione completata', optional: 'Facoltativo', offerTitle: 'Vuoi sostenere {name} anche ogni mese?', notActive: 'Nessuna donazione mensile è attiva. Si attiva solo se tocchi il pulsante verde.', cta: 'Sì, attiva {amount}/mese', decline: 'No grazie, ho finito', close: 'Chiudi' },
+  es: { completed: 'Donación completada', optional: 'Opcional', offerTitle: '¿Quieres apoyar a {name} también cada mes?', notActive: 'No hay ninguna donación mensual activa. Solo se activa si tocas el botón verde.', cta: 'Sí, activar {amount}/mes', decline: 'No, gracias, he terminado', close: 'Cerrar' },
+  pt: { completed: 'Donativo concluído', optional: 'Opcional', offerTitle: 'Quer apoiar a {name} também todos os meses?', notActive: 'Não há nenhum donativo mensal ativo. Só é ativado se tocar no botão verde.', cta: 'Sim, ativar {amount}/mês', decline: 'Não, obrigado, terminei', close: 'Fechar' },
+  pl: { completed: 'Wpłata zakończona', optional: 'Opcjonalnie', offerTitle: 'Czy chcesz wspierać {name} także co miesiąc?', notActive: 'Żadna comiesięczna wpłata nie jest aktywna. Włączy się tylko po dotknięciu zielonego przycisku.', cta: 'Tak, włącz {amount}/mies.', decline: 'Nie, dziękuję, to wszystko', close: 'Zamknij' },
+  fr: { completed: 'Don effectué', optional: 'Facultatif', offerTitle: 'Souhaitez-vous aussi soutenir {name} chaque mois ?', notActive: 'Aucun don mensuel n\'est actif. Il ne démarre que si vous appuyez sur le bouton vert.', cta: 'Oui, activer {amount}/mois', decline: 'Non merci, j\'ai terminé', close: 'Fermer' }
+};
 for (const [lang, strings] of Object.entries(UPSELL_LOCALE)) {
-  if (CHECKOUT_LOCALE[lang]) CHECKOUT_LOCALE[lang].upsell = { ...strings, ...(UPSELL_SCREEN[lang] || UPSELL_SCREEN.en) };
+  if (CHECKOUT_LOCALE[lang]) CHECKOUT_LOCALE[lang].upsell = { ...strings, ...(UPSELL_SCREEN[lang] || UPSELL_SCREEN.en), ...(UPSELL_CLARITY[lang] || UPSELL_CLARITY.en) };
 }
 
 const { CURRENCIES, getSymbol, getPosition, formatAmount } = require('./currency');

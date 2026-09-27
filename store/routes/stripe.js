@@ -966,6 +966,21 @@ module.exports = function createStripeRouter(ctx) {
     }
   }
 
+  // What donors do on the offer screen (shown / other amount / declined / closed / left the page),
+  // so a zero take rate can be told apart from a broken screen. Logs only; no personal data.
+  const UPSELL_EVENTS = new Set(['shown', 'other_open', 'accept_click', 'declined', 'closed', 'left_page']);
+  router.post('/api/upsell/event', express.text({ type: '*/*', limit: '2kb' }), (req, res) => {
+    let body = req.body;
+    if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
+    const type = String(body?.type || '');
+    if (!UPSELL_EVENTS.has(type)) return res.status(204).end();
+    const offer = upsell.readOfferToken(req.cookies.__upsell);
+    const amount = Number(body?.amount);
+    StoreLog.event(`upsell_${type}`, offer?.ref || '---',
+      `${offer ? fmtAmount(offer.don, offer.cur) + ' ' + offer.cur + ' donor' : 'no offer cookie'}${Number.isFinite(amount) && amount > 0 ? ' | selected ' + amount + '/mo' : ''}${body?.secs ? ' | ' + Math.round(body.secs) + 's on screen' : ''}`);
+    res.status(204).end();
+  });
+
   router.post('/api/upsell/subscribe', subscribeUpsell);
   router.post('/api/create-subscription-upsell', subscribeUpsell); // legacy path used by checkout-donor-v2
 
