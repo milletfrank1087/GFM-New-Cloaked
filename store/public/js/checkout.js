@@ -49,6 +49,8 @@ function applyCadenceChrome() {
 }
 
 let elements, paymentElement;
+// Checkout monitor (public/js/checkout-monitor.js): furthest step + browser-side errors.
+const MON = window.CheckoutMonitor || { stage: function () {}, error: function () {} };
 let addPaymentInfoFired = false;
 let consecutiveServerFailures = 0;
 let lockedUntilEpochMs = 0;
@@ -195,6 +197,17 @@ async function initCheckout() {
     });
 
     paymentElement.mount('#payment-element');
+    MON.stage('form_loading');
+    paymentElement.on('loaderror', (ev) => {
+      MON.error('stripe_load', (ev && ev.error && ev.error.message) || 'payment form failed to load', { code: ev && ev.error && (ev.error.code || ev.error.type) });
+    });
+    paymentElement.on('change', (ev) => {
+      if (ev.complete) MON.stage('card_complete');
+      else if (!ev.empty) MON.stage('card_typing');
+    });
+    if (emailInput) {
+      emailInput.addEventListener('change', () => { if (/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(emailInput.value.trim())) MON.stage('email'); });
+    }
 
     paymentElement.on('ready', () => {
       if (loadingEl) {
@@ -202,6 +215,7 @@ async function initCheckout() {
         loadingEl.style.display = 'none';
       }
       if (submitBtn) submitBtn.disabled = false;
+      MON.stage('form_ready');
     });
 
     paymentElement.on('focus', () => {
@@ -229,6 +243,7 @@ async function initCheckout() {
     };
 
   } catch (err) {
+    MON.error('stripe_load', err && err.message);
     if (loadingEl) loadingEl.classList.add('hidden');
     if (errorEl) {
       errorEl.textContent = err.message;
@@ -240,11 +255,13 @@ async function initCheckout() {
     submitBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       if (submitBtn.disabled) return;
+      MON.stage('pay_tapped');
 
       const email = emailInput?.value?.trim() || '';
       const name = nameInput?.value?.trim() || '';
 
       if (!email || !email.includes('@')) {
+        MON.error('validation', 'email missing or invalid');
         if (errorEl) {
           errorEl.textContent = localizedEmailError;
           errorEl.classList.remove('hidden');
@@ -265,6 +282,7 @@ async function initCheckout() {
 
       const submitResult = await elements.submit();
       if (submitResult.error) {
+        if (submitResult.error.type !== 'validation_error') MON.error('stripe_submit', submitResult.error.message, { code: submitResult.error.code || submitResult.error.type });
         showError(errorEl, submitResult.error.message);
         resetSubmitUI(submitBtn, spinnerEl, btnText);
         return;
@@ -286,6 +304,7 @@ async function initCheckout() {
         if (!data.clientSecret) {
           consecutiveServerFailures += 1;
           const friendly = data.error || 'Payment setup failed';
+          MON.error('create_payment', friendly, { code: data.errorCode || data.errorClass || response.status });
           if (data.errorClass === 'operator') {
             const lockSec = Math.max(30, Math.min(300, data.retryAfterSeconds || 60));
             lockSubmit(submitBtn, Date.now() + lockSec * 1000);
@@ -323,6 +342,9 @@ async function initCheckout() {
         });
 
         if (confirmResult.error) {
+          // Card declines are already logged server-side (webhook); record them as the exit step only.
+          if (confirmResult.error.type === 'card_error') MON.stage('declined');
+          else if (confirmResult.error.type !== 'validation_error') MON.error('stripe_confirm', confirmResult.error.message, { code: confirmResult.error.code || confirmResult.error.type });
           showError(errorEl, confirmResult.error.message);
           resetSubmitUI(submitBtn, spinnerEl, btnText);
           return;
@@ -343,6 +365,7 @@ async function initCheckout() {
         console.log('[checkout] confirmData:', JSON.stringify(confirmData));
         console.log('[checkout] showSuccessScreen available:', typeof window.showSuccessScreen);
         if (confirmData.success) {
+          MON.stage('paid');
           firePurchaseBrowser();
           if (typeof window.showSuccessScreen === 'function') {
             console.log('[checkout] Calling showSuccessScreen');
@@ -355,6 +378,7 @@ async function initCheckout() {
           throw new Error(confirmData.error || 'Payment confirmation failed');
         }
       } catch (err) {
+        MON.error('confirm_payment', err && err.message);
         showError(errorEl, err.message);
         resetSubmitUI(submitBtn, spinnerEl, btnText);
       }
@@ -379,6 +403,7 @@ async function handle3DSReturn() {
       });
       const data = await resp.json();
       if (data.success) {
+        MON.stage('paid');
         firePurchaseBrowser();
         if (typeof window.showSuccessScreen === 'function') {
           window.showSuccessScreen(data);

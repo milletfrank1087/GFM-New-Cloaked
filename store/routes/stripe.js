@@ -999,6 +999,28 @@ module.exports = function createStripeRouter(ctx) {
     res.status(204).end();
   });
 
+  // Checkout monitor (public/js/checkout-monitor.js): browser errors + furthest step of unpaid checkouts.
+  const EXIT_STAGES = new Set(['page_loaded', 'form_loading', 'form_ready', 'email', 'card_typing', 'card_complete', 'pay_tapped', 'declined']);
+  router.post('/api/client/report', express.text({ type: '*/*', limit: '4kb' }), (req, res) => {
+    let body = req.body;
+    if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
+    if (body?.t === 'exit') {
+      if (EXIT_STAGES.has(body.stage)) StoreLog.checkoutExit(body.stage);
+    } else if (body?.t === 'error') {
+      const kind = String(body.kind || 'js').replace(/[^\w]/g, '').slice(0, 20);
+      const msg = String(body.msg || '').replace(/\s+/g, ' ').slice(0, 200);
+      const src = String(body.src || '').replace(/^https?:\/\/[^/]+/, '').replace(/\?.*$/, '').slice(0, 80);
+      const ua = String(req.headers['user-agent'] || '');
+      const device = `${/iPhone|iPad/.test(ua) ? 'iOS' : /Android/.test(ua) ? 'Android' : 'desktop'}${/FBAN|FBAV|FB_IAB/.test(ua) ? ' FB app' : /Instagram/.test(ua) ? ' IG app' : ''}`;
+      if (msg) {
+        // Signature ignores numbers so "timeout after 3012ms" variants count as one error type.
+        const sig = `${kind}|${msg.replace(/\d+/g, '#')}|${src}`;
+        StoreLog.clientError(sig, `${kind}: ${msg}${body.code ? ' [' + String(body.code).slice(0, 40) + ']' : ''}${src ? ' · ' + src + (body.line ? ':' + Number(body.line) : '') : ''} · at ${String(body.stage || '?').replace(/_/g, ' ')} · ${device}`);
+      }
+    }
+    res.status(204).end();
+  });
+
   router.post('/api/upsell/subscribe', subscribeUpsell);
   router.post('/api/create-subscription-upsell', subscribeUpsell); // legacy path used by checkout-donor-v2
 

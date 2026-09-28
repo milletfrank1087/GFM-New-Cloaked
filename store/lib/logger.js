@@ -81,8 +81,9 @@ const STORE_EVENTS = {
   subscription_manage: { icon: '⚠️', step: 'monthly' }
 };
 
-const newCounters = () => ({ checkouts: 0, payAttempts: 0, donated: 0, totals: {}, declined: 0, offers: 0, offerDeclined: 0, offerLeft: 0, monthly: 0, renewals: 0, badLinks: 0, shopViews: 0, scanner: 0, errors: 0 });
+const newCounters = () => ({ checkouts: 0, payAttempts: 0, donated: 0, totals: {}, declined: 0, offers: 0, offerDeclined: 0, offerLeft: 0, monthly: 0, renewals: 0, badLinks: 0, shopViews: 0, scanner: 0, errors: 0, jsErrors: 0, jsNew: 0, exits: {} });
 let counters = newCounters();
+const seenClientErrors = new Map(); // signature -> count (process lifetime)
 let hour = new Date().getHours();
 
 function line(icon, step, message, flags, toErr) {
@@ -102,10 +103,14 @@ function flushHour(force) {
   const now = new Date();
   if (!force && now.getHours() === hour) return;
   const c = counters;
-  if (c.checkouts || c.donated || c.declined || c.scanner || c.errors || c.renewals) {
+  if (c.checkouts || c.donated || c.declined || c.scanner || c.errors || c.renewals || c.jsErrors) {
     const label = new Date(now.getTime() - (force ? 0 : 60_000)).toLocaleTimeString('en-GB', { hour: '2-digit', timeZone: 'Europe/Athens' });
     const money = Object.entries(c.totals).map(([cur, v]) => fmtAmount(Math.round(v * 100) / 100, cur)).join(' + ') || '0';
+    const order = ['page_loaded', 'form_loading', 'form_ready', 'email', 'card_typing', 'card_complete', 'pay_tapped', 'declined', 'error'];
+    const exits = Object.entries(c.exits).sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0])).map(([k, v]) => `${k.replace(/_/g, ' ')} ${v}`).join(' · ');
+    const extra = [exits ? `unpaid checkouts stopped at: ${exits}` : '', c.jsErrors ? `browser errors ${c.jsErrors} (${c.jsNew} new types)` : ''].filter(Boolean).join(' | ');
     console.log(`── ${label}:00 last hour · ${c.checkouts} checkouts · ${c.donated} donated ${money} · ${c.declined} declined · offer: ${c.offers} shown, ${c.offerDeclined} no-thanks, ${c.offerLeft} left page, ${c.monthly} monthly · ${c.renewals} renewals | ${c.errors} errors · ${c.scanner} scanner hits hidden`);
+    if (extra) console.log(`   ${extra}`);
   }
   hour = now.getHours();
   counters = newCounters();
@@ -138,6 +143,23 @@ const StoreLog = {
   },
 
   scannerHit() { counters.scanner += 1; },
+
+  // Browser-side checkout monitor (public/js/checkout-monitor.js).
+  // Errors: first occurrence of each signature is printed in full (per process), repeats only counted.
+  clientError(signature, text) {
+    counters.jsErrors += 1;
+    if (seenClientErrors.has(signature)) {
+      seenClientErrors.set(signature, seenClientErrors.get(signature) + 1);
+      return false;
+    }
+    if (seenClientErrors.size > 500) seenClientErrors.clear();
+    seenClientErrors.set(signature, 1);
+    counters.jsNew += 1;
+    line('🐞', 'browser', text, '', true);
+    return true;
+  },
+  // Furthest step reached by a checkout that ended without paying (hourly summary only).
+  checkoutExit(stage) { counters.exits[stage] = (counters.exits[stage] || 0) + 1; },
 
   event(eventKey, sessionRef, message) {
     const cfg = STORE_EVENTS[eventKey] || { icon: 'ℹ️', step: eventKey.replace(/_/g, ' ') };
