@@ -257,32 +257,40 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
       if (!allDataRows.length) throw new Error(`no rows for preset ${preset}`);
 
       let byId = new Map(campaigns.map(c => [c.id, c]));
-      const hasUnseen = allDataRows.some(r => {
+
+      // New campaigns: register them from THIS response (each row carries the campaign's id/name/status).
+      // Relying on another preset's campaign list failed whenever that list was cached before the
+      // campaign existed: ad_spend has a foreign key to ad_campaigns, so one unknown id rejected the
+      // whole batch and tripped the circuit breaker.
+      const unseen = new Map();
+      for (const r of allDataRows) {
         const id = String(r.id || r.campaign_id || '');
-        return id && !byId.has(id);
-      });
-      if (hasUnseen) {
-        try {
-          await syncCampaigns();
-          const refetch = await supabase.from('ad_campaigns').select('id, account_id, name').order('name');
-          campaigns = refetch.data || [];
-          byId = new Map(campaigns.map(c => [c.id, c]));
-        } catch (syncErr) {
-          console.warn('[ads-sync] Auto-seed campaigns error:', syncErr.message);
+        if (id && !byId.has(id) && !unseen.has(id)) {
+          unseen.set(id, normalizeCampaign({ ...r, id, account_id: r.account_id || r._source_account_id || '' }));
+        }
+      }
+      if (unseen.size) {
+        const { error: seedErr } = await supabase.from('ad_campaigns').upsert([...unseen.values()], { onConflict: 'id' });
+        if (seedErr) {
+          console.warn('[ads-sync] new campaign registration failed:', seedErr.message);
+        } else {
+          for (const c of unseen.values()) byId.set(c.id, c);
+          console.log(`[ads-sync] registered ${unseen.size} new campaign(s): ${[...unseen.values()].map(c => c.name).join(', ')}`);
         }
       }
 
       const rows = [];
+      let skipped = 0;
       for (const r of allDataRows) {
         const id = String(r.id || r.campaign_id || '');
         const campaign = byId.get(id);
         if (campaign) {
-          rows.push(normalizeSpendRow(campaign.id, campaign.account_id, preset, r));
+          rows.push(normalizeSpendRow(campaign.id, campaign.account_id || r._source_account_id, preset, r));
         } else if (id) {
-          const accId = String(r.account_id || r.ad_account_id || r._source_account_id || 'act_default');
-          rows.push(normalizeSpendRow(id, accId, preset, r));
+          skipped += 1; // registration failed: skip this campaign instead of failing everyone's spend
         }
       }
+      if (skipped) console.warn(`[ads-sync] preset ${preset}: skipped ${skipped} row(s) for unregistered campaigns`);
 
       if (rows.length > 0) {
         const deduped = new Map();
