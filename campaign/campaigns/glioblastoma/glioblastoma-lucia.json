@@ -7,12 +7,15 @@
     "initials": "CD",
     "location": "Sevilla, España",
     "verified": true,
-    "createdDate": "1 Sep 2026"
+    "createdDate": "16 Ago 2026"
   },
   "goal": 90000,
   "raised": 34040,
   "donorCount": 1135,
-  "daysLeft": 30,
+  "daysLeft": 29,
+  "donationPresets": {
+    "EUR": { "amounts": [10, 20, 25, 50, 100, 250], "default": 25 }
+  },
   "images": [
     {
       "url": "/images/campaigns/glioblastoma-lucia/1.jpg",
@@ -41,12 +44,12 @@
       {
         "title": "El Diagnóstico",
         "icon": "diagnosis",
-        "content": "Todo comenzó en junio de 2026, cuando Lucía empezó a sufrir cefaleas persistentes, especialmente matutinas, acompañadas de náuseas y visión borrosa en el ojo izquierdo. El 20 de junio, tras un episodio de convulsiones durante una clase en la Facultad de Medicina de la Universidad de Sevilla, fue trasladada de urgencia al Servicio de Neurocirugía del Hospital Universitario Virgen del Rocío.\\n\\nLa resonancia magnética (RM) reveló una masa de 4,2 cm en el lóbulo frontal derecho con captación en anillo característica de contraste y edema perilesional. La biopsia estereotáctica y el análisis molecular confirmaron el diagnóstico: Glioblastoma Multiforme, IDH-wildtype, grado IV según la OMS, con promotor MGMT no metilado — el subtipo molecular más desfavorable, que implica una respuesta reducida a la quimioterapia."
+        "content": "Todo comenzó en diciembre de 2025, cuando Lucía empezó a sufrir cefaleas persistentes, especialmente matutinas, acompañadas de náuseas y visión borrosa en el ojo izquierdo. El 20 de diciembre, tras un episodio de convulsiones durante una clase en la Facultad de Medicina de la Universidad de Sevilla, fue trasladada de urgencia al Servicio de Neurocirugía del Hospital Universitario Virgen del Rocío.\\n\\nLa resonancia magnética (RM) reveló una masa de 4,2 cm en el lóbulo frontal derecho con captación en anillo característica de contraste y edema perilesional. La biopsia estereotáctica y el análisis molecular confirmaron el diagnóstico: Glioblastoma Multiforme, IDH-wildtype, grado IV según la OMS, con promotor MGMT no metilado — el subtipo molecular más desfavorable, que implica una respuesta reducida a la quimioterapia."
       },
       {
         "title": "El Tratamiento Estándar y sus Límites",
         "icon": "treatment",
-        "content": "Lucía se sometió a una resección quirúrgica parcial del tumor (exéresis subtotal) el 10 de julio de 2026 en el Hospital Virgen del Rocío — una resección completa no fue posible debido a la proximidad del tumor a las áreas funcionales del lenguaje. Siguió el protocolo Stupp: radioterapia concomitante (30 sesiones en 6 semanas) con temozolomida diaria, seguida de ciclos de mantenimiento con temozolomida.\\n\\nLos médicos fueron honestos: con el MGMT no metilado, la respuesta a la temozolomida se espera limitada. La supervivencia mediana con el tratamiento estándar es de 12-15 meses. La RM de control de septiembre de 2026 mostró un tumor residual estable en tamaño, pero los médicos advirtieron que la recurrencia es casi segura."
+        "content": "Lucía se sometió a una resección quirúrgica parcial del tumor (exéresis subtotal) el 15 de enero de 2026 en el Hospital Virgen del Rocío — una resección completa no fue posible debido a la proximidad del tumor a las áreas funcionales del lenguaje. Siguió el protocolo Stupp: radioterapia concomitante (30 sesiones en 6 semanas) con temozolomida diaria, seguida de ciclos de mantenimiento con temozolomida.\\n\\nLos médicos fueron honestos: con el MGMT no metilado, la respuesta a la temozolomida se espera limitada. La supervivencia mediana con el tratamiento estándar es de 12-15 meses. La RM de control de septiembre de 2026 mostró un tumor residual estable en tamaño, pero los médicos advirtieron que la recurrencia es casi segura."
       },
       {
         "title": "La Esperanza: Inmunoterapia con Células Dendríticas",
@@ -108,14 +111,14 @@
   },
   "updates": [
     {
-      "date": "12 Sep 2026",
+      "date": "20 Sep 2026",
       "title": "Resultados de la RM de control 📋",
       "content": "La RM de control tras finalizar la radioterapia muestra un tumor residual estable sin nuevas lesiones. Los médicos del Virgen del Rocío dicen que es el mejor resultado posible con el tratamiento estándar, pero la recurrencia sigue siendo muy probable. La clínica en Alemania nos ha confirmado que pueden comenzar la inmunoterapia con células dendríticas en noviembre, si conseguimos la financiación.",
       "isNew": true
     },
     {
-      "date": "5 Sep 2026",
-      "title": "¡Hemos superado los 600 donantes! 🙏",
+      "date": "10 Sep 2026",
+      "title": "¡Hemos superado los 1.000 donantes! 🙏",
       "content": "Vuestro apoyo nos emociona profundamente. Lucía ha terminado los ciclos de mantenimiento con temozolomida y se siente fuerte. Lee cada uno de vuestros mensajes y dice que le dais fuerza para seguir adelante. Cada euro nos acerca a Alemania.",
       "isNew": false
     },
@@ -128,7 +131,7 @@
     {
       "date": "16 Ago 2026",
       "title": "La campaña ha comenzado",
-      "content": "Con el corazón encogido pero con determinación, lanzamos esta llamada. Tras tres meses de tratamiento intensivo en el sistema público, los médicos nos dijeron con claridad: el tratamiento estándar da tiempo, pero la inmunoterapia puede dar vida. Desgraciadamente, no está cubierta en ningún país de Europa. Creemos en la solidaridad.",
+      "content": "Con el corazón encogido pero con determinación, lanzamos esta llamada. Tras meses de tratamiento intensivo en el sistema público, los médicos nos dijeron con claridad: el tratamiento estándar da tiempo, pero la inmunoterapia puede dar vida. Desgraciadamente, no está cubierta en ningún país de Europa. Creemos en la solidaridad.",
       "isNew": false
     }
   ],
@@ -181,7 +184,7 @@
     {
       "name": "María C.",
       "amount": 20,
-      "time": "2 min ago",
+      "time": "hace 2 min",
       "initials": "MC",
       "color": "from-rose-400 to-rose-500",
       "message": "¡Fuerza, bonita!"
@@ -189,7 +192,7 @@
     {
       "name": "Anónimo",
       "amount": 25,
-      "time": "8 min ago",
+      "time": "hace 8 min",
       "initials": "?",
       "color": "from-gray-400 to-gray-500",
       "message": ""
@@ -197,7 +200,7 @@
     {
       "name": "Pablo R.",
       "amount": 15,
-      "time": "14 min ago",
+      "time": "hace 14 min",
       "initials": "PR",
       "color": "from-blue-400 to-blue-500",
       "message": "De un compañero de promo"
@@ -205,7 +208,7 @@
     {
       "name": "Elena V.",
       "amount": 40,
-      "time": "22 min ago",
+      "time": "hace 22 min",
       "initials": "EV",
       "color": "from-violet-400 to-violet-500",
       "message": "Mucho ánimo"
@@ -213,7 +216,7 @@
     {
       "name": "Javier G.",
       "amount": 30,
-      "time": "35 min ago",
+      "time": "hace 35 min",
       "initials": "JG",
       "color": "from-emerald-400 to-emerald-500",
       "message": ""
