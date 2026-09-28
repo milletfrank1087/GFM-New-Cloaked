@@ -175,12 +175,17 @@ function applyPresetAmounts() {
   const symbolBefore = document.querySelector('.currency-symbol-before');
   const symbolAfterEl = document.querySelector('.currency-symbol-after');
   const customInput = document.getElementById('modal-custom-amount');
+  // Room for the symbol grows with its length ("$" vs "CA$" / "zł"): 1rem inset + ~0.9rem per bold char + gap.
+  const symbolRoom = `${(1.5 + symbol.length * 0.9).toFixed(2)}rem`;
   if (position === 'after' && symbolBefore && symbolAfterEl && customInput) {
     symbolBefore.classList.add('hidden');
     symbolAfterEl.textContent = symbol;
     symbolAfterEl.classList.remove('hidden');
     customInput.classList.remove('pl-10');
-    customInput.classList.add('pl-4', 'pr-10');
+    customInput.classList.add('pl-4');
+    customInput.style.paddingRight = symbolRoom;
+  } else if (customInput) {
+    customInput.style.paddingLeft = symbolRoom;
   }
 }
 
