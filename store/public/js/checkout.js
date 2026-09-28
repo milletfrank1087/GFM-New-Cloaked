@@ -2,7 +2,59 @@ const stripeKey = document.getElementById('stripe-key')?.value;
 if (!stripeKey) throw new Error('Stripe key missing');
 
 const stripeLocale = document.getElementById('payment-locale')?.value || 'auto';
-const stripe = Stripe(stripeKey, { locale: stripeLocale });
+// Stripe.js can fail to load (seen in Facebook's in-app browser): ensureStripe() retries before boot.
+let stripe = null;
+
+const STRIPE_LOAD_MSG = {
+  it: ['Il modulo di pagamento non si è caricato.', 'Riprova'],
+  pt: ['O formulário de pagamento não carregou.', 'Tentar novamente'],
+  es: ['El formulario de pago no se ha cargado.', 'Reintentar'],
+  fr: ["Le formulaire de paiement ne s'est pas chargé.", 'Réessayer'],
+  el: ['Η φόρμα πληρωμής δεν φορτώθηκε.', 'Δοκιμάστε ξανά'],
+  pl: ['Formularz płatności się nie załadował.', 'Spróbuj ponownie'],
+  en: ['The payment form did not load.', 'Try again']
+};
+
+function loadStripeScript() {
+  return new Promise((resolve) => {
+    const s = document.createElement('script');
+    s.src = 'https://js.stripe.com/v3/?retry=' + Date.now();
+    s.onload = () => resolve(typeof Stripe === 'function');
+    s.onerror = () => resolve(false);
+    document.head.appendChild(s);
+    setTimeout(() => resolve(typeof Stripe === 'function'), 8000);
+  });
+}
+
+async function ensureStripe() {
+  for (let attempt = 0; typeof Stripe !== 'function' && attempt < 2; attempt++) {
+    await loadStripeScript();
+  }
+  if (typeof Stripe !== 'function') return false;
+  stripe = Stripe(stripeKey, { locale: stripeLocale });
+  return true;
+}
+
+function showStripeLoadError() {
+  const lang = String(stripeLocale || 'en').slice(0, 2);
+  const [msg, btn] = STRIPE_LOAD_MSG[lang] || STRIPE_LOAD_MSG.en;
+  const loading = document.getElementById('payment-loading');
+  if (loading) loading.classList.add('hidden');
+  const errorEl = document.getElementById('payment-error');
+  if (errorEl) {
+    errorEl.innerHTML = '';
+    const p = document.createElement('p');
+    p.textContent = msg;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = btn;
+    b.className = 'mt-2 w-full rounded-lg bg-gray-900 py-2.5 text-sm font-semibold text-white';
+    b.onclick = () => window.location.reload();
+    errorEl.appendChild(p);
+    errorEl.appendChild(b);
+    errorEl.classList.remove('hidden');
+  }
+}
 
 const paymentAmountUnits = parseInt(document.getElementById('payment-amount')?.value || '0', 10);
 const paymentCurrency = (document.getElementById('payment-currency')?.value || 'eur').toLowerCase();
@@ -420,6 +472,11 @@ async function handle3DSReturn() {
 }
 
 async function boot() {
+  if (!(await ensureStripe())) {
+    if (window.CheckoutMonitor) window.CheckoutMonitor.error('stripe_load', 'Stripe.js failed to load after 2 retries');
+    showStripeLoadError();
+    return;
+  }
   const handled = await handle3DSReturn();
   if (!handled) {
     initCheckout();

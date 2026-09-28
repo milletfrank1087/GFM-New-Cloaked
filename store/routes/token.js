@@ -78,7 +78,7 @@ module.exports = function createTokenRouter(ctx) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Lax',
-        maxAge: 10 * 60 * 1000,
+        maxAge: 60 * 60 * 1000, // 10 min was too short: slower donors hit "No session found" when paying
         path: '/'
       });
 
