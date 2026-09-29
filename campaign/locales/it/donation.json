@@ -72,7 +72,8 @@
     "cardNotInitialized": "Pagamento con carta non inizializzato. Ricarica e riprova.",
     "processing": "Elaborazione...",
     "paymentVerificationFailed": "Verifica pagamento fallita. Prova un altro metodo di pagamento.",
-    "3dsVerificationFailed": "Verifica 3D Secure fallita"
+    "3dsVerificationFailed": "Verifica 3D Secure fallita",
+    "alreadyDonated": "Hai già donato ${amount} ${minutes} min fa. Grazie! 💚 Tocca di nuovo Continua solo se vuoi fare un'altra donazione."
   },
   "success": {
     "title": "Grazie!",

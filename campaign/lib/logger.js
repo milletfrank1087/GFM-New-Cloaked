@@ -25,6 +25,7 @@ const PAYMENT_EVENT_CONFIG = {
   session_timeout: { icon: '⏱️', step: 'form', msg: 'session timed out' },
   redirect_initiated: { icon: '➜', step: 'checkout', msg: '' },
   cadence_selected: { icon: '🔁', step: 'cadence', msg: '', hidden: true },
+  duplicate_warned: { icon: '✋', step: 'form', msg: 'already donated — shown "donate again?" check' },
   subscribed: { icon: '💚', step: 'MONTHLY', msg: '✓' }
 };
 

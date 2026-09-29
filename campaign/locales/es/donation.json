@@ -72,7 +72,8 @@
     "cardNotInitialized": "Pago con tarjeta no inicializado. Recarga e inténtalo de nuevo.",
     "processing": "Procesando...",
     "paymentVerificationFailed": "Error en la verificación del pago. Prueba con otro método de pago.",
-    "3dsVerificationFailed": "Error en la verificación 3D Secure"
+    "3dsVerificationFailed": "Error en la verificación 3D Secure",
+    "alreadyDonated": "Ya donaste ${amount} hace ${minutes} min. ¡Gracias! 💚 Pulsa Continuar de nuevo solo si quieres hacer otra donación."
   },
   "types": {
     "oneTime": "Puntual",

@@ -24,6 +24,43 @@ function translate(key, params) {
   return key;
 }
 
+// Donors who press Back after paying often land on the form again and pay a second time by accident.
+// Remember a finished donation for 15 minutes; the first Continue in that window asks before redirecting.
+const RECENT_DONATION_KEY = '_last_donation';
+const RECENT_DONATION_MS = 15 * 60 * 1000;
+let duplicateAcknowledged = false;
+
+function rememberDonation(amount, currencyCode) {
+  try {
+    localStorage.setItem(RECENT_DONATION_KEY, JSON.stringify({ amount, currency: currencyCode, at: Date.now() }));
+  } catch (_) {}
+}
+
+function recentDonation() {
+  try {
+    const d = JSON.parse(localStorage.getItem(RECENT_DONATION_KEY) || 'null');
+    return d && Date.now() - d.at < RECENT_DONATION_MS ? d : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+// Inline (not a toast): the donor must read it before tapping again, so it sits right above Continue.
+function showDuplicateNotice(text) {
+  const btn = document.getElementById('continue-to-payment-btn');
+  if (!btn) return;
+  let box = document.getElementById('duplicate-donation-notice');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'duplicate-donation-notice';
+    box.setAttribute('role', 'status');
+    box.className = 'mb-3 px-4 py-3 rounded-xl bg-gfm-green-light border border-gfm-green text-sm font-medium text-gfm-dark';
+    btn.parentNode.insertBefore(box, btn);
+  }
+  box.textContent = text;
+  box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
 function logCadenceChoice(reason) {
   const payload = {
     eventType: 'cadence_selected',
@@ -108,6 +145,12 @@ function handleDonatedReturn() {
     const urlEid = trackedReturn?.eventId || params.get('eid');
     const urlAmt = trackedReturn?.amount || parseFloat(params.get('amt') || '0');
     const urlCur = trackedReturn?.currency || params.get('cur');
+    try {
+      rememberDonation(
+        urlAmt > 0 ? urlAmt : parseFloat(sessionStorage.getItem('_purchase_amount') || '0'),
+        urlCur || sessionStorage.getItem('_purchase_currency') || null
+      );
+    } catch (_) {}
     const cleanUrl = new URL(window.location.href);
     ['status', 'eid', 'amt', 'cur'].forEach((key) => {
       cleanUrl.searchParams.delete(key);
@@ -269,6 +312,24 @@ function getTipAmount() {
 
 async function initDonationRedirect() {
   if (isRedirecting) return;
+
+  const recent = recentDonation();
+  if (recent && !duplicateAcknowledged) {
+    duplicateAcknowledged = true; // second tap goes through: a genuine extra gift is still one tap away
+    const mins = Math.max(1, Math.round((Date.now() - recent.at) / 60000));
+    const amount = recent.amount > 0 && typeof currency !== 'undefined' && currency.loaded
+      ? currency.format(recent.amount, recent.amount % 1 !== 0)
+      : '';
+    showDuplicateNotice(translate('donation.messages.alreadyDonated', { amount, minutes: mins }));
+    try {
+      fetch('/api/track/payment-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventType: 'duplicate_warned', details: `${mins} min after paying` })
+      }).catch(() => {});
+    } catch (_) {}
+    return;
+  }
 
   const continueBtn = document.getElementById('continue-to-payment-btn');
   if (continueBtn) {

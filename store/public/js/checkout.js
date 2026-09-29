@@ -424,7 +424,7 @@ async function initCheckout() {
             window.showSuccessScreen(confirmData);
           } else if (confirmData.redirectUrl) {
             console.log('[checkout] Redirecting to:', confirmData.redirectUrl);
-            window.location.href = confirmData.redirectUrl;
+            window.location.replace(confirmData.redirectUrl); // paid: drop checkout from history
           }
         } else {
           throw new Error(confirmData.error || 'Payment confirmation failed');
@@ -460,7 +460,7 @@ async function handle3DSReturn() {
         if (typeof window.showSuccessScreen === 'function') {
           window.showSuccessScreen(data);
         } else if (data.redirectUrl) {
-          window.location.href = data.redirectUrl;
+          window.location.replace(data.redirectUrl); // paid: drop checkout from history
         }
         return true;
       }

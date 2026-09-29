@@ -72,7 +72,8 @@
     "cardNotInitialized": "Płatność kartą nie zainicjalizowana. Odśwież i spróbuj ponownie.",
     "processing": "Przetwarzanie...",
     "paymentVerificationFailed": "Weryfikacja płatności nie powiodła się. Spróbuj innej metody płatności.",
-    "3dsVerificationFailed": "Weryfikacja 3D Secure nie powiodła się"
+    "3dsVerificationFailed": "Weryfikacja 3D Secure nie powiodła się",
+    "alreadyDonated": "Twoja darowizna ${amount} została przekazana ${minutes} min temu. Dziękujemy! 💚 Naciśnij Kontynuuj ponownie tylko, jeśli chcesz wpłacić kolejną."
   },
   "success": {
     "title": "Dziękujemy!",

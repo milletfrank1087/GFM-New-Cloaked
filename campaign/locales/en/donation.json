@@ -72,7 +72,8 @@
     "cardNotInitialized": "Card payment not initialized. Please refresh and try again.",
     "processing": "Processing...",
     "paymentVerificationFailed": "Payment verification failed. Please try another payment method.",
-    "3dsVerificationFailed": "3D Secure verification failed"
+    "3dsVerificationFailed": "3D Secure verification failed",
+    "alreadyDonated": "You already donated ${amount} ${minutes} min ago. Thank you! 💚 Tap Continue again only if you want to make another donation."
   },
   "success": {
     "title": "Thank You!",

@@ -67,7 +67,8 @@
 
   function $(id) { return document.getElementById(id); }
   function card() { return $('checkout-card') || document.querySelector('.checkout-card'); }
-  function goBack() { window.location.href = state.redirectUrl || '/'; }
+  // replace, not href: the paid checkout must leave history, or Back reopens it (and people pay twice).
+  function goBack() { window.location.replace(state.redirectUrl || '/'); }
   function leave(type) { state.decided = true; track(type); goBack(); }
   function vars(extra) {
     var o = state.offer;
