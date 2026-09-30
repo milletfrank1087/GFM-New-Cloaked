@@ -73,14 +73,31 @@ module.exports = function createStripeRouter(ctx) {
         case 'payment_intent.payment_failed': {
           StoreLog.error('webhook_fail', ref, `card refused: ${(obj.last_payment_error?.decline_code || obj.last_payment_error?.code || 'unknown').replace(/_/g, ' ')} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())}`);
           if (supabase) {
+            // Context Stripe already sends in the webhook: lets failures be attributed to a campaign / card type.
+            const lpe = obj.last_payment_error || {};
+            const card = lpe.payment_method?.card || {};
             await dbSafe('payment_failures insert', ref, supabase.from('payment_failures').insert({
               store_id: ctx.getStoreDbId(),
+              source_ref: obj.metadata?.src || null,
               endpoint: 'webhook',
               stripe_payment_intent_id: obj.id,
               error_type: 'PAYMENT_FAILED',
-              error_code: obj.last_payment_error?.decline_code || obj.last_payment_error?.code || 'UNKNOWN',
-              error_message: obj.last_payment_error?.message || 'Payment failed',
-              request_amount: fromSmallestUnit(obj.amount, obj.currency)
+              error_code: lpe.decline_code || lpe.code || 'UNKNOWN',
+              error_message: lpe.message || 'Payment failed',
+              request_amount: fromSmallestUnit(obj.amount, obj.currency),
+              payment_method: lpe.payment_method?.type || null,
+              error_details: {
+                code: lpe.code || null,
+                decline_code: lpe.decline_code || null,
+                network_decline_code: lpe.network_decline_code || null,
+                advice_code: lpe.advice_code || null,
+                currency: obj.currency || null,
+                card_brand: card.brand || null,
+                card_country: card.country || null,
+                card_funding: card.funding || null,
+                three_d_secure: card.three_d_secure_usage?.supported ?? null,
+                session_ref: obj.metadata?.[(storeConfig.metadataKeys || {}).sessionRef || 'sessionRef'] || null
+              }
             }));
           }
           break;
@@ -241,7 +258,8 @@ module.exports = function createStripeRouter(ctx) {
         [mk.subtotal || 'subtotal']: String(donor.amount),
         [mk.serviceFee || 'serviceFee']: String(clientTip),
         [mk.guestCheckout || 'guestCheckout']: String(donor.guest || false),
-        [mk.orderSummary || 'orderSummary']: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', ')
+        [mk.orderSummary || 'orderSummary']: lineItems.map(i => `${i.quantity}x ${i.name}`).join(', '),
+        src: String(donor.ref || '').substring(0, 60)
       };
 
       const stripeLineItems = lineItems.map(item => ({
