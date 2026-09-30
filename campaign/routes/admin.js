@@ -4,7 +4,6 @@ const fs = require('fs');
 
 const createAdminStoresRouter = require('./admin-stores');
 const createAdminCustomersRouter = require('./admin-customers');
-const { getCockpitData } = require('../lib/cockpit');
 
 module.exports = function createAdminRouter(ctx) {
   const router = express.Router();
@@ -240,15 +239,6 @@ module.exports = function createAdminRouter(ctx) {
     } catch (error) {
       console.error('[admin/profit] error:', error);
       res.status(500).json({ error: 'Failed to load profit data' });
-    }
-  });
-
-  router.get('/api/admin/cockpit', adminAuth, async (req, res) => {
-    try {
-      res.json(await getCockpitData(req.query.days));
-    } catch (error) {
-      console.error('[admin/cockpit] error:', error);
-      res.status(500).json({ error: 'Failed to load cockpit data' });
     }
   });
 

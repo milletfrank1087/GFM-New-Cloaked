@@ -1,628 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Profit Cockpit | HopeRise Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --canvas:#f8fafd; --surface:#fff; --border:#e5edf5; --border2:#d0ddec; --navy:#061b31; --slate:#64748d; --muted:#8898aa;
-  --purple:#635bff; --green:#00875a; --green-bg:#edf9f3; --red:#df1b41; --red-bg:#fef2f4; --amber:#b45309; --amber-bg:#fff7e6;
-  --shadow:0 2px 5px rgba(50,50,93,.05),0 1px 2px rgba(0,0,0,.04);
-  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
-}
-*{box-sizing:border-box}
-html,body{overflow-x:hidden}
-body{margin:0;background:var(--canvas);color:var(--slate);font:14px/1.45 'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1360px;margin:0 auto;padding:0 20px 56px}
-h1{margin:0;font-size:22px;letter-spacing:-.02em;color:var(--navy)}
-h2{margin:0;font-size:14px;color:var(--navy)}
-.sub{font-size:12px;color:var(--muted)}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:16px;min-width:0}
-.row{display:flex;gap:12px;align-items:center}
-.between{justify-content:space-between}
-.wrapflex{flex-wrap:wrap}
-.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-section{margin-bottom:14px}
-/* sticky top bar */
-.bar-top{position:sticky;top:0;z-index:30;background:rgba(248,250,253,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);margin:0 -20px 14px;padding:10px 20px 8px;padding-top:max(10px,env(safe-area-inset-top))}
-.bar-top .line1{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.bar-top .line2{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
-.dot{width:8px;height:8px;border-radius:99px;background:var(--green);box-shadow:0 0 0 3px rgba(0,135,90,.2);flex:none}
-.dot.warn{background:#d97706;box-shadow:0 0 0 3px rgba(217,119,6,.2)}
-.seg{display:inline-flex;background:#eef3f8;border-radius:10px;padding:3px;gap:2px}
-.seg button{border:0;background:transparent;padding:0 14px;min-height:36px;border-radius:8px;font:600 13px Inter,sans-serif;color:var(--slate);cursor:pointer;white-space:nowrap}
-.seg button.on{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.1)}
-select{border:1px solid var(--border2);background:#fff;border-radius:8px;padding:0 10px;min-height:42px;font:500 13px Inter,sans-serif;color:var(--navy)}
-.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px;background:#eef3f8;color:var(--slate);border:0;cursor:pointer;min-height:30px}
-/* KPIs */
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.kpi{position:relative;overflow:hidden}
-.kpi .lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
-.kpi .val{font-size:26px;font-weight:700;color:var(--navy);margin:4px 0 2px}
-.kpi.big{grid-column:span 2;background:linear-gradient(90deg,#fff,#fbfcff)}
-.kpi.big .val{font-size:40px}
-.kpi .foot{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;flex-wrap:wrap}
-.delta{font-weight:700;font-size:12px;padding:1px 6px;border-radius:5px;white-space:nowrap}
-.delta.good{background:var(--green-bg);color:var(--green)}
-.delta.bad{background:var(--red-bg);color:var(--red)}
-.delta.flat{background:#eef3f8;color:var(--slate)}
-.spark{display:block;width:100%;height:34px;margin-top:6px}
-/* alerts */
-.alerts{display:grid;gap:8px}
-.alert{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;border:1px solid;font-size:13px}
-.alert.red{background:var(--red-bg);border-color:#f8c6d0;color:#8f1230}
-.alert.amber{background:var(--amber-bg);border-color:#f6dcae;color:#7a4306}
-.alert.green{background:var(--green-bg);border-color:#c2ecd7;color:#04543a}
-.alert>div{min-width:0}
-.alert small{display:block;opacity:.85;margin-top:2px;font-size:12px}
-.alert .act{margin-left:auto;white-space:nowrap;font-weight:600;font-size:12px;text-decoration:underline;cursor:pointer;padding:4px 0 4px 8px}
-.more{background:none;border:1px dashed var(--border2);border-radius:10px;color:var(--slate);font:600 13px Inter,sans-serif;min-height:40px;cursor:pointer}
-/* grids */
-.grid2{display:grid;grid-template-columns:2fr 1fr;gap:12px}
-.grid11{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.legend{display:flex;gap:12px;font-size:12px;flex-wrap:wrap}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
-svg text{font-family:Inter,sans-serif}
-.chartbox{position:relative;width:100%}
-.tip{position:absolute;pointer-events:none;background:rgba(6,27,49,.96);color:#fff;border-radius:8px;padding:8px 10px;font-size:12px;min-width:170px;opacity:0;transition:opacity .1s;z-index:5}
-.tip .r{display:flex;justify-content:space-between;gap:14px}
-/* desktop table */
-table{width:100%;border-collapse:collapse}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;text-align:right;padding:8px 10px;border-bottom:1px solid var(--border);background:#fafcfe;white-space:nowrap}
-th:first-child,td:first-child{text-align:left}
-td{padding:10px;border-bottom:1px solid #edf2f7;text-align:right;color:var(--navy);font-size:13px;white-space:nowrap}
-tbody tr.mkt{cursor:pointer}
-tbody tr.mkt:hover td{background:#f8fbff}
-tr.detail td{background:#fafcfe;padding:10px 16px;text-align:left}
-.tscroll{overflow-x:auto}
-.name{font-weight:600}
-.name small{display:block;font-weight:400;color:var(--muted);font-family:var(--mono);font-size:10px}
-.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px}
-.badge.scale{background:var(--green-bg);color:var(--green)}
-.badge.hold{background:#eef3f8;color:var(--slate)}
-.badge.cut{background:var(--red-bg);color:var(--red)}
-.badge.learn{background:var(--amber-bg);color:var(--amber)}
-/* mobile market cards */
-.mcards{display:none}
-.mc{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;background:#fff}
-.mc .hd{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:32px}
-.mc .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px;margin-top:10px}
-.mc .grid div span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
-.mc .grid div b{font-size:15px;color:var(--navy)}
-.mc .days{margin-top:10px;border-top:1px solid #edf2f7;padding-top:8px;font-size:12px}
-.mc .days .d{display:grid;grid-template-columns:.9fr 1fr 1fr 1fr .8fr;gap:4px;padding:4px 0;color:var(--navy)}
-.mc .days .d.h{color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase}
-/* meta vs reality */
-.cmp{display:grid;grid-template-columns:1.1fr repeat(3,1fr);gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #edf2f7}
-.cmp.h{padding:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
-.cmp .pair{display:grid;gap:3px;margin-bottom:4px}
-.cmp .pair .l{display:flex;justify-content:space-between;font-size:12px;gap:8px}
-.cmp .pair .l i{font-style:normal;color:var(--muted);font-size:11px}
-.cmp .pair .l b{color:var(--navy)}
-.bars{height:6px;border-radius:3px;background:#eef3f8;position:relative;overflow:hidden}
-.bars span{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
-.gap{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;display:inline-block}
-.gap.ok{background:#eef3f8;color:var(--slate)} .gap.low{background:var(--amber-bg);color:var(--amber)} .gap.hi{background:var(--red-bg);color:var(--red)}
-/* meta vs reality */
-.mvr-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
-.mt{border:1px solid var(--border);border-radius:10px;padding:12px;background:#fafcfe}
-.mt .lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
-.mt .vs{display:flex;align-items:baseline;gap:14px;margin:6px 0 6px;flex-wrap:wrap}
-.mt .vs .m{font:700 18px var(--mono);color:#b45309}
-.mt .vs .t{font:700 22px var(--mono);color:var(--navy)}
-.mt .vs small{font-size:11px;color:var(--muted);font-family:Inter,sans-serif;font-weight:500;margin-right:4px}
-table.mvr th.grp{text-align:center;border-bottom:0;padding-bottom:0}
-table.mvr td.m{color:#b45309}
-table.mvr td.t{font-weight:700}
-table.mvr .sep{border-left:1px solid var(--border)}
-.gapc{display:inline-block;min-width:54px;text-align:center;font-size:11px;font-weight:700;padding:2px 6px;border-radius:5px}
-.gapc.ok{background:#eef3f8;color:var(--slate)} .gapc.low{background:var(--amber-bg);color:var(--amber)} .gapc.hi{background:var(--red-bg);color:var(--red)}
-.mc .mrow{display:grid;grid-template-columns:1.1fr 1fr 1fr auto;gap:6px;align-items:center;padding:6px 0;border-top:1px solid #edf2f7;font-size:13px}
-.mc .mrow span:first-child{color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:600;letter-spacing:.04em}
-/* other */
-.reason{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 0;border-bottom:1px solid #edf2f7}
-.reason:last-child{border:0}
-.tag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;white-space:nowrap}
-.tag.no{background:#eef3f8;color:var(--slate)} .tag.some{background:var(--amber-bg);color:var(--amber)} .tag.yes{background:var(--green-bg);color:var(--green)}
-.hbar{height:8px;border-radius:4px;background:#eef3f8;overflow:hidden}
-.hbar>span{display:block;height:100%}
-.notes{font-size:12px;color:var(--slate);padding-left:18px;margin:8px 0 0}
-.notes li{margin:5px 0}
-.nav{display:flex;gap:14px;font-size:12px;margin-top:6px;flex-wrap:wrap}.nav a{color:var(--slate);text-decoration:none;font-weight:600}.nav a:hover{color:var(--navy)}
-.err{display:none;background:var(--red-bg);border:1px solid #f8c6d0;color:#8f1230;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:13px}
-.loading{padding:40px 0;text-align:center;color:var(--muted)}
-@media (min-width:901px){.kpi:nth-child(7),.kpi:nth-child(8){grid-column:span 2}}
-/* ---------- mobile ---------- */
-@media (max-width:900px){
-  .grid2,.grid11{grid-template-columns:1fr}
-  .kpis{grid-template-columns:repeat(2,1fr);gap:10px}
-  .kpi.big{grid-column:span 1}
-  .kpi .val,.kpi.big .val{font-size:24px}
-  .card{padding:14px}
-}
-@media (max-width:720px){
-  .wrap{padding:0 12px 64px}
-  .bar-top{margin:0 -12px 12px;padding-left:12px;padding-right:12px}
-  h1{font-size:19px}
-  .tscroll.desk{display:none}
-  .mcards{display:block}
-  .mvr-tiles{grid-template-columns:1fr}
-  .cmp>.nm{grid-column:1/-1;font-weight:700;color:var(--navy)}
-  .cmp.h{display:none}
-  .seg{width:100%}
-  .seg button{flex:1;padding:0 6px}
-  #market{flex:1;min-width:0}
-  .alert{padding:10px}
-  .kpi .foot{gap:4px}
-  .kpi .foot .sub{width:100%}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Profit Cockpit | HopeRise Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/css/profit.css">
 </head>
-<body>
-<div class="wrap">
-  <div class="bar-top">
-    <div class="line1">
-      <h1>Profit Cockpit</h1>
-      <div class="row" style="gap:8px;min-width:0"><span class="dot" id="syncdot"></span><span class="sub" id="syncline" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span></div>
-    </div>
-    <div class="line2">
-      <div class="seg" id="range" role="tablist" aria-label="Date range">
-        <button data-r="today" class="on">Today</button><button data-r="yesterday">Yesterday</button><button data-r="7d">7D</button><button data-r="14d">14D</button>
+<body class="min-h-screen text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
+
+  <!-- Mobile Top App Header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 px-3.5 py-2.5 flex items-center justify-between" style="padding-top: max(0.6rem, env(safe-area-inset-top));">
+    <div class="flex items-center gap-2.5">
+      <button id="mobile-menu-btn" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" class="p-2 -ml-1 text-slate-700 hover:bg-slate-100 active:bg-slate-200 rounded-lg touch-target flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-[#635bff] rounded-md flex items-center justify-center text-white shadow-xs font-bold text-[10px]">HR</div>
+        <span class="font-bold text-sm text-[#061b31] tracking-tight">Profit Cockpit</span>
       </div>
-      <select id="market" aria-label="Market filter"></select>
     </div>
-    <nav class="nav"><a href="/admin">Overview</a><a href="/admin/transactions.html">Transactions</a><a href="/admin/stores.html">Stores</a><a href="/admin/profit-classic.html">Classic view</a><a href="#" id="logout">Sign out</a></nav>
+    <div class="flex items-center gap-1.5">
+      <button onclick="refreshProfit()" id="mobile-refresh-btn" aria-label="Refresh Data" class="p-2 text-slate-600 hover:bg-slate-100 active:bg-slate-200 rounded-lg touch-target flex items-center justify-center">
+        <svg id="mobile-refresh-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </button>
+      <button onclick="logout()" aria-label="Logout" class="p-2 -mr-1 text-slate-400 hover:text-slate-600 rounded-lg touch-target flex items-center justify-center">
+        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar (injected by admin-common.js) -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out"></aside>
+  <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 hidden lg:hidden transition-opacity" onclick="closeSidebar()"></div>
+
+  <!-- Main Workspace -->
+  <main class="lg:ml-64 pt-14 lg:pt-0 min-h-screen">
+    <div class="max-w-[1560px] mx-auto p-3.5 sm:p-6 lg:p-8 space-y-4 sm:space-y-5">
+
+      <!-- Top Operations Bar -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 pb-2 border-b border-gray-200">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="pulse-dot" id="fresh-dot"></span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="freshness-label" aria-live="polite">Live Operating Cockpit</span>
+            <span class="text-xs text-slate-300">·</span>
+            <span class="text-xs text-slate-400 font-mono" id="last-updated-label">Syncing data…</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#061b31]">Financial Overview &amp; Net Profit</h1>
+        </div>
+        
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button onclick="exportProfitCSV()" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-md bg-white border border-gray-200 hover:border-gray-300 text-xs font-medium text-slate-700 shadow-xs flex items-center gap-1.5 transition-all">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>Export CSV</span>
+          </button>
+
+          <button id="refresh-btn" onclick="refreshProfit()" class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-md bg-[#635bff] hover:bg-[#533afd] text-white text-xs font-medium shadow-xs flex items-center gap-1.5 transition-all">
+            <svg id="refresh-icon" class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span id="refresh-label">Refresh</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Control Deck: Filter Pills & Range Switcher -->
+      <div class="stripe-card p-3 sm:p-3.5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          
+          <!-- Quick Date Range Segmented Control -->
+          <div class="flex items-center bg-[#eef3f8] p-1 rounded-lg overflow-x-auto scroll-smooth-x no-scrollbar" id="range-pills">
+            <button onclick="selectRange('today')" class="stripe-pill active" data-range="today">Today</button>
+            <button onclick="selectRange('yesterday')" class="stripe-pill inactive" data-range="yesterday">Yesterday</button>
+            <button onclick="selectRange('last7days')" class="stripe-pill inactive" data-range="last7days">Last 7D</button>
+            <button onclick="selectRange('last30days')" class="stripe-pill inactive" data-range="last30days">Last 30D</button>
+            <button onclick="selectRange('thisMonth')" class="stripe-pill inactive" data-range="thisMonth">This Month</button>
+            <button onclick="selectRange('lastMonth')" class="stripe-pill inactive" data-range="lastMonth">Last Month</button>
+            <button onclick="selectRange('allTime')" class="stripe-pill inactive" data-range="allTime">All Time</button>
+          </div>
+
+          <!-- Campaign Select Dropdown & Timezone Note -->
+          <div class="flex items-center gap-3">
+            <div class="relative min-w-[200px] flex-1 sm:flex-none">
+              <select id="filter-campaign" onchange="loadProfit()" class="w-full bg-white border border-gray-200 text-[#061b31] text-xs sm:text-sm font-medium rounded-md py-1.5 px-3 pr-8 focus:ring-1 focus:ring-[#635bff] focus:outline-none transition-all cursor-pointer">
+                <option value="all">All Campaigns</option>
+              </select>
+            </div>
+            <div class="hidden sm:block text-right">
+              <p class="text-[11px] text-slate-400 font-medium" id="timezone-note">Local Timezone</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Alerts / Notification Banners -->
+      <div id="profit-error" class="hidden rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 flex items-center justify-between gap-3" role="alert">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span id="profit-error-text" aria-live="assertive">Profit data could not be loaded.</span>
+        </div>
+        <button type="button" class="shrink-0 rounded bg-red-700 px-3 py-1 text-xs font-semibold text-white hover:bg-red-800 transition-colors" onclick="loadProfit()">Retry</button>
+      </div>
+
+      <div id="profit-quality" class="hidden rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 flex items-center gap-2" role="status" aria-live="polite">
+        <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span id="profit-quality-text"></span>
+      </div>
+
+      <!-- HERO: True Net Withdrawable Profit -->
+      <div class="stripe-card p-6 sm:p-8 bg-gradient-to-r from-white to-[#fbfcff]">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-[#00875a] uppercase tracking-wider border border-emerald-100">Operating Net Profit</span>
+              <span class="text-xs font-mono font-bold text-slate-500" id="hero-currency-badge">EUR (€)</span>
+              <span class="text-xs text-slate-300">·</span>
+              <span class="text-xs text-slate-400 font-medium" id="hero-window">Selected Window</span>
+            </div>
+            
+            <div class="flex items-baseline gap-3 flex-wrap">
+              <p class="text-4xl sm:text-6xl font-bold text-[#061b31] tracking-tight tabular-numbers" id="hero-profit">€0.00</p>
+            </div>
+            
+            <p class="text-xs text-slate-500 mt-2 font-medium flex items-center gap-1.5">
+              <span class="inline-block w-2 h-2 rounded-full bg-[#00875a]"></span>
+              Gross Collected − Stripe Processing Fees − Meta Ad Spend = Real Liquid Profit
+            </p>
+          </div>
+
+          <div class="flex items-center gap-6 border-t lg:border-t-0 lg:border-l border-slate-100 pt-4 lg:pt-0 lg:pl-8">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-0.5">Net Profit Margin</p>
+              <p class="text-3xl font-bold text-[#00875a] tabular-numbers" id="hero-margin">—</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 font-medium" id="hero-margin-sub">of gross collected</p>
+            </div>
+            <div class="h-10 w-[1px] bg-slate-200"></div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-0.5">Settled Payments</p>
+              <p class="text-3xl font-bold text-[#061b31] tabular-numbers" id="hero-txns">0</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 font-medium" id="hero-txns-sub">completed transactions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Waterfall Pipeline (2x2 on mobile, 1x4 on desktop) -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+        <!-- Gross Card -->
+        <div class="stripe-card p-3 sm:p-4 space-y-1 sm:space-y-1.5">
+          <div class="flex items-center justify-between text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>1. Gross Rev</span>
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 font-normal" id="wf-gross-count">0 txns</span>
+          </div>
+          <p class="text-lg sm:text-2xl lg:text-3xl font-bold text-[#061b31] tabular-numbers truncate" id="wf-gross">€0.00</p>
+          <div class="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] sm:text-xs text-slate-500">
+            <span>Tips inc:</span>
+            <span class="font-semibold text-blue-600 font-mono" id="wf-tips">€0.00</span>
+          </div>
+        </div>
+
+        <!-- Stripe Fees Card -->
+        <div class="stripe-card p-3 sm:p-4 space-y-1 sm:space-y-1.5">
+          <div class="flex items-center justify-between text-[10px] sm:text-xs font-semibold text-[#df1b41] uppercase tracking-wider">
+            <span>2. Processor Fees</span>
+            <span class="text-[10px] sm:text-[11px] font-mono font-semibold" id="wf-fee-pct">0.0%</span>
+          </div>
+          <p class="text-lg sm:text-2xl lg:text-3xl font-bold text-[#df1b41] tabular-numbers truncate" id="wf-fees">−€0.00</p>
+          <div class="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] sm:text-xs text-slate-500">
+            <span>Stripe fees:</span>
+            <span class="text-slate-600 truncate">Interchange</span>
+          </div>
+        </div>
+
+        <!-- Ad Spend Card -->
+        <div class="stripe-card p-3 sm:p-4 space-y-1 sm:space-y-1.5">
+          <div class="flex items-center justify-between text-[10px] sm:text-xs font-semibold text-indigo-600 uppercase tracking-wider">
+            <span>3. Meta Spend</span>
+            <span class="text-[10px] sm:text-[11px] font-mono font-semibold truncate" id="wf-spend-native-badge">$0.00</span>
+          </div>
+          <p class="text-lg sm:text-2xl lg:text-3xl font-bold text-indigo-600 tabular-numbers truncate" id="wf-spend">€0.00</p>
+          <div class="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] sm:text-xs text-slate-500">
+            <span>Preset:</span>
+            <span class="font-mono text-indigo-500" id="wf-spend-preset">last_30d</span>
+          </div>
+        </div>
+
+        <!-- Net Operating Profit Card -->
+        <div class="stripe-card p-3 sm:p-4 space-y-1 sm:space-y-1.5 bg-[#edf9f3] border-[#c2ecd7]">
+          <div class="flex items-center justify-between text-[10px] sm:text-xs font-semibold text-[#00875a] uppercase tracking-wider">
+            <span>4. Net Profit</span>
+            <span class="text-[10px] sm:text-[11px] font-mono font-bold" id="wf-margin-badge">0.0%</span>
+          </div>
+          <p class="text-lg sm:text-2xl lg:text-3xl font-bold text-[#00875a] tabular-numbers truncate" id="wf-net">€0.00</p>
+          <div class="pt-1.5 sm:pt-2 border-t border-[#d5f3e4] flex items-center justify-between text-[10px] sm:text-xs text-[#00875a]">
+            <span>Net margin:</span>
+            <span class="font-semibold">Liquid</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signals Deck (KPI Intelligence Grid) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-3">
+        <div class="stripe-card p-2.5 sm:p-3.5">
+          <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">Avg. Order (AOV)</p>
+          <p class="text-base sm:text-xl font-bold text-[#061b31] tabular-numbers mt-0.5 sm:mt-1 truncate" id="signal-aov">€0.00</p>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">gross / payment</p>
+        </div>
+
+        <div class="stripe-card p-2.5 sm:p-3.5">
+          <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-indigo-600">ROAS</p>
+          <p class="text-base sm:text-xl font-bold text-indigo-600 tabular-numbers mt-0.5 sm:mt-1 truncate" id="signal-roas">—</p>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate" id="signal-roas-sub">gross / spend</p>
+        </div>
+
+        <div class="stripe-card p-2.5 sm:p-3.5">
+          <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-indigo-600">Cost / donation</p>
+          <p class="text-base sm:text-xl font-bold text-indigo-600 tabular-numbers mt-0.5 sm:mt-1 truncate" id="signal-cpa">—</p>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate" id="signal-cpa-sub">cost / purchase</p>
+        </div>
+
+        <div class="stripe-card p-2.5 sm:p-3.5">
+          <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-blue-600">Tips Captured</p>
+          <p class="text-base sm:text-xl font-bold text-blue-600 tabular-numbers mt-0.5 sm:mt-1 truncate" id="signal-tips">€0.00</p>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate" id="signal-tips-pct">0% of gross</p>
+        </div>
+
+        <div class="stripe-card p-2.5 sm:p-3.5">
+          <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">Fee Drag</p>
+          <p class="text-base sm:text-xl font-bold text-[#df1b41] tabular-numbers mt-0.5 sm:mt-1 truncate" id="signal-fee-drag">0.0%</p>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">effective rate</p>
+        </div>
+
+        <div class="stripe-card p-2.5 sm:p-3.5">
+          <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">FX Exposure</p>
+          <p class="text-base sm:text-xl font-bold text-slate-800 tabular-numbers mt-0.5 sm:mt-1 truncate" id="signal-fx">0 Currencies</p>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">ECB converted</p>
+        </div>
+      </div>
+
+      <!-- Settlement Trajectory Chart (Synchronized with Main Date Range) -->
+      <div class="stripe-card p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-sm font-bold text-[#061b31]">Settlement Trajectory Matrix</h2>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200" id="chart-type-badge">24H Hourly Velocity</span>
+            </div>
+            <p class="text-xs text-slate-400" id="chart-subtitle">Gross revenue volume vs net profit per settlement interval (aligned with selected filter)</p>
+          </div>
+
+          <!-- Dynamic Legend & Status -->
+          <div class="flex items-center gap-4 text-xs font-medium text-slate-600">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#635bff]"></span> Gross Collected</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#00875a]"></span> Net Profit</span>
+          </div>
+        </div>
+
+        <div class="h-44 flex items-end gap-1 sm:gap-2 pt-4 pb-1 border-b border-slate-100 overflow-x-auto scroll-smooth-x" id="chart-bars-container">
+          <!-- Rendered via JS -->
+        </div>
+        <div id="chart-tooltip" class="text-center text-xs text-slate-500 font-mono h-5 flex items-center justify-center transition-all">Hover over any bar to inspect interval settlement &amp; FX</div>
+      </div>
+
+      <!-- Main Data Sections: Campaigns & Stores Grid -->
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+        
+        <!-- Campaign Performance Matrix (2 cols on xl) -->
+        <div class="xl:col-span-2 stripe-card p-5 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-sm font-bold text-[#061b31]">Campaign Attribution Matrix</h2>
+              <p class="text-xs text-slate-400">Unit economics, Meta ad spend attribution, and campaign-level net ROI</p>
+            </div>
+
+            <!-- Campaign Filter Tabs -->
+            <div class="flex items-center gap-1 bg-[#eef3f8] p-0.5 rounded-md text-xs font-semibold">
+              <button onclick="filterCampaignTable('active')" id="tab-camp-active" class="camp-tab px-2.5 py-1 rounded bg-white shadow-sm text-[#061b31]" data-filter="active">Active <span id="badge-active-count" class="ml-1 text-[10px] font-bold px-1 rounded-full bg-emerald-100 text-[#00875a]">0</span></button>
+              <button onclick="filterCampaignTable('ads')" id="tab-camp-ads" class="camp-tab px-2.5 py-1 rounded text-slate-500 hover:text-[#061b31]" data-filter="ads">Ads Only <span id="badge-ads-count" class="ml-1 text-[10px] font-bold px-1 rounded-full bg-indigo-100 text-indigo-700">0</span></button>
+              <button onclick="filterCampaignTable('all')" id="tab-camp-all" class="camp-tab px-2.5 py-1 rounded text-slate-500 hover:text-[#061b31]" data-filter="all">All <span id="badge-all-count" class="ml-1 text-[10px] font-bold px-1 rounded-full bg-slate-200 text-slate-700">0</span></button>
+            </div>
+          </div>
+
+          <!-- Matrix Search Box -->
+          <div>
+            <input type="text" id="campaign-search" placeholder="Search campaign name, UTM, or ID..." oninput="searchCampaigns(this.value)" class="w-full bg-[#f8fafd] border border-gray-200 text-xs rounded-md py-1.5 px-3 text-[#061b31] placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#635bff]">
+          </div>
+
+          <div class="scroll-smooth-x rounded border border-slate-200 max-h-[480px] overflow-y-auto">
+            <table class="w-full stripe-table text-left">
+              <thead>
+                <tr>
+                  <th class="sticky-col">Campaign</th>
+                  <th class="text-right">Revenue</th>
+                  <th class="text-right">Tips</th>
+                  <th class="text-right">Fees</th>
+                  <th class="text-right">Net</th>
+                  <th class="text-right">Ad Spend</th>
+                  <th class="text-right">Profit</th>
+                  <th class="text-right">ROAS</th>
+                  <th class="text-right">CPA</th>
+                </tr>
+              </thead>
+              <tbody id="campaign-table-body" class="font-mono text-xs">
+                <tr><td colspan="9" class="text-center py-6 text-slate-400">Loading campaign intelligence…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Store Distribution & Currency Breakdown (1 col on xl) -->
+        <div class="space-y-5">
+          
+          <!-- Store Volume Share Card -->
+          <div class="stripe-card p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-bold text-[#061b31]">Store Processing Matrix</h2>
+              <span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-mono font-bold" id="store-count-badge">0 Stores</span>
+            </div>
+            <p class="text-xs text-slate-400">Volume distribution across rotating merchant fronts</p>
+            
+            <div class="space-y-2.5" id="stores-breakdown-list">
+              <p class="text-xs text-slate-400 py-3 text-center">Loading store statistics…</p>
+            </div>
+          </div>
+
+          <!-- Currency Distribution Card -->
+          <div class="stripe-card p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-bold text-[#061b31]">Currency Breakdown</h2>
+              <span class="text-xs text-slate-400 font-mono">ECB Rates</span>
+            </div>
+            <p class="text-xs text-slate-400">Historical daily FX conversions normalized to base EUR</p>
+            
+            <div class="space-y-2" id="currency-breakdown-container">
+              <p class="text-xs text-slate-400 py-3 text-center">Loading currency stats…</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Completed Transactions Feed (All Records for Selected Range) -->
+      <div class="stripe-card p-5 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-sm font-bold text-[#061b31]">Completed Transactions</h2>
+              <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-50 text-[#00875a] border border-emerald-100" id="txns-count-badge">0 Transactions</span>
+            </div>
+            <p class="text-xs text-slate-400">Live feed of all processed payments with full fee, tip, and FX provenance</p>
+          </div>
+          
+          <div>
+            <input type="text" id="txn-search" placeholder="Search donor, ID, campaign..." oninput="searchTransactions(this.value)" class="bg-[#f8fafd] border border-gray-200 text-xs rounded-md py-1.5 px-3 text-[#061b31] placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#635bff]">
+          </div>
+        </div>
+
+        <div class="scroll-smooth-x rounded border border-slate-200 max-h-[480px] overflow-y-auto">
+          <table class="w-full stripe-table text-left">
+            <thead>
+              <tr>
+                <th class="sticky-col">Donor / Customer</th>
+                <th>Campaign</th>
+                <th class="text-right">Donation</th>
+                <th class="text-right">Tip</th>
+                <th class="text-right">Gross Total</th>
+                <th class="text-right">Stripe Fee</th>
+                <th class="text-right">Net Revenue</th>
+                <th>Currency</th>
+                <th class="text-right">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="recent-transactions-body" class="font-mono text-xs">
+              <tr><td colspan="9" class="text-center py-6 text-slate-400">Loading transactions…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Transaction Detail Modal (Drawer Style) -->
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" onclick="closeDetail()"></div>
+    <div class="absolute inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-xl bg-white rounded-t-2xl sm:rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-gray-200">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-slate-50/70">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-md bg-[#edf9f3] text-[#00875a] flex items-center justify-center font-bold text-xs">✓</div>
+          <div>
+            <h3 id="detail-title" class="text-base font-bold text-[#061b31]">Transaction Details</h3>
+            <p class="text-[11px] text-slate-400 font-mono" id="detail-id-label">Payment ID</p>
+          </div>
+        </div>
+        <button id="detail-close" aria-label="Close transaction details" onclick="closeDetail()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-100 touch-target flex items-center justify-center">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto flex-1 space-y-3" id="detail-content">
+        <p class="text-slate-400 text-xs">Loading transaction metadata…</p>
+      </div>
+    </div>
   </div>
 
-  <div class="err" id="err"></div>
-  <div class="loading" id="loading">Loading cockpit…</div>
-  <section class="kpis" id="kpis"></section>
+  <!-- FX Lineage Popover Tooltip -->
+  <div id="fx-popover-card" class="popover-card" role="tooltip"></div>
 
-
-  <section class="grid2">
-    <div class="card">
-      <div class="row between wrapflex" style="margin-bottom:6px">
-        <div><h2>Daily performance</h2><div class="sub">Spend vs net revenue, profit line, ROI and card failures per day</div></div>
-        <div class="legend"><span><i style="background:#a5b4fc"></i>Ad spend</span><span><i style="background:#34b27f"></i>Net revenue</span><span><i style="background:#061b31"></i>Profit</span></div>
-      </div>
-      <div class="chartbox" id="chart1"></div>
-    </div>
-    <div class="card">
-      <div><h2>Today's pace</h2><div class="sub">Cumulative net revenue by hour, Athens time</div></div>
-      <div class="chartbox" id="chart2"></div>
-      <div class="sub" id="pace-note" style="margin-top:6px"></div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="row between wrapflex" style="margin-bottom:8px">
-      <div><h2>Markets: where we make money and where we don't</h2><div class="sub">ROI = net revenue (after Stripe fees) ÷ ad spend; break-even is 1.0×. Tap a market for daily detail. Badges use the last 3 days.</div></div>
-    </div>
-    <div class="tscroll desk"><table id="mtable"></table></div>
-    <div class="mcards" id="mcards"></div>
-  </section>
-
-  <section class="card">
-    <div class="row between wrapflex"><div><h2>Meta says vs what actually happened</h2><div class="sub" id="cmpwin"></div></div>
-      <div class="legend"><span><i style="background:#f59e0b"></i>Meta reported</span><span><i style="background:#061b31"></i>True (our records)</span></div></div>
-    <div class="mvr-tiles" id="cmptiles"></div>
-    <div class="tscroll desk"><table class="mvr" id="cmptable"></table></div>
-    <div class="mcards" id="cmpcards"></div>
-    <div class="sub" style="margin-top:10px">True ROAS = money collected (donation + tip, before fees) ÷ ad spend, the same basis as Meta's purchase value. Gap = how far Meta is from our records; within ±10% is normal attribution noise.</div>
-  </section>
-
-  <section class="grid11">
-    <div class="card">
-      <div><h2>Payment success rate</h2><div class="sub">Share of payments that went through</div></div>
-      <div class="chartbox" id="chart3"></div>
-      <div class="sub" id="leg3" style="margin-top:6px"></div>
-    </div>
-    <div class="card">
-      <div><h2>Card failures</h2><div class="sub">Failed payment attempts per day by reason</div></div>
-      <div class="chartbox" id="chart4"></div>
-      <div class="legend" style="margin-top:6px"><span><i style="background:#df1b41"></i>Bank decline</span><span><i style="background:#f59e0b"></i>3D Secure</span><span><i style="background:#7c3aed"></i>Risk block</span><span><i style="background:#94a3b8"></i>Funds / card data</span></div>
-    </div>
-  </section>
-
-  <section class="alerts" id="alerts" aria-label="Needs attention"></section>
-
-  <section class="grid11">
-    <div class="card">
-      <h2>Why payments fail <span class="sub" id="reasonwin"></span></h2>
-      <div class="sub" style="margin-bottom:6px">The tag shows whether we can act on it</div>
-      <div id="reasons"></div>
-    </div>
-    <div class="card">
-      <h2>Funnel</h2>
-      <div class="sub" style="margin-bottom:10px" id="funnelwin"></div>
-      <div id="funnel"></div>
-    </div>
-  </section>
-
-</div>
-
-<script>
-(function(){
-'use strict';
-var D=null, days=[], N=0, LAST=0;
-var TH={roiCut:1.2,roiScale:2.5,minSpend:40,minDon:8,minPaid:55,payDrop:10,minAttempts:25,metaGap:10};
-var $=function(s){return document.querySelector(s)};
-var state={range:'today',market:'all',open:{},allAlerts:false};
-
-/* ---------- helpers ---------- */
-function eur(v,d){v=+v||0;var s=Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:d==null?0:d,maximumFractionDigits:d==null?0:d});return (v<0?'−':'')+'€'+s}
-function x2(v){return v==null||!isFinite(v)?'—':v.toFixed(2)+'×'}
-function pct(v){return v==null||!isFinite(v)?'—':v.toFixed(0)+'%'}
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function short(k){var c=D&&D.campaigns.filter(function(x){return x.key===k})[0];return ({'glioblastoma-serafina':'Italy','glioblastoma-mariana':'Portugal','glioblastoma-lucia':'Spain','glioblastoma-mia':'Australia','glioblastoma-olivia':'Canada','glejak-natalia':'Poland','glioblastoma-grace':'UK (organic)'})[k]||(c&&c.name)||k}
-var COLORS={'glioblastoma-serafina':'#635bff','glioblastoma-mariana':'#00875a','glioblastoma-lucia':'#d97706','glioblastoma-mia':'#0ea5e9','glioblastoma-olivia':'#db2777','glejak-natalia':'#7c3aed','glioblastoma-grace':'#64748d'};
-function fmtDay(d){var t=new Date(d+'T00:00:00Z');return t.toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'})}
-function cw(el,min){return Math.max(min||260,Math.floor(el.getBoundingClientRect().width)||min||260)}
-function isMobile(){return window.innerWidth<=720}
-
-/* ---------- aggregation ---------- */
-var FIELDS=['spend','gross','net','fees','tips','n','v','pay','buy','mp','mv'];
-function zero(){var a={};FIELDS.forEach(function(f){a[f]=0});return a}
-function camps(){return D.campaigns.filter(function(c){return state.market==='all'||c.key===state.market})}
-function addDay(a,x){a.spend+=x.spend;a.gross+=x.gross;a.net+=x.net;a.fees+=x.fees;a.tips+=x.tips;a.n+=x.n;a.v+=x.visitors;a.pay+=x.addPay;a.buy+=x.purchases;a.mp+=x.mp;a.mv+=x.mv}
-function dayAgg(i){var a=zero();camps().forEach(function(c){addDay(a,c.days[i])});a.profit=a.net-a.spend;return a}
-function sumIdx(idx){var a=zero();idx.forEach(function(i){var d=dayAgg(i);FIELDS.forEach(function(f){a[f]+=d[f]})});a.profit=a.net-a.spend;return a}
-function derived(a){return {roi:a.spend>0?a.net/a.spend:null,roas:a.spend>0?a.gross/a.spend:null,mroas:a.spend>0?a.mv/a.spend:null,cpd:a.n>0&&a.spend>0?a.spend/a.n:null,paid:a.pay>0?a.buy/a.pay*100:null,feePct:a.gross>0?a.fees/a.gross*100:null}}
-function windowIdx(){
-  var r=state.range;
-  if(r==='today')return {cur:[LAST],prev:[LAST-1],label:'today',prevLabel:'yesterday'};
-  if(r==='yesterday')return {cur:[LAST-1],prev:[LAST-2],label:'yesterday',prevLabel:'the day before'};
-  if(r==='7d'){var c=[],p=[];for(var i=LAST-6;i<=LAST;i++)c.push(i);for(var j=LAST-13;j<=LAST-7;j++)p.push(j);return {cur:c,prev:p,label:'last 7 days',prevLabel:'the 7 days before'}}
-  var all=[];for(var k=0;k<N;k++)all.push(k);return {cur:all,prev:null,label:'last 14 days',prevLabel:null};
-}
-function comparable(){
-  var w=windowIdx(),cur=sumIdx(w.cur),prev=w.prev?sumIdx(w.prev):null;
-  if(state.range==='today'&&prev){
-    var f=(D.hourNow+1)/24;
-    if(state.market==='all'){prev.net=D.hourly.yesterday[D.hourNow];prev.n=D.hourly.yesterdayN[D.hourNow];['spend','gross','fees','v','pay','buy','mp','mv'].forEach(function(k){prev[k]*=f})}
-    else ['net','n','spend','gross','fees','v','pay','buy','mp','mv'].forEach(function(k){prev[k]*=f});
-    prev.profit=prev.net-prev.spend;
-  }
-  return {w:w,cur:cur,prev:prev};
-}
-function delta(cur,prev,mode){
-  if(prev==null||cur==null||!isFinite(prev)||prev===0)return '';
-  var d=(cur-prev)/Math.abs(prev)*100;if(!isFinite(d))return '';
-  var cls=mode==='flat'?'flat':(Math.abs(d)<3?'flat':((d>0)===(mode==='up')?'good':'bad'));
-  return '<span class="delta '+cls+'">'+(d>0?'▲':'▼')+' '+Math.abs(d).toFixed(0)+'%</span>';
-}
-function deltaPts(cur,prev,mode){
-  if(prev==null||cur==null)return '';var d=cur-prev;var cls=Math.abs(d)<3?'flat':((d>0)===(mode==='up')?'good':'bad');
-  return '<span class="delta '+cls+'">'+(d>0?'▲':'▼')+' '+Math.abs(d).toFixed(0)+' pts</span>';
-}
-function spark(vals,color){
-  var w=200,h=34,mx=Math.max.apply(null,vals.concat([0.0001])),mn=Math.min.apply(null,vals.concat([0])),rg=mx-mn||1;
-  var pts=vals.map(function(v,i){return [i/(vals.length-1)*w,h-3-(v-mn)/rg*(h-8)]});
-  var d=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)}).join(' '),last=pts[pts.length-1];
-  return '<svg class="spark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" aria-hidden="true"><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="1.8" vector-effect="non-scaling-stroke"/><circle cx="'+last[0]+'" cy="'+last[1]+'" r="2.6" fill="'+color+'"/></svg>';
-}
-function seriesFor(f){var out=[];for(var i=0;i<N;i++)out.push(f(dayAgg(i)));return out}
-
-/* ---------- KPIs ---------- */
-function renderKpis(){
-  var c=comparable(),cur=c.cur,pv=c.prev,dc=derived(cur),dp=pv?derived(pv):{};
-  var pl=c.w.prevLabel?('vs '+c.w.prevLabel+(state.range==='today'?', same time':'')):'';
-  var roiNote=dc.roi==null?'no ad spend in this window':'Meta says '+x2(dc.mroas)+' ROAS · true '+x2(dc.roas);
-  var tiles=[
-    {big:1,lbl:'Net profit · '+c.w.label,val:eur(cur.profit),d:delta(cur.profit,pv&&pv.profit,'up'),note:'net revenue − ad spend',sp:seriesFor(function(a){return a.profit}),col:cur.profit>=0?'#00875a':'#df1b41'},
-    {big:1,lbl:'ROI (net ÷ spend)',val:x2(dc.roi),d:deltaPts(dc.roi==null?null:dc.roi*100,dp.roi==null?null:dp.roi*100,'up'),note:roiNote,sp:seriesFor(function(a){return a.spend>0?a.net/a.spend:0}),col:'#635bff'},
-    {lbl:'Net revenue',val:eur(cur.net),d:delta(cur.net,pv&&pv.net,'up'),sp:seriesFor(function(a){return a.net}),col:'#00875a'},
-    {lbl:'Ad spend',val:eur(cur.spend),d:delta(cur.spend,pv&&pv.spend,'flat'),sp:seriesFor(function(a){return a.spend}),col:'#6366f1'},
-    {lbl:'Donations',val:String(cur.n),d:delta(cur.n,pv&&pv.n,'up'),sp:seriesFor(function(a){return a.n}),col:'#0ea5e9'},
-    {lbl:'Cost per donation',val:dc.cpd==null?'—':eur(dc.cpd,2),d:delta(dc.cpd,dp.cpd,'down'),sp:seriesFor(function(a){return a.n>0&&a.spend>0?a.spend/a.n:0}),col:'#d97706'},
-    {lbl:'Payment success',val:pct(dc.paid),d:deltaPts(dc.paid,dp.paid,'up'),note:'card entered → paid',sp:seriesFor(function(a){return a.pay>0?a.buy/a.pay*100:0}),col:'#00875a'},
-    {lbl:'Stripe fee drag',val:dc.feePct==null?'—':dc.feePct.toFixed(1)+'%',d:delta(dc.feePct,dp.feePct,'down'),note:'of gross collected',sp:seriesFor(function(a){return a.gross>0?a.fees/a.gross*100:0}),col:'#df1b41'}
-  ];
-  $('#kpis').innerHTML=tiles.map(function(t){
-    return '<div class="card kpi'+(t.big?' big':'')+'"><div class="lbl">'+t.lbl+'</div><div class="val mono">'+t.val+'</div><div class="foot"><span class="sub">'+(t.note||'')+'</span><span>'+(t.d||'')+(t.d&&pl&&!isMobile()?' <span class="sub">'+pl+'</span>':'')+'</span></div>'+spark(t.sp,t.col)+'</div>';
-  }).join('');
-}
-
-/* ---------- Chart 1 ---------- */
-function renderChart1(){
-  var box=$('#chart1'),W=cw(box,280),small=W<520,H=small?250:300,L=small?36:44,R=small?4:10,T=14,B=small?66:76,pw=W-L-R,ph=H-T-B,fs=small?9:10;
-  var data=[];for(var i=0;i<N;i++){var a=dayAgg(i);a.d=days[i];a.i=i;data.push(a)}
-  var mx=Math.max.apply(null,data.map(function(a){return Math.max(a.spend,a.net)}).concat([100]));
-  var step=mx>1500?500:mx>800?250:100;mx=Math.ceil(mx/step)*step;
-  var mn=Math.min.apply(null,data.map(function(a){return a.profit}).concat([0]));mn=Math.floor(mn/step)*step;
-  var y=function(v){return T+ph-(v-mn)/(mx-mn)*ph},slot=pw/N,bw=Math.max(4,Math.min(15,slot/2.5));
-  var every=small?2:1;
-  var s='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Daily spend, net revenue and profit">';
-  for(var g=mn;g<=mx;g+=step){s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="'+(g===0?'#cbd5e1':'#eef2f7')+'"/><text x="'+(L-5)+'" y="'+(y(g)+4)+'" text-anchor="end" font-size="'+fs+'" fill="#8898aa">'+(g<0?'−':'')+'€'+Math.abs(g)+'</text>'}
-  var line=[];
-  data.forEach(function(a,k){
-    var cx=L+slot*k+slot/2,isT=k===LAST,op=isT?.55:1;
-    s+='<rect x="'+(cx-bw-1)+'" y="'+y(a.spend)+'" width="'+bw+'" height="'+Math.max(0,y(0)-y(a.spend))+'" rx="2" fill="#a5b4fc" opacity="'+op+'"/>';
-    s+='<rect x="'+(cx+1)+'" y="'+y(a.net)+'" width="'+bw+'" height="'+Math.max(0,y(0)-y(a.net))+'" rx="2" fill="#34b27f" opacity="'+op+'"/>';
-    line.push([cx,y(a.profit)]);
-    var roi=a.spend>30?a.net/a.spend:null,col=roi==null?'#94a3b8':(roi<1?'#df1b41':roi<1.5?'#b45309':'#00875a');
-    var f=D.failures[a.d]||{},fc=0;for(var q in f)fc+=f[q];
-    if((LAST-k)%every===0){
-      s+='<text x="'+cx+'" y="'+(H-(small?48:56))+'" text-anchor="middle" font-size="'+fs+'" fill="#64748d">'+fmtDay(a.d).replace(' Sept',' Sep').replace(' ',' ')+'</text>';
-      s+='<text x="'+cx+'" y="'+(H-(small?32:40))+'" text-anchor="middle" font-size="'+(small?10:11)+'" font-weight="700" fill="'+col+'">'+(roi==null?'–':roi.toFixed(1)+'×')+'</text>';
-      s+='<text x="'+cx+'" y="'+(H-(small?14:22))+'" text-anchor="middle" font-size="'+(small?10:11)+'" font-weight="'+(fc>=15?700:500)+'" fill="'+(fc>=15?'#df1b41':fc>=8?'#b45309':'#94a3b8')+'">'+(fc||'·')+'</text>';
-    }
-  });
-  s+='<text x="'+(L-5)+'" y="'+(H-(small?32:40))+'" text-anchor="end" font-size="9" fill="#8898aa">ROI</text><text x="'+(L-5)+'" y="'+(H-(small?14:22))+'" text-anchor="end" font-size="9" fill="#8898aa">fails</text>';
-  s+='<path d="'+line.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)}).join(' ')+'" fill="none" stroke="#061b31" stroke-width="2"/>';
-  line.forEach(function(p,i){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(i===LAST?4:2.4)+'" fill="'+(i===LAST?'#fff':'#061b31')+'" stroke="#061b31" stroke-width="'+(i===LAST?2:0)+'"/>'});
-  s+='<text x="'+(L+slot*LAST+slot/2)+'" y="'+(T+6)+'" text-anchor="middle" font-size="9" fill="#8898aa">so far</text>';
-  data.forEach(function(a,k){s+='<rect class="hit" data-i="'+k+'" x="'+(L+slot*k)+'" y="'+T+'" width="'+slot+'" height="'+(H-T)+'" fill="transparent"/>'});
-  s+='</svg><div class="tip" id="tip1"></div>';
-  box.innerHTML=s;
-  var tip=$('#tip1');
-  function show(r){var a=data[+r.dataset.i],f=D.failures[a.d]||{},fc=0;for(var q in f)fc+=f[q];
-    tip.innerHTML='<b>'+fmtDay(a.d)+(a.i===LAST?' (so far)':'')+'</b><div class="r"><span>Ad spend</span><span>'+eur(a.spend)+'</span></div><div class="r"><span>Net revenue</span><span>'+eur(a.net)+'</span></div><div class="r"><span>Profit</span><b>'+eur(a.profit)+'</b></div><div class="r"><span>ROI</span><span>'+(a.spend>0?x2(a.net/a.spend):'—')+'</span></div><div class="r"><span>Donations</span><span>'+a.n+'</span></div><div class="r"><span>Card failures</span><span>'+fc+'</span></div>';
-    var bb=box.getBoundingClientRect(),rr=r.getBoundingClientRect();var left=rr.left-bb.left+rr.width/2+10;if(left>bb.width-180)left=rr.left-bb.left-180;if(left<0)left=0;tip.style.left=left+'px';tip.style.top='6px';tip.style.opacity=1}
-  box.querySelectorAll('.hit').forEach(function(r){
-    r.addEventListener('mouseenter',function(){show(r)});r.addEventListener('mouseleave',function(){tip.style.opacity=0});
-    r.addEventListener('click',function(e){show(r);e.stopPropagation()});
-  });
-  document.addEventListener('click',function(){tip.style.opacity=0},{once:true});
-}
-
-/* ---------- Chart 2 ---------- */
-function renderChart2(){
-  var box=$('#chart2'),W=cw(box,260),H=W<400?200:250,L=40,R=8,T=12,B=26,pw=W-L-R,ph=H-T-B;
-  var ty=D.hourly.yesterday,tt=D.hourly.today,h=D.hourNow;
-  var mx=Math.max(ty[23],tt[h],100);mx=Math.ceil(mx/500)*500;
-  var x=function(i){return L+i/23*pw},y=function(v){return T+ph-v/mx*ph};
-  var s='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Cumulative net revenue by hour, today vs yesterday">';
-  for(var g=0;g<=mx;g+=mx/4){s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="#eef2f7"/><text x="'+(L-5)+'" y="'+(y(g)+4)+'" text-anchor="end" font-size="10" fill="#8898aa">€'+Math.round(g)+'</text>'}
-  [0,6,12,18,23].forEach(function(i){s+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="#8898aa">'+String(i).padStart(2,'0')+'h</text>'});
-  s+='<path d="'+ty.map(function(v,i){return (i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)}).join(' ')+'" fill="none" stroke="#b8c4d6" stroke-width="2" stroke-dasharray="5 4"/>';
-  s+='<path d="'+tt.slice(0,h+1).map(function(v,i){return (i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)}).join(' ')+'" fill="none" stroke="#00875a" stroke-width="2.6"/>';
-  s+='<circle cx="'+x(h)+'" cy="'+y(tt[h])+'" r="4.5" fill="#00875a"/><line x1="'+x(h)+'" x2="'+x(h)+'" y1="'+T+'" y2="'+(T+ph)+'" stroke="#cbd5e1" stroke-dasharray="2 3"/>';
-  s+='<text x="'+(x(23)-2)+'" y="'+(y(ty[23])-7)+'" text-anchor="end" font-size="10" fill="#8898aa">yesterday €'+Math.round(ty[23])+'</text>';
-  s+='<text x="'+Math.max(L+4,Math.min(x(h)-8,W-R))+'" y="'+(y(tt[h])+18)+'" text-anchor="'+(x(h)>W*.6?'end':'start')+'" font-size="11" font-weight="700" fill="#00875a">today €'+Math.round(tt[h])+'</text></svg>';
-  box.innerHTML=s;
-  var diff=tt[h]-ty[h];
-  $('#pace-note').innerHTML='At '+String(h).padStart(2,'0')+':59: <b style="color:'+(diff>=0?'#00875a':'#df1b41')+'">'+(diff>=0?'+':'−')+eur(Math.abs(diff))+'</b> vs yesterday at the same hour ('+D.hourly.todayN[h]+' vs '+D.hourly.yesterdayN[h]+' donations). All markets.';
-}
-
-/* ---------- Markets ---------- */
-function marketRows(){
-  var w=windowIdx(),recent=[LAST-2,LAST-1,LAST];
-  return D.campaigns.map(function(c){
-    var sum=function(idx){var a=zero();idx.forEach(function(i){addDay(a,c.days[i])});a.profit=a.net-a.spend;return a};
-    var cur=sum(w.cur),pv=w.prev?sum(w.prev):null,r3=sum(recent);
-    var roi=cur.spend>0?cur.net/cur.spend:null,proi=pv&&pv.spend>0?pv.net/pv.spend:null;
-    var paid=cur.pay>0?cur.buy/cur.pay*100:null,ppaid=pv&&pv.pay>0?pv.buy/pv.pay*100:null;
-    var r3roi=r3.spend>0?r3.net/r3.spend:null,r3paid=r3.pay>0?r3.buy/r3.pay*100:null;
-    var status='hold',why='Between the thresholds';
-    if(r3.spend<TH.minSpend){status='learn';why='Less than €'+TH.minSpend+' spend in the last 3 days, not enough to judge'}
-    else if(r3.n<TH.minDon){status='learn';why='Under '+TH.minDon+' donations in the last 3 days, still too small a sample'}
-    else if(r3roi<TH.roiCut){status='cut';why='ROI '+x2(r3roi)+' over the last 3 days is below '+TH.roiCut.toFixed(1)+'×'}
-    else if(r3roi>=TH.roiScale&&(r3paid==null||r3paid>=TH.minPaid)){status='scale';why='ROI '+x2(r3roi)+' over the last 3 days and payment success '+pct(r3paid)}
-    else if(r3roi>=TH.roiScale){status='hold';why='ROI is strong ('+x2(r3roi)+') but payment success is only '+pct(r3paid)+', fix payments before scaling'}
-    return {c:c,cur:cur,pv:pv,roi:roi,proi:proi,paid:paid,ppaid:ppaid,status:status,why:why,series:c.days.map(function(x){return x.spend>30?x.net/x.spend:0}),r3roi:r3roi,r3paid:r3paid,r3:r3};
-  }).filter(function(m){return m.cur.spend>0||m.cur.n>0}).sort(function(a,b){return b.cur.spend-a.cur.spend});
-}
-var BADGE={scale:'Scale',hold:'Hold',cut:'Cut / pause',learn:'Too early'};
-function detailRows(m){return m.c.days.slice(-7).reverse()}
-function renderMarkets(){
-  var rows=marketRows();
-  var head='<thead><tr><th>Market</th><th>Suggest</th><th>Ad spend</th><th>Net revenue</th><th>Profit</th><th>ROI</th><th>Donations</th><th>Cost / donation</th><th>Payment success</th><th>ROI · 14 days</th></tr></thead>';
-  var body=rows.map(function(m){
-    var k=m.c.key,roiTxt=m.cur.spend>=15?x2(m.roi):'<span class="sub">organic</span>';
-    var roiCol=m.roi==null||m.cur.spend<15?'':(m.roi<1?'color:#df1b41':m.roi<1.5?'color:#b45309':'color:#00875a');
-    var main='<tr class="mkt" data-k="'+k+'"><td class="name"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:'+(COLORS[k]||'#94a3b8')+';margin-right:8px"></span>'+esc(short(k))+'<small>'+esc(k)+'</small></td>'
-     +'<td><span class="badge '+m.status+'" title="'+esc(m.why)+'">'+BADGE[m.status]+'</span></td>'
-     +'<td class="mono">'+eur(m.cur.spend)+'</td><td class="mono">'+eur(m.cur.net)+'</td>'
-     +'<td class="mono" style="font-weight:700;color:'+(m.cur.profit<0?'#df1b41':'#00875a')+'">'+eur(m.cur.profit)+'</td>'
-     +'<td class="mono" style="font-weight:700;'+roiCol+'">'+roiTxt+' '+(m.proi!=null&&m.roi!=null?delta(m.roi,m.proi,'up'):'')+'</td>'
-     +'<td class="mono">'+m.cur.n+'</td><td class="mono">'+(m.cur.n>0&&m.cur.spend>0?eur(m.cur.spend/m.cur.n,2):'—')+'</td>'
-     +'<td class="mono">'+pct(m.paid)+' '+(m.ppaid!=null&&m.paid!=null?deltaPts(m.paid,m.ppaid,'up'):'')+'</td>'
-     +'<td style="width:120px">'+spark(m.series,COLORS[k]||'#94a3b8')+'</td></tr>';
-    var det='';
-    if(state.open[k]){
-      det='<tr class="detail"><td colspan="10"><div class="sub" style="margin-bottom:6px"><b>'+esc(short(k))+'</b> · '+esc(m.why)+'</div><div class="tscroll"><table><thead><tr><th>Day</th><th>Spend</th><th>Net revenue</th><th>Profit</th><th>ROI</th><th>Donations</th><th>Visitors</th><th>Card entered</th><th>Paid</th><th>Payment success</th></tr></thead><tbody>'
-       +detailRows(m).map(function(x){var r=x.spend>0?x.net/x.spend:null;return '<tr><td>'+fmtDay(x.d)+'</td><td class="mono">'+eur(x.spend)+'</td><td class="mono">'+eur(x.net)+'</td><td class="mono">'+eur(x.net-x.spend)+'</td><td class="mono">'+x2(r)+'</td><td class="mono">'+x.n+'</td><td class="mono">'+x.visitors+'</td><td class="mono">'+x.addPay+'</td><td class="mono">'+x.purchases+'</td><td class="mono">'+(x.addPay>0?pct(x.purchases/x.addPay*100):'—')+'</td></tr>'}).join('')
-       +'</tbody></table></div></td></tr>';
-    }
-    return main+det;
-  }).join('');
-  var tot=rows.reduce(function(a,m){a.spend+=m.cur.spend;a.net+=m.cur.net;a.n+=m.cur.n;return a},{spend:0,net:0,n:0});
-  $('#mtable').innerHTML=head+'<tbody>'+body+'</tbody><tfoot><tr><td class="name">All markets</td><td></td><td class="mono">'+eur(tot.spend)+'</td><td class="mono">'+eur(tot.net)+'</td><td class="mono" style="font-weight:700">'+eur(tot.net-tot.spend)+'</td><td class="mono" style="font-weight:700">'+x2(tot.spend>0?tot.net/tot.spend:null)+'</td><td class="mono">'+tot.n+'</td><td class="mono">'+(tot.n?eur(tot.spend/tot.n,2):'—')+'</td><td></td><td></td></tr></tfoot>';
-  $('#mtable').querySelectorAll('tr.mkt').forEach(function(tr){tr.addEventListener('click',function(){state.open[tr.dataset.k]=!state.open[tr.dataset.k];renderMarkets()})});
-  $('#mcards').innerHTML=rows.map(function(m){
-    var k=m.c.key,roiCol=m.roi==null||m.cur.spend<15?'#64748d':(m.roi<1?'#df1b41':m.roi<1.5?'#b45309':'#00875a');
-    var open=state.open[k];
-    return '<div class="mc" data-k="'+k+'"><div class="hd"><span class="name"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:'+(COLORS[k]||'#94a3b8')+';margin-right:8px"></span>'+esc(short(k))+'</span><span class="badge '+m.status+'">'+BADGE[m.status]+'</span></div>'
-     +'<div class="grid"><div><span>Ad spend</span><b class="mono">'+eur(m.cur.spend)+'</b></div><div><span>Net revenue</span><b class="mono">'+eur(m.cur.net)+'</b></div><div><span>Profit</span><b class="mono" style="color:'+(m.cur.profit<0?'#df1b41':'#00875a')+'">'+eur(m.cur.profit)+'</b></div>'
-     +'<div><span>ROI</span><b class="mono" style="color:'+roiCol+'">'+(m.cur.spend>=15?x2(m.roi):'organic')+'</b></div><div><span>Donations</span><b class="mono">'+m.cur.n+'</b></div><div><span>Pay success</span><b class="mono">'+pct(m.paid)+'</b></div></div>'
-     +'<div style="margin-top:8px">'+spark(m.series,COLORS[k]||'#94a3b8')+'</div>'
-     +(open?'<div class="sub" style="margin-top:8px">'+esc(m.why)+'</div><div class="days"><div class="d h"><span>Day</span><span>Spend</span><span>Net</span><span>ROI</span><span>Don.</span></div>'+detailRows(m).map(function(x){return '<div class="d mono"><span>'+fmtDay(x.d).replace(' Sept',' Sep')+'</span><span>'+eur(x.spend)+'</span><span>'+eur(x.net)+'</span><span>'+(x.spend>0?x2(x.net/x.spend):'—')+'</span><span>'+x.n+'</span></div>'}).join('')+'</div>':'<div class="sub" style="margin-top:6px">Tap for daily detail</div>')
-     +'</div>';
-  }).join('');
-  $('#mcards').querySelectorAll('.mc').forEach(function(el){el.addEventListener('click',function(){state.open[el.dataset.k]=!state.open[el.dataset.k];renderMarkets()})});
-}
-
-/* ---------- Meta vs reality ---------- */
-function cmpRows(){
-  var w=windowIdx();
-  return D.campaigns.filter(function(c){return state.market==='all'||c.key===state.market}).map(function(c){
-    var a=zero();w.cur.forEach(function(i){addDay(a,c.days[i])});
-    return {k:c.key,a:a,d:derived(a)};
-  }).filter(function(r){return r.a.spend>=15}).sort(function(a,b){return b.a.spend-a.a.spend});
-}
-function gapInfo(meta,real){
-  if(meta==null||real==null||!real||!isFinite(meta)||!isFinite(real))return '<span class="gapc ok">—</span>';
-  var g=(meta-real)/real*100,abs=Math.abs(g),cls=abs<TH.metaGap?'ok':(g<0?'low':'hi');
-  return '<span class="gapc '+cls+'" title="'+(g<0?'Meta reports less than our records':'Meta reports more than our records')+'">'+(abs<1?'match':(g>0?'+':'−')+abs.toFixed(0)+'%')+'</span>';
-}
-function mvr(a){var d=derived(a),mcpa=a.mp>0?a.spend/a.mp:null;return {
-  pur:{mt:String(Math.round(a.mp)),tt:String(a.n),gap:gapInfo(a.mp,a.n)},
-  roas:{mt:x2(d.mroas),tt:x2(d.roas),gap:gapInfo(d.mroas,d.roas)},
-  cpa:{mt:mcpa==null?'—':eur(mcpa,2),tt:d.cpd==null?'—':eur(d.cpd,2),gap:gapInfo(mcpa,d.cpd)}}}
-function renderCmp(){
-  var w=windowIdx(),rows=cmpRows(),tot=zero();
-  rows.forEach(function(r){FIELDS.forEach(function(f){tot[f]+=r.a[f]})});
-  $('#cmpwin').textContent=w.label+(state.market==='all'?' · markets with ad spend':' · '+short(state.market));
-  if(!rows.length){$('#cmptiles').innerHTML='<div class="sub" style="padding:14px 0">No ad spend in this window.</div>';$('#cmptable').innerHTML='';$('#cmpcards').innerHTML='';return}
-  var T=mvr(tot);
-  var tile=function(lbl,x,note){return '<div class="mt"><div class="lbl">'+lbl+'</div><div class="vs"><span class="m"><small>Meta</small>'+x.mt+'</span><span class="t"><small>True</small>'+x.tt+'</span></div><div class="row" style="gap:6px">'+x.gap+'<span class="sub">'+note+'</span></div></div>'};
-  $('#cmptiles').innerHTML=tile('Purchases',T.pur,'Meta vs donations recorded')+tile('ROAS',T.roas,'collected ÷ spend')+tile('Cost per purchase',T.cpa,'spend ÷ purchases');
-  var head='<thead><tr><th rowspan="2" style="vertical-align:bottom">Market</th><th class="grp sep" colspan="3">Purchases</th><th class="grp sep" colspan="3">ROAS</th><th class="grp sep" colspan="3">Cost per purchase</th></tr><tr>'
-    +[0,1,2].map(function(){return '<th class="sep">Meta</th><th>True</th><th>Gap</th>'}).join('')+'</tr></thead>';
-  var cells=function(x){return '<td class="mono m sep">'+x.mt+'</td><td class="mono t">'+x.tt+'</td><td>'+x.gap+'</td>'};
-  var row=function(nm,col,M,bold){return '<tr'+(bold?' style="background:#fafcfe"':'')+'><td class="name">'+(col?'<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:'+col+';margin-right:8px"></span>':'')+esc(nm)+'</td>'+cells(M.pur)+cells(M.roas)+cells(M.cpa)+'</tr>'};
-  $('#cmptable').innerHTML=head+'<tbody>'+rows.map(function(r){return row(short(r.k),COLORS[r.k],mvr(r.a))}).join('')+'</tbody>'+(rows.length>1?'<tfoot>'+row('All ad markets',null,T,1)+'</tfoot>':'');
-  $('#cmpcards').innerHTML=rows.map(function(r){var M=mvr(r.a);
-    var mr=function(l,x){return '<div class="mrow"><span>'+l+'</span><b class="mono" style="color:#b45309">'+x.mt+'</b><b class="mono">'+x.tt+'</b>'+x.gap+'</div>'};
-    return '<div class="mc"><div class="hd"><span class="name"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:'+(COLORS[r.k]||'#94a3b8')+';margin-right:8px"></span>'+esc(short(r.k))+'</span><span class="sub">Meta · True · Gap</span></div>'+mr('Purchases',M.pur)+mr('ROAS',M.roas)+mr('CPA',M.cpa)+'</div>'}).join('');
-}
-
-/* ---------- Payment success + failures ---------- */
-function attemptsPaid(i){var f=D.failures[days[i]]||{},ft=0;for(var q in f)ft+=f[q];var n=0;D.campaigns.forEach(function(c){n+=c.days[i].n});return {n:n,ft:ft}}
-function paidSeries(key){
-  var out=[];
-  for(var i=0;i<N;i++){
-    if(key==='attempt'){var a=attemptsPaid(i);out.push(a.n+a.ft>=15?a.n/(a.n+a.ft)*100:null);continue}
-    var p=0,b=0;D.campaigns.forEach(function(c){if(c.key===key){p+=c.days[i].addPay;b+=c.days[i].purchases}});out.push(p>=8?b/p*100:null);
-  }
-  return out;
-}
-function renderChart3(){
-  var box=$('#chart3'),W=cw(box,280),small=W<480,H=small?230:250,L=34,R=small?96:118,T=12,B=26,pw=W-L-R,ph=H-T-B;
-  var x=function(i){return L+i/(N-1)*pw},y=function(v){return T+ph-(v/100)*ph};
-  var s='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Payment success rate by day">';
-  [0,25,50,75,100].forEach(function(g){s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="#eef2f7"/><text x="'+(L-5)+'" y="'+(y(g)+4)+'" text-anchor="end" font-size="10" fill="#8898aa">'+g+'%</text>'});
-  [0,6,13].forEach(function(i){s+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="'+(i===0?'start':i===13?'end':'middle')+'" font-size="10" fill="#8898aa">'+fmtDay(days[i])+'</text>'});
-  var ser=[['attempt','Paid ÷ attempts','#061b31',2.6],['glioblastoma-serafina','Italy',COLORS['glioblastoma-serafina'],2],['glioblastoma-mariana','Portugal',COLORS['glioblastoma-mariana'],2]],ends=[];
-  ser.forEach(function(sr){var v=paidSeries(sr[0]),d='',pen=false,last=null;v.forEach(function(val,i){if(val==null){pen=false;return}d+=(pen?'L':'M')+x(i).toFixed(1)+' '+y(val).toFixed(1)+' ';pen=true;last=[i,val]});
-    s+='<path d="'+d+'" fill="none" stroke="'+sr[2]+'" stroke-width="'+sr[3]+'"/>';
-    if(last){s+='<circle cx="'+x(last[0])+'" cy="'+y(last[1])+'" r="3.5" fill="'+sr[2]+'"/>';ends.push({x:x(last[0]),ly:y(last[1]),c:sr[2],t:(small&&sr[0]==='attempt'?'Paid/attempts':sr[1])+' '+last[1].toFixed(0)+'%'})}});
-  ends.sort(function(a,b){return a.ly-b.ly});for(var e=1;e<ends.length;e++)if(ends[e].ly-ends[e-1].ly<15)ends[e].ly=ends[e-1].ly+15;
-  ends.forEach(function(e){s+='<text x="'+(e.x+8)+'" y="'+(e.ly+4)+'" font-size="'+(small?10:11)+'" font-weight="700" fill="'+e.c+'">'+e.t+'</text>'});
-  box.innerHTML=s+'</svg>';
-  $('#leg3').innerHTML='<b>Paid ÷ attempts</b> = donations ÷ (donations + failed payments), all markets, needs 15+ attempts. <b>Italy / Portugal</b> = visitors who entered card details and then paid.';
-}
-var CAT={payment_intent_authentication_failure:'3ds',authentication_required:'3ds',highest_risk_level:'risk',insufficient_funds:'funds',incorrect_cvc:'funds',expired_card:'funds',incorrect_number:'funds'};
-function cat(code){return CAT[code]||'bank'}
-var CATCOL={bank:'#df1b41','3ds':'#f59e0b',risk:'#7c3aed',funds:'#94a3b8'};
-function renderChart4(){
-  var box=$('#chart4'),W=cw(box,280),H=W<480?220:250,L=28,R=6,T=14,B=26,pw=W-L-R,ph=H-T-B,slot=pw/N,bw=Math.max(6,Math.min(20,slot*.7));
-  var tot=days.map(function(d){var f=D.failures[d]||{},t=0;for(var k in f)t+=f[k];return t}),mx=Math.max.apply(null,tot.concat([10]));mx=Math.ceil(mx/5)*5;
-  var y=function(v){return T+ph-v/mx*ph};
-  var s='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Card failures per day by reason">';
-  for(var g=0;g<=mx;g+=mx/5){s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="#eef2f7"/><text x="'+(L-5)+'" y="'+(y(g)+4)+'" text-anchor="end" font-size="10" fill="#8898aa">'+Math.round(g)+'</text>'}
-  days.forEach(function(d,i){var f=D.failures[d]||{},c={bank:0,'3ds':0,risk:0,funds:0};for(var k in f)c[cat(k)]+=f[k];var acc=0,cx=L+slot*i+slot/2;
-    ['bank','3ds','risk','funds'].forEach(function(t){if(!c[t])return;s+='<rect x="'+(cx-bw/2)+'" y="'+y(acc+c[t])+'" width="'+bw+'" height="'+(y(acc)-y(acc+c[t]))+'" fill="'+CATCOL[t]+'"'+(i===LAST?' opacity=".6"':'')+'/>';acc+=c[t]});
-    if(acc)s+='<text x="'+cx+'" y="'+(y(acc)-4)+'" text-anchor="middle" font-size="10" font-weight="600" fill="#061b31">'+acc+'</text>'});
-  [0,6,13].forEach(function(i){s+='<text x="'+(L+slot*i+slot/2)+'" y="'+(H-8)+'" text-anchor="'+(i===0?'start':i===13?'end':'middle')+'" font-size="10" fill="#8898aa">'+fmtDay(days[i])+'</text>'});
-  box.innerHTML=s+'</svg>';
-}
-var REASONS={
-  do_not_honor:['Bank refused (do not honor)','no','Bank-side risk rule; only the cardholder can resolve it'],
-  generic_decline:['Bank refused, no reason given','no','Issuer decision; nothing on our side'],
-  transaction_not_allowed:['Card not allowed for this purchase','no','Card restrictions (often prepaid/debit)'],
-  try_again_later:['Temporary bank issue','some','A retry may work; consider a "try again" prompt'],
-  card_velocity_exceeded:['Too many attempts on this card','some','Avoid repeat retries with the same card'],
-  payment_intent_authentication_failure:['3D Secure check failed','some','Partly fixable: authentication settings and Radar 3DS rules'],
-  authentication_required:['3D Secure required','some','Partly fixable: authentication settings'],
-  highest_risk_level:['Blocked by Stripe Radar','yes','Reviewable: check Radar rules / allow-list'],
-  insufficient_funds:['Not enough funds','no','Donor-side'],
-  incorrect_cvc:['Wrong security code','no','Donor-side; a clearer CVC prompt helps']
-};
-function renderReasons(){
-  var w=windowIdx(),tally={},tot=0;
-  w.cur.forEach(function(i){var f=D.failures[days[i]]||{};for(var k in f){tally[k]=(tally[k]||0)+f[k];tot+=f[k]}});
-  $('#reasonwin').textContent='· '+w.label;
-  var list=Object.keys(tally).sort(function(a,b){return tally[b]-tally[a]});
-  if(!list.length){$('#reasons').innerHTML='<div class="sub" style="padding:16px 0">No recorded failures in this window.</div>';return}
-  $('#reasons').innerHTML=list.map(function(k){var r=REASONS[k]||[k.replace(/_/g,' '),'no',''];var p=tally[k]/tot*100;
-    return '<div class="reason"><div style="min-width:0"><b style="color:var(--navy)">'+esc(r[0])+'</b><span class="tag '+r[1]+'">'+({no:'can\'t fix',some:'partly fixable',yes:'we can act'})[r[1]]+'</span><div class="sub">'+esc(r[2])+'</div><div class="hbar" style="margin-top:4px"><span style="width:'+p+'%;background:'+CATCOL[cat(k)]+'"></span></div></div><div class="mono" style="text-align:right;color:var(--navy)"><b>'+tally[k]+'</b><div class="sub">'+p.toFixed(0)+'%</div></div></div>'}).join('');
-}
-function renderFunnel(){
-  var w=windowIdx(),a=sumIdx(w.cur);$('#funnelwin').textContent=w.label+(state.market==='all'?' · all markets':' · '+short(state.market));
-  var steps=[['Landing page visitors',a.v,'#a5b4fc'],['Entered card details',a.pay,'#635bff'],['Donation completed',a.buy,'#00875a']],mx=a.v||1;
-  $('#funnel').innerHTML=steps.map(function(s,i){var rate=i?(steps[i-1][1]?s[1]/steps[i-1][1]*100:0):null;
-    return '<div style="margin-bottom:12px"><div class="row between"><span style="color:var(--navy);font-weight:600">'+s[0]+'</span><span class="mono" style="color:var(--navy)"><b>'+s[1].toLocaleString()+'</b>'+(rate!=null?' <span class="sub">'+rate.toFixed(0)+'%</span>':'')+'</span></div><div class="hbar" style="height:14px;margin-top:4px"><span style="width:'+(s[1]/mx*100)+'%;background:'+s[2]+'"></span></div></div>'}).join('')
-    +'<div class="sub">Percent is of the previous step. Visitors are unique per day, so multi-day windows count a returning visitor once per day.</div>';
-}
-
-/* ---------- alerts (below the KPIs, top 3 shown) ---------- */
-function alerts(){
-  var out=[],rows=marketRows(),base=[LAST-7,LAST-6,LAST-5,LAST-4,LAST-3];
-  rows.forEach(function(m){
-    if(m.status==='cut'&&m.r3.spend>=TH.minSpend*2)out.push({s:'red',t:'<b>'+short(m.c.key)+'</b> is at '+x2(m.r3roi)+' ROI over the last 3 days',d:'Spent '+eur(m.r3.spend)+' for '+eur(m.r3.net)+' net revenue'+(m.r3paid!=null?'. Payment success '+pct(m.r3paid)+'.':'.'),a:'market:'+m.c.key});
-    if(m.status==='scale')out.push({s:'green',t:'<b>'+short(m.c.key)+'</b>: '+x2(m.r3roi)+' ROI, '+pct(m.r3paid)+' payment success',d:'Doing well: '+m.r3.n+' donations, '+eur(m.r3.spend)+' spent in 3 days.',a:'market:'+m.c.key});
-  });
-  var sp=function(idx,key){var p=0,b=0;D.campaigns.forEach(function(c){if(c.key===key)idx.forEach(function(i){p+=c.days[i].addPay;b+=c.days[i].purchases})});return {p:p,r:p?b/p*100:null}};
-  D.campaigns.forEach(function(c){var cu=sp([LAST-1,LAST],c.key),ba=sp(base,c.key);
-    if(cu.p>=TH.minAttempts&&ba.p>=TH.minAttempts&&ba.r-cu.r>=TH.payDrop)out.push({s:'red',t:'Payment success fell to '+pct(cu.r)+' in <b>'+short(c.key)+'</b> (was '+pct(ba.r)+')',d:'Last 2 days vs the 5 days before, '+cu.p+' card-entered visitors.',a:'payments'})});
-  var att=function(idx){var n=0,ft=0;idx.forEach(function(i){var a=attemptsPaid(i);n+=a.n;ft+=a.ft});return {a:n+ft,r:n+ft?n/(n+ft)*100:null}};
-  var ac=att([LAST-1,LAST]),ab=att(base);
-  if(ac.a>=TH.minAttempts&&ab.a>=TH.minAttempts&&ab.r-ac.r>=TH.payDrop)out.push({s:'red',t:'Only <b>'+pct(ac.r)+'</b> of payment attempts succeeded in the last 2 days (was '+pct(ab.r)+')',d:'Donations ÷ (donations + failed payments), '+ac.a+' attempts. Ad traffic is unchanged, so the drop is at the card step.',a:'payments'});
-  var f=function(d){var t=0,o=D.failures[d]||{};for(var k in o)t+=o[k];return t},avg=(function(){var s=0;for(var i=LAST-7;i<LAST-1;i++)s+=f(days[i]);return s/6})();
-  if(f(days[LAST])>=Math.max(6,avg*2))out.push({s:'amber',t:'Card failures today: <b>'+f(days[LAST])+'</b> already (7-day daily average '+avg.toFixed(1)+')',d:'See "Why payments fail" for the split.',a:'payments'});
-  var wk=[];for(var i=LAST-6;i<=LAST;i++)wk.push(i);
-  D.campaigns.forEach(function(c){var a=zero();wk.forEach(function(i){addDay(a,c.days[i])});
-    if(a.spend>=TH.minSpend*2&&a.n>=30&&Math.abs(a.mp-a.n)/a.n*100>=TH.metaGap)out.push({s:'amber',t:'Meta '+(a.mp<a.n?'under':'over')+'-reports <b>'+short(c.key)+'</b> by '+Math.abs((a.mp-a.n)/a.n*100).toFixed(0)+'%',d:'Last 7 days: Meta counted '+Math.round(a.mp)+' purchases, we recorded '+a.n+' donations. Meta-based optimisation works from a '+(a.mp<a.n?'partial':'inflated')+' picture.',a:'meta'})});
-  if(D.storeCount<=2)out.push({s:'amber',t:'All donations go through '+D.storeCount+' checkout store'+(D.storeCount>1?'s':''),d:'One Stripe/Radar problem stops everything.',a:null});
-  var age=D.adSyncAt?(Date.parse(D.generated)-Date.parse(D.adSyncAt))/60000:Infinity;
-  if(age>180)out.push({s:'amber',t:isFinite(age)?'Meta spend data is '+Math.round(age/60)+'h old':'No daily Meta spend recorded yet',d:'Profit and ROI use stale spend until the next sync.',a:null});
-  var order={red:0,amber:1,green:2};out.sort(function(a,b){return order[a.s]-order[b.s]});return out;
-}
-function renderAlerts(){
-  var a=alerts(),show=state.allAlerts?a:a.slice(0,3);
-  if(!a.length){$('#alerts').innerHTML='<div class="alert green"><span>✓</span><div>Nothing needs attention right now.</div></div>';return}
-  var nRed=a.filter(function(x){return x.s==='red'}).length;
-  $('#alerts').innerHTML='<div class="row between" style="margin:2px 0"><h2>Needs attention <span class="sub">· '+a.length+' item'+(a.length>1?'s':'')+(nRed?' · '+nRed+' urgent':'')+'</span></h2></div>'
-   +show.map(function(x){var ico={red:'⚠️',amber:'●',green:'▲'}[x.s];
-    return '<div class="alert '+x.s+'"><span>'+ico+'</span><div>'+x.t+'<small>'+x.d+'</small></div>'+(x.a?'<span class="act" data-a="'+x.a+'">View</span>':'')+'</div>'}).join('')
-   +(a.length>3?'<button class="more" id="morebtn">'+(state.allAlerts?'Show fewer':'Show '+(a.length-3)+' more')+'</button>':'');
-  var mb=$('#morebtn');if(mb)mb.addEventListener('click',function(){state.allAlerts=!state.allAlerts;renderAlerts()});
-  $('#alerts').querySelectorAll('.act').forEach(function(el){el.addEventListener('click',function(){var v=el.dataset.a,target;
-    if(v.indexOf('market:')===0){state.open[v.slice(7)]=true;renderMarkets();target=isMobile()?$('#mcards'):$('#mtable')}else if(v==='meta')target=$('#cmptiles');else target=$('#chart3');
-    target.scrollIntoView({behavior:'smooth',block:'start'})})});
-}
-
-/* ---------- boot ---------- */
-function renderAll(){renderKpis();renderAlerts();renderChart1();renderChart2();renderMarkets();renderCmp();renderChart3();renderChart4();renderReasons();renderFunnel()}
-var sel=$('#market');
-sel.addEventListener('change',function(){state.market=sel.value;renderAll()});
-document.querySelectorAll('#range button').forEach(function(b){b.addEventListener('click',function(){state.range=b.dataset.r;document.querySelectorAll('#range button').forEach(function(x){x.classList.toggle('on',x===b)});renderAll()})});
-$('#logout').addEventListener('click',function(e){e.preventDefault();fetch('/api/admin/logout',{method:'POST'}).then(function(){location.href='/admin/login.html'})});
-function fillMarkets(){
-  var keep=state.market;
-  sel.innerHTML='<option value="all">All markets</option>'+D.campaigns.filter(function(c){return c.days.some(function(x){return x.spend>0})}).map(function(c){return '<option value="'+esc(c.key)+'">'+esc(short(c.key))+'</option>'}).join('');
-  sel.value=keep;if(sel.value!==keep){sel.value='all';state.market='all'}
-}
-function syncLabel(){
-  var at=Date.parse(D.adSyncAt),age=isFinite(at)?Math.round((Date.parse(D.generated)-at)/60000):null;
-  $('#syncline').textContent=(age==null?'Meta spend not synced yet':'Meta synced '+age+'m ago')+' · Athens days';
-  $('#syncdot').className='dot'+(age==null||age>180?' warn':'');
-}
-var loading=false;
-function load(){
-  if(loading)return;loading=true;
-  fetch('/api/admin/cockpit?days=14',{credentials:'same-origin'}).then(function(r){
-    if(r.status===401){location.href='/admin/login.html';throw new Error('unauthorized')}
-    if(!r.ok)throw new Error('HTTP '+r.status);return r.json();
-  }).then(function(data){
-    D=data;days=D.days;N=days.length;LAST=N-1;
-    $('#err').style.display='none';$('#loading').style.display='none';
-    fillMarkets();syncLabel();renderAll();
-  }).catch(function(e){
-    if(e.message==='unauthorized')return;
-    $('#loading').style.display='none';$('#err').style.display='block';
-    $('#err').textContent='Could not load cockpit data ('+e.message+'). Retrying in a minute.';
-  }).then(function(){loading=false});
-}
-var rz;window.addEventListener('resize',function(){if(!D)return;clearTimeout(rz);rz=setTimeout(function(){renderKpis();renderChart1();renderChart2();renderCmp();renderChart3();renderChart4();renderMarkets()},120)});
-setInterval(function(){if(document.visibilityState==='visible')load()},60000);
-document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')load()});
-load();
-})();
-</script>
+  <!-- Modular Scripts -->
+  <script src="/admin/js/admin-common.js"></script>
+  <script src="/admin/js/profit-fx.js?v=3"></script>
+  <script src="/admin/js/profit-renderers.js?v=4"></script>
+  <script src="/admin/js/profit-main.js?v=3"></script>
 </body>
 </html>

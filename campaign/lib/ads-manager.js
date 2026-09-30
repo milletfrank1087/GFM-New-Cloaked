@@ -247,7 +247,6 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
           if (data?.rows && Array.isArray(data.rows)) {
             for (const r of data.rows) {
               r._source_account_id = acctId || data.account?.id || data.account_id || null;
-              r._range = data.range || null;
             }
             allDataRows.push(...data.rows);
           }
@@ -305,7 +304,6 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
           .from('ad_spend')
           .upsert(uniqueRows, { onConflict: 'campaign_id,date_preset' });
         if (error) throw new Error(`preset ${preset} upsert failed: ${error.message}`);
-        if (DAILY_PRESETS.has(preset)) await upsertDaily(rows, allDataRows);
       }
 
       lastSyncCompleted.set(preset, Date.now());
@@ -325,26 +323,6 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
 
   inFlightSyncs.set(preset, syncPromise);
   return syncPromise;
-}
-
-/* Single-day presets are exactly one Europe/Athens day (fb-ads-manager returns range.since === range.until),
-   so each sync also stores that day as its own ad_spend row (date_preset 'day:YYYY-MM-DD', date set) for the
-   cockpit's daily history. Readers of the preset rows filter on an exact preset name, so these never mix in. */
-const DAILY_PRESETS = new Set(['today', 'yesterday']);
-
-async function upsertDaily(spendRows, rawRows) {
-  const dayById = new Map();
-  for (const r of rawRows) {
-    const since = r._range?.since, until = r._range?.until;
-    if (since && since === until) dayById.set(String(r.id || r.campaign_id || ''), since);
-  }
-  const daily = spendRows
-    .filter(r => dayById.has(r.campaign_id))
-    .map(r => ({ ...r, date: dayById.get(r.campaign_id), date_preset: `day:${dayById.get(r.campaign_id)}` }));
-  if (!daily.length) return;
-  const { error } = await supabase.from('ad_spend').upsert(daily, { onConflict: 'campaign_id,date_preset' });
-  // Never fail the preset sync over the daily history rows.
-  if (error) console.warn('[ads-sync] daily spend upsert note:', error.message);
 }
 
 async function syncSpend() {
