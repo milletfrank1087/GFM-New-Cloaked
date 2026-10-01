@@ -216,8 +216,7 @@ async function initCheckout() {
       mode: elementsMode,
       amount: paymentAmountUnits,
       currency: paymentCurrency,
-      // Must match the PaymentIntent (routes/stripe.js, lib/upsell.js savesCardForUpsell): EUR is not saved.
-      ...(elementsMode === 'payment' && paymentCurrency !== 'eur' ? { setupFutureUsage: 'off_session' } : {}),
+      // No setupFutureUsage: it must match the PaymentIntent (routes/stripe.js), which no longer saves the card.
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',

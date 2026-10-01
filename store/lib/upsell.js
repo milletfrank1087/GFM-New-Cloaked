@@ -7,15 +7,6 @@ const UPSELL_DELAY_DAYS = 30;
 const TOKEN_TTL_MS = 30 * 60 * 1000; // the offer is valid for 30 minutes after payment
 const NICE_AMOUNTS = [2, 3, 5, 8, 10, 12, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 250];
 
-// Saving the card (setup_future_usage) makes EEA issuers ask for 3DS plus a card-on-file mandate, and hides
-// payment methods that can't be saved (MB WAY). Italian/Portuguese EUR traffic converted far worse with it
-// (Sep 26+), so EUR pays one-time without it and gets no upsell. Keep in sync with public/js/checkout.js.
-const NO_SAVE_CARD_CURRENCIES = ['eur'];
-
-function savesCardForUpsell(currency) {
-  return !NO_SAVE_CARD_CURRENCIES.includes(String(currency || '').toLowerCase());
-}
-
 function secret() {
   return process.env.CALLBACK_SECRET || 'change-me';
 }
@@ -93,7 +84,6 @@ function getMonthlyProduct(stripe, storeConfig) {
 
 module.exports = {
   UPSELL_DELAY_DAYS,
-  savesCardForUpsell,
   makeOfferToken,
   readOfferToken,
   cancelToken,

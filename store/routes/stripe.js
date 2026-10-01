@@ -383,7 +383,8 @@ module.exports = function createStripeRouter(ctx) {
           statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
           payment_details: { order_reference: refCode },
           amount_details: { line_items: stripeLineItems },
-          ...(upsell.savesCardForUpsell(donorCurrency) ? { setup_future_usage: 'off_session' } : {}),
+          // No setup_future_usage: saving the card adds 3DS/mandate friction and hides MB WAY. So the post-payment
+          // monthly upsell is never offered (it needs a saved card); see subscribeUpsell if it is ever rebuilt.
           ...(customerId ? { customer: customerId } : {})
         };
 
