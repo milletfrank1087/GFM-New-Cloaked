@@ -62,5 +62,14 @@
     if (document.visibilityState === 'hidden' && furthest !== 'pay_tapped') reportExit(); // 3-D Secure / wallet sheets can hide the page mid-payment
   });
 
-  window.CheckoutMonitor = { stage: stage, error: error };
+  // One Pay tap: result paid|declined|error|pending, ms = time confirmPayment took (a long wait means a 3DS challenge).
+  // The server adds the device from the user agent, so rates can be read per device (iOS FB app, Android, ...).
+  var attempts = 0;
+  function attempt(result, ms) {
+    if (attempts >= 6) return;
+    attempts += 1;
+    send({ t: 'attempt', result: result, ms: Math.round(ms || 0) });
+  }
+
+  window.CheckoutMonitor = { stage: stage, error: error, attempt: attempt };
 })();

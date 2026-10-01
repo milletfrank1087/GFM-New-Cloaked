@@ -102,10 +102,15 @@ function applyCadenceChrome() {
 
 let elements, paymentElement;
 // Checkout monitor (public/js/checkout-monitor.js): furthest step + browser-side errors.
-const MON = window.CheckoutMonitor || { stage: function () {}, error: function () {} };
+const MON = window.CheckoutMonitor || { stage: function () {}, error: function () {}, attempt: function () {} };
 let addPaymentInfoFired = false;
 let consecutiveServerFailures = 0;
 let lockedUntilEpochMs = 0;
+// Issuer soft declines repeat for the same card within minutes (4 of 4 retries in 1-4 min failed, Sep 30-Oct 1)
+// and a quick retry can trip Radar velocity: hold the button until the card changes or 2 minutes pass.
+let retryHold = false;
+const RETRY_HOLD_MS = 2 * 60 * 1000;
+const RETRY_HOLD_CODES = ['try_again_later', 'do_not_honor', 'generic_decline', 'transaction_not_allowed', 'card_velocity_exceeded'];
 const MAX_CONSECUTIVE_FAILURES = 3;
 const LONG_LOCK_MS = 60 * 1000;
 
@@ -173,7 +178,7 @@ function showError(errorEl, message) {
 }
 
 function resetSubmitUI(submitBtn, spinnerEl, btnText) {
-  if (submitBtn) submitBtn.disabled = false;
+  if (submitBtn) submitBtn.disabled = Date.now() < lockedUntilEpochMs; // keep a retry hold in place
   if (spinnerEl) spinnerEl.classList.add('hidden');
   if (btnText) btnText.textContent = submitBtn?.dataset?.paytext || 'Pay';
 }
@@ -211,8 +216,8 @@ async function initCheckout() {
       mode: elementsMode,
       amount: paymentAmountUnits,
       currency: paymentCurrency,
-      // Must match the PaymentIntent (routes/stripe.js): the card is saved for the one-tap monthly upsell.
-      ...(elementsMode === 'payment' ? { setupFutureUsage: 'off_session' } : {}),
+      // Must match the PaymentIntent (routes/stripe.js, lib/upsell.js savesCardForUpsell): EUR is not saved.
+      ...(elementsMode === 'payment' && paymentCurrency !== 'eur' ? { setupFutureUsage: 'off_session' } : {}),
       locale: stripeLocale,
       appearance: {
         theme: 'stripe',
@@ -254,6 +259,8 @@ async function initCheckout() {
       MON.error('stripe_load', (ev && ev.error && ev.error.message) || 'payment form failed to load', { code: ev && ev.error && (ev.error.code || ev.error.type) });
     });
     paymentElement.on('change', (ev) => {
+      // Editing the card after a soft decline means a different card: release the retry hold.
+      if (retryHold && !ev.empty) { retryHold = false; lockedUntilEpochMs = 0; if (submitBtn) submitBtn.disabled = false; }
       if (ev.complete) MON.stage('card_complete');
       else if (!ev.empty) MON.stage('card_typing');
     });
@@ -378,30 +385,46 @@ async function initCheckout() {
 
         let paymentIntentId = data.paymentIntentId || null;
 
-        const confirmResult = await stripe.confirmPayment({
-          elements,
-          clientSecret: data.clientSecret,
-          confirmParams: {
-            return_url: window.location.origin + '/checkout',
-            payment_method_data: {
-              billing_details: {
-                name: name || undefined,
-                email: email || undefined
+        // 3DS challenges that never finish time out after ~10 min as "failed authentication" with no device
+        // data. Report how long confirmPayment took (and whether it was still open at 90s) per device.
+        const confirmStartedAt = Date.now();
+        const pendingTimer = setTimeout(() => MON.attempt('pending', 90000), 90000);
+        let confirmResult;
+        try {
+          confirmResult = await stripe.confirmPayment({
+            elements,
+            clientSecret: data.clientSecret,
+            confirmParams: {
+              return_url: window.location.origin + '/checkout',
+              payment_method_data: {
+                billing_details: {
+                  name: name || undefined,
+                  email: email || undefined
+                }
               }
-            }
-          },
-          redirect: 'if_required'
-        });
+            },
+            redirect: 'if_required'
+          });
+        } finally {
+          clearTimeout(pendingTimer);
+        }
 
         if (confirmResult.error) {
           // Card declines are already logged server-side (webhook); record them as the exit step only.
-          if (confirmResult.error.type === 'card_error') MON.stage('declined');
-          else if (confirmResult.error.type !== 'validation_error') MON.error('stripe_confirm', confirmResult.error.message, { code: confirmResult.error.code || confirmResult.error.type });
+          MON.attempt(confirmResult.error.type === 'card_error' ? 'declined' : 'error', Date.now() - confirmStartedAt);
+          if (confirmResult.error.type === 'card_error') {
+            MON.stage('declined');
+            if (RETRY_HOLD_CODES.includes(confirmResult.error.decline_code)) {
+              retryHold = true;
+              lockSubmit(submitBtn, Date.now() + RETRY_HOLD_MS);
+            }
+          } else if (confirmResult.error.type !== 'validation_error') MON.error('stripe_confirm', confirmResult.error.message, { code: confirmResult.error.code || confirmResult.error.type });
           showError(errorEl, confirmResult.error.message);
           resetSubmitUI(submitBtn, spinnerEl, btnText);
           return;
         }
 
+        MON.attempt('paid', Date.now() - confirmStartedAt);
         if (!paymentIntentId && confirmResult.paymentIntent) {
           paymentIntentId = confirmResult.paymentIntent.id;
         }

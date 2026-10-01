@@ -81,7 +81,7 @@ const STORE_EVENTS = {
   subscription_manage: { icon: '⚠️', step: 'monthly' }
 };
 
-const newCounters = () => ({ checkouts: 0, payAttempts: 0, donated: 0, totals: {}, declined: 0, offers: 0, offerDeclined: 0, offerLeft: 0, monthly: 0, renewals: 0, badLinks: 0, shopViews: 0, scanner: 0, errors: 0, jsErrors: 0, jsNew: 0, exits: {} });
+const newCounters = () => ({ checkouts: 0, payAttempts: 0, donated: 0, totals: {}, declined: 0, offers: 0, offerDeclined: 0, offerLeft: 0, monthly: 0, renewals: 0, badLinks: 0, shopViews: 0, scanner: 0, errors: 0, jsErrors: 0, jsNew: 0, exits: {}, declineKinds: {}, devices: {} });
 let counters = newCounters();
 const seenClientErrors = new Map(); // signature -> count (process lifetime)
 let hour = new Date().getHours();
@@ -111,6 +111,10 @@ function flushHour(force) {
     const extra = [exits ? `unpaid checkouts stopped at: ${exits}` : '', c.jsErrors ? `browser errors ${c.jsErrors} (${c.jsNew} new types)` : ''].filter(Boolean).join(' | ');
     console.log(`── ${label}:00 last hour · ${c.checkouts} checkouts · ${c.donated} donated ${money} · ${c.declined} declined · offer: ${c.offers} shown, ${c.offerDeclined} no-thanks, ${c.offerLeft} left page, ${c.monthly} monthly · ${c.renewals} renewals | ${c.errors} errors · ${c.scanner} scanner hits hidden`);
     if (extra) console.log(`   ${extra}`);
+    const kinds = Object.entries(c.declineKinds).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k, v]) => `${k} ×${v}`).join(' · ');
+    if (kinds) console.log(`   declines by country/bank code: ${kinds}`);
+    const devs = Object.entries(c.devices).sort((a, b) => b[1].n - a[1].n).map(([d, v]) => `${d} ${v.paid}/${v.n} paid${v.slow ? ` (${v.slowPaid}/${v.slow} with 3DS-length wait)` : ''}${v.pending ? `, ${v.pending} still open at 90s` : ''}`).join(' · ');
+    if (devs) console.log(`   card attempts by device: ${devs}`);
   }
   hour = now.getHours();
   counters = newCounters();
@@ -160,6 +164,20 @@ const StoreLog = {
   },
   // Furthest step reached by a checkout that ended without paying (hourly summary only).
   checkoutExit(stage) { counters.exits[stage] = (counters.exits[stage] || 0) + 1; },
+
+  // Run fn with a visitor context (webhooks have no cookie, so the PaymentIntent's remembered context is used).
+  withContext(ctx, fn) { return als.run(ctx || {}, fn); },
+
+  // Hourly-summary buckets: bank/Stripe reason per country, and card attempts per device.
+  declineKind(key) { counters.declineKinds[key] = (counters.declineKinds[key] || 0) + 1; },
+  // Browser-reported result of one confirmPayment call: result paid|declined|error|pending, ms = time spent waiting.
+  attempt(device, result, ms) {
+    const d = counters.devices[device] || (counters.devices[device] = { n: 0, paid: 0, slow: 0, slowPaid: 0, pending: 0 });
+    if (result === 'pending') { d.pending += 1; return; }
+    d.n += 1;
+    if (result === 'paid') d.paid += 1;
+    if (ms > 20000) { d.slow += 1; if (result === 'paid') d.slowPaid += 1; }
+  },
 
   event(eventKey, sessionRef, message) {
     const cfg = STORE_EVENTS[eventKey] || { icon: 'ℹ️', step: eventKey.replace(/_/g, ' ') };

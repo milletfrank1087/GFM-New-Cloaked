@@ -6,6 +6,7 @@ const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
 const { classifyStripeError, getDonorMessage } = require('../lib/stripe-errors');
 const { sendDonationConfirmation, sendSubscriptionConfirmation } = require('../lib/email');
 const upsell = require('../lib/upsell');
+const forensics = require('../lib/payment-forensics');
 const { CHECKOUT_LOCALE } = require('../lib/locale');
 
 module.exports = function createStripeRouter(ctx) {
@@ -68,14 +69,29 @@ module.exports = function createStripeRouter(ctx) {
       switch (event.type) {
         case 'payment_intent.succeeded': {
           StoreLog.event('webhook_ok', ref, `Payment succeeded ${obj.id} - ${fromSmallestUnit(obj.amount, obj.currency)} ${obj.currency.toUpperCase()}`);
+          forensics.recordOutcome(true, { country: forensics.attemptContext(obj.id)?.geo }, emitAlert);
           break;
         }
         case 'payment_intent.payment_failed': {
-          StoreLog.error('webhook_fail', ref, `card refused: ${(obj.last_payment_error?.decline_code || obj.last_payment_error?.code || 'unknown').replace(/_/g, ' ')} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())}`);
+          // Everything we know about this attempt: what the bank/Stripe said (charge) + what we saw at creation.
+          const lpe = obj.last_payment_error || {};
+          const card = lpe.payment_method?.card || {};
+          const a = forensics.attemptContext(obj.id);
+          const d = await forensics.chargeDetails(stripe, lpe.charge || obj.latest_charge);
+          const reason = (lpe.decline_code || lpe.code || 'unknown').replace(/_/g, ' ');
+          const isAuthTimeout = lpe.code === 'payment_intent_authentication_failure';
+          // 3DS that never finished: Stripe only reports it ~10 min later, so say how long the challenge sat open.
+          const waited = a && isAuthTimeout ? `3DS challenge not completed (open ${Math.round((Date.now() - a.t) / 1000)}s)` : '';
+          const detail = isAuthTimeout ? [waited, a ? `try #${a.attempt} · ${a.device}${a.geo ? ' · geo ' + a.geo : ''}` : ''].filter(Boolean).join(' · ')
+            : forensics.failureLine(obj.id, lpe, d, a);
+          const country = d.country || card.country || a?.geo || '';
+          const bankCode = lpe.network_decline_code || d.network_decline_code || (isAuthTimeout ? '3ds-timeout' : lpe.decline_code || lpe.code || '?');
+          StoreLog.declineKind(`${country || '?'} ${bankCode}`);
+          forensics.recordOutcome(false, { country, code: bankCode }, emitAlert);
+          StoreLog.withContext({ vid: a?.vid, mkt: a?.mkt }, () => {
+            StoreLog.error('webhook_fail', ref, `card refused: ${reason} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())} · ${detail} [${obj.id.substring(0, 12)}]`);
+          });
           if (supabase) {
-            // Context Stripe already sends in the webhook: lets failures be attributed to a campaign / card type.
-            const lpe = obj.last_payment_error || {};
-            const card = lpe.payment_method?.card || {};
             await dbSafe('payment_failures insert', ref, supabase.from('payment_failures').insert({
               store_id: ctx.getStoreDbId(),
               source_ref: obj.metadata?.src || null,
@@ -86,17 +102,28 @@ module.exports = function createStripeRouter(ctx) {
               error_message: lpe.message || 'Payment failed',
               request_amount: fromSmallestUnit(obj.amount, obj.currency),
               payment_method: lpe.payment_method?.type || null,
+              ip_address: a?.ip || null,
               error_details: {
                 code: lpe.code || null,
                 decline_code: lpe.decline_code || null,
-                network_decline_code: lpe.network_decline_code || null,
+                network_decline_code: lpe.network_decline_code || d.network_decline_code || null,
                 advice_code: lpe.advice_code || null,
                 currency: obj.currency || null,
-                card_brand: card.brand || null,
-                card_country: card.country || null,
-                card_funding: card.funding || null,
-                three_d_secure: card.three_d_secure_usage?.supported ?? null,
-                session_ref: obj.metadata?.[(storeConfig.metadataKeys || {}).sessionRef || 'sessionRef'] || null
+                card_brand: card.brand || d.brand || null,
+                card_country: card.country || d.country || null,
+                card_funding: card.funding || d.funding || null,
+                // NOT whether 3DS ran: only whether the card is able to do 3DS. The real result is tds_* below.
+                three_d_secure_supported: card.three_d_secure_usage?.supported ?? null,
+                session_ref: obj.metadata?.[(storeConfig.metadataKeys || {}).sessionRef || 'sessionRef'] || null,
+                // Added for debugging: bank/Stripe verdict, 3DS result, checks, wallet
+                network_status: d.network_status || null, outcome_type: d.outcome_type || null, outcome_reason: d.outcome_reason || null,
+                network_advice_code: d.network_advice_code || null, risk_level: d.risk_level || null, risk_score: d.risk_score ?? null,
+                tds_result: d.tds_result || null, tds_version: d.tds_version || null, tds_flow: d.tds_flow || null, tds_reason: d.tds_reason || null,
+                cvc_check: d.cvc_check || null, zip_check: d.zip_check || null, wallet: d.wallet || null, network_token: d.network_token ?? null,
+                last4: d.last4 || null, lookup_error: d.lookup_error || null,
+                // Context captured when the PaymentIntent was created
+                attempt: a?.attempt ?? null, secs_since_first_try: a?.sinceFirstSecs ?? null, secs_open: a ? Math.round((Date.now() - a.t) / 1000) : null,
+                device: a?.device || null, geo: a?.geo || null, visitor: a?.vid || null, market: a?.mkt || null, saved_card: a?.sfu ?? null
               }
             }));
           }
@@ -356,7 +383,7 @@ module.exports = function createStripeRouter(ctx) {
           statement_descriptor_suffix: storeConfig.statementDescriptor.substring(0, 22),
           payment_details: { order_reference: refCode },
           amount_details: { line_items: stripeLineItems },
-          setup_future_usage: 'off_session',
+          ...(upsell.savesCardForUpsell(donorCurrency) ? { setup_future_usage: 'off_session' } : {}),
           ...(customerId ? { customer: customerId } : {})
         };
 
@@ -377,7 +404,13 @@ module.exports = function createStripeRouter(ctx) {
           }
         }
 
-        StoreLog.event('payment_created', donor.ref || '---', `${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency}`);
+        const attemptNo = forensics.rememberAttempt(paymentIntent.id, {
+          sid: donor.sid, vid: donor.utm?.visitorId, mkt: donor.utm?.market, ua: donor.ua || req.headers['user-agent'],
+          ip: donor.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip,
+          geo: donor.utm?.clientLocation?.countryCode, src: donor.ref, currency: donorCurrency, amount: totalAmount,
+          sfu: !!intentParams.setup_future_usage
+        });
+        StoreLog.event('payment_created', donor.ref || '---', `${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency} · try #${attemptNo}`);
 
         res.json({
           clientSecret: paymentIntent.client_secret,
@@ -1022,7 +1055,12 @@ module.exports = function createStripeRouter(ctx) {
   router.post('/api/client/report', express.text({ type: '*/*', limit: '4kb' }), (req, res) => {
     let body = req.body;
     if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
-    if (body?.t === 'exit') {
+    if (body?.t === 'attempt') {
+      // Browser-measured result of one Pay tap: lets us split 3DS waits and outcomes by device.
+      const ua = String(req.headers['user-agent'] || '');
+      const result = ['paid', 'declined', 'error', 'pending'].includes(body.result) ? body.result : 'error';
+      StoreLog.attempt(forensics.deviceLabel(ua), result, Number(body.ms) || 0);
+    } else if (body?.t === 'exit') {
       if (EXIT_STAGES.has(body.stage)) StoreLog.checkoutExit(body.stage);
     } else if (body?.t === 'error') {
       const kind = String(body.kind || 'js').replace(/[^\w]/g, '').slice(0, 20);
