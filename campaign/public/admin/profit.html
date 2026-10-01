@@ -348,13 +348,18 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div class="flex items-center gap-2">
-              <h2 class="text-sm font-bold text-[#061b31]">Completed Transactions</h2>
+              <h2 class="text-sm font-bold text-[#061b31]">Transactions</h2>
               <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-50 text-[#00875a] border border-emerald-100" id="txns-count-badge">0 Transactions</span>
+              <span class="hidden text-xs font-mono font-bold px-2 py-0.5 rounded bg-red-50 text-[#df1b41] border border-red-100" id="txns-failed-badge">0 failed</span>
             </div>
-            <p class="text-xs text-slate-400">Live feed of all processed payments with full fee, tip, and FX provenance</p>
+            <p class="text-xs text-slate-400">Completed payments with fee, tip and FX provenance. Failed attempts are shown in red and never count toward totals.</p>
           </div>
-          
-          <div>
+
+          <div class="flex items-center gap-3">
+            <label class="flex items-center gap-1.5 text-xs text-slate-600 select-none cursor-pointer">
+              <input type="checkbox" id="txn-show-failed" checked onchange="toggleFailedTransactions(this.checked)" class="accent-[#df1b41]">
+              Show failed
+            </label>
             <input type="text" id="txn-search" placeholder="Search donor, ID, campaign..." oninput="searchTransactions(this.value)" class="bg-[#f8fafd] border border-gray-200 text-xs rounded-md py-1.5 px-3 text-[#061b31] placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#635bff]">
           </div>
         </div>

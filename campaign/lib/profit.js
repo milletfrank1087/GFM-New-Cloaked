@@ -81,6 +81,75 @@ async function fetchPayments(campaignSlug, dateRange) {
   };
 }
 
+// Failed payment attempts (declines, 3DS not completed, checkout errors). Shown in the transactions feed
+// only: they never count toward revenue, fees or profit.
+const FAILURE_FIELDS =
+  'id, created_at, source_ref, endpoint, stripe_payment_intent_id, error_type, error_code, error_message, ' +
+  'request_amount, payment_method, error_details';
+const MAX_FAILURES = 2000;
+
+async function fetchFailures(campaignSlug, dateRange) {
+  if (!supabase) return [];
+  let query = supabase
+    .from('payment_failures')
+    .select(FAILURE_FIELDS)
+    .order('created_at', { ascending: false })
+    .limit(MAX_FAILURES);
+  if (campaignSlug && campaignSlug !== 'all') query = query.eq('source_ref', campaignSlug);
+  if (dateRange?.startDate) query = query.gte('created_at', dateRange.startDate);
+  if (dateRange?.endDate) {
+    const end = toExclusiveEnd(dateRange.endDate);
+    query = end === String(dateRange.endDate)
+      ? query.lte('created_at', dateRange.endDate)
+      : query.lt('created_at', end);
+  }
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+function failureTransaction(row, rates) {
+  const d = row.error_details || {};
+  const currency = String(d.currency || BASE_CURRENCY).toUpperCase();
+  const amountNative = Number(row.request_amount) || 0;
+  const amountBase = convertToBase(amountNative, currency, rates);
+  return {
+    id: `fail_${row.id}`,
+    status: 'failed',
+    name: null,
+    campaign: row.source_ref || 'direct',
+    storeDomain: 'unknown',
+    currency,
+    date: row.created_at,
+    isSubscription: false,
+    amountBase,
+    tipBase: 0,
+    grossBase: amountBase,
+    feeBase: 0,
+    netBase: 0,
+    native: { amount: amountNative, tip: 0, gross: amountNative, fee: 0, net: 0, currency },
+    fx: null,
+    failure: {
+      reason: d.decline_code || row.error_code || row.error_type || 'unknown',
+      message: row.error_message || null,
+      endpoint: row.endpoint || null,
+      paymentIntent: row.stripe_payment_intent_id || null,
+      method: row.payment_method || null,
+      bankCode: d.network_decline_code || null,
+      advice: d.advice_code || d.network_advice_code || null,
+      cardCountry: d.card_country || null,
+      cardBrand: d.card_brand || null,
+      cardFunding: d.card_funding || null,
+      last4: d.last4 || null,
+      threeDS: d.tds_result ? `${d.tds_flow || ''} ${d.tds_result}`.trim() : null,
+      risk: d.risk_level || null,
+      wallet: d.wallet || null,
+      device: d.device || null,
+      attempt: d.attempt ?? null,
+    },
+  };
+}
+
 async function fetchAdSpendData(preset) {
   if (!supabase) return { spendRows: [], campaignRows: [] };
   const [spendRes, campRes] = await Promise.all([
@@ -150,10 +219,14 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
   const AD_SPEND_CURRENCY = 'USD';
   const tzOffsetMinutes = Number(tzOffset) || 0;
 
-  const [paymentResult, adDataResult, latestRatesResult] = await Promise.all([
+  const [paymentResult, adDataResult, latestRatesResult, failureRows] = await Promise.all([
     fetchPayments(campaignSlug, dateRange),
     withAdSpend ? fetchAdSpendData(preset) : Promise.resolve({ spendRows: [], campaignRows: [] }),
-    withAdSpend ? fetchLatestRates().catch(() => null) : Promise.resolve(null),
+    fetchLatestRates().catch(() => null),
+    fetchFailures(campaignSlug, dateRange).catch((err) => {
+      console.warn('[profit] failures not loaded:', err.message);
+      return [];
+    }),
   ]);
 
   const payments = paymentResult.rows;
@@ -395,8 +468,14 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
         currency: p.currency,
       },
       fx: p.fx,
+      status: 'completed',
     };
   });
+
+  // Failed attempts are merged into the feed by time; totals above stay completed-only.
+  const failedTransactions = failureRows.map((row) => failureTransaction(row, latestRatesResult));
+  const feed = allTransactions.concat(failedTransactions)
+    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 
   return {
     baseCurrency: BASE_CURRENCY,
@@ -421,8 +500,10 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     perStore: storeRows,
     currencyBreakdown,
     recent: allTransactions.slice(0, 15),
-    transactions: allTransactions,
+    transactions: feed,
     totalTransactionsCount: paymentResult.count,
+    failedCount: failedTransactions.length,
+    failedAmount: failedTransactions.reduce((s, t) => s + t.amountBase, 0),
     adSync: {
       preset,
       presetDays: presetDaySpan(preset),

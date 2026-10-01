@@ -296,31 +296,87 @@
     }).join('');
   }
 
-  /* All Completed Transactions Renderer */
+  /* Transactions Renderer: completed payments + failed attempts (red, excluded from totals) */
+  var FAILED_PREF_KEY = 'profit.showFailedTxns';
+  var showFailed = true;
+  try { showFailed = localStorage.getItem(FAILED_PREF_KEY) !== '0'; } catch (_) {}
+  var txnSearchQuery = '';
+
   function searchTransactions(q) {
-    renderTransactionsFeed(q.toLowerCase().trim());
+    txnSearchQuery = q.toLowerCase().trim();
+    renderTransactionsFeed(txnSearchQuery);
+  }
+
+  function toggleFailedTransactions(on) {
+    showFailed = !!on;
+    try { localStorage.setItem(FAILED_PREF_KEY, showFailed ? '1' : '0'); } catch (_) {}
+    renderTransactionsFeed(txnSearchQuery);
+  }
+
+  // "try again later" from "try_again_later"; 3DS timeouts get a plain-language label.
+  function failureLabel(f) {
+    if (!f) return 'failed';
+    if (f.reason === 'payment_intent_authentication_failure') return '3DS not completed';
+    return String(f.reason || 'failed').replace(/_/g, ' ');
+  }
+
+  function failedRow(p) {
+    var f = p.failure || {};
+    var timeLabel = new Date(p.date).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short', timeZone: window.userTimeZone });
+    var card = [f.cardCountry, f.cardBrand, f.cardFunding].filter(Boolean).join(' ');
+    var sub = [card, f.bankCode ? 'bank ' + f.bankCode : '', f.device].filter(Boolean).join(' · ');
+    return '<tr class="cursor-pointer transition-colors bg-red-50/40" onclick="showDetail(\'' + p.id + '\', this)">' +
+      '<td class="sticky-col font-semibold text-[#df1b41] flex items-center gap-2">' +
+        '<div class="w-6 h-6 rounded-md bg-red-100 text-[#df1b41] font-bold text-[10px] flex items-center justify-center shrink-0">✕</div>' +
+        '<span class="truncate max-w-[160px] sm:max-w-none" title="' + esc(f.message || '') + '">' +
+          '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-[#df1b41] border border-red-200 mr-1">FAILED</span>' +
+          esc(failureLabel(f)) +
+          (sub ? '<span class="block text-[10px] font-normal text-slate-400">' + esc(sub) + '</span>' : '') +
+        '</span>' +
+      '</td>' +
+      '<td class="text-left font-mono text-xs text-slate-600">' + esc(p.campaign) + '</td>' +
+      '<td class="text-right font-mono text-slate-400 line-through">' + fmt(p.amountBase) + '</td>' +
+      '<td class="text-right font-mono text-slate-300">—</td>' +
+      '<td class="text-right font-mono text-slate-300">—</td>' +
+      '<td class="text-right font-mono text-slate-300">—</td>' +
+      '<td class="text-right font-mono text-slate-400">' + fmt(0) + '</td>' +
+      '<td class="text-left font-mono text-xs text-slate-500">' + esc(p.currency) + '</td>' +
+      '<td class="text-right font-mono text-xs text-slate-400">' + esc(timeLabel) + '</td>' +
+    '</tr>';
   }
 
   function renderTransactionsFeed(searchQuery) {
     var tbody = document.getElementById('recent-transactions-body');
-    var list = window.allTransactionsData || [];
+    var all = window.allTransactionsData || [];
+    var failedTotal = all.filter(function(p) { return p.status === 'failed'; }).length;
+    var list = showFailed ? all : all.filter(function(p) { return p.status !== 'failed'; });
 
     if (searchQuery) {
       list = list.filter(function(p) {
+        var f = p.failure || {};
         return (p.name || '').toLowerCase().indexOf(searchQuery) >= 0 ||
                (p.id || '').toLowerCase().indexOf(searchQuery) >= 0 ||
-               (p.campaign || '').toLowerCase().indexOf(searchQuery) >= 0;
+               (p.campaign || '').toLowerCase().indexOf(searchQuery) >= 0 ||
+               (p.status === 'failed' && (failureLabel(f) + ' ' + (f.cardCountry || '') + ' ' + (f.paymentIntent || '')).toLowerCase().indexOf(searchQuery) >= 0);
       });
     }
 
-    setText('txns-count-badge', (list ? list.length : 0) + ' Transactions');
+    setText('txns-count-badge', list.filter(function(p) { return p.status !== 'failed'; }).length + ' Transactions');
+    var failedBadge = document.getElementById('txns-failed-badge');
+    if (failedBadge) {
+      failedBadge.textContent = failedTotal + ' failed';
+      failedBadge.classList.toggle('hidden', !failedTotal);
+    }
+    var toggle = document.getElementById('txn-show-failed');
+    if (toggle) toggle.checked = showFailed;
 
     if (!list || !list.length) {
-      tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400 text-xs">No completed payments for this timeframe</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400 text-xs">No payments for this timeframe</td></tr>';
       return;
     }
 
     tbody.innerHTML = list.map(function(p) {
+      if (p.status === 'failed') return failedRow(p);
       var isNonEur = p.currency !== (window.__profitBaseCurrency || 'EUR');
       var amountFx = isNonEur ? fxMarkup(fmtNative(p.native?.amount, p.currency), fmt(p.amountBase), p.currency, p.fx) : '';
       var tipFx = (isNonEur && p.tipBase > 0) ? fxMarkup(fmtNative(p.native?.tip, p.currency), fmt(p.tipBase), p.currency, p.fx) : '';
@@ -351,6 +407,34 @@
     }).join('');
   }
 
+  function failedDetailHtml(p) {
+    var f = p.failure || {};
+    var pi = f.paymentIntent
+      ? '<span class="copy-pill font-mono text-[11px]" onclick="copyToClipboard(\'' + esc(f.paymentIntent) + '\', this)">' + esc(f.paymentIntent) + ' 📋</span>'
+      : '—';
+    var rows = [
+      ['Status', '<span class="px-2 py-0.5 rounded bg-red-100 text-[#df1b41] text-xs font-bold font-mono uppercase">failed</span>'],
+      ['Reason', esc(failureLabel(f))],
+      ['Message', esc(f.message || '—')],
+      ['Campaign Target', esc(p.campaign || '—')],
+      ['Attempted Amount', fmtNative(p.native && p.native.gross, p.currency)],
+      ['Card', esc(([f.cardCountry, f.cardBrand, f.cardFunding].filter(Boolean).join(' ') + (f.last4 ? ' •••• ' + f.last4 : '')) || '—')],
+      ['Bank Code / Advice', esc([f.bankCode, f.advice].filter(Boolean).join(' / ') || '—')],
+      ['3D Secure', esc(f.threeDS || '—')],
+      ['Risk / Wallet', esc([f.risk, f.wallet].filter(Boolean).join(' / ') || '—')],
+      ['Device / Attempt', esc([f.device, f.attempt != null ? 'try #' + f.attempt : ''].filter(Boolean).join(' / ') || '—')],
+      ['Source', esc(f.endpoint || '—')],
+      ['Timestamp', new Date(p.date).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', timeZone: window.userTimeZone }) + ' (' + esc(window.userTimeZone) + ')'],
+      ['PaymentIntent', pi]
+    ];
+    return rows.map(function(r) {
+      return '<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">' +
+        '<span class="text-xs font-medium text-slate-500">' + r[0] + '</span>' +
+        '<span class="text-xs sm:text-sm font-semibold text-[#061b31] text-right font-mono">' + r[1] + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
   /* Transaction Detail Modal */
   async function showDetail(id, trigger) {
     showDetail.lastTrigger = trigger || document.activeElement;
@@ -359,6 +443,13 @@
     document.getElementById('detail-close').focus();
     setText('detail-id-label', 'ID: ' + id);
     setHtml('detail-content', '<p class="text-slate-400 text-xs">Loading transaction metadata…</p>');
+
+    // Failed attempts have no payments row: render from the feed data already loaded.
+    if (String(id).indexOf('fail_') === 0) {
+      var failed = (window.allTransactionsData || []).find(function(p) { return p.id === id; });
+      setHtml('detail-content', failed ? failedDetailHtml(failed) : '<p class="text-red-500 text-xs">Failed attempt not found.</p>');
+      return;
+    }
 
     try {
       var res = await fetch('/api/admin/transactions/' + id);
@@ -449,6 +540,7 @@
   window.renderStoreBreakdown = renderStoreBreakdown;
   window.renderCurrencyBreakdown = renderCurrencyBreakdown;
   window.searchTransactions = searchTransactions;
+  window.toggleFailedTransactions = toggleFailedTransactions;
   window.renderTransactionsFeed = renderTransactionsFeed;
   window.showDetail = showDetail;
   window.closeDetail = closeDetail;
