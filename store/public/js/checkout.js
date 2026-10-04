@@ -15,6 +15,35 @@ const STRIPE_LOAD_MSG = {
   en: ['The payment form did not load.', 'Try again']
 };
 
+// MB WAY: the donor must approve in their banking app within ~5 min; about 1 in 5 never does (Oct 2026 logs).
+const MBWAY_MSG = {
+  pt: ['Depois de tocar em pagar, abra a app MB WAY no seu telemóvel e aprove o pagamento. Tem cerca de 5 minutos.', 'Aguarde a notificação MB WAY e aprove na app…'],
+  en: ['After you tap pay, open the MB WAY app on your phone and approve the payment. You have about 5 minutes.', 'Waiting for your MB WAY approval in the app…']
+};
+
+function mbwayText(i) {
+  const raw = stripeLocale && stripeLocale !== 'auto' ? stripeLocale : (document.documentElement.lang || navigator.language || 'en');
+  const lang = String(raw).slice(0, 2).toLowerCase();
+  return (MBWAY_MSG[lang] || MBWAY_MSG.en)[i];
+}
+
+// Show/hide a short instruction under the payment form while MB WAY is the selected method.
+function setMbwayHint(show, text) {
+  let el = document.getElementById('mbway-hint');
+  if (!show) { if (el) el.classList.add('hidden'); return; }
+  if (!el) {
+    const anchor = document.getElementById('payment-element');
+    if (!anchor || !anchor.parentNode) return;
+    el = document.createElement('div');
+    el.id = 'mbway-hint';
+    el.setAttribute('role', 'status');
+    el.style.cssText = 'margin-top:12px;padding:10px 12px;border-radius:8px;background:#eef6ff;color:#1e3a5f;font-size:14px;line-height:1.4';
+    anchor.parentNode.insertBefore(el, anchor.nextSibling);
+  }
+  el.textContent = text || mbwayText(0);
+  el.classList.remove('hidden');
+}
+
 function loadStripeScript() {
   return new Promise((resolve) => {
     const s = document.createElement('script');
@@ -260,6 +289,7 @@ async function initCheckout() {
     paymentElement.on('change', (ev) => {
       // Editing the card after a soft decline means a different card: release the retry hold.
       if (retryHold && !ev.empty) { retryHold = false; lockedUntilEpochMs = 0; if (submitBtn) submitBtn.disabled = false; }
+      setMbwayHint(!!(ev.value && ev.value.type === 'mb_way'));
       if (ev.complete) MON.stage('card_complete');
       else if (!ev.empty) MON.stage('card_typing');
     });
@@ -387,6 +417,8 @@ async function initCheckout() {
         // 3DS challenges that never finish time out after ~10 min as "failed authentication" with no device
         // data. Report how long confirmPayment took (and whether it was still open at 90s) per device.
         const confirmStartedAt = Date.now();
+        const mbwaySelected = !!document.getElementById('mbway-hint') && !document.getElementById('mbway-hint').classList.contains('hidden');
+        if (mbwaySelected) setMbwayHint(true, mbwayText(1));
         const pendingTimer = setTimeout(() => MON.attempt('pending', 90000), 90000);
         let confirmResult;
         try {
@@ -410,6 +442,7 @@ async function initCheckout() {
 
         if (confirmResult.error) {
           // Card declines are already logged server-side (webhook); record them as the exit step only.
+          if (mbwaySelected) setMbwayHint(true);
           MON.attempt(confirmResult.error.type === 'card_error' ? 'declined' : 'error', Date.now() - confirmStartedAt);
           if (confirmResult.error.type === 'card_error') {
             MON.stage('declined');
