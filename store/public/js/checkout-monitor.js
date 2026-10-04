@@ -65,10 +65,10 @@
   // One Pay tap: result paid|declined|error|pending, ms = time confirmPayment took (a long wait means a 3DS challenge).
   // The server adds the device from the user agent, so rates can be read per device (iOS FB app, Android, ...).
   var attempts = 0;
-  function attempt(result, ms) {
+  function attempt(result, ms, pi) {
     if (attempts >= 6) return;
     attempts += 1;
-    send({ t: 'attempt', result: result, ms: Math.round(ms || 0) });
+    send({ t: 'attempt', result: result, ms: Math.round(ms || 0), pi: pi || '' });
   }
 
   window.CheckoutMonitor = { stage: stage, error: error, attempt: attempt };

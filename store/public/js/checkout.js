@@ -419,7 +419,7 @@ async function initCheckout() {
         const confirmStartedAt = Date.now();
         const mbwaySelected = !!document.getElementById('mbway-hint') && !document.getElementById('mbway-hint').classList.contains('hidden');
         if (mbwaySelected) setMbwayHint(true, mbwayText(1));
-        const pendingTimer = setTimeout(() => MON.attempt('pending', 90000), 90000);
+        const pendingTimer = setTimeout(() => MON.attempt('pending', 90000, paymentIntentId), 90000);
         let confirmResult;
         try {
           confirmResult = await stripe.confirmPayment({
@@ -443,7 +443,7 @@ async function initCheckout() {
         if (confirmResult.error) {
           // Card declines are already logged server-side (webhook); record them as the exit step only.
           if (mbwaySelected) setMbwayHint(true);
-          MON.attempt(confirmResult.error.type === 'card_error' ? 'declined' : 'error', Date.now() - confirmStartedAt);
+          MON.attempt(confirmResult.error.type === 'card_error' ? 'declined' : 'error', Date.now() - confirmStartedAt, paymentIntentId);
           if (confirmResult.error.type === 'card_error') {
             MON.stage('declined');
             if (RETRY_HOLD_CODES.includes(confirmResult.error.decline_code)) {
@@ -456,7 +456,7 @@ async function initCheckout() {
           return;
         }
 
-        MON.attempt('paid', Date.now() - confirmStartedAt);
+        MON.attempt('paid', Date.now() - confirmStartedAt, paymentIntentId);
         if (!paymentIntentId && confirmResult.paymentIntent) {
           paymentIntentId = confirmResult.paymentIntent.id;
         }

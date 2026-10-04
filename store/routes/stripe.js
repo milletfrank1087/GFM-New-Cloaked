@@ -1053,9 +1053,38 @@ module.exports = function createStripeRouter(ctx) {
 
   // Checkout monitor (public/js/checkout-monitor.js): browser errors + furthest step of unpaid checkouts.
   const EXIT_STAGES = new Set(['page_loaded', 'form_loading', 'form_ready', 'email', 'card_typing', 'card_complete', 'pay_tapped', 'declined']);
+  // Persist checkout stages/results so the payment-layer funnel can be queried later (Railway logs reset on every deploy).
+  // Uses the campaign funnel_events table; fire-and-forget, never blocks or breaks the checkout.
+  function persistCheckoutEvent(req, eventType, extra) {
+    if (!supabase) return;
+    try {
+      let d = {};
+      try { d = JSON.parse(req.cookies.__session || '{}'); } catch (_) { d = {}; }
+      supabase.from('funnel_events').insert({
+        campaign_slug: String(d.ref || 'unknown').slice(0, 60),
+        event_type: eventType,
+        visitor_id: d.utm?.visitorId || null,
+        ip_address: d.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || null,
+        country: d.utm?.clientLocation?.countryCode || null,
+        amount: d.amount != null && !isNaN(parseFloat(d.amount)) ? parseFloat(d.amount) : null,
+        currency: d.currency || null,
+        store_domain: STORE_DOMAIN,
+        device_type: forensics.deviceLabel(req.headers['user-agent']),
+        extra: Object.assign({ session: String(d.sid || '').slice(0, 12), lang: d.lang || null }, extra)
+      }).then(({ error }) => { if (error) console.error('[checkout-events] insert failed:', error.message); }, () => {});
+    } catch (_) { /* never break the checkout for telemetry */ }
+  }
+
   router.post('/api/client/report', express.text({ type: '*/*', limit: '4kb' }), (req, res) => {
     let body = req.body;
     if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
+    if (body?.t === 'attempt') {
+      persistCheckoutEvent(req, 'Checkout_Attempt', { result: String(body.result || '').slice(0, 12), ms: Number(body.ms) || 0, pi: String(body.pi || '').slice(0, 40) || null });
+    } else if (body?.t === 'exit' && EXIT_STAGES.has(body.stage)) {
+      persistCheckoutEvent(req, 'Checkout_Exit', { stage: body.stage, secs: Number(body.secs) || 0 });
+    } else if (body?.t === 'error') {
+      persistCheckoutEvent(req, 'Checkout_Error', { kind: String(body.kind || '').slice(0, 20), msg: String(body.msg || '').slice(0, 160), code: String(body.code || '').slice(0, 40), stage: String(body.stage || '').slice(0, 20), secs: Number(body.secs) || 0 });
+    }
     if (body?.t === 'attempt') {
       // Browser-measured result of one Pay tap: lets us split 3DS waits and outcomes by device.
       const ua = String(req.headers['user-agent'] || '');
