@@ -1,5 +1,7 @@
 {
   "id": "glioblastoma-serafina",
+  "template": "standalone-v2",
+  "language": "it",
   "title": "Aiuta Serafina a Combattere il Tumore al Cervello",
   "description": "Serafina, 21 anni, è stata diagnosticata con un glioblastoma (GBM) di grado IV — il tumore cerebrale più aggressivo. Ha urgente bisogno di immunoterapia con cellule dendritiche in Germania — un trattamento non coperto da nessun sistema sanitario pubblico in Europa.",
   "organizer": {
@@ -14,7 +16,17 @@
   "donorCount": 947,
   "daysLeft": 29,
   "donationPresets": {
-    "EUR": { "amounts": [10, 20, 25, 50, 100, 250], "default": 25 }
+    "EUR": {
+      "amounts": [
+        10,
+        20,
+        25,
+        50,
+        100,
+        250
+      ],
+      "default": 25
+    }
   },
   "images": [
     {

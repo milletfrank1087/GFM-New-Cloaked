@@ -1,5 +1,7 @@
 {
   "id": "glioblastoma-grace",
+  "template": "standalone-v2",
+  "language": "en",
   "title": "Help Grace Fight Her Brain Tumour",
   "description": "Grace, 21, has been diagnosed with a grade IV glioblastoma (GBM) — the most aggressive malignant brain tumour. She urgently needs dendritic cell immunotherapy in Germany — a treatment that is not funded by the NHS.",
   "organizer": {

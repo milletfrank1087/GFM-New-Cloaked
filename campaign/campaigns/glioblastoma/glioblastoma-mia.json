@@ -1,5 +1,7 @@
 {
   "id": "glioblastoma-mia",
+  "template": "standalone-v2",
+  "language": "en",
   "title": "Help Mia Fight Her Brain Tumour",
   "description": "Mia, 21, has been diagnosed with a grade IV glioblastoma (GBM) — the most aggressive malignant brain tumour. She urgently needs dendritic cell immunotherapy in Germany — a treatment that is not covered by Medicare or any public health system.",
   "organizer": {

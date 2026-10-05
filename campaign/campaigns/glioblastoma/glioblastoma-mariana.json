@@ -1,5 +1,7 @@
 {
   "id": "glioblastoma-mariana",
+  "template": "standalone-v2",
+  "language": "pt",
   "title": "Ajuda a Mariana a Lutar Contra o Tumor Cerebral",
   "description": "A Mariana, de 21 anos, foi diagnosticada com um glioblastoma (GBM) de grau IV — o tumor cerebral mais agressivo. Precisa urgentemente de imunoterapia com células dendríticas na Alemanha — um tratamento que não é coberto por nenhum sistema de saúde pública na Europa.",
   "organizer": {
@@ -14,7 +16,17 @@
   "donorCount": 807,
   "daysLeft": 29,
   "donationPresets": {
-    "EUR": { "amounts": [10, 20, 25, 50, 100, 250], "default": 25 }
+    "EUR": {
+      "amounts": [
+        10,
+        20,
+        25,
+        50,
+        100,
+        250
+      ],
+      "default": 25
+    }
   },
   "images": [
     {

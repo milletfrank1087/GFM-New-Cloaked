@@ -1,5 +1,7 @@
 {
   "id": "glioblastoma-lucia",
+  "template": "standalone-v2",
+  "language": "es",
   "title": "Ayuda a Lucía a Luchar Contra su Tumor Cerebral",
   "description": "Lucía, de 21 años, ha sido diagnosticada con un glioblastoma (GBM) de grado IV — el tumor cerebral más agresivo. Necesita urgentemente inmunoterapia con células dendríticas en Alemania — un tratamiento que no está cubierto por ningún sistema de salud pública en Europa.",
   "organizer": {
@@ -14,7 +16,17 @@
   "donorCount": 1135,
   "daysLeft": 29,
   "donationPresets": {
-    "EUR": { "amounts": [10, 20, 25, 50, 100, 250], "default": 25 }
+    "EUR": {
+      "amounts": [
+        10,
+        20,
+        25,
+        50,
+        100,
+        250
+      ],
+      "default": 25
+    }
   },
   "images": [
     {

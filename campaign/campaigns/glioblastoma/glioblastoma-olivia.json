@@ -1,5 +1,7 @@
 {
   "id": "glioblastoma-olivia",
+  "template": "standalone-v2",
+  "language": "en",
   "title": "Help Olivia Fight Her Brain Tumour",
   "description": "Olivia, 21, has been diagnosed with a grade IV glioblastoma (GBM) — the most aggressive malignant brain tumour. She urgently needs dendritic cell immunotherapy in Germany — a treatment that is not covered by OHIP or any public health system.",
   "organizer": {

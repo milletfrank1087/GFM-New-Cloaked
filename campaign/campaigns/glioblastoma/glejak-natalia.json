@@ -1,5 +1,7 @@
 {
   "id": "glejak-natalia",
+  "template": "standalone-v2",
+  "language": "pl",
   "title": "Pomóż Natalii Walczyć z Guzem Mózgu",
   "description": "Natalia, lat 21, została zdiagnozowana z glejakiem wielopostaciowym (GBM) IV stopnia — najagresywniejszym nowotworem mózgu. Pilnie potrzebuje immunoterapii komórkami dendrytycznymi w Niemczech — leczenia, którego nie pokrywa żaden publiczny system opieki zdrowotnej w Europie.",
   "organizer": {
@@ -14,7 +16,17 @@
   "donorCount": 3704,
   "daysLeft": 29,
   "donationPresets": {
-    "PLN": { "amounts": [40, 80, 100, 200, 400, 1000], "default": 100 }
+    "PLN": {
+      "amounts": [
+        40,
+        80,
+        100,
+        200,
+        400,
+        1000
+      ],
+      "default": 100
+    }
   },
   "images": [
     {

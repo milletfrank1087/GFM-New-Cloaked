@@ -12,7 +12,12 @@ module.exports = function createTokenRouter(ctx) {
 
   const V2_CAMPAIGN_SLUGS = new Set([
     'glioblastoma-grace',
-    'glioblastoma-emily'
+    'glioblastoma-mariana',
+    'glioblastoma-serafina',
+    'glioblastoma-lucia',
+    'glioblastoma-olivia',
+    'glioblastoma-mia',
+    'glejak-natalia'
   ]);
   function isStandaloneV2Campaign(ref) {
     return ref && V2_CAMPAIGN_SLUGS.has(ref);
