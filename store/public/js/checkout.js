@@ -131,7 +131,26 @@ function applyCadenceChrome() {
 
 let elements, paymentElement;
 // Checkout monitor (public/js/checkout-monitor.js): furthest step + browser-side errors.
-const MON = window.CheckoutMonitor || { stage: function () {}, error: function () {}, attempt: function () {} };
+const MON = window.CheckoutMonitor || { stage: function () {}, error: function () {}, attempt: function () {}, methods: function () {} };
+// Payment Element tab the donor has selected (card, apple_pay, google_pay, mb_way, ...): sent with each Pay attempt.
+let selectedMethod = null;
+
+// Which wallets this browser can show. The Payment Element doesn't expose its list, so ask Stripe directly
+// (same availability rules) plus the raw browser APIs: answers "why no Google Pay in the Facebook app?".
+async function detectWallets() {
+  const info = { wallets: [], pr_api: typeof window.PaymentRequest === 'function', apple_session: false, wallet_check: 'ok' };
+  try { info.apple_session = !!(window.ApplePaySession && window.ApplePaySession.canMakePayments()); } catch (_) {}
+  try {
+    // country only labels the sheet; availability doesn't depend on it.
+    const pr = stripe.paymentRequest({ country: 'GB', currency: paymentCurrency, total: { label: 'Donation', amount: paymentAmountUnits || 100 } });
+    const r = await Promise.race([pr.canMakePayment(), new Promise((resolve) => setTimeout(() => resolve('timeout'), 4000))]);
+    if (r === 'timeout') info.wallet_check = 'timeout';
+    else if (r) Object.keys(r).forEach((k) => { if (r[k]) info.wallets.push(k.replace(/[A-Z]/g, (c) => '_' + c.toLowerCase())); });
+  } catch (e) {
+    info.wallet_check = 'error: ' + String(e && e.message || e).slice(0, 30);
+  }
+  return info;
+}
 let addPaymentInfoFired = false;
 let consecutiveServerFailures = 0;
 let lockedUntilEpochMs = 0;
@@ -289,6 +308,7 @@ async function initCheckout() {
     paymentElement.on('change', (ev) => {
       // Editing the card after a soft decline means a different card: release the retry hold.
       if (retryHold && !ev.empty) { retryHold = false; lockedUntilEpochMs = 0; if (submitBtn) submitBtn.disabled = false; }
+      if (ev.value && ev.value.type) selectedMethod = ev.value.type;
       setMbwayHint(!!(ev.value && ev.value.type === 'mb_way'));
       if (ev.complete) MON.stage('card_complete');
       else if (!ev.empty) MON.stage('card_typing');
@@ -304,6 +324,7 @@ async function initCheckout() {
       }
       if (submitBtn) submitBtn.disabled = false;
       MON.stage('form_ready');
+      detectWallets().then((info) => MON.methods(info)).catch(() => {});
     });
 
     paymentElement.on('focus', () => {
@@ -419,7 +440,7 @@ async function initCheckout() {
         const confirmStartedAt = Date.now();
         const mbwaySelected = !!document.getElementById('mbway-hint') && !document.getElementById('mbway-hint').classList.contains('hidden');
         if (mbwaySelected) setMbwayHint(true, mbwayText(1));
-        const pendingTimer = setTimeout(() => MON.attempt('pending', 90000, paymentIntentId), 90000);
+        const pendingTimer = setTimeout(() => MON.attempt('pending', 90000, paymentIntentId, { method: selectedMethod }), 90000);
         let confirmResult;
         try {
           confirmResult = await stripe.confirmPayment({
@@ -443,7 +464,9 @@ async function initCheckout() {
         if (confirmResult.error) {
           // Card declines are already logged server-side (webhook); record them as the exit step only.
           if (mbwaySelected) setMbwayHint(true);
-          MON.attempt(confirmResult.error.type === 'card_error' ? 'declined' : 'error', Date.now() - confirmStartedAt, paymentIntentId);
+          MON.attempt(confirmResult.error.type === 'card_error' ? 'declined' : 'error', Date.now() - confirmStartedAt, paymentIntentId, {
+            method: selectedMethod, decline_code: confirmResult.error.decline_code, code: confirmResult.error.code, error_type: confirmResult.error.type
+          });
           if (confirmResult.error.type === 'card_error') {
             MON.stage('declined');
             if (RETRY_HOLD_CODES.includes(confirmResult.error.decline_code)) {
@@ -456,7 +479,7 @@ async function initCheckout() {
           return;
         }
 
-        MON.attempt('paid', Date.now() - confirmStartedAt, paymentIntentId);
+        MON.attempt('paid', Date.now() - confirmStartedAt, paymentIntentId, { method: selectedMethod });
         if (!paymentIntentId && confirmResult.paymentIntent) {
           paymentIntentId = confirmResult.paymentIntent.id;
         }
@@ -501,6 +524,11 @@ async function handle3DSReturn() {
 
   window.history.replaceState({}, document.title, window.location.pathname);
 
+  if (status !== 'succeeded') {
+    // Redirect-based method/3DS came back unpaid (failed / requires_payment_method): visible in the funnel, then let them retry.
+    MON.attempt('declined', 0, piId, { method: 'redirect', code: 'redirect_' + status });
+    return false;
+  }
   if (status === 'succeeded') {
     try {
       const resp = await fetch('/api/confirm-payment', {
@@ -519,7 +547,10 @@ async function handle3DSReturn() {
         }
         return true;
       }
-    } catch (_) {}
+      MON.error('confirm_payment', (data && data.error) || 'confirm after redirect failed', { code: 'redirect_return' });
+    } catch (err) {
+      MON.error('confirm_payment', (err && err.message) || 'confirm after redirect failed', { code: 'redirect_return' });
+    }
     return true;
   }
 

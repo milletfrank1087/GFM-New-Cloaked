@@ -34,7 +34,7 @@ function rememberAttempt(piId, info) {
   const attempt = list.length;
   attempts.set(piId, {
     t: now, attempt, sinceFirstSecs: Math.round((now - list[0]) / 1000),
-    vid: info.vid || null, mkt: info.mkt || null, device: deviceLabel(info.ua), ip: info.ip || null,
+    vid: info.vid || null, mkt: info.mkt || null, device: deviceLabel(info.ua), ua: info.ua ? String(info.ua).slice(0, 400) : null, ip: info.ip || null,
     geo: info.geo || null, sid: sid.substring(0, 12), src: info.src || null,
     currency: info.currency || null, amount: info.amount || null, sfu: !!info.sfu
   });
@@ -44,6 +44,12 @@ function rememberAttempt(piId, info) {
 
 function attemptContext(piId) {
   return attempts.get(piId) || null;
+}
+
+// payment_intent.requires_action: the 3DS challenge / bank-app approval (MB WAY) started now.
+function markAction(piId, type) {
+  const a = attempts.get(piId);
+  if (a && !a.actionAt) { a.actionAt = Date.now(); a.actionType = type || null; }
 }
 
 // Key raw bank response codes as they appear on the card networks. Unknown codes print as-is.
@@ -157,4 +163,4 @@ function recordOutcome(ok, meta, emitAlert) {
   });
 }
 
-module.exports = { deviceLabel, rememberAttempt, attemptContext, chargeDetails, failureLine, describeNetworkCode, recordOutcome };
+module.exports = { deviceLabel, rememberAttempt, attemptContext, markAction, chargeDetails, failureLine, describeNetworkCode, recordOutcome };

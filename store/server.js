@@ -91,6 +91,26 @@ app.use((req, res, next) => {
   express.json()(req, res, next);
 });
 
+// HTTP problems + slow payment endpoints. Registered before the Stripe router so /api/create-payment,
+// /api/confirm-payment, /webhooks/stripe and /s/:token are covered too.
+const SLOW_MS = { '/api/create-payment': 4000, '/api/confirm-payment': 8000, '/webhooks/stripe': 5000 };
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const status = res.statusCode;
+    const path = req.originalUrl.split('?')[0];
+    // 404s are almost all vulnerability scanners (/.env, /.git/config…): counted in the hourly summary.
+    if (status === 404) { StoreLog.scannerHit(); return; }
+    const ms = Date.now() - start;
+    if (status >= 500 || (status >= 400 && (path.startsWith('/api/') || path.startsWith('/webhooks/')))) {
+      StoreLog.system(status >= 500 ? '💥' : '⚠️', `HTTP ${status} ${req.method} ${path} (${ms}ms)`);
+    } else if (ms > (SLOW_MS[path] || (path.startsWith('/s/') ? 3000 : Infinity))) {
+      StoreLog.event('slow_request', '---', `${req.method} ${path.startsWith('/s/') ? '/s/:token' : path} took ${ms}ms (HTTP ${status})`);
+    }
+  });
+  next();
+});
+
 app.use(createStripeRouter(ctx));
 
 app.use((req, res, next) => {
@@ -99,19 +119,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  res.on('finish', () => {
-    const status = res.statusCode;
-    // 404s are almost all vulnerability scanners (/.env, /.git/config…): counted in the hourly summary.
-    if (status === 404) { StoreLog.scannerHit(); return; }
-    if (status >= 500 || (status >= 400 && req.originalUrl.startsWith('/api/'))) {
-      const ms = Date.now() - start;
-      StoreLog.system(status >= 500 ? '💥' : '⚠️', `HTTP ${status} ${req.method} ${req.originalUrl.split('?')[0]} (${ms}ms)`);
-    }
-  });
-  next();
-});
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 

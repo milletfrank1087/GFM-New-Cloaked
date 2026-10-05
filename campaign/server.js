@@ -155,6 +155,22 @@ function getClientInfo(req) {
   };
 }
 
+// API failures and slow API calls (pages/static files are not logged; 404s are mostly scanners).
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api/')) return next();
+  const start = Date.now();
+  res.on('finish', () => {
+    const ms = Date.now() - start;
+    const status = res.statusCode;
+    if (status >= 500 || (status >= 400 && status !== 404)) {
+      JourneyLog.system(status >= 500 ? '💥' : '⚠️', `HTTP ${status} ${req.method} ${req.path} (${ms}ms)`);
+    } else if (ms > 3000) {
+      JourneyLog.system('🐢', `slow ${req.method} ${req.path} took ${ms}ms`);
+    }
+  });
+  next();
+});
+
 app.use(express.json());
 app.use(cookieParser());
 

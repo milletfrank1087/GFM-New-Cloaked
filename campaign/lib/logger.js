@@ -80,7 +80,8 @@ function sourceOf(url) {
 function createJourneyLog(fmtCurrency, { market = '--' } = {}) {
   const MKT = String(market).toUpperCase().slice(0, 3).padEnd(3);
   const seenVisitors = new Set();
-  const newCounters = () => ({ visits: 0, returning: 0, forms: 0, checkouts: 0, cards: 0, donated: 0, total: 0, monthly: 0, tracked: 0, trackFail: 0 });
+  const newCounters = () => ({ visits: 0, returning: 0, forms: 0, checkouts: 0, cards: 0, donated: 0, total: 0, monthly: 0, tracked: 0, trackFail: 0, jsErrors: 0, jsNew: 0, initFail: 0, initMs: [] });
+  const seenClientErrors = new Map(); // signature -> count (process lifetime)
   let hour = new Date().getHours();
   let c = newCounters();
 
@@ -99,9 +100,14 @@ function createJourneyLog(fmtCurrency, { market = '--' } = {}) {
     const now = new Date();
     if (!force && now.getHours() === hour) return;
     const label = new Date(now.getTime() - (force ? 0 : 60_000)).toLocaleTimeString('en-GB', { hour: '2-digit', timeZone: 'Europe/Athens' });
-    if (c.visits || c.forms || c.donated || c.monthly) {
+    if (c.visits || c.forms || c.donated || c.monthly || c.jsErrors || c.initFail) {
       const metaOk = c.tracked ? Math.round(100 * (c.tracked - c.trackFail) / c.tracked) : 100;
       console.log(`── ${label}:00 last hour · ${MKT.trim()} ${c.visits} visits (${c.returning} returning) · ${c.forms} forms · ${c.checkouts} checkouts · ${c.donated} donated ${fmtCurrency(Math.round(c.total * 100) / 100)} · ${c.monthly} monthly | tracking ok ${metaOk}%`);
+      const ms = c.initMs.slice().sort((a, b) => a - b);
+      const pct = (q) => ms.length ? `${(ms[Math.min(ms.length - 1, Math.floor(ms.length * q))] / 1000).toFixed(1)}s` : '?';
+      const extra = [ms.length ? `Donate→checkout link: median ${pct(0.5)}, slowest ${pct(0.99)}` : '', c.initFail ? `${c.initFail} Donate taps failed` : '',
+        c.jsErrors ? `page errors ${c.jsErrors} (${c.jsNew} new types)` : ''].filter(Boolean).join(' · ');
+      if (extra) console.log(`   ${extra}`);
     }
     hour = now.getHours();
     c = newCounters();
@@ -173,6 +179,23 @@ function createJourneyLog(fmtCurrency, { market = '--' } = {}) {
 
     system(emoji, message) {
       console.log(`${getTimestamp()}  ${MKT} ${'--'.padEnd(9)} ${emoji} ${message}`);
+    },
+
+    // Browser error on the campaign page: first of each signature printed in full, repeats only counted.
+    clientError(visitorId, signature, text) {
+      c.jsErrors += 1;
+      if (seenClientErrors.has(signature)) { seenClientErrors.set(signature, seenClientErrors.get(signature) + 1); return; }
+      if (seenClientErrors.size > 500) seenClientErrors.clear();
+      seenClientErrors.set(signature, 1);
+      c.jsNew += 1;
+      line(visitorId, '🐞', 'browser', text);
+    },
+
+    // /api/init-donation: server time to create the checkout link (ok) or the reason it failed.
+    initDonation(visitorId, ms, failure) {
+      if (failure) { c.initFail += 1; line(visitorId, '💥', 'DONATE', `Donate tap failed: ${failure} (${ms}ms)`, '⚠ donor could not reach checkout'); return; }
+      if (c.initMs.length < 1000) c.initMs.push(ms);
+      if (ms > 3000) line(visitorId, '🐢', 'slow', `checkout link took ${(ms / 1000).toFixed(1)}s to create`);
     },
 
     flushHour,

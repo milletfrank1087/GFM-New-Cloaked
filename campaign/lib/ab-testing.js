@@ -3,6 +3,19 @@ const path = require('path');
 const { supabase, fetchRates, convertToBase } = require('./db/client');
 const { parseUserAgent } = require('./userAgentParser');
 
+// supabase-js resolves with { error } on DB errors (it only rejects on network failures): report each distinct
+// ab_visitors failure once per hour instead of silently dropping it.
+const abDbErrorsSeen = new Map();
+function abDbResult(label) {
+  const report = (msg) => {
+    const key = `${label}|${msg}`;
+    if (Date.now() - (abDbErrorsSeen.get(key) || 0) < 3600e3) return;
+    abDbErrorsSeen.set(key, Date.now());
+    console.error(`[ab_visitors] ${label} failed: ${msg}`);
+  };
+  return [({ error } = {}) => { if (error) report(error.message); }, (err) => report((err && err.message) || String(err))];
+}
+
 const VARIANTS = {
   CONTROL: 'control',
   VARIANT_B: 'variant_b'
@@ -324,7 +337,7 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
         country_code: session.countryCode,
         created_at: new Date(now).toISOString(),
         updated_at: new Date(now).toISOString()
-      }, { onConflict: 'session_key' }).then(null, () => {});
+      }, { onConflict: 'session_key' }).then(...abDbResult('upsert'));
     }
 
     // Resolve IP geolocation in background
@@ -341,7 +354,7 @@ function recordImpression(variant, userAgent = '', ip = '', campaignSlug = 'glio
           country: geo.country,
           country_code: geo.countryCode,
           updated_at: new Date().toISOString()
-        }).eq('session_key', sessionKey).then(null, () => {});
+        }).eq('session_key', sessionKey).then(...abDbResult('geo update'));
       }
     }).catch(() => {
       session.locationLabel = 'Unknown Location';
@@ -395,7 +408,7 @@ function recordEngagementEvent(variant, eventName, data = {}, ip = '', req = nul
       if (session.checkoutOpened) updates.checkout_opened = true;
       if (session.checkoutInitiated) updates.checkout_initiated = true;
       if (session.scrollDepth) updates.scroll_depth = session.scrollDepth;
-      supabase.from('ab_visitors').update(updates).eq('session_key', session.key).then(null, () => {});
+      supabase.from('ab_visitors').update(updates).eq('session_key', session.key).then(...abDbResult('engagement update'));
     }
   }
 }

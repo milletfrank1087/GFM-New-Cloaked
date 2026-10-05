@@ -60,6 +60,12 @@ const STORE_EVENTS = {
   webhook_dispute:  { icon: '⚠️', step: 'DISPUTE', action: 'respond in Stripe dashboard → Disputes before the deadline' },
   webhook_refund:   { icon: '↩️', step: 'refund' },
   webhook_error:    { icon: '💥', step: 'webhook', action: 'check STRIPE_WEBHOOK_SECRET matches the Stripe endpoint' },
+  webhook_dispute_update: { icon: '⚠️', step: 'DISPUTE' },
+  webhook_efw:      { icon: '🚩', step: 'FRAUD', action: 'issuer reported fraud on a paid charge: refund it in Stripe before it becomes a dispute' },
+  webhook_review:   { icon: '🔎', step: 'radar' },
+  webhook_canceled: { icon: '🚫', step: 'canceled' },
+  payment_unrecorded: { icon: '💥', step: 'UNSAVED', action: 'donor paid but nothing was recorded: add the payment from the Stripe dashboard (PaymentIntent id above)' },
+  slow_request:     { icon: '🐢', step: 'slow' },
   db_failed:        { icon: '💥', step: 'DB', action: 'check Supabase (row not saved)' },
   paypal_order_created: { hidden: true },
   paypal_order_failed:  { icon: '❌', step: 'ERROR' },
@@ -81,7 +87,7 @@ const STORE_EVENTS = {
   subscription_manage: { icon: '⚠️', step: 'monthly' }
 };
 
-const newCounters = () => ({ checkouts: 0, payAttempts: 0, donated: 0, totals: {}, declined: 0, offers: 0, offerDeclined: 0, offerLeft: 0, monthly: 0, renewals: 0, badLinks: 0, shopViews: 0, scanner: 0, errors: 0, jsErrors: 0, jsNew: 0, exits: {}, declineKinds: {}, devices: {} });
+const newCounters = () => ({ checkouts: 0, payAttempts: 0, donated: 0, totals: {}, declined: 0, offers: 0, offerDeclined: 0, offerLeft: 0, monthly: 0, renewals: 0, badLinks: 0, shopViews: 0, scanner: 0, errors: 0, jsErrors: 0, jsNew: 0, exits: {}, declineKinds: {}, devices: {}, forms: 0, wallets: {}, chosen: {}, readyMs: [] });
 let counters = newCounters();
 const seenClientErrors = new Map(); // signature -> count (process lifetime)
 let hour = new Date().getHours();
@@ -103,7 +109,7 @@ function flushHour(force) {
   const now = new Date();
   if (!force && now.getHours() === hour) return;
   const c = counters;
-  if (c.checkouts || c.donated || c.declined || c.scanner || c.errors || c.renewals || c.jsErrors) {
+  if (c.checkouts || c.donated || c.declined || c.scanner || c.errors || c.renewals || c.jsErrors || c.forms) {
     const label = new Date(now.getTime() - (force ? 0 : 60_000)).toLocaleTimeString('en-GB', { hour: '2-digit', timeZone: 'Europe/Athens' });
     const money = Object.entries(c.totals).map(([cur, v]) => fmtAmount(Math.round(v * 100) / 100, cur)).join(' + ') || '0';
     const order = ['page_loaded', 'form_loading', 'form_ready', 'email', 'card_typing', 'card_complete', 'pay_tapped', 'declined', 'error'];
@@ -113,8 +119,16 @@ function flushHour(force) {
     if (extra) console.log(`   ${extra}`);
     const kinds = Object.entries(c.declineKinds).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k, v]) => `${k} ×${v}`).join(' · ');
     if (kinds) console.log(`   declines by country/bank code: ${kinds}`);
-    const devs = Object.entries(c.devices).sort((a, b) => b[1].n - a[1].n).map(([d, v]) => `${d} ${v.paid}/${v.n} paid${v.slow ? ` (${v.slowPaid}/${v.slow} with 3DS-length wait)` : ''}${v.pending ? `, ${v.pending} still open at 90s` : ''}`).join(' · ');
-    if (devs) console.log(`   card attempts by device: ${devs}`);
+    // Key is "device" for cards/wallets, "device · mb_way" for bank-app methods (their wait is an approval, not 3DS).
+    const devs = Object.entries(c.devices).sort((a, b) => b[1].n - a[1].n).map(([d, v]) => `${d} ${v.paid}/${v.n} paid${v.slow ? ` (${v.slowPaid}/${v.slow} with ${/ · /.test(d) ? 'app-approval' : '3DS-length'} wait)` : ''}${v.pending ? `, ${v.pending} still open at 90s` : ''}`).join(' · ');
+    if (devs) console.log(`   pay attempts by device: ${devs}`);
+    if (c.forms) {
+      const wallets = Object.entries(c.wallets).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}/${c.forms}`).join(' · ') || 'none';
+      const chosen = Object.entries(c.chosen).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · ');
+      const ms = c.readyMs.slice().sort((a, b) => a - b);
+      const med = ms.length ? (ms[Math.floor(ms.length / 2)] / 1000).toFixed(1) + 's' : '?';
+      console.log(`   payment form: ${c.forms} loaded (median ${med}) · wallets offered: ${wallets}${chosen ? ` · chosen at Pay: ${chosen}` : ''}`);
+    }
   }
   hour = now.getHours();
   counters = newCounters();
@@ -165,14 +179,23 @@ const StoreLog = {
   // Furthest step reached by a checkout that ended without paying (hourly summary only).
   checkoutExit(stage) { counters.exits[stage] = (counters.exits[stage] || 0) + 1; },
 
+  // Payment form loaded: which wallets this browser can show (Google Pay / Apple Pay / Link) and how long it took.
+  paymentForm(wallets, readyMs) {
+    counters.forms += 1;
+    (wallets || []).forEach((w) => { counters.wallets[w] = (counters.wallets[w] || 0) + 1; });
+    if (readyMs > 0 && counters.readyMs.length < 500) counters.readyMs.push(readyMs);
+  },
+  chosenMethod(method) { if (method) counters.chosen[method] = (counters.chosen[method] || 0) + 1; },
+
   // Run fn with a visitor context (webhooks have no cookie, so the PaymentIntent's remembered context is used).
   withContext(ctx, fn) { return als.run(ctx || {}, fn); },
 
   // Hourly-summary buckets: bank/Stripe reason per country, and card attempts per device.
   declineKind(key) { counters.declineKinds[key] = (counters.declineKinds[key] || 0) + 1; },
   // Browser-reported result of one confirmPayment call: result paid|declined|error|pending, ms = time spent waiting.
-  attempt(device, result, ms) {
-    const d = counters.devices[device] || (counters.devices[device] = { n: 0, paid: 0, slow: 0, slowPaid: 0, pending: 0 });
+  attempt(device, result, ms, method) {
+    const key = method && !['card', 'apple_pay', 'google_pay', 'link'].includes(method) ? `${device} · ${method}` : device;
+    const d = counters.devices[key] || (counters.devices[key] = { n: 0, paid: 0, slow: 0, slowPaid: 0, pending: 0 });
     if (result === 'pending') { d.pending += 1; return; }
     d.n += 1;
     if (result === 'paid') d.paid += 1;

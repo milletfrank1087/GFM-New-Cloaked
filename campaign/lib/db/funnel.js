@@ -22,8 +22,11 @@ function logFunnelEvent({ campaignSlug, eventType, visitor, amount, currency, ca
     extra: extra || null
   };
 
-  supabase.from('funnel_events').insert(row).then(null, (err) => {
-    console.error('[funnel] Insert error:', err?.message);
+  // supabase-js resolves with { error } on DB errors (it only rejects on network failures): check both.
+  supabase.from('funnel_events').insert(row).then(({ error }) => {
+    if (error) console.error(`[funnel] Insert error (${eventType}):`, error.message);
+  }, (err) => {
+    console.error(`[funnel] Insert error (${eventType}):`, err?.message);
   });
 }
 

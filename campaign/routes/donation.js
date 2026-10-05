@@ -47,19 +47,38 @@ module.exports = function createDonationRouter(ctx) {
     loadCampaignFromFile
   } = ctx;
 
+  // "Android FB app", "iOS IG app", "desktop": same labels as the store logs (store/lib/payment-forensics.js).
+  function deviceLabel(ua) {
+    ua = String(ua || '');
+    const os = /iPhone|iPad|iPod/.test(ua) ? 'iOS' : /Android/.test(ua) ? 'Android' : ua ? 'desktop' : '?';
+    return os + (/FBAN|FBAV|FB_IAB|FBIOS/.test(ua) ? ' FB app' : /Instagram/.test(ua) ? ' IG app' : '');
+  }
+
   router.post('/api/init-donation', async (req, res) => {
     const clientInfo = getClientInfo(req);
     const { amount, tip = 0, isAnonymous = false, donorEmail = null, tracking = null, clientLocation = null } = req.body;
+    const t0 = Date.now();
+    const timings = {};
+    // A Donate tap that never reaches checkout: logged + saved, since the donor only sees an error toast.
+    const fail = (status, error, reason) => {
+      const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, clientLocation || clientInfo.clientLocation);
+      JourneyLog.initDonation(visitor.id, Date.now() - t0, reason);
+      logFunnelEvent({ campaignSlug: req.body.campaign || ACTIVE_CAMPAIGN, eventType: 'Redirect_Failed', visitor, amount, currency: ACTIVE_CURRENCY.code,
+        deviceType: deviceLabel(clientInfo.userAgent), extra: { reason, status, ms: Date.now() - t0, timings } });
+      return res.status(status).json({ error });
+    };
 
     try {
       const minAmount = ACTIVE_CURRENCY.stripeMin || 0.50;
       if (!amount || parseFloat(amount) < minAmount) {
-        return res.status(400).json({ error: `Invalid donation amount (minimum ${minAmount} ${ACTIVE_CURRENCY.code})` });
+        return fail(400, `Invalid donation amount (minimum ${minAmount} ${ACTIVE_CURRENCY.code})`, `invalid amount ${amount}`);
       }
 
+      let tStep = Date.now();
       const store = await getNextStore();
+      timings.store_ms = Date.now() - tStep;
       if (!store) {
-        return res.status(503).json({ error: 'No active stores available' });
+        return fail(503, 'No active stores available', 'no active store');
       }
 
       const token = crypto.randomBytes(32).toString('hex');
@@ -108,6 +127,7 @@ module.exports = function createDonationRouter(ctx) {
       const targetCurrency = req.body.currency || campaign?.currency || (isSanctuary ? 'USD' : ACTIVE_CURRENCY.code);
       const targetLanguage = req.body.language || campaign?.language || (isSanctuary ? 'en' : ctx.DEFAULT_LANGUAGE);
 
+      tStep = Date.now();
       const session = await createDonationToken({
         token,
         amount: parseFloat(amount),
@@ -124,8 +144,9 @@ module.exports = function createDonationRouter(ctx) {
         expiresAt
       });
 
+      timings.token_ms = Date.now() - tStep;
       if (!session) {
-        return res.status(503).json({ error: 'Failed to initialize donation' });
+        return fail(503, 'Failed to initialize donation', 'checkout session not saved (Supabase)');
       }
 
       const tipNum = parseFloat(tip) || 0;
@@ -140,8 +161,11 @@ module.exports = function createDonationRouter(ctx) {
         currency: ACTIVE_CURRENCY.code,
         cadence: enrichedTracking.cadence,
         storeDomain: store.domain,
-        eventId: enrichedTracking.eventId
+        eventId: enrichedTracking.eventId,
+        deviceType: deviceLabel(clientInfo.userAgent),
+        extra: Object.assign({ ms: Date.now() - t0 }, timings)
       });
+      JourneyLog.initDonation(visitor.id, Date.now() - t0, null);
 
       try {
         const { recordEngagementEvent } = require('../lib/ab-testing');
@@ -153,7 +177,7 @@ module.exports = function createDonationRouter(ctx) {
       res.json({ redirectUrl });
     } catch (error) {
       console.error('Init donation error:', error);
-      res.status(500).json({ error: 'Failed to initialize donation' });
+      fail(500, 'Failed to initialize donation', `exception: ${String(error && error.message || error).slice(0, 120)}`);
     }
   });
 
@@ -231,7 +255,7 @@ module.exports = function createDonationRouter(ctx) {
         logFunnelEvent({
           campaignSlug: tracking.campaignSlug || ACTIVE_CAMPAIGN,
           eventType: 'Purchase',
-          visitor,
+          visitor: tracking.visitorId ? { ...visitor, id: tracking.visitorId } : visitor, // the id the funnel started with, not an IP lookup
           amount: paymentData.amount,
           currency: paymentData.currency,
           cadence: tracking.cadence,
@@ -366,6 +390,24 @@ module.exports = function createDonationRouter(ctx) {
     } catch (error) {
       res.json({ success: false, error: error.message });
     }
+  });
+
+  // Campaign-page browser errors (public/js/page-monitor.js): JS errors, failed Donate taps, failed resources.
+  router.post('/api/client/error', express.text({ type: '*/*', limit: '4kb' }), (req, res) => {
+    let body = req.body;
+    if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
+    const kind = String(body?.kind || 'js').replace(/[^\w]/g, '').slice(0, 20);
+    const msg = String(body?.msg || '').replace(/\s+/g, ' ').slice(0, 200);
+    if (!msg) return res.status(204).end();
+    const clientInfo = getClientInfo(req);
+    const { visitor } = getOrCreateVisitor(clientInfo.ipAddress, clientInfo.clientLocation);
+    const device = deviceLabel(clientInfo.userAgent);
+    const src = String(body.src || '').replace(/^https?:\/\/[^/]+/, '').replace(/\?.*$/, '').slice(0, 80);
+    const sig = `${kind}|${msg.replace(/\d+/g, '#')}|${src}`;
+    JourneyLog.clientError(visitor.id, sig, `${kind}: ${msg}${body.code ? ' [' + String(body.code).slice(0, 40) + ']' : ''}${src ? ' · ' + src + (body.line ? ':' + Number(body.line) : '') : ''} · ${device}`);
+    logFunnelEvent({ campaignSlug: ACTIVE_CAMPAIGN, eventType: 'Page_Error', visitor, deviceType: device,
+      extra: { kind, msg, code: String(body.code || '').slice(0, 40) || null, src: src || null, line: Number(body.line) || null, secs: Number(body.secs) || 0, ms: Number(body.ms) || null } });
+    res.status(204).end();
   });
 
   router.post('/api/track/payment-event', (req, res) => {

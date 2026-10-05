@@ -33,6 +33,70 @@ module.exports = function createStripeRouter(ctx) {
     return ['active', 'canceled', 'past_due', 'incomplete', 'unpaid', 'paused'].includes(s) ? s : 'incomplete';
   }
 
+  const sessionKey = () => (storeConfig.metadataKeys || {}).sessionRef || 'sessionRef';
+  const clientIp = (req) => req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+
+  // What the donor paid with: wallets ride on a card PaymentMethod, everything else (mb_way, link, ...) is pm.type.
+  const METHOD_LABELS = { apple_pay: 'Apple Pay', google_pay: 'Google Pay', link: 'Link', mb_way: 'MB WAY', satispay: 'Satispay', blik: 'BLIK', paypal: 'PayPal' };
+  function paymentSourceOf(pm) {
+    if (!pm) return 'card';
+    if (pm.type === 'card') return pm.card?.wallet?.type || 'card';
+    return pm.type || 'card';
+  }
+
+  // Rebuild the __session cookie payload from checkout_sessions (same shape as routes/token.js), for payments
+  // whose browser lost the cookie (1h expiry) or never called /api/confirm-payment.
+  async function donorFromSession(sessionId) {
+    if (!supabase || !sessionId || String(sessionId).length < 36) return null;
+    const row = await dbSafe('checkout_sessions lookup', '---', supabase.from('checkout_sessions').select('*').eq('id', sessionId).maybeSingle());
+    if (!row) return null;
+    return {
+      sid: row.id, amount: row.amount, currency: row.currency, lang: row.language, ref: row.source_ref,
+      fee: row.service_fee, guest: row.guest_checkout, email: row.customer_email, utm: row.tracking,
+      ip: row.ip_address, ua: row.user_agent, storeId: row.store_id
+    };
+  }
+
+  // Store-side events (Stripe webhooks, checkout links, PaymentIntent context) share funnel_events with the
+  // campaign funnel: no extra table needed, and Railway logs reset on every deploy. Never throws.
+  function persistEvent(eventType, fields, extra) {
+    if (!supabase) return Promise.resolve();
+    return dbSafe(`funnel_events ${eventType}`, '---', supabase.from('funnel_events').insert(Object.assign({
+      campaign_slug: 'unknown', event_type: eventType, store_domain: STORE_DOMAIN
+    }, fields, { extra })));
+  }
+
+  // Who/where for server-side failures (create/confirm), which have no webhook context.
+  function errorContext(req, donor, extra) {
+    const ua = req.headers['user-agent'] || donor?.ua || '';
+    return Object.assign({
+      device: forensics.deviceLabel(ua), user_agent: String(ua).slice(0, 400), visitor: donor?.utm?.visitorId || null,
+      market: donor?.utm?.market || null, session_ref: String(donor?.sid || '').slice(0, 12) || null,
+      currency: donor?.currency || null, geo: donor?.utm?.clientLocation?.countryCode || null
+    }, extra);
+  }
+
+  function persistDispute(eventType, obj) {
+    return persistEvent('Stripe_Dispute', { amount: fromSmallestUnit(obj.amount, obj.currency), currency: obj.currency?.toUpperCase() }, {
+      id: obj.id, charge: obj.charge, pi: obj.payment_intent || null, reason: obj.reason || null, status: obj.status || null, event: eventType,
+      due_by: obj.evidence_details?.due_by ? new Date(obj.evidence_details.due_by * 1000).toISOString() : null
+    });
+  }
+
+  // PaymentIntent context: in memory for 6h, else the Checkout_Intent row saved at creation (survives deploys).
+  async function intentContext(piId) {
+    const mem = forensics.attemptContext(piId);
+    if (mem) return Object.assign({ from: 'memory' }, mem);
+    if (!supabase) return null;
+    const rows = await dbSafe('Checkout_Intent lookup', '---', supabase.from('funnel_events').select('created_at,visitor_id,country,ip_address,extra')
+      .eq('event_type', 'Checkout_Intent').eq('extra->>pi', piId).limit(1));
+    const r = rows && rows[0];
+    if (!r) return null;
+    const x = r.extra || {};
+    return { from: 'db', t: new Date(r.created_at).getTime(), attempt: x.attempt ?? null, sinceFirstSecs: x.secs_since_first_try ?? null,
+      vid: r.visitor_id || null, mkt: x.market || null, device: x.device || null, ua: x.ua || null, ip: r.ip_address || null, geo: r.country || null, sfu: false };
+  }
+
   // Newer Stripe API versions moved invoice.subscription under invoice.parent.
   function invoiceSubscription(invoice) {
     const viaParent = invoice.parent && invoice.parent.subscription_details;
@@ -70,26 +134,68 @@ module.exports = function createStripeRouter(ctx) {
         case 'payment_intent.succeeded': {
           StoreLog.event('webhook_ok', ref, `Payment succeeded ${obj.id} - ${fromSmallestUnit(obj.amount, obj.currency)} ${obj.currency.toUpperCase()}`);
           forensics.recordOutcome(true, { country: forensics.attemptContext(obj.id)?.geo }, emitAlert);
+          // The browser normally records the payment via /api/confirm-payment within seconds. If it never does
+          // (tab closed, phone asleep through 3DS, cookie expired), record it from here so the donation,
+          // receipt and Meta Purchase are not lost.
+          if (obj.metadata?.[sessionKey()] && !obj.invoice) scheduleRecovery(obj.id);
+          break;
+        }
+        case 'payment_intent.requires_action': {
+          // 3DS challenge / MB WAY approval started: lets a later failure say how long the donor had it open.
+          forensics.markAction(obj.id, obj.next_action?.type || null);
+          break;
+        }
+        case 'payment_intent.canceled': {
+          const a = await intentContext(obj.id);
+          StoreLog.withContext({ vid: a?.vid, mkt: a?.mkt }, () => {
+            StoreLog.event('webhook_canceled', ref, `payment canceled (${obj.cancellation_reason || 'no reason'}) · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())} [${obj.id.substring(0, 12)}]`);
+          });
+          await persistEvent('Stripe_PI_Canceled', { campaign_slug: obj.metadata?.src || 'unknown', amount: fromSmallestUnit(obj.amount, obj.currency), currency: obj.currency?.toUpperCase(), visitor_id: a?.vid || null },
+            { pi: obj.id, reason: obj.cancellation_reason || null, device: a?.device || null });
+          break;
+        }
+        case 'radar.early_fraud_warning.created':
+        case 'radar.early_fraud_warning.updated': {
+          // Issuer reported fraud on a paid charge: the earliest warning that an issuer is turning against us
+          // (and a dispute usually follows). Refunding it before a dispute avoids the dispute fee and ratio hit.
+          StoreLog.error('webhook_efw', ref, `early fraud warning: ${String(obj.fraud_type || '?').replace(/_/g, ' ')} · charge ${obj.charge} · actionable ${obj.actionable}`);
+          if (emitAlert && event.type.endsWith('created')) {
+            emitAlert({ key: `efw-${obj.id}`, title: `Early fraud warning: ${obj.fraud_type}`, severity: 'warning',
+              context: { charge: obj.charge, actionable: obj.actionable, hint: 'Consider refunding the charge before it becomes a dispute' } });
+          }
+          await persistEvent('Stripe_EFW', {}, { id: obj.id, charge: obj.charge, fraud_type: obj.fraud_type || null, actionable: obj.actionable ?? null, event: event.type });
+          break;
+        }
+        case 'review.opened':
+        case 'review.closed': {
+          StoreLog.event('webhook_review', ref, `Radar review ${event.type === 'review.opened' ? 'opened' : 'closed (' + (obj.reason || '?') + ')'} · ${obj.payment_intent || obj.charge || obj.id}`);
+          await persistEvent('Stripe_Review', {}, { id: obj.id, pi: obj.payment_intent || null, charge: obj.charge || null, reason: obj.reason || null, open: !!obj.open, event: event.type });
           break;
         }
         case 'payment_intent.payment_failed': {
           // Everything we know about this attempt: what the bank/Stripe said (charge) + what we saw at creation.
           const lpe = obj.last_payment_error || {};
           const card = lpe.payment_method?.card || {};
-          const a = forensics.attemptContext(obj.id);
+          const a = await intentContext(obj.id);
           const d = await forensics.chargeDetails(stripe, lpe.charge || obj.latest_charge);
           const reason = (lpe.decline_code || lpe.code || 'unknown').replace(/_/g, ' ');
+          const pmType = lpe.payment_method?.type || 'card';
           const isAuthTimeout = lpe.code === 'payment_intent_authentication_failure';
+          const isApprovalTimeout = pmType !== 'card'; // MB WAY & co: donor approves in their bank app, or it expires
           // 3DS that never finished: Stripe only reports it ~10 min later, so say how long the challenge sat open.
-          const waited = a && isAuthTimeout ? `3DS challenge not completed (open ${Math.round((Date.now() - a.t) / 1000)}s)` : '';
-          const detail = isAuthTimeout ? [waited, a ? `try #${a.attempt} · ${a.device}${a.geo ? ' · geo ' + a.geo : ''}` : ''].filter(Boolean).join(' · ')
+          const actionSecs = a?.actionAt ? Math.round((Date.now() - a.actionAt) / 1000) : null;
+          const waited = a && isAuthTimeout ? `3DS challenge not completed (open ${actionSecs ?? Math.round((Date.now() - a.t) / 1000)}s)` : '';
+          const ctxText = a ? `try #${a.attempt} · ${a.device}${a.geo ? ' · geo ' + a.geo : ''}` : '';
+          const detail = isAuthTimeout ? [waited, ctxText].filter(Boolean).join(' · ')
+            : isApprovalTimeout ? [`${METHOD_LABELS[pmType] || pmType}: ${lpe.message || reason}`, actionSecs != null ? `waited ${actionSecs}s for approval` : '', ctxText].filter(Boolean).join(' · ')
             : forensics.failureLine(obj.id, lpe, d, a);
           const country = d.country || card.country || a?.geo || '';
-          const bankCode = lpe.network_decline_code || d.network_decline_code || (isAuthTimeout ? '3ds-timeout' : lpe.decline_code || lpe.code || '?');
+          const bankCode = isApprovalTimeout ? `${pmType} ${lpe.code === 'payment_intent_payment_attempt_expired' ? 'expired' : lpe.decline_code || lpe.code || '?'}`
+            : lpe.network_decline_code || d.network_decline_code || (isAuthTimeout ? '3ds-timeout' : lpe.decline_code || lpe.code || '?');
           StoreLog.declineKind(`${country || '?'} ${bankCode}`);
           forensics.recordOutcome(false, { country, code: bankCode }, emitAlert);
           StoreLog.withContext({ vid: a?.vid, mkt: a?.mkt }, () => {
-            StoreLog.error('webhook_fail', ref, `card refused: ${reason} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())} · ${detail} [${obj.id.substring(0, 12)}]`);
+            StoreLog.error('webhook_fail', ref, `${isApprovalTimeout ? (METHOD_LABELS[pmType] || pmType) + ' not completed' : 'card refused'}: ${reason} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())} · ${detail} [${obj.id.substring(0, 12)}]`);
           });
           if (supabase) {
             await dbSafe('payment_failures insert', ref, supabase.from('payment_failures').insert({
@@ -123,7 +229,10 @@ module.exports = function createStripeRouter(ctx) {
                 last4: d.last4 || null, lookup_error: d.lookup_error || null,
                 // Context captured when the PaymentIntent was created
                 attempt: a?.attempt ?? null, secs_since_first_try: a?.sinceFirstSecs ?? null, secs_open: a ? Math.round((Date.now() - a.t) / 1000) : null,
-                device: a?.device || null, geo: a?.geo || null, visitor: a?.vid || null, market: a?.mkt || null, saved_card: a?.sfu ?? null
+                device: a?.device || null, geo: a?.geo || null, visitor: a?.vid || null, market: a?.mkt || null, saved_card: a?.sfu ?? null,
+                // 3DS challenge / bank-app approval: when it started and what kind (from payment_intent.requires_action)
+                action_type: a?.actionType || null, secs_in_action: actionSecs,
+                user_agent: a?.ua || null, context_source: a?.from || null // memory | db (restored after a restart)
               }
             }));
           }
@@ -135,10 +244,21 @@ module.exports = function createStripeRouter(ctx) {
             emitAlert({ key: `dispute-${obj.id}`, title: `Stripe dispute: ${obj.reason}`, severity: 'critical',
               context: { dispute: obj.id, amount: fromSmallestUnit(obj.amount, obj.currency), currency: obj.currency, charge: obj.charge } });
           }
+          await persistDispute(event.type, obj);
+          break;
+        }
+        case 'charge.dispute.updated':
+        case 'charge.dispute.closed':
+        case 'charge.dispute.funds_withdrawn':
+        case 'charge.dispute.funds_reinstated': {
+          StoreLog.event('webhook_dispute_update', ref, `dispute ${event.type.split('.').pop().replace(/_/g, ' ')} · status ${obj.status} · ${fmtAmount(fromSmallestUnit(obj.amount, obj.currency), obj.currency.toUpperCase())} · ${obj.id}`);
+          await persistDispute(event.type, obj);
           break;
         }
         case 'charge.refunded': {
           StoreLog.event('webhook_refund', ref, `Refund ${obj.id} - ${fromSmallestUnit(obj.amount_refunded, obj.currency)} ${obj.currency}`);
+          await persistEvent('Stripe_Refund', { campaign_slug: obj.metadata?.src || 'unknown', amount: fromSmallestUnit(obj.amount_refunded, obj.currency), currency: obj.currency?.toUpperCase() },
+            { charge: obj.id, pi: obj.payment_intent || null, full: !!obj.refunded, amount_total: fromSmallestUnit(obj.amount, obj.currency) });
           break;
         }
         case 'invoice.payment_succeeded':
@@ -281,7 +401,8 @@ module.exports = function createStripeRouter(ctx) {
         [mk.storeId || 'storeId']: ctx.getStoreDbId() || '',
         [mk.storeDomain || 'storeDomain']: STORE_DOMAIN,
         [mk.referenceCode || 'referenceCode']: refCode,
-        [mk.sessionRef || 'sessionRef']: (donor.sid || '').substring(0, 12),
+        // Full checkout_sessions id: lets the webhook rebuild the donor and record a payment the browser never confirmed.
+        [mk.sessionRef || 'sessionRef']: String(donor.sid || ''),
         [mk.subtotal || 'subtotal']: String(donor.amount),
         [mk.serviceFee || 'serviceFee']: String(clientTip),
         [mk.guestCheckout || 'guestCheckout']: String(donor.guest || false),
@@ -405,13 +526,24 @@ module.exports = function createStripeRouter(ctx) {
           }
         }
 
+        const attemptUa = req.headers['user-agent'] || donor.ua;
+        const attemptIp = donor.ip || clientIp(req);
         const attemptNo = forensics.rememberAttempt(paymentIntent.id, {
-          sid: donor.sid, vid: donor.utm?.visitorId, mkt: donor.utm?.market, ua: donor.ua || req.headers['user-agent'],
-          ip: donor.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip,
+          sid: donor.sid, vid: donor.utm?.visitorId, mkt: donor.utm?.market, ua: attemptUa, ip: attemptIp,
           geo: donor.utm?.clientLocation?.countryCode, src: donor.ref, currency: donorCurrency, amount: totalAmount,
           sfu: !!intentParams.setup_future_usage
         });
         StoreLog.event('payment_created', donor.ref || '---', `${paymentIntent.id.substring(0, 18)}... - ${fmtAmount(totalAmount, donor.currency)} ${donor.currency} · try #${attemptNo}`);
+        // Same context in the DB, so a failure webhook after a deploy/restart (or >6h) still knows device, visitor, try #.
+        const ac = forensics.attemptContext(paymentIntent.id) || {};
+        persistEvent('Checkout_Intent', {
+          campaign_slug: String(donor.ref || 'unknown').slice(0, 60), visitor_id: donor.utm?.visitorId || null, ip_address: attemptIp || null,
+          country: donor.utm?.clientLocation?.countryCode || null, amount: totalAmount, currency: donorCurrency, device_type: ac.device || null
+        }, {
+          pi: paymentIntent.id, session: String(donor.sid || '').slice(0, 12), attempt: attemptNo, secs_since_first_try: ac.sinceFirstSecs ?? null,
+          market: donor.utm?.market || null, device: ac.device || null, ua: String(attemptUa || '').slice(0, 400),
+          methods: paymentIntent.payment_method_types || null, lang: donor.lang || null
+        });
 
         res.json({
           clientSecret: paymentIntent.client_secret,
@@ -457,7 +589,7 @@ module.exports = function createStripeRouter(ctx) {
       }
 
       if (supabase) {
-        await supabase.from('payment_failures').insert({
+        await dbSafe('payment_failures insert', ref, supabase.from('payment_failures').insert({
           store_id: ctx.getStoreDbId(),
           source_ref: donor.ref,
           endpoint: '/api/create-payment',
@@ -465,10 +597,9 @@ module.exports = function createStripeRouter(ctx) {
           error_code: cls.code,
           error_message: error.message,
           request_amount: donor.amount,
-          ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
-        }).then(({ error: insErr }) => {
-          if (insErr) console.error('[stripe] payment_failures insert failed:', insErr.message);
-        }).catch(() => {});
+          ip_address: clientIp(req),
+          error_details: errorContext(req, donor, { class: cls.class, stripe_type: error.type || null, request_id: error.requestId || null })
+        }));
       }
 
       const statusCode = cls.class === 'operator' ? 503 : (cls.class === 'rate_limit' ? 429 : 500);
@@ -481,17 +612,365 @@ module.exports = function createStripeRouter(ctx) {
     }
   });
 
+  // Record a succeeded PaymentIntent exactly once: payments row, customer, receipt email, campaign callback
+  // (Meta Purchase). Called by /api/confirm-payment (browser) and, as a fallback, from the
+  // payment_intent.succeeded webhook when the browser never confirmed (tab closed, phone asleep, cookie expired).
+  // Callers in this process share one run per PaymentIntent; an existing payments row means it is already recorded.
+  const finalizing = new Map(); // paymentIntentId -> Promise<result>
+  function finalizePayment(opts) {
+    const key = opts.paymentIntentId;
+    if (finalizing.has(key)) return finalizing.get(key).then((r) => Object.assign({}, r, { already: true }));
+    const p = doFinalize(opts);
+    finalizing.set(key, p);
+    p.catch(() => {}).finally(() => setTimeout(() => finalizing.delete(key), 10 * 60 * 1000).unref());
+    return p;
+  }
+
+  function campaignRedirectUrl(donor, totalAmount, campaignUrl) {
+    let campaignOrigin = '';
+    try {
+      const srcUrl = (donor.utm && donor.utm.sourceUrl) ? donor.utm.sourceUrl : '';
+      if (srcUrl) campaignOrigin = new URL(srcUrl).origin;
+    } catch (_) {}
+    if (!campaignOrigin) campaignOrigin = campaignUrl || '';
+    const eidParam = donor.utm?.eventId ? `&eid=${encodeURIComponent(donor.utm.eventId)}` : '';
+    // Purchase value for Meta = what the donor paid (donation + tip)
+    const amtParam = totalAmount ? `&amt=${encodeURIComponent(totalAmount)}` : '';
+    const curParam = donor.currency ? `&cur=${encodeURIComponent(donor.currency)}` : '';
+    return campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
+  }
+
+  async function doFinalize({ paymentIntentId, donor, isSubscription, subscriptionId, via, ip, ua }) {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
+      expand: ['payment_method', 'latest_charge.balance_transaction']
+    });
+
+    if (paymentIntent.status !== 'succeeded') {
+      throw Object.assign(new Error(`Payment ${paymentIntent.status}`), { paymentStatus: paymentIntent.status });
+    }
+
+    const totalAmount = fromSmallestUnit(paymentIntent.amount, paymentIntent.currency);
+    const campaignUrl = resolveCampaignCallbackUrl(donor, donor.ref);
+    const redirectUrl = campaignRedirectUrl(donor, totalAmount, campaignUrl);
+    const charge = paymentIntent.latest_charge;
+    const pm = paymentIntent.payment_method;
+    const base = { redirectUrl, paymentIntent, pm, stripeCustomerId: null, email: null, donorNameReal: 'Unknown' };
+
+    // Already recorded (the other path got there first, or a retried webhook): only hand back the redirect.
+    const { data: existing, error: existErr } = await supabase.from('payments').select('id').eq('stripe_payment_intent_id', paymentIntent.id).maybeSingle();
+    if (existErr) StoreLog.error('db_failed', donor.ref || '---', `payments dedupe: ${existErr.message}`);
+    if (existing) return Object.assign(base, { already: true });
+
+    let stripeFee = 0;
+    let resolvedBt = null;
+    const bt = charge?.balance_transaction;
+    if (bt && typeof bt === 'object') {
+      resolvedBt = bt;
+    } else if (charge?.id) {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+        try {
+          const freshCharge = await stripe.charges.retrieve(charge.id, {
+            expand: ['balance_transaction']
+          });
+          if (freshCharge.balance_transaction && typeof freshCharge.balance_transaction === 'object') {
+            resolvedBt = freshCharge.balance_transaction;
+            break;
+          }
+        } catch (btErr) {
+          console.error(`Retry ${attempt + 1}/3 fetching balance_transaction:`, btErr.message);
+        }
+      }
+    }
+    if (resolvedBt) {
+      const feeInSettlement = fromSmallestUnit(resolvedBt.fee, resolvedBt.currency);
+      stripeFee = resolvedBt.exchange_rate ? feeInSettlement / resolvedBt.exchange_rate : feeInSettlement;
+    }
+
+    let cardHolderName = pm?.billing_details?.name || '';
+    let cardLastDigits = pm?.card?.last4 || null;
+    let cardBrand = pm?.card?.brand || null;
+    let cardExpiry = pm?.card ? `${String(pm.card.exp_month).padStart(2, '0')}/${pm.card.exp_year}` : null;
+    let cardType = pm?.card?.funding || null;
+    const paymentSource = paymentSourceOf(pm);
+
+    const brandDisplay = cardBrand ? cardBrand.charAt(0).toUpperCase() + cardBrand.slice(1) : 'Card';
+    {
+      const tipPaid = parseFloat(paymentIntent.metadata?.[(storeConfig.metadataKeys || {}).serviceFee || 'serviceFee'] ?? donor.fee ?? 0) || 0;
+      const walletLabel = METHOD_LABELS[paymentSource] || (paymentSource !== 'card' ? paymentSource : '');
+      const method = walletLabel ? `${walletLabel}${cardLastDigits ? ' ••' + cardLastDigits : ''}` : `${brandDisplay} ••${cardLastDigits || '????'}`;
+      const breakdown = tipPaid > 0 ? ` (${fmtAmount(totalAmount - tipPaid, donor.currency)} + ${fmtAmount(tipPaid, donor.currency)} tip)` : '';
+      const viaNote = via && via !== 'browser' ? ` · recorded by ${via}` : '';
+      StoreLog.event('payment_ok', donor.ref || '---', `${fmtAmount(totalAmount, donor.currency)}${breakdown} · ${method}${shortName(cardHolderName) ? ' · ' + shortName(cardHolderName) : ''}${paymentIntent.livemode ? '' : ' · TEST MODE'}${viaNote}`);
+      StoreLog.addDonation(totalAmount, donor.currency);
+    }
+
+    let donorName = cardHolderName || 'Anonymous';
+    if (donor.guest) donorName = 'Anonymous';
+
+    const donorNameReal = cardHolderName || 'Unknown';
+    if (!donor.guest && donorNameReal !== 'Unknown') {
+      const parts = donorNameReal.trim().split(/\s+/);
+      donorName = parts.length >= 2 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : donorNameReal;
+    }
+
+    const mk = storeConfig.metadataKeys || {};
+    const savedTip = parseFloat(
+      paymentIntent.metadata?.[mk.serviceFee || 'serviceFee'] ?? donor.fee ?? 0
+    );
+    const lineItems = decomposeAmount(parseFloat(donor.amount) + savedTip, storeConfig.products, donor.currency || 'EUR');
+
+    let customerId = null;
+    const email = donor.email || charge?.billing_details?.email || pm?.billing_details?.email || null;
+
+    let stripeCustomerId = typeof paymentIntent.customer === 'string'
+      ? paymentIntent.customer
+      : (paymentIntent.customer && paymentIntent.customer.id) || null;
+    if (!stripeCustomerId && email) {
+      try {
+        const existingCustomers = await stripe.customers.list({ email, limit: 1 });
+        if (existingCustomers.data.length > 0) {
+          stripeCustomerId = existingCustomers.data[0].id;
+        } else {
+          const newStripeCustomer = await stripe.customers.create({ email, name: cardHolderName || undefined });
+          stripeCustomerId = newStripeCustomer.id;
+        }
+        if (!isSubscription) {
+          await stripe.paymentIntents.update(paymentIntentId, { customer: stripeCustomerId });
+        }
+      } catch (custErr) {
+        StoreLog.error('confirm_failed', donor.ref || '---', `Stripe customer attach (non-critical): ${custErr.message}`);
+      }
+    }
+
+    if (email) {
+      const { data: existingCustomer, error: custSelErr } = await supabase
+        .from('customers')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
+      if (custSelErr) StoreLog.error('db_failed', donor.ref || '---', `customers select: ${custSelErr.message}`);
+
+      if (existingCustomer) {
+        customerId = existingCustomer.id;
+        StoreLog.event('customer_exists', donor.ref || '---', `${email} (returning)`);
+      } else {
+        const initials = donorNameReal !== 'Unknown'
+          ? donorNameReal.trim().split(/\s+/).map(p => p[0]).join('').substring(0, 2).toUpperCase()
+          : '?';
+
+        const nowIso = new Date().toISOString();
+        const { data: newCustomer, error: custInsertErr } = await supabase
+          .from('customers')
+          .insert({
+            name: donorName, initials, email,
+            card_holder_name: cardHolderName || null,
+            first_donation_at: nowIso,
+            last_donation_at: nowIso,
+            country: charge?.billing_details?.address?.country || null,
+            color_gradient: ['from-blue-400 to-blue-500', 'from-violet-400 to-violet-500', 'from-rose-400 to-rose-500', 'from-emerald-400 to-emerald-500'][Math.floor(Math.random() * 4)],
+            utm_source: donor.utm?.utm_source || null,
+            utm_medium: donor.utm?.utm_medium || null,
+            utm_campaign: donor.utm?.utm_campaign || null,
+            referrer_url: donor.utm?.referrer || null
+          })
+          .select()
+          .single();
+
+        if (custInsertErr) {
+          StoreLog.error('customer_insert_failed', donor.ref || '---', `${email}: ${custInsertErr.message}`);
+        }
+        customerId = newCustomer?.id || null;
+        StoreLog.event('customer_new', donor.ref || '---', `${email} (${stripeCustomerId || 'no-stripe'}${customerId ? '' : ' UNLINKED'})`);
+      }
+    }
+
+    const { error: payInsertErr } = await supabase
+      .from('payments')
+      .insert({
+        customer_id: customerId,
+        store_id: ctx.getStoreDbId(),
+        store_domain: STORE_DOMAIN,
+        source_ref: donor.ref,
+        payment_method: 'stripe',
+        stripe_payment_intent_id: paymentIntent.id,
+        stripe_charge_id: charge?.id,
+        amount: parseFloat(donor.amount),
+        service_fee: savedTip,
+        total_amount: totalAmount,
+        stripe_fee: stripeFee,
+        net_amount: totalAmount - stripeFee,
+        currency: donor.currency,
+        payment_source: paymentSource,
+        status: paymentIntent.livemode ? 'completed' : 'test',
+        line_items: lineItems,
+        customer_name: donorName,
+        billing_name: donorNameReal,
+        guest_checkout: donor.guest || false,
+        card_holder_name: cardHolderName || null,
+        card_last_digits: cardLastDigits,
+        card_brand: cardBrand,
+        card_expiry: cardExpiry,
+        card_type: cardType,
+        customer_email: email,
+        ip_address: donor.ip || ip,
+        user_agent: donor.ua || ua,
+        fbp: donor.utm?.fbp || null, fbc: donor.utm?.fbc || null, fbclid: donor.utm?.fbclid || null,
+        ttp: donor.utm?.ttp || null, ttclid: donor.utm?.ttclid || null,
+        utm_source: donor.utm?.utm_source || null, utm_medium: donor.utm?.utm_medium || null,
+        utm_campaign: donor.utm?.utm_campaign || null, utm_content: donor.utm?.utm_content || null,
+        utm_term: donor.utm?.utm_term || null,
+        referrer_url: donor.utm?.referrer || null,
+        landing_url: donor.utm?.sourceUrl || null,
+        stripe_subscription_id: subscriptionId || null,
+        stripe_response: {
+          paymentIntentId: paymentIntent.id, chargeId: charge?.id,
+          status: paymentIntent.status, amount: paymentIntent.amount,
+          currency: paymentIntent.currency, cardBrand, cardLast4: cardLastDigits,
+          walletType: pm?.card?.wallet?.type || null,
+          paymentMethodType: pm?.type || null,
+          recordedVia: via || 'browser',
+          visitorId: donor.utm?.visitorId || null, sessionId: donor.sid || null, eventId: donor.utm?.eventId || null,
+          isSubscription: isSubscription || false,
+          subscriptionId: subscriptionId || null
+        }
+      });
+    if (payInsertErr) {
+      // The donor paid but revenue/attribution reports will miss it: loud, with the id needed to backfill.
+      StoreLog.error('db_failed', donor.ref || '---', `payments insert ${paymentIntent.id}: ${payInsertErr.message}`);
+      if (emitAlert) emitAlert({ key: `payments-insert-${payInsertErr.code || 'x'}`, title: 'Paid donation not saved to Supabase', severity: 'critical',
+        context: { pi: paymentIntent.id, amount: totalAmount, currency: donor.currency, error: payInsertErr.message } });
+    }
+
+    if (isSubscription && subscriptionId) {
+      try {
+        const sub = await stripe.subscriptions.retrieve(subscriptionId);
+        const { error: subInsErr } = await supabase.from('subscriptions').insert({
+          customer_id: customerId,
+          store_id: ctx.getStoreDbId(),
+          stripe_subscription_id: subscriptionId,
+          stripe_customer_id: sub.customer,
+          stripe_price_id: sub.items?.data?.[0]?.price?.id || null,
+          stripe_product_id: sub.items?.data?.[0]?.price?.product || null,
+          source_ref: donor.ref,
+          amount: totalAmount,
+          currency: donor.currency,
+          interval: 'month',
+          status: sub.status,
+          current_period_start: sub.current_period_start ? new Date(sub.current_period_start * 1000).toISOString() : null,
+          current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
+          renewal_count: 0,
+          total_collected: totalAmount,
+          customer_email: email,
+          customer_name: donorNameReal,
+          metadata: { ref: donor.ref, sid: donor.sid }
+        });
+        if (subInsErr) throw subInsErr;
+        StoreLog.event('subscription_saved', donor.ref || '---', `${subscriptionId} → DB`);
+      } catch (subErr) {
+        StoreLog.error('subscription_save_failed', donor.ref || '---', subErr.message);
+      }
+    }
+
+    const fmk = storeConfig.metadataKeys || {};
+    if (email) {
+      const refKeyName = fmk.referenceCode || 'referenceCode';
+      const donationReference = (paymentIntent.metadata && paymentIntent.metadata[refKeyName]) || paymentIntent.id.slice(-8).toUpperCase();
+      sendDonationConfirmation({
+        to: email,
+        name: donorNameReal !== 'Unknown' ? donorNameReal : '',
+        currency: donor.currency,
+        donationAmount: parseFloat(donor.amount),
+        tip: savedTip,
+        total: totalAmount,
+        cardBrand,
+        cardLast4: cardLastDigits,
+        paymentSource,
+        reference: donationReference,
+        descriptor: storeConfig.statementDescriptor,
+        paymentIntentId: paymentIntent.id,
+        emailTemplate: donor.utm?.emailTemplate || 'default'
+      });
+    }
+
+    const fulfillment = storeConfig.fulfillment || {};
+    const fulfillmentStatusValue = fulfillment.statusValue || 'delivered';
+    const deliveryMethodValue = fulfillment.method || 'digital_download';
+    await stripe.paymentIntents.update(paymentIntent.id, {
+      metadata: {
+        ...paymentIntent.metadata,
+        [fmk.fulfillmentStatus || 'fulfillment_status']: fulfillmentStatusValue,
+        [fmk.fulfilledAt || 'fulfilled_at']: new Date().toISOString(),
+        [fmk.deliveryMethod || 'delivery_method']: deliveryMethodValue
+      }
+    });
+
+    if (campaignUrl) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        const cbRes = await fetch(`${campaignUrl}/api/payment-callback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            secret: CALLBACK_SECRET,
+            tokenId: donor.sid,
+            paymentData: {
+              amount: parseFloat(donor.amount), tip: savedTip, totalAmount, currency: donor.currency,
+              storeDomain: STORE_DOMAIN, stripeChargeId: charge?.id,
+              cardHolderName, donorNameReal, donorEmail: email,
+              customerId, ipAddress: donor.ip, userAgent: donor.ua,
+              tracking: donor.utm || {}
+            }
+          })
+        }).finally(() => clearTimeout(timeout));
+        if (!cbRes.ok) throw new Error(`HTTP ${cbRes.status}`);
+        StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}/api/payment-callback`);
+      } catch (callbackErr) {
+        StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}: ${callbackErr.message}`);
+      }
+    } else {
+      StoreLog.error('callback_failed', donor.ref || '---', 'no campaign route for payment-callback');
+    }
+
+    StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
+    return Object.assign(base, { stripeCustomerId, email, donorNameReal, recorded: true });
+  }
+
+  // Webhook fallback: 90s after payment_intent.succeeded, record the payment if the browser still hasn't.
+  const RECOVERY_DELAY_MS = 90 * 1000;
+  function scheduleRecovery(piId) {
+    setTimeout(() => {
+      recoverPayment(piId).catch((err) => StoreLog.error('confirm_failed', '---', `webhook recovery ${piId.substring(0, 18)}…: ${err.message}`));
+    }, RECOVERY_DELAY_MS).unref();
+  }
+
+  async function recoverPayment(piId) {
+    if (!supabase || !stripe || finalizing.has(piId)) return;
+    const { data: existing, error } = await supabase.from('payments').select('id').eq('stripe_payment_intent_id', piId).maybeSingle();
+    if (error) { StoreLog.error('db_failed', '---', `recovery dedupe ${piId.substring(0, 18)}…: ${error.message} (not recovered)`); return; }
+    if (existing) return;
+    const pi = await stripe.paymentIntents.retrieve(piId);
+    const donor = await donorFromSession(pi.metadata?.[sessionKey()]);
+    if (!donor) {
+      StoreLog.error('payment_unrecorded', pi.metadata?.src || '---', `paid ${fmtAmount(fromSmallestUnit(pi.amount, pi.currency), pi.currency.toUpperCase())} but no payments row and no checkout session to rebuild it [${piId}]`);
+      return;
+    }
+    await StoreLog.withContext({ vid: donor.utm?.visitorId, mkt: donor.utm?.market }, () => finalizePayment({
+      paymentIntentId: piId, donor, isSubscription: false, subscriptionId: null,
+      via: 'webhook (browser never confirmed)', ip: donor.ip, ua: donor.ua
+    }));
+  }
+
   router.post('/api/confirm-payment', async (req, res) => {
+    let donor = null;
     try {
       if (!stripe) {
         return res.status(400).json({ error: 'Stripe not configured for this store' });
       }
 
       let { paymentIntentId, isSubscription, subscriptionId } = req.body;
-      const sessionCookie = req.cookies.__session;
-      if (!sessionCookie) {
-        return res.status(400).json({ error: 'Missing session' });
-      }
 
       if (!paymentIntentId && subscriptionId) {
         const sub = await stripe.subscriptions.retrieve(subscriptionId, { expand: ['latest_invoice'] });
@@ -506,308 +985,34 @@ module.exports = function createStripeRouter(ctx) {
         return res.status(400).json({ error: 'Missing payment data' });
       }
 
-      const donor = JSON.parse(sessionCookie);
+      try { donor = req.cookies.__session ? JSON.parse(req.cookies.__session) : null; } catch (_) { donor = null; }
+      let via = 'browser';
+      if (!donor) {
+        // __session lasts 1h; a donor who comes back from a long 3DS/bank-app wait has lost it. The
+        // PaymentIntent carries the checkout session id, so rebuild the donor instead of failing a paid donation.
+        const piLite = await stripe.paymentIntents.retrieve(paymentIntentId);
+        donor = await donorFromSession(piLite.metadata?.[sessionKey()]);
+        if (!donor) {
+          StoreLog.error('confirm_failed', '---', `Missing session for ${paymentIntentId.substring(0, 18)}… (cookie gone, checkout session not found)`);
+          return res.status(400).json({ error: 'Missing session' });
+        }
+        StoreLog.setDonor(donor.utm);
+        via = 'browser (session restored)';
+      }
 
-      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
-        expand: ['payment_method', 'latest_charge.balance_transaction']
+      const r = await finalizePayment({
+        paymentIntentId, donor, isSubscription, subscriptionId, via,
+        ip: clientIp(req), ua: req.headers['user-agent']
       });
-
-      if (paymentIntent.status !== 'succeeded') {
-        StoreLog.error('confirm_failed', donor.ref || '---', `Payment status: ${paymentIntent.status}`);
-        return res.status(400).json({ error: `Payment ${paymentIntent.status}` });
-      }
-
-      const charge = paymentIntent.latest_charge;
-      const pm = paymentIntent.payment_method;
-
-      let stripeFee = 0;
-      let resolvedBt = null;
-      const bt = charge?.balance_transaction;
-      if (bt && typeof bt === 'object') {
-        resolvedBt = bt;
-      } else if (charge?.id) {
-        for (let attempt = 0; attempt < 3; attempt++) {
-          await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
-          try {
-            const freshCharge = await stripe.charges.retrieve(charge.id, {
-              expand: ['balance_transaction']
-            });
-            if (freshCharge.balance_transaction && typeof freshCharge.balance_transaction === 'object') {
-              resolvedBt = freshCharge.balance_transaction;
-              break;
-            }
-          } catch (btErr) {
-            console.error(`Retry ${attempt + 1}/3 fetching balance_transaction:`, btErr.message);
-          }
-        }
-      }
-      if (resolvedBt) {
-        const feeInSettlement = fromSmallestUnit(resolvedBt.fee, resolvedBt.currency);
-        stripeFee = resolvedBt.exchange_rate ? feeInSettlement / resolvedBt.exchange_rate : feeInSettlement;
-      }
-
-      const totalAmount = fromSmallestUnit(paymentIntent.amount, paymentIntent.currency);
-
-      let cardHolderName = pm?.billing_details?.name || '';
-      let cardLastDigits = pm?.card?.last4 || null;
-      let cardBrand = pm?.card?.brand || null;
-      let cardExpiry = pm?.card ? `${String(pm.card.exp_month).padStart(2, '0')}/${pm.card.exp_year}` : null;
-      let cardType = pm?.card?.funding || null;
-      let paymentSource = 'card';
-      if (pm?.card?.wallet?.type === 'apple_pay') paymentSource = 'apple_pay';
-      if (pm?.card?.wallet?.type === 'google_pay') paymentSource = 'google_pay';
-      if (pm?.type === 'link') paymentSource = 'link';
-
-      const brandDisplay = cardBrand ? cardBrand.charAt(0).toUpperCase() + cardBrand.slice(1) : 'Card';
-      {
-        const tipPaid = parseFloat(paymentIntent.metadata?.[(storeConfig.metadataKeys || {}).serviceFee || 'serviceFee'] ?? donor.fee ?? 0) || 0;
-        const walletLabel = { apple_pay: 'Apple Pay', google_pay: 'Google Pay', link: 'Link' }[paymentSource];
-        const method = walletLabel ? `${walletLabel}${cardLastDigits ? ' ••' + cardLastDigits : ''}` : `${brandDisplay} ••${cardLastDigits || '????'}`;
-        const breakdown = tipPaid > 0 ? ` (${fmtAmount(totalAmount - tipPaid, donor.currency)} + ${fmtAmount(tipPaid, donor.currency)} tip)` : '';
-        StoreLog.event('payment_ok', donor.ref || '---', `${fmtAmount(totalAmount, donor.currency)}${breakdown} · ${method}${shortName(cardHolderName) ? ' · ' + shortName(cardHolderName) : ''}${paymentIntent.livemode ? '' : ' · TEST MODE'}`);
-        StoreLog.addDonation(totalAmount, donor.currency);
-      }
-
-      let donorName = cardHolderName || 'Anonymous';
-      if (donor.guest) donorName = 'Anonymous';
-
-      const donorNameReal = cardHolderName || 'Unknown';
-      if (!donor.guest && donorNameReal !== 'Unknown') {
-        const parts = donorNameReal.trim().split(/\s+/);
-        donorName = parts.length >= 2 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : donorNameReal;
-      }
-
-      const mk = storeConfig.metadataKeys || {};
-      const savedTip = parseFloat(
-        paymentIntent.metadata?.[mk.serviceFee || 'serviceFee'] ?? donor.fee ?? 0
-      );
-      const lineItems = decomposeAmount(parseFloat(donor.amount) + savedTip, storeConfig.products, donor.currency || 'EUR');
-
-      let customerId = null;
-      const email = donor.email || charge?.billing_details?.email || null;
-
-      let stripeCustomerId = typeof paymentIntent.customer === 'string'
-        ? paymentIntent.customer
-        : (paymentIntent.customer && paymentIntent.customer.id) || null;
-      if (!stripeCustomerId && email) {
-        try {
-          const existingCustomers = await stripe.customers.list({ email, limit: 1 });
-          if (existingCustomers.data.length > 0) {
-            stripeCustomerId = existingCustomers.data[0].id;
-          } else {
-            const newStripeCustomer = await stripe.customers.create({ email, name: cardHolderName || undefined });
-            stripeCustomerId = newStripeCustomer.id;
-          }
-          if (!isSubscription) {
-            await stripe.paymentIntents.update(paymentIntentId, { customer: stripeCustomerId });
-          }
-        } catch (custErr) {
-          StoreLog.error('confirm_failed', donor.ref || '---', `Stripe customer attach (non-critical): ${custErr.message}`);
-        }
-      }
-
-      if (email) {
-        const { data: existingCustomer } = await supabase
-          .from('customers')
-          .select('id')
-          .eq('email', email)
-          .maybeSingle();
-
-        if (existingCustomer) {
-          customerId = existingCustomer.id;
-          StoreLog.event('customer_exists', donor.ref || '---', `${email} (returning)`);
-        } else {
-          const initials = donorNameReal !== 'Unknown'
-            ? donorNameReal.trim().split(/\s+/).map(p => p[0]).join('').substring(0, 2).toUpperCase()
-            : '?';
-
-          const nowIso = new Date().toISOString();
-          const { data: newCustomer, error: custInsertErr } = await supabase
-            .from('customers')
-            .insert({
-              name: donorName, initials, email,
-              card_holder_name: cardHolderName || null,
-              first_donation_at: nowIso,
-              last_donation_at: nowIso,
-              country: charge?.billing_details?.address?.country || null,
-              color_gradient: ['from-blue-400 to-blue-500', 'from-violet-400 to-violet-500', 'from-rose-400 to-rose-500', 'from-emerald-400 to-emerald-500'][Math.floor(Math.random() * 4)],
-              utm_source: donor.utm?.utm_source || null,
-              utm_medium: donor.utm?.utm_medium || null,
-              utm_campaign: donor.utm?.utm_campaign || null,
-              referrer_url: donor.utm?.referrer || null
-            })
-            .select()
-            .single();
-
-          if (custInsertErr) {
-            StoreLog.error('customer_insert_failed', donor.ref || '---', `${email}: ${custInsertErr.message}`);
-          }
-          customerId = newCustomer?.id || null;
-          StoreLog.event('customer_new', donor.ref || '---', `${email} (${stripeCustomerId || 'no-stripe'}${customerId ? '' : ' UNLINKED'})`);
-        }
-      }
-
-      await supabase
-        .from('payments')
-        .insert({
-          customer_id: customerId,
-          store_id: ctx.getStoreDbId(),
-          store_domain: STORE_DOMAIN,
-          source_ref: donor.ref,
-          payment_method: 'stripe',
-          stripe_payment_intent_id: paymentIntent.id,
-          stripe_charge_id: charge?.id,
-          amount: parseFloat(donor.amount),
-          service_fee: savedTip,
-          total_amount: totalAmount,
-          stripe_fee: stripeFee,
-          net_amount: totalAmount - stripeFee,
-          currency: donor.currency,
-          payment_source: paymentSource,
-          status: paymentIntent.livemode ? 'completed' : 'test',
-          line_items: lineItems,
-          customer_name: donorName,
-          billing_name: donorNameReal,
-          guest_checkout: donor.guest || false,
-          card_holder_name: cardHolderName || null,
-          card_last_digits: cardLastDigits,
-          card_brand: cardBrand,
-          card_expiry: cardExpiry,
-          card_type: cardType,
-          customer_email: email,
-          ip_address: donor.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip,
-          user_agent: donor.ua || req.headers['user-agent'],
-          fbp: donor.utm?.fbp || null, fbc: donor.utm?.fbc || null, fbclid: donor.utm?.fbclid || null,
-          ttp: donor.utm?.ttp || null, ttclid: donor.utm?.ttclid || null,
-          utm_source: donor.utm?.utm_source || null, utm_medium: donor.utm?.utm_medium || null,
-          utm_campaign: donor.utm?.utm_campaign || null, utm_content: donor.utm?.utm_content || null,
-          utm_term: donor.utm?.utm_term || null,
-          referrer_url: donor.utm?.referrer || null,
-          landing_url: donor.utm?.sourceUrl || null,
-          stripe_subscription_id: subscriptionId || null,
-          stripe_response: {
-            paymentIntentId: paymentIntent.id, chargeId: charge?.id,
-            status: paymentIntent.status, amount: paymentIntent.amount,
-            currency: paymentIntent.currency, cardBrand, cardLast4: cardLastDigits,
-            walletType: pm?.card?.wallet?.type || null,
-            isSubscription: isSubscription || false,
-            subscriptionId: subscriptionId || null
-          }
-        });
-
-      if (isSubscription && subscriptionId) {
-        try {
-          const sub = await stripe.subscriptions.retrieve(subscriptionId);
-          await supabase.from('subscriptions').insert({
-            customer_id: customerId,
-            store_id: ctx.getStoreDbId(),
-            stripe_subscription_id: subscriptionId,
-            stripe_customer_id: sub.customer,
-            stripe_price_id: sub.items?.data?.[0]?.price?.id || null,
-            stripe_product_id: sub.items?.data?.[0]?.price?.product || null,
-            source_ref: donor.ref,
-            amount: totalAmount,
-            currency: donor.currency,
-            interval: 'month',
-            status: sub.status,
-            current_period_start: sub.current_period_start ? new Date(sub.current_period_start * 1000).toISOString() : null,
-            current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
-            renewal_count: 0,
-            total_collected: totalAmount,
-            customer_email: email,
-            customer_name: donorNameReal,
-            metadata: { ref: donor.ref, sid: donor.sid }
-          });
-          StoreLog.event('subscription_saved', donor.ref || '---', `${subscriptionId} → DB`);
-        } catch (subErr) {
-          StoreLog.error('subscription_save_failed', donor.ref || '---', subErr.message);
-        }
-      }
-
-      const fmk = storeConfig.metadataKeys || {};
-      if (email) {
-        const refKeyName = fmk.referenceCode || 'referenceCode';
-        const donationReference = (paymentIntent.metadata && paymentIntent.metadata[refKeyName]) || paymentIntent.id.slice(-8).toUpperCase();
-        const savedTip = parseFloat(paymentIntent.metadata?.[fmk.serviceFee || 'serviceFee'] || donor.fee || 0);
-        sendDonationConfirmation({
-          to: email,
-          name: donorNameReal !== 'Unknown' ? donorNameReal : '',
-          currency: donor.currency,
-          donationAmount: parseFloat(donor.amount),
-          tip: savedTip,
-          total: totalAmount,
-          cardBrand,
-          cardLast4: cardLastDigits,
-          paymentSource,
-          reference: donationReference,
-          descriptor: storeConfig.statementDescriptor,
-          paymentIntentId: paymentIntent.id,
-          emailTemplate: donor.utm?.emailTemplate || 'default'
-        });
-      }
-
-      const fulfillment = storeConfig.fulfillment || {};
-      const fulfillmentStatusValue = fulfillment.statusValue || 'delivered';
-      const deliveryMethodValue = fulfillment.method || 'digital_download';
-      await stripe.paymentIntents.update(paymentIntent.id, {
-        metadata: {
-          ...paymentIntent.metadata,
-          [fmk.fulfillmentStatus || 'fulfillment_status']: fulfillmentStatusValue,
-          [fmk.fulfilledAt || 'fulfilled_at']: new Date().toISOString(),
-          [fmk.deliveryMethod || 'delivery_method']: deliveryMethodValue
-        }
-      });
-
-      const campaignUrl = resolveCampaignCallbackUrl(donor, donor.ref);
-      if (campaignUrl) {
-        try {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 5000);
-          await fetch(`${campaignUrl}/api/payment-callback`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
-            body: JSON.stringify({
-              secret: CALLBACK_SECRET,
-              tokenId: donor.sid,
-              paymentData: {
-                amount: parseFloat(donor.amount), tip: savedTip, totalAmount, currency: donor.currency,
-                storeDomain: STORE_DOMAIN, stripeChargeId: charge?.id,
-                cardHolderName, donorNameReal, donorEmail: email,
-                customerId, ipAddress: donor.ip, userAgent: donor.ua,
-                tracking: donor.utm || {}
-              }
-            })
-          }).finally(() => clearTimeout(timeout));
-          StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}/api/payment-callback`);
-        } catch (callbackErr) {
-          StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}: ${callbackErr.message}`);
-        }
-      } else {
-        StoreLog.error('callback_failed', donor.ref || '---', 'no campaign route for payment-callback');
-      }
+      const { paymentIntent, pm, stripeCustomerId, email, donorNameReal } = r;
 
       res.clearCookie('__session', { path: '/' });
-
-      let campaignOrigin = '';
-      try {
-        const srcUrl = (donor.utm && donor.utm.sourceUrl) ? donor.utm.sourceUrl : '';
-        if (srcUrl) campaignOrigin = new URL(srcUrl).origin;
-      } catch (_) {}
-      if (!campaignOrigin) campaignOrigin = campaignUrl || '';
-      const eidParam = donor.utm?.eventId ? `&eid=${encodeURIComponent(donor.utm.eventId)}` : '';
-      // Purchase value for Meta = what the donor paid (donation + tip)
-      const amtParam = totalAmount ? `&amt=${encodeURIComponent(totalAmount)}` : '';
-      const curParam = donor.currency ? `&cur=${encodeURIComponent(donor.currency)}` : '';
-      const redirectUrl = campaignOrigin ? `${campaignOrigin}?status=complete${eidParam}${amtParam}${curParam}` : '/';
-
-      StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
 
       // Post-donation monthly upsell: only for one-time card/wallet payments whose card was saved.
       let upsellOffer = null;
       const pmId = pm && pm.id;
       const reusable = pmId && (pm.type === 'card' || pm.type === 'link') && paymentIntent.setup_future_usage === 'off_session';
-      if (!isSubscription && reusable && stripeCustomerId) {
+      if (!r.already && !isSubscription && reusable && stripeCustomerId) {
         const t = donor.utm || {};
         res.cookie('__upsell', upsell.makeOfferToken({
           pi: paymentIntent.id, pm: pmId, cus: stripeCustomerId,
@@ -826,23 +1031,28 @@ module.exports = function createStripeRouter(ctx) {
         };
       }
 
-      res.json({ success: true, redirectUrl, sessionId: donor.sid || null, upsell: upsellOffer });
+      res.json({ success: true, redirectUrl: r.redirectUrl, sessionId: donor.sid || null, upsell: upsellOffer });
     } catch (error) {
-      const ref = (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
+      const ref = donor?.ref || (() => { try { return JSON.parse(req.cookies.__session)?.ref; } catch (_) { return '---'; } })();
+      if (error.paymentStatus) {
+        StoreLog.error('confirm_failed', ref, `Payment status: ${error.paymentStatus}`);
+        return res.status(400).json({ error: error.message });
+      }
       StoreLog.error('confirm_failed', ref, `${error.code || 'ERROR'}: ${error.message}`);
 
-      try {
-        const sessionCookie = req.cookies.__session;
-        const donor = sessionCookie ? JSON.parse(sessionCookie) : {};
-        await supabase.from('payment_failures').insert({
-          store_id: ctx.getStoreDbId(), source_ref: donor.ref,
+      if (supabase) {
+        let d = donor;
+        if (!d) { try { d = req.cookies.__session ? JSON.parse(req.cookies.__session) : {}; } catch (_) { d = {}; } }
+        await dbSafe('payment_failures insert', ref, supabase.from('payment_failures').insert({
+          store_id: ctx.getStoreDbId(), source_ref: d.ref,
           endpoint: '/api/confirm-payment',
           stripe_payment_intent_id: req.body?.paymentIntentId,
           error_type: 'CONFIRM_ERROR', error_code: error.code || 'UNKNOWN',
           error_message: error.message,
-          ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip
-        });
-      } catch (logErr) {}
+          ip_address: clientIp(req),
+          error_details: errorContext(req, d, { stripe_type: error.type || null })
+        }));
+      }
 
       res.status(500).json({ error: 'Failed to confirm payment' });
     }
@@ -1078,8 +1288,20 @@ module.exports = function createStripeRouter(ctx) {
   router.post('/api/client/report', express.text({ type: '*/*', limit: '4kb' }), (req, res) => {
     let body = req.body;
     if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
+    const short = (v, n) => (v == null || v === '' ? null : String(v).slice(0, n));
     if (body?.t === 'attempt') {
-      persistCheckoutEvent(req, 'Checkout_Attempt', { result: String(body.result || '').slice(0, 12), ms: Number(body.ms) || 0, pi: String(body.pi || '').slice(0, 40) || null });
+      persistCheckoutEvent(req, 'Checkout_Attempt', {
+        result: String(body.result || '').slice(0, 12), ms: Number(body.ms) || 0, pi: short(body.pi, 40),
+        method: short(body.method, 24), decline_code: short(body.decline_code, 40), error_code: short(body.code, 40), error_type: short(body.error_type, 30)
+      });
+    } else if (body?.t === 'methods') {
+      // Once per page: what this browser could pay with (wallet availability) and how long the form took to load.
+      const wallets = Array.isArray(body.wallets) ? body.wallets.map((w) => String(w).slice(0, 20)).slice(0, 6) : [];
+      persistCheckoutEvent(req, 'Checkout_Methods', {
+        wallets, payment_request_api: !!body.pr_api, apple_pay_session: !!body.apple_session, ready_ms: Number(body.ready_ms) || 0,
+        wallet_check: short(body.wallet_check, 40), ua: String(req.headers['user-agent'] || '').slice(0, 400)
+      });
+      StoreLog.paymentForm(wallets, Number(body.ready_ms) || 0);
     } else if (body?.t === 'exit' && EXIT_STAGES.has(body.stage)) {
       persistCheckoutEvent(req, 'Checkout_Exit', { stage: body.stage, secs: Number(body.secs) || 0 });
     } else if (body?.t === 'error') {
@@ -1089,7 +1311,9 @@ module.exports = function createStripeRouter(ctx) {
       // Browser-measured result of one Pay tap: lets us split 3DS waits and outcomes by device.
       const ua = String(req.headers['user-agent'] || '');
       const result = ['paid', 'declined', 'error', 'pending'].includes(body.result) ? body.result : 'error';
-      StoreLog.attempt(forensics.deviceLabel(ua), result, Number(body.ms) || 0);
+      const method = body.method ? String(body.method).replace(/[^\w]/g, '').slice(0, 24) : null;
+      StoreLog.attempt(forensics.deviceLabel(ua), result, Number(body.ms) || 0, method);
+      if (result !== 'pending') StoreLog.chosenMethod(method);
     } else if (body?.t === 'exit') {
       if (EXIT_STAGES.has(body.stage)) StoreLog.checkoutExit(body.stage);
     } else if (body?.t === 'error') {

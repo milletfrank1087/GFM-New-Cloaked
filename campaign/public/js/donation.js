@@ -392,6 +392,8 @@ async function initDonationRedirect() {
   tracking.cadence = cadenceValue();
   tracking.donationType = donationType;
 
+  const initStartedAt = Date.now();
+  let initStatus = 0;
   try {
     const response = await fetch('/api/init-donation', {
       method: 'POST',
@@ -406,6 +408,7 @@ async function initDonationRedirect() {
       })
     });
 
+    initStatus = response.status;
     const data = await response.json();
 
     if (data.redirectUrl) {
@@ -420,6 +423,11 @@ async function initDonationRedirect() {
       throw new Error(data.error || 'Failed to initialize donation');
     }
   } catch (error) {
+    // Network failures never reach the server's own log, so report every failed Donate tap from here.
+    if (window.PageMonitor) {
+      window.PageMonitor.error('init_donation', (error && error.message) || 'init-donation failed',
+        { code: initStatus || 'network', ms: Date.now() - initStartedAt });
+    }
     isRedirecting = false;
     hideRedirectOverlay();
     if (continueBtn) {

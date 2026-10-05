@@ -5,6 +5,7 @@ const { CHECKOUT_LOCALE, CURRENCY_SYMBOLS } = require('../lib/locale');
 const { getSymbol, getPosition, getDecimals, toSmallestUnit, formatAmount } = require('../lib/currency');
 const { StoreLog, fmtAmount, extractOriginHost } = require('../lib/logger');
 const { resolveCampaignCallbackUrl } = require('../lib/campaign-routing');
+const { deviceLabel } = require('../lib/payment-forensics');
 
 module.exports = function createTokenRouter(ctx) {
   const { supabase, storeConfig, PAYMENT_PROCESSOR, STORE_DOMAIN, CALLBACK_SECRET } = ctx;
@@ -15,6 +16,25 @@ module.exports = function createTokenRouter(ctx) {
   ]);
   function isStandaloneV2Campaign(ref) {
     return ref && V2_CAMPAIGN_SLUGS.has(ref);
+  }
+
+  // Checkout links that didn't open a checkout (expired / already used / unknown): the donor clicked Donate and
+  // landed on the shop home instead. Saved so the drop-off is countable, not just a log line. Never throws.
+  async function persistLinkProblem(req, eventType, tokenData, extra) {
+    try {
+      const { error } = await supabase.from('funnel_events').insert({
+        campaign_slug: String(tokenData?.source_ref || 'unknown').slice(0, 60), event_type: eventType,
+        visitor_id: tokenData?.tracking?.visitorId || null, store_domain: STORE_DOMAIN,
+        ip_address: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || null,
+        country: tokenData?.tracking?.clientLocation?.countryCode || null,
+        amount: tokenData?.amount != null ? parseFloat(tokenData.amount) : null, currency: tokenData?.currency || null,
+        device_type: deviceLabel(req.headers['user-agent']),
+        extra: Object.assign({ token: String(req.params.token || '').slice(0, 8), session: String(tokenData?.id || '').slice(0, 12) || null }, extra)
+      });
+      if (error) StoreLog.error('db_failed', '---', `funnel_events ${eventType}: ${error.message}`);
+    } catch (err) {
+      StoreLog.error('db_failed', '---', `funnel_events ${eventType}: ${err.message}`);
+    }
   }
 
   router.get('/s/:token', async (req, res) => {
@@ -38,20 +58,26 @@ module.exports = function createTokenRouter(ctx) {
         .single();
 
       if (error || !tokenData) {
-        StoreLog.event('token_invalid', '---', 'Token not found or already claimed');
+        // Tell "used twice" (reload / double tap / back button) apart from "never existed".
+        const { data: used } = await supabase.from('checkout_sessions').select('id,source_ref,amount,currency,tracking,claimed_at')
+          .eq('token', token).maybeSingle();
+        StoreLog.event('token_invalid', used?.source_ref || '---', used ? `checkout link opened again (first opened ${used.claimed_at || '?'})` : 'Token not found or already claimed');
+        persistLinkProblem(req, used ? 'Checkout_Link_Reused' : 'Checkout_Link_Invalid', used, used ? { first_claimed_at: used.claimed_at || null } : {});
         return res.redirect('/');
       }
 
       if (new Date(tokenData.expires_at) < new Date()) {
         const ref = tokenData.source_ref || '---';
         StoreLog.event('token_expired', ref, `${fmtAmount(tokenData.amount, tokenData.currency)} expired at ${tokenData.expires_at}`);
+        persistLinkProblem(req, 'Checkout_Link_Expired', tokenData, { secs_late: Math.round((Date.now() - new Date(tokenData.expires_at).getTime()) / 1000) });
         return res.redirect('/');
       }
 
-      await supabase
+      const { error: claimErr } = await supabase
         .from('checkout_sessions')
         .update({ claimed: true, claimed_at: new Date().toISOString() })
         .eq('id', tokenData.id);
+      if (claimErr) StoreLog.error('db_failed', tokenData.source_ref || '---', `checkout_sessions claim: ${claimErr.message}`);
 
       const cookieData = {
         sid: tokenData.id,

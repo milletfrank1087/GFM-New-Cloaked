@@ -62,14 +62,25 @@
     if (document.visibilityState === 'hidden' && furthest !== 'pay_tapped') reportExit(); // 3-D Secure / wallet sheets can hide the page mid-payment
   });
 
-  // One Pay tap: result paid|declined|error|pending, ms = time confirmPayment took (a long wait means a 3DS challenge).
+  // One Pay tap: result paid|declined|error|pending, ms = time confirmPayment took (a long wait means a 3DS challenge
+  // or a bank-app approval). extra: { method, decline_code, code, error_type } as Stripe.js reported them.
   // The server adds the device from the user agent, so rates can be read per device (iOS FB app, Android, ...).
   var attempts = 0;
-  function attempt(result, ms, pi) {
+  function attempt(result, ms, pi, extra) {
     if (attempts >= 6) return;
     attempts += 1;
-    send({ t: 'attempt', result: result, ms: Math.round(ms || 0), pi: pi || '' });
+    extra = extra || {};
+    send({ t: 'attempt', result: result, ms: Math.round(ms || 0), pi: pi || '', method: extra.method || '',
+      decline_code: extra.decline_code || '', code: extra.code || '', error_type: extra.error_type || '' });
   }
 
-  window.CheckoutMonitor = { stage: stage, error: error, attempt: attempt };
+  // Once per page, when the payment form is ready: which wallets this browser can show and how long loading took.
+  var sentMethods = false;
+  function methods(info) {
+    if (sentMethods) return;
+    sentMethods = true;
+    send(Object.assign({ t: 'methods', ready_ms: Date.now() - startedAt }, info || {}));
+  }
+
+  window.CheckoutMonitor = { stage: stage, error: error, attempt: attempt, methods: methods };
 })();
