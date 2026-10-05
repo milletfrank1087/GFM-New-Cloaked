@@ -357,7 +357,7 @@
             <div id="main-gallery-skeleton" class="absolute inset-0 skeleton-shimmer z-0 transition-opacity duration-300 pointer-events-none"></div>
 
             <img id="main-gallery-image" 
-                 src="images/campaigns/glioblastoma-grace/1.jpg" 
+                 src="campaign/public/images/campaigns/glioblastoma-grace/1.jpg" 
                  onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" 
                  alt="Grace Clarke" 
                  onload="this.classList.remove('opacity-0'); document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');"
@@ -382,16 +382,16 @@
           <!-- Pure Visual Thumbnail Strip (Zero Text Labels) -->
           <div class="p-2.5 bg-slate-50 border-t border-slate-200 grid grid-cols-4 gap-2">
             <button onclick="switchPhoto(0)" id="photo-tab-0" class="gallery-thumb active-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-brand-600 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="images/campaigns/glioblastoma-grace/1.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" alt="Thumbnail 1" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/1.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" alt="Thumbnail 1" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
             <button onclick="switchPhoto(1)" id="photo-tab-1" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="images/campaigns/glioblastoma-grace/2.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/2.jpg';" alt="Thumbnail 2" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/2.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/2.jpg';" alt="Thumbnail 2" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
             <button onclick="switchPhoto(2)" id="photo-tab-2" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="images/campaigns/glioblastoma-grace/3.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/3.jpg';" alt="Thumbnail 3" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/3.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/3.jpg';" alt="Thumbnail 3" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
             <button onclick="switchPhoto(3)" id="photo-tab-3" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="images/campaigns/glioblastoma-grace/4.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/4.jpg';" alt="Thumbnail 4" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/4.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/4.jpg';" alt="Thumbnail 4" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
           </div>
 
@@ -980,7 +980,20 @@
               </div>
             </div>
 
-            <!-- FAQ 5: Small Donations & Grassroots Impact -->
+            <!-- FAQ 5: Monthly Management & 1-Click Cancellation -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>How can I manage, change, or cancel my recurring monthly support?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Donors retain 100% self-serve control. Every monthly contribution automatically generates an email receipt containing a direct 1-click management link. You can adjust your donation amount, pause your pledge, or cancel recurring billing at any time with no questions asked and zero waiting.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 6: Small Donations & Grassroots Impact -->
             <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
               <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
                 <span>Can I contribute smaller amounts such as £5 or £15?</span>
@@ -1082,6 +1095,17 @@
             </div>
           </div>
 
+          <!-- Cadence Switch (Once vs Monthly) -->
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" onclick="setCadence('once')" id="cadence-once" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+              Give Once
+            </button>
+            <button type="button" onclick="setCadence('monthly')" id="cadence-monthly" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Give Monthly</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">2x Impact</span>
+            </button>
+          </div>
+
           <!-- Preset Amount Chips -->
           <div class="space-y-1.5">
             <div class="flex items-center justify-between">
@@ -1130,7 +1154,7 @@
           <!-- Primary Modal Checkout Actions -->
           <div class="space-y-2 pt-1 border-t border-slate-100">
             <button id="main-submit-cta" onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
-              <span id="main-cta-label">Donate £25</span>
+              <span id="main-cta-label">Donate just £0.83/day</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
             </button>
 
@@ -1146,7 +1170,7 @@
             <span>HopeRise Giving Guarantee • Direct Hospital Escrow</span>
           </div>
 
-          <!-- GoFundMe Style Recent Donations Section -->
+          <!-- Recent Donations Section -->
           <div class="pt-4 border-t border-slate-100 space-y-3.5">
             
             <!-- Trending Indicator -->
@@ -1365,10 +1389,41 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
+
+        <!-- Frequency Toggle & Rationale -->
+        <div class="space-y-2 mb-4">
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" id="modal-cadence-once" onclick="setModalCadence('once')" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all text-center cursor-pointer">
+              Give Once
+            </button>
+            <button type="button" id="modal-cadence-monthly" onclick="setModalCadence('monthly')" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Give Monthly</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">2x Impact</span>
+            </button>
+          </div>
+
+          <!-- Subscription Rationale (Concise) -->
+          <div id="modal-subscription-rationale" class="p-3 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs text-slate-700 flex items-start gap-2">
+            <svg class="w-4 h-4 text-brand-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+            <div>
+              <strong class="text-brand-900">Why monthly:</strong> Monthly pledges fund continuous outreach ads so more people learn about Grace’s case and keep her visible until her goal is reached. Cancel anytime in 1 click.
+            </div>
+          </div>
+
+          <!-- One-off Rationale (Concise) -->
+          <div id="modal-oneoff-rationale" class="hidden p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between gap-2">
+            <span>Subscriptions allow us to keep running ads so more people discover Grace’s appeal.</span>
+            <button type="button" onclick="setModalCadence('monthly')" class="font-bold text-brand-700 hover:text-brand-800 underline whitespace-nowrap cursor-pointer text-xs">
+              Switch to Monthly
+            </button>
+          </div>
+        </div>
+
         <!-- Amount Chips Row -->
         <div class="space-y-1.5 mb-3.5">
           <div class="flex items-center justify-between">
             <label class="text-xs font-bold text-slate-700">Select donation amount:</label>
+            <span id="modal-per-day-badge" class="text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">just £0.83/day</span>
           </div>
           <div class="grid grid-cols-6 gap-1.5">
             <button type="button" onclick="setModalAmount(10)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">£10</button>
@@ -1419,7 +1474,7 @@
         <!-- Checkout Actions & Reassurance Footer -->
         <div class="space-y-2">
           <button id="modal-submit-cta" onclick="executeModalPledge()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
-            <span id="modal-cta-label">Donate £25</span>
+            <span id="modal-cta-label">Donate just £0.96/day</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
           </button>
 
@@ -1480,13 +1535,13 @@
   <script>
     // System Environment & Image Resolver
     const isServedFromCampaign = window.location.pathname.startsWith('/grace') || window.location.port === '3000';
-    const primaryImgPrefix = isServedFromCampaign ? 'images/campaigns/glioblastoma-grace/' : 'campaign/public/images/campaigns/glioblastoma-grace/';
-    const fallbackImgPrefix = isServedFromCampaign ? '/images/campaigns/glioblastoma-grace/' : 'images/campaigns/glioblastoma-grace/';
+    const primaryImgPrefix = isServedFromCampaign ? '/images/campaigns/glioblastoma-grace/' : 'campaign/public/images/campaigns/glioblastoma-grace/';
+    const fallbackImgPrefix = isServedFromCampaign ? 'campaign/public/images/campaigns/glioblastoma-grace/' : '/images/campaigns/glioblastoma-grace/';
 
     // System Data Model
     const app = {
       amount: 25,
-      cadence: 'once',
+      cadence: 'monthly',
       tip: 15,
       photoIndex: 0,
       photos: [
@@ -1687,7 +1742,22 @@
     }
 
     function setCadence(type) {
-      app.cadence = 'once';
+      app.cadence = type;
+      const onceBtn = document.getElementById('cadence-once');
+      const monthlyBtn = document.getElementById('cadence-monthly');
+
+      if (type === 'monthly') {
+        monthlyBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.remove('text-slate-600');
+        onceBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.add('text-slate-600');
+      } else {
+        onceBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.remove('text-slate-600');
+        monthlyBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.add('text-slate-600');
+      }
+
       renderImpact();
       calculateTotal();
     }
@@ -1696,7 +1766,11 @@
       const container = document.getElementById('live-impact-container');
       const el = document.getElementById('live-impact-text');
       const amt = app.amount;
-      const text = app.impacts[amt] || `£${amt} provides critical direct funding toward Grace's European medical care.`;
+      let text = app.impacts[amt] || `£${amt} provides critical direct funding toward Grace's European medical care.`;
+
+      if (app.cadence === 'monthly') {
+        text += ' Monthly gifts guarantee sustained continuity across all 6 vaccine cycles.';
+      }
 
       el.innerHTML = text;
 
@@ -1710,11 +1784,21 @@
     function calculateTotal() {
       const ctaLabel = document.getElementById('main-cta-label');
       if (ctaLabel) {
-        ctaLabel.textContent = `Donate £${app.amount}`;
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          ctaLabel.textContent = `Donate just £${daily}/day`;
+        } else {
+          ctaLabel.textContent = `Donate £${app.amount}`;
+        }
       }
       const tierBadge = document.getElementById('tier-badge-label');
       if (tierBadge) {
-        tierBadge.textContent = app.amount === 25 ? 'Most common gift' : `£${app.amount} one-off`;
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          tierBadge.textContent = `just £${daily}/day`;
+        } else {
+          tierBadge.textContent = app.amount === 25 ? 'Most common gift' : `£${app.amount} one-off`;
+        }
       }
     }
 
@@ -1740,13 +1824,55 @@
 
     function syncModalWithAppState() {
       const amt = app.amount;
+      const cadenceStr = app.cadence === 'monthly' ? '/ month' : 'one-off';
       const summaryAmt = document.getElementById('modal-summary-amount');
-      if (summaryAmt) summaryAmt.textContent = `£${amt} one-off`;
+      if (summaryAmt) summaryAmt.textContent = `£${amt} ${cadenceStr}`;
       const summaryBadge = document.getElementById('modal-summary-badge');
-      if (summaryBadge) summaryBadge.textContent = 'One-off Gift';
+      if (summaryBadge) summaryBadge.textContent = app.cadence === 'monthly' ? 'Monthly Sustainer' : 'One-off Gift';
+
+      const perDayBadge = document.getElementById('modal-per-day-badge');
+      if (perDayBadge) {
+        if (app.cadence === 'monthly') {
+          const dailyAmt = (app.amount / 30).toFixed(2);
+          perDayBadge.textContent = `just £${dailyAmt}/day`;
+          perDayBadge.classList.remove('hidden');
+        } else {
+          perDayBadge.classList.add('hidden');
+        }
+      }
 
       const impactDesc = document.getElementById('modal-impact-desc');
       if (impactDesc) impactDesc.textContent = app.impacts[amt] || `£${amt} directly finances Grace's dendritic cell therapy in Germany.`;
+
+      // Sync cadence buttons in modal
+      const modalCadenceMonthly = document.getElementById('modal-cadence-monthly');
+      const modalCadenceOnce = document.getElementById('modal-cadence-once');
+      const subRationale = document.getElementById('modal-subscription-rationale');
+      const oneoffRationale = document.getElementById('modal-oneoff-rationale');
+
+      if (app.cadence === 'monthly') {
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.remove('hidden');
+        if (oneoffRationale) oneoffRationale.classList.add('hidden');
+      } else {
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.add('hidden');
+        if (oneoffRationale) oneoffRationale.classList.remove('hidden');
+      }
 
       // Highlight matching chip inside modal if exact match
       document.querySelectorAll('.modal-amt-chip').forEach(chip => {
@@ -1811,7 +1937,12 @@
 
       const ctaLabel = document.getElementById('modal-cta-label');
       if (ctaLabel) {
-        ctaLabel.textContent = `Donate £${total.toFixed(2)}`;
+        if (app.cadence === 'monthly') {
+          const daily = (total / 30).toFixed(2);
+          ctaLabel.textContent = `Donate just £${daily}/day`;
+        } else {
+          ctaLabel.textContent = `Donate £${total.toFixed(2)}`;
+        }
       }
     }
 
@@ -1824,8 +1955,16 @@
       const existingErr = document.getElementById('email-error-msg');
       if (existingErr) existingErr.remove();
 
-
-
+      if (app.cadence === 'monthly' && (!email || !email.includes('@'))) {
+        emailInput.classList.add('border-red-400', 'bg-red-50');
+        const errMsg = document.createElement('p');
+        errMsg.id = 'email-error-msg';
+        errMsg.className = 'text-xs text-red-600 font-medium mt-1';
+        errMsg.textContent = 'Email is required for subscriptions — we need it to send receipts and let you cancel anytime with 1 click.';
+        emailInput.parentNode.insertBefore(errMsg, emailInput.nextSibling);
+        emailInput.focus();
+        return;
+      }
 
       const submitBtn = document.getElementById('modal-submit-cta');
       submitBtn.classList.add('opacity-75');
@@ -1848,7 +1987,7 @@
       const purchaseEventId = (typeof Tracking !== 'undefined') ? Tracking.generateEventId('Purchase') : ('Purchase_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11));
       try {
         sessionStorage.setItem('_purchase_event_id', purchaseEventId);
-        sessionStorage.setItem('_purchase_amount', String(app.amount + (tipAmount || 0)));
+        sessionStorage.setItem('_purchase_amount', String(app.amount));
         sessionStorage.setItem('_purchase_currency', 'GBP');
       } catch (e) {}
 
@@ -1882,7 +2021,7 @@
       })
       .then(res => res.ok ? res.json() : Promise.reject(new Error('Server error')))
       .then(data => {
-        if (data.redirectUrl) window.location.assign(data.redirectUrl); // keep campaign in history for Back
+        if (data.redirectUrl) window.location.replace(data.redirectUrl);
       })
       .catch(() => {
         submitBtn.classList.remove('opacity-75');
@@ -2042,7 +2181,6 @@
     // PRODUCTION BACKEND INTEGRATION
     // ================================================================
 
-    // Live Stats Injection: update DOM from server-injected __CAMPAIGN_DATA
     (function injectLiveStats() {
       const d = window.__CAMPAIGN_DATA;
       if (!d) return;
@@ -2072,13 +2210,10 @@
 
   </script>
 
-  <!-- Production tracking + engagement modules (loaded from campaign server) -->
-  <script src="/js/page-monitor.js"></script>
   <script src="/js/tracking.js"></script>
   <script src="/js/ab-tracker.js"></script>
   <script src="/js/thank-you-overlay.js"></script>
 
-  <!-- Tracking init — MUST run after tracking.js is loaded above -->
   <script>
     (async function initTracking() {
       if (typeof Tracking === 'undefined') return;
@@ -2130,6 +2265,5 @@
     })();
   </script>
 
-<script>window.addEventListener('pageshow',function(e){if(e.persisted)location.reload();});</script>
 </body>
 </html>

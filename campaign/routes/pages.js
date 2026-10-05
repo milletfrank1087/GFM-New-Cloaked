@@ -110,11 +110,16 @@ module.exports = function createPagesRouter(ctx) {
 
   const STANDALONE_CAMPAIGN_MAP = {
     'glioblastoma-grace': 'grace.html',
-    'glioblastoma-emily': 'emily.html'
+    'glioblastoma-mariana': 'mariana.html',
+    'glioblastoma-serafina': 'serafina.html',
+    'glioblastoma-lucia': 'lucia.html',
+    'glioblastoma-olivia': 'olivia.html',
+    'glioblastoma-mia': 'mia.html',
+    'glejak-natalia': 'natalia.html'
   };
 
   router.get('*', (req, res) => {
-    const activeSlug = typeof ACTIVE_CAMPAIGN === 'string' ? ACTIVE_CAMPAIGN : (ACTIVE_CAMPAIGN?.id || 'leukemia-sofia');
+    const activeSlug = typeof ACTIVE_CAMPAIGN === 'string' ? ACTIVE_CAMPAIGN : (ACTIVE_CAMPAIGN?.id || 'glioblastoma-grace');
 
     const standaloneFile = STANDALONE_CAMPAIGN_MAP[activeSlug];
     if (standaloneFile) {

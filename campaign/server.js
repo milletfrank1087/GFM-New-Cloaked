@@ -56,7 +56,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'hoperise-admin-secret-key';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const CALLBACK_SECRET = process.env.CALLBACK_SECRET || 'change-me';
 
-const ACTIVE_CAMPAIGN = process.env.ACTIVE_CAMPAIGN || 'leukemia-sofia';
+const ACTIVE_CAMPAIGN = process.env.ACTIVE_CAMPAIGN || 'glioblastoma-grace';
 const MERCHANT_COUNTRY = process.env.MERCHANT_COUNTRY || 'GR';
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'en';
 
