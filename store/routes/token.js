@@ -17,7 +17,8 @@ module.exports = function createTokenRouter(ctx) {
     'glioblastoma-lucia',
     'glioblastoma-olivia',
     'glioblastoma-mia',
-    'glejak-natalia'
+    'glejak-natalia',
+    'leucemia-carmen'
   ]);
   function isStandaloneV2Campaign(ref) {
     return ref && V2_CAMPAIGN_SLUGS.has(ref);
