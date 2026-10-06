@@ -1,1 +1,158 @@
-{"daysLeft": null, "description": "Carmen, 15 años, de Valencia, falleció el 4 de septiembre de 2026 en Filadelfia (EE. UU.), donde su familia la llevó al hospital que inventó el CAR-T tras agotar las opciones en España. Esta campaña ayuda a su familia a pagar las facturas hospitalarias americanas, el transporte médico y la repatriación.", "donationPresets": {"EUR": {"amounts": [10, 20, 25, 50, 100, 250], "default": 25}}, "donorCount": 312, "goal": 250000, "id": "leucemia-carmen", "images": [{"alt": "Carmen sonriendo", "thumb": "/images/campaigns/leucemia-carmen/1.jpg", "url": "/images/campaigns/leucemia-carmen/1.jpg"}, {"alt": "Carmen en casa", "thumb": "/images/campaigns/leucemia-carmen/2.jpg", "url": "/images/campaigns/leucemia-carmen/2.jpg"}, {"alt": "Carmen con su familia", "thumb": "/images/campaigns/leucemia-carmen/3.jpg", "url": "/images/campaigns/leucemia-carmen/3.jpg"}, {"alt": "Carmen en la playa", "thumb": "/images/campaigns/leucemia-carmen/4.jpg", "url": "/images/campaigns/leucemia-carmen/4.jpg"}], "language": "es", "milestones": [{"amount": 62500, "label": "Primer tramo — Facturas de la UCI pediátrica del CHOP", "reached": false}, {"amount": 125000, "label": "50% — Transporte médico aéreo y repatriación", "reached": false}, {"amount": 187500, "label": "75% — Funeral en Valencia y apoyo a la familia", "reached": false}, {"amount": 250000, "label": "Objetivo — Deuda saldada, Carmen descansa en casa", "reached": false}], "organizer": {"createdDate": "5 Oct 2026", "initials": "PI", "location": "Valencia, España", "name": "Pilar Ibáñez", "verified": true}, "raised": 18480, "recentDonors": [{"amount": 40, "name": "María J."}, {"amount": 25, "name": "Anónimo"}, {"amount": 100, "name": "Javier R."}, {"amount": 15, "name": "Lucía V."}], "story": {"intro": "Carmen tenía 15 años y era nadadora del Club Natación Valencia cuando una leucemia linfoblástica aguda de células B le paró la vida en marzo de 2025. Logró la remisión, volvió a la piscina y al instituto. En mayo de 2026 la enfermedad volvió, agresiva e intratable con los protocolos disponibles en España dentro de su ventana de tiempo. Sus padres tomaron la decisión más dura y más cara de sus vidas: llevarla al Children's Hospital of Philadelphia, el hospital que inventó la terapia CAR-T, en un avión medicalizado. Hubo una respuesta parcial. Luego, complicaciones. Carmen falleció el 4 de septiembre de 2026 en Filadelfia, a 6.500 kilómetros de casa. Volvió a Valencia en un ataúd. Esta campaña paga las facturas que aquel último intento dejó: el hospital americano, el transporte médico, la repatriación y el funeral.", "sections": [{"content": "En febrero de 2025 achacamos su cansancio a los entrenamientos. El 4 de marzo, un hemograma en urgencias mostró 87.000 leucocitos con un 92% de blastos: leucemia linfoblástica aguda de células B. Ingresó esa noche en oncohematología pediátrica del Hospital La Fe de Valencia y respondió a la inducción según el protocolo SEHOP-PETHEMA, con remisión completa y enfermedad mínima residual negativa en junio.", "icon": "diagnosis", "title": "El diagnóstico y la remisión"}, {"content": "Once meses de vida normal: instituto, piscina, verano. El 18 de mayo de 2026, en una revisión rutinaria, los blastos habían vuelto: recaída medular temprana, el peor escenario en leucemia infantil. El equipo de La Fe fue honesto: el protocolo de rescate con CAR-T existía, pero no había slot disponible dentro de su ventana. Cada semana contaba y la lista no se movía.", "icon": "treatment", "title": "La recaída sin slot"}, {"content": "A través de una segunda opinión, la familia consiguió una plaza de uso compasivo en el Children's Hospital of Philadelphia, donde nació el CAR-T. Volaron el 20 de junio en avión medicalizado: 45.000 euros solo el vuelo. Hubo respuesta parcial al CAR-T en julio. En agosto, una tormenta de citoquinas seguida de fallo multiorgánico en la UCI pediátrica acabó con sus opciones. Falleció el 4 de septiembre a las 03:40, con su madre cogiéndole la mano.", "icon": "trial", "title": "Filadelfia: el último intento"}, {"content": "El funeral fue en Valencia el 12 de septiembre, con todo su club de natación en las gradas de la iglesia. Quedan las facturas: 195.000 dólares del hospital americano, el transporte médico, la repatriación y el funeral. La sanidad pública española lo cubrió todo mientras estuvo en casa; nada de Filadelfia. Esta campaña existe para que sus padres no pasen la próxima década pagando el intento de salvarla.", "icon": "bills", "title": "Lo que queda: las facturas"}]}, "template": "standalone-v2", "title": "Carmen se fue en Filadelfia: ayuda a su familia con las facturas", "topDonors": [{"amount": 1200, "name": "Club Natación Valencia"}, {"amount": 500, "name": "Familia Ferrando"}, {"amount": 250, "name": "Anónimo"}, {"amount": 100, "name": "Javier R."}], "updates": [{"content": "87.000 leucocitos, 92% de blastos: LLA-B. Carmen ingresa en La Fe y empieza la inducción esa misma semana.", "date": "4 Mar 2025", "title": "El diagnóstico"}, {"content": "Remisión completa con EMR negativa. Vuelve al instituto y a la piscina: once meses de vida normal.", "date": "20 Jun 2025", "title": "La remisión"}, {"content": "Recaída medular temprana sin slot de CAR-T disponible en España. La familia consigue plaza de uso compasivo en Filadelfia y vuela el 20 de junio.", "date": "18 May 2026", "title": "La recaída y el vuelo"}, {"content": "Carmen falleció el 4 de septiembre en la UCI pediátrica del CHOP. Funeral en Valencia el 12 de septiembre. Hoy abrimos esta campaña: 195.000 dólares de hospital, transporte, repatriación y funeral.", "date": "5 Oct 2026", "title": "Las facturas, al descubierto"}]}
+{
+  "daysLeft": null,
+  "description": "Carmen, 15 años, de Valencia, falleció el 4 de septiembre de 2026 en Filadelfia (EE. UU.), donde su familia la llevó al hospital que inventó el CAR-T tras agotar las opciones en España. Esta campaña ayuda a su familia a pagar las facturas hospitalarias americanas, el transporte médico y la repatriación.",
+  "donationPresets": {
+    "EUR": {
+      "amounts": [
+        10,
+        20,
+        25,
+        50,
+        100,
+        250
+      ],
+      "default": 25
+    }
+  },
+  "donorCount": 312,
+  "goal": 250000,
+  "id": "leucemia-carmen",
+  "images": [
+    {
+      "alt": "Carmen en el hospital con su violín",
+      "thumb": "/images/campaigns/leucemia-carmen/1.jpg",
+      "url": "/images/campaigns/leucemia-carmen/1.jpg"
+    },
+    {
+      "alt": "Carmen al atardecer",
+      "thumb": "/images/campaigns/leucemia-carmen/2.jpg",
+      "url": "/images/campaigns/leucemia-carmen/2.jpg"
+    },
+    {
+      "alt": "Carmen en la playa con amigas",
+      "thumb": "/images/campaigns/leucemia-carmen/3.jpg",
+      "url": "/images/campaigns/leucemia-carmen/3.jpg"
+    },
+    {
+      "alt": "Carmen de compras con su amiga",
+      "thumb": "/images/campaigns/leucemia-carmen/4.jpg",
+      "url": "/images/campaigns/leucemia-carmen/4.jpg"
+    }
+  ],
+  "language": "es",
+  "milestones": [
+    {
+      "amount": 62500,
+      "label": "Primer tramo — Facturas de la UCI pediátrica del CHOP",
+      "reached": false
+    },
+    {
+      "amount": 125000,
+      "label": "50% — Transporte médico aéreo y repatriación",
+      "reached": false
+    },
+    {
+      "amount": 187500,
+      "label": "75% — Funeral en Valencia y apoyo a la familia",
+      "reached": false
+    },
+    {
+      "amount": 250000,
+      "label": "Objetivo — Deuda saldada, Carmen descansa en casa",
+      "reached": false
+    }
+  ],
+  "organizer": {
+    "createdDate": "5 Oct 2026",
+    "initials": "PI",
+    "location": "Valencia, España",
+    "name": "Pilar Ibáñez",
+    "verified": true
+  },
+  "raised": 18480,
+  "recentDonors": [
+    {
+      "amount": 40,
+      "name": "María J."
+    },
+    {
+      "amount": 25,
+      "name": "Anónimo"
+    },
+    {
+      "amount": 100,
+      "name": "Javier R."
+    },
+    {
+      "amount": 15,
+      "name": "Lucía V."
+    }
+  ],
+  "story": {
+    "intro": "Carmen tenía 15 años y era nadadora del Club Natación Valencia cuando una leucemia linfoblástica aguda de células B le paró la vida en marzo de 2025. Logró la remisión, volvió a la piscina y al instituto. En mayo de 2026 la enfermedad volvió, agresiva e intratable con los protocolos disponibles en España dentro de su ventana de tiempo. Sus padres tomaron la decisión más dura y más cara de sus vidas: llevarla al Children's Hospital of Philadelphia, el hospital que inventó la terapia CAR-T, en un avión medicalizado. Hubo una respuesta parcial. Luego, complicaciones. Carmen falleció el 4 de septiembre de 2026 en Filadelfia, a 6.500 kilómetros de casa. Volvió a Valencia en un ataúd. Esta campaña paga las facturas que aquel último intento dejó: el hospital americano, el transporte médico, la repatriación y el funeral.",
+    "sections": [
+      {
+        "content": "En febrero de 2025 achacamos su cansancio a los entrenamientos. El 4 de marzo, un hemograma en urgencias mostró 87.000 leucocitos con un 92% de blastos: leucemia linfoblástica aguda de células B. Ingresó esa noche en oncohematología pediátrica del Hospital La Fe de Valencia y respondió a la inducción según el protocolo SEHOP-PETHEMA, con remisión completa y enfermedad mínima residual negativa en junio.",
+        "icon": "diagnosis",
+        "title": "El diagnóstico y la remisión"
+      },
+      {
+        "content": "Once meses de vida normal: instituto, piscina, verano. El 18 de mayo de 2026, en una revisión rutinaria, los blastos habían vuelto: recaída medular temprana, el peor escenario en leucemia infantil. El equipo de La Fe fue honesto: el protocolo de rescate con CAR-T existía, pero no había slot disponible dentro de su ventana. Cada semana contaba y la lista no se movía.",
+        "icon": "treatment",
+        "title": "La recaída sin slot"
+      },
+      {
+        "content": "A través de una segunda opinión, la familia consiguió una plaza de uso compasivo en el Children's Hospital of Philadelphia, donde nació el CAR-T. Volaron el 20 de junio en avión medicalizado: 45.000 euros solo el vuelo. Hubo respuesta parcial al CAR-T en julio. En agosto, una tormenta de citoquinas seguida de fallo multiorgánico en la UCI pediátrica acabó con sus opciones. Falleció el 4 de septiembre a las 03:40, con su madre cogiéndole la mano.",
+        "icon": "trial",
+        "title": "Filadelfia: el último intento"
+      },
+      {
+        "content": "El funeral fue en Valencia el 12 de septiembre, con todo su club de natación en las gradas de la iglesia. Quedan las facturas: 195.000 dólares del hospital americano, el transporte médico, la repatriación y el funeral. La sanidad pública española lo cubrió todo mientras estuvo en casa; nada de Filadelfia. Esta campaña existe para que sus padres no pasen la próxima década pagando el intento de salvarla.",
+        "icon": "bills",
+        "title": "Lo que queda: las facturas"
+      }
+    ]
+  },
+  "template": "standalone-v2",
+  "title": "Carmen se fue en Filadelfia: ayuda a su familia con las facturas",
+  "topDonors": [
+    {
+      "amount": 1200,
+      "name": "Club Natación Valencia"
+    },
+    {
+      "amount": 500,
+      "name": "Familia Ferrando"
+    },
+    {
+      "amount": 250,
+      "name": "Anónimo"
+    },
+    {
+      "amount": 100,
+      "name": "Javier R."
+    }
+  ],
+  "updates": [
+    {
+      "content": "87.000 leucocitos, 92% de blastos: LLA-B. Carmen ingresa en La Fe y empieza la inducción esa misma semana.",
+      "date": "4 Mar 2025",
+      "title": "El diagnóstico"
+    },
+    {
+      "content": "Remisión completa con EMR negativa. Vuelve al instituto y a la piscina: once meses de vida normal.",
+      "date": "20 Jun 2025",
+      "title": "La remisión"
+    },
+    {
+      "content": "Recaída medular temprana sin slot de CAR-T disponible en España. La familia consigue plaza de uso compasivo en Filadelfia y vuela el 20 de junio.",
+      "date": "18 May 2026",
+      "title": "La recaída y el vuelo"
+    },
+    {
+      "content": "Carmen falleció el 4 de septiembre en la UCI pediátrica del CHOP. Funeral en Valencia el 12 de septiembre. Hoy abrimos esta campaña: 195.000 dólares de hospital, transporte, repatriación y funeral.",
+      "date": "5 Oct 2026",
+      "title": "Las facturas, al descubierto"
+    }
+  ]
+}
