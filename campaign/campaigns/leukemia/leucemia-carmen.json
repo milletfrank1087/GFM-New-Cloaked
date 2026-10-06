@@ -1,6 +1,6 @@
 {
   "daysLeft": null,
-  "description": "Carmen, 15 años, de Valencia, falleció el 4 de septiembre de 2026 en Filadelfia (EE. UU.), donde su familia la llevó al hospital que inventó el CAR-T tras agotar las opciones en España. Esta campaña ayuda a su familia a pagar las facturas hospitalarias americanas, el transporte médico y la repatriación.",
+  "description": "Carmen, 16 años, de Valencia, falleció el 4 de septiembre de 2026 en Filadelfia (EE. UU.), donde su familia la llevó al hospital que inventó el CAR-T tras agotar las opciones en España. Esta campaña ayuda a su familia a pagar las facturas hospitalarias americanas, el transporte médico y la repatriación.",
   "donationPresets": {
     "EUR": {
       "amounts": [
@@ -89,7 +89,7 @@
     }
   ],
   "story": {
-    "intro": "Carmen tenía 15 años y era nadadora del Club Natación Valencia cuando una leucemia linfoblástica aguda de células B le paró la vida en marzo de 2025. Logró la remisión, volvió a la piscina y al instituto. En mayo de 2026 la enfermedad volvió, agresiva e intratable con los protocolos disponibles en España dentro de su ventana de tiempo. Sus padres tomaron la decisión más dura y más cara de sus vidas: llevarla al Children's Hospital of Philadelphia, el hospital que inventó la terapia CAR-T, en un avión medicalizado. Hubo una respuesta parcial. Luego, complicaciones. Carmen falleció el 4 de septiembre de 2026 en Filadelfia, a 6.500 kilómetros de casa. Volvió a Valencia en un ataúd. Esta campaña paga las facturas que aquel último intento dejó: el hospital americano, el transporte médico, la repatriación y el funeral.",
+    "intro": "Carmen tenía 14 años y era nadadora del Club Natación Valencia cuando una leucemia linfoblástica aguda de células B le paró la vida en marzo de 2025. Logró la remisión, volvió a la piscina y al instituto. En mayo de 2026 la enfermedad volvió, agresiva e intratable con los protocolos disponibles en España dentro de su ventana de tiempo. Sus padres tomaron la decisión más dura y más cara de sus vidas: llevarla al Children's Hospital of Philadelphia, el hospital que inventó la terapia CAR-T, en un avión medicalizado. Hubo una respuesta parcial. Luego, complicaciones. Carmen falleció el 4 de septiembre de 2026 en Filadelfia, a 6.500 kilómetros de casa. Volvió a Valencia en un ataúd. Esta campaña paga las facturas que aquel último intento dejó: el hospital americano, el transporte médico, la repatriación y el funeral.",
     "sections": [
       {
         "content": "En febrero de 2025 achacamos su cansancio a los entrenamientos. El 4 de marzo, un hemograma en urgencias mostró 87.000 leucocitos con un 92% de blastos: leucemia linfoblástica aguda de células B. Ingresó esa noche en oncohematología pediátrica del Hospital La Fe de Valencia y respondió a la inducción según el protocolo SEHOP-PETHEMA, con remisión completa y enfermedad mínima residual negativa en junio.",
