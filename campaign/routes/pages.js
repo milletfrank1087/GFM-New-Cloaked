@@ -116,7 +116,8 @@ module.exports = function createPagesRouter(ctx) {
     'glioblastoma-olivia': 'olivia.html',
     'glioblastoma-mia': 'mia.html',
     'glejak-natalia': 'natalia.html',
-    'leucemia-carmen': 'carmen.html'
+    'leucemia-carmen': 'carmen.html',
+    'dipg-willow': 'willow.html'
   };
 
   router.get('*', (req, res) => {

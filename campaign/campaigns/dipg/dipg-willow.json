@@ -1,0 +1,296 @@
+{
+  "id": "dipg-willow",
+  "template": "standalone-v2",
+  "language": "en",
+  "title": "Help Willow, 6, Reach Her Brain Tumour Trial in Germany",
+  "description": "Willow, 6, has been diagnosed with diffuse intrinsic pontine glioma (DIPG) — an aggressive childhood brainstem tumour. She urgently needs a specialist immunotherapy and targeted-therapy trial programme in Germany — treatment that is not funded by the NHS.",
+  "organizer": {
+    "name": "Hannah R.",
+    "initials": "HR",
+    "location": "Leeds, UK",
+    "verified": true,
+    "createdDate": "7 Oct 2026"
+  },
+  "goal": 120000,
+  "raised": 47250,
+  "donorCount": 1184,
+  "daysLeft": 34,
+  "images": [
+    {
+      "url": "/images/campaigns/dipg-willow/1.jpg",
+      "thumb": "/images/campaigns/dipg-willow/1.jpg",
+      "alt": "Willow at home"
+    },
+    {
+      "url": "/images/campaigns/dipg-willow/2.jpg",
+      "thumb": "/images/campaigns/dipg-willow/2.jpg",
+      "alt": "Willow drawing at home"
+    },
+    {
+      "url": "/images/campaigns/dipg-willow/3.jpg",
+      "thumb": "/images/campaigns/dipg-willow/3.jpg",
+      "alt": "Willow on a quiet morning at home"
+    },
+    {
+      "url": "/images/campaigns/dipg-willow/4.jpg",
+      "thumb": "/images/campaigns/dipg-willow/4.jpg",
+      "alt": "Willow with flowers from well-wishers"
+    }
+  ],
+  "story": {
+    "intro": "Willow is a 6-year-old Year 2 pupil from Leeds who was diagnosed with diffuse intrinsic pontine glioma (DIPG), H3 K27M-mutant — an aggressive tumour of the brainstem that affects around 40 children a year in the UK. Standard radiotherapy can buy months, but it cannot cure her. The only active option left — a specialist trial immunotherapy programme in Germany — is not funded by the NHS.",
+    "sections": [
+      {
+        "title": "The Diagnosis",
+        "icon": "diagnosis",
+        "content": "It started in August 2026 with a squint in her left eye and clumsiness dropping her school pencils. On 2nd September, after her smile became suddenly lopsided during breakfast, she was rushed to Leeds General Infirmary.\n\nThe MRI revealed a 3.1 cm diffuse lesion filling her pons — the part of the brainstem that controls breathing, heartbeat and movement — with no safe surgical corridor. A stereotactic biopsy and molecular analysis confirmed the diagnosis: diffuse intrinsic pontine glioma, H3 K27M-mutant, WHO grade IV. Because of where it sits, surgeons cannot remove it."
+      },
+      {
+        "title": "Standard Treatment and Its Limits",
+        "icon": "treatment",
+        "content": "Willow began a six-week course of focal radiotherapy (54 Gy in 30 fractions) at Leeds in late September, alongside steroids to control the swelling. Her doctors were honest with us: radiotherapy typically shrinks a DIPG for a few months, and median survival is 9–11 months. Fewer than 1 in 10 children survive two years. There is no standard chemotherapy that changes this — which is why every paediatric oncologist we spoke to said the same thing: get her onto a trial."
+      },
+      {
+        "title": "The Hope: Trial Immunotherapy in Germany",
+        "icon": "hope",
+        "content": "After weeks of research and second opinions, Willow was accepted onto an individualised multimodal immunotherapy programme at a certified oncology centre in Germany, combining a personalised dendritic cell vaccine made from her own immune cells with targeted therapy matched to her tumour's H3 K27M mutation.\n\nEarly published reports describe objective responses in a subset of children with H3 K27M-mutant diffuse midline glioma treated with the targeted drug ONC201 (dordaviprone), and the German centre has confirmed it can begin Willow's programme in December — if we secure the funding. This programme is NOT funded by the NHS and is available only on a private-pay basis."
+      },
+      {
+        "title": "Why We Need Your Help",
+        "icon": "help",
+        "content": "We want to be completely transparent. Willow's diagnosis, biopsy, radiotherapy and steroids were provided free of charge by the NHS at Leeds General Infirmary. That is covered. What is NOT available on the NHS is the trial immunotherapy programme in Germany — the only active treatment option her doctors can point to. We need £120,000 to get our six-year-old onto it before her window closes.",
+        "coveredLabel": "Covered by the NHS",
+        "coveredItems": [
+          "Initial diagnosis — MRI and stereotactic biopsy (Leeds General Infirmary, NHS)",
+          "Focal radiotherapy — 30 fractions (NHS)",
+          "Steroids and supportive care (NHS)",
+          "Physiotherapy and community paediatric care (NHS)"
+        ],
+        "notCoveredLabel": "Not Funded by the NHS",
+        "notCoveredItems": [
+          "Trial immunotherapy programme — dendritic cell vaccine + targeted therapy in Germany",
+          "Advanced molecular profiling and treatment monitoring",
+          "Targeted therapy medication (ONC201/dordaviprone pathway)",
+          "Travel, accommodation & carer support in Germany for 12+ months",
+          "Rehabilitation, physiotherapy equipment and specialist schooling support"
+        ]
+      },
+      {
+        "title": "Cost Breakdown",
+        "icon": "cost",
+        "totalLabel": "Total",
+        "items": [
+          {
+            "text": "Trial immunotherapy programme (dendritic cell vaccine + targeted therapy, Germany)",
+            "amount": 58000
+          },
+          {
+            "text": "Advanced molecular profiling and ongoing treatment monitoring",
+            "amount": 9000
+          },
+          {
+            "text": "Travel, accommodation & carer expenses in Germany (12+ months)",
+            "amount": 28000
+          },
+          {
+            "text": "Rehabilitation, physiotherapy equipment and specialist schooling support",
+            "amount": 15000
+          },
+          {
+            "text": "Unexpected medical expenses & reserve fund",
+            "amount": 10000
+          }
+        ]
+      }
+    ],
+    "quote": {
+      "text": "She's six. She still loses teeth and believes the tooth fairy is late because of the hospital post. Her doctors told us the tumour can't be cut out — but there's a trial in Germany that could give her more birthdays. Every donation isn't just money — it's time. Time with her little brother. Time to be seven. Please help us get her there before December.",
+      "author": "Hannah R., Willow's mum"
+    }
+  },
+  "updates": [
+    {
+      "date": "7 Oct 2026",
+      "title": "Accepted onto the German programme 📋",
+      "content": "The biggest news so far: the centre in Germany has reviewed Willow's biopsy and MRI and confirmed her place on the trial immunotherapy programme, starting in December if we secure the funding. She is halfway through radiotherapy at Leeds and coping bravely. This is our window — please keep sharing.",
+      "isNew": true
+    },
+    {
+      "date": "2 Oct 2026",
+      "title": "We've passed 1,100 donors! 🙏",
+      "content": "Your support has been overwhelming — more than 1,100 people have given. Willow finished her third week of radiotherapy and still insists on walking to school when she can. Her little brother drew a picture of 'the German doctors' for her hospital wall. Every pound brings us closer to December.",
+      "isNew": false
+    },
+    {
+      "date": "24 Sep 2026",
+      "title": "Radiotherapy is underway",
+      "content": "Willow started her six-week course of radiotherapy at Leeds General Infirmary. She is dealing with tiredness and wobbliness, but her smile is intact. Her oncologist explained that radiotherapy buys time — which is exactly why the trial programme matters so much.",
+      "isNew": false
+    },
+    {
+      "date": "12 Sep 2026",
+      "title": "The campaign has launched",
+      "content": "With heavy hearts but determination, we're launching this appeal. After the biopsy confirmed DIPG, her doctors told us clearly: standard treatment buys months, but the trial in Germany is her only active option. Unfortunately, it isn't funded by the NHS. We believe in the power of community.",
+      "isNew": false
+    }
+  ],
+  "milestones": [
+    {
+      "amount": 30000,
+      "label": "Radiotherapy completed & molecular profiling",
+      "reached": true
+    },
+    {
+      "amount": 60000,
+      "label": "50% — Begin trial immunotherapy programme",
+      "reached": false
+    },
+    {
+      "amount": 96000,
+      "label": "80% — Targeted therapy medication secured",
+      "reached": false
+    },
+    {
+      "amount": 120000,
+      "label": "Goal — Full trial coverage in Germany 🎉",
+      "reached": false
+    }
+  ],
+  "topDonors": [
+    {
+      "name": "Allerton Primary School PTA",
+      "amount": 1200,
+      "initials": "AP",
+      "color": "from-amber-400 to-amber-500",
+      "rank": 1
+    },
+    {
+      "name": "The R. Family",
+      "amount": 650,
+      "initials": "RF",
+      "color": "from-gray-400 to-gray-500",
+      "rank": 2
+    },
+    {
+      "name": "Anonymous",
+      "amount": 400,
+      "initials": "?",
+      "color": "from-orange-400 to-orange-500",
+      "rank": 3
+    }
+  ],
+  "recentDonors": [
+    {
+      "name": "Olivia H.",
+      "amount": 25,
+      "time": "2 min ago",
+      "initials": "OH",
+      "color": "from-rose-400 to-rose-500",
+      "message": "Stay strong, Willow!"
+    },
+    {
+      "name": "Anonymous",
+      "amount": 50,
+      "time": "8 min ago",
+      "initials": "?",
+      "color": "from-gray-400 to-gray-500",
+      "message": ""
+    },
+    {
+      "name": "Jack T.",
+      "amount": 20,
+      "time": "14 min ago",
+      "initials": "JT",
+      "color": "from-blue-400 to-blue-500",
+      "message": "From a fellow Leeds parent"
+    },
+    {
+      "name": "Sophie R.",
+      "amount": 75,
+      "time": "22 min ago",
+      "initials": "SR",
+      "color": "from-violet-400 to-violet-500",
+      "message": "Praying for you x"
+    },
+    {
+      "name": "Harry W.",
+      "amount": 30,
+      "time": "35 min ago",
+      "initials": "HW",
+      "color": "from-emerald-400 to-emerald-500",
+      "message": ""
+    },
+    {
+      "name": "Anonymous",
+      "amount": 100,
+      "time": "2 hours ago",
+      "initials": "?",
+      "color": "from-amber-400 to-amber-500",
+      "message": "You've got this"
+    },
+    {
+      "name": "Amelia B.",
+      "amount": 15,
+      "time": "2 hours ago",
+      "initials": "AB",
+      "color": "from-pink-400 to-pink-500",
+      "message": ""
+    },
+    {
+      "name": "Charlie L.",
+      "amount": 40,
+      "time": "3 hours ago",
+      "initials": "CL",
+      "color": "from-cyan-400 to-cyan-500",
+      "message": "Keep fighting Willow!"
+    },
+    {
+      "name": "Ella K.",
+      "amount": 20,
+      "time": "3 hours ago",
+      "initials": "EK",
+      "color": "from-indigo-400 to-indigo-500",
+      "message": "From York with love"
+    },
+    {
+      "name": "George T.",
+      "amount": 50,
+      "time": "4 hours ago",
+      "initials": "GT",
+      "color": "from-teal-400 to-teal-500",
+      "message": ""
+    },
+    {
+      "name": "Isla S.",
+      "amount": 15,
+      "time": "5 hours ago",
+      "initials": "IS",
+      "color": "from-orange-400 to-orange-500",
+      "message": "Sending strength to the whole family"
+    },
+    {
+      "name": "Poppy H.",
+      "amount": 10,
+      "time": "7 hours ago",
+      "initials": "PH",
+      "color": "from-fuchsia-400 to-fuchsia-500",
+      "message": "From Bristol"
+    },
+    {
+      "name": "Freya A.",
+      "amount": 25,
+      "time": "9 hours ago",
+      "initials": "FA",
+      "color": "from-red-400 to-red-500",
+      "message": "Praying for you"
+    },
+    {
+      "name": "Daisy Z.",
+      "amount": 20,
+      "time": "10 hours ago",
+      "initials": "DZ",
+      "color": "from-yellow-400 to-yellow-500",
+      "message": ""
+    }
+  ]
+}

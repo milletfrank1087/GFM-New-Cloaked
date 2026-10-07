@@ -352,16 +352,23 @@
         <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-card">
           
           <!-- Main Photo Frame -->
-          <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden select-none group">
+          <div class="relative aspect-[16/10] bg-slate-900 overflow-hidden select-none group">
             <!-- Skeleton Shimmer Placeholder -->
             <div id="main-gallery-skeleton" class="absolute inset-0 skeleton-shimmer z-0 transition-opacity duration-300 pointer-events-none"></div>
 
-            <img id="main-gallery-image" 
+                        <!-- Blurred Fill Backdrop (synced with main photo, never cropped look) -->
+            <img id="main-gallery-blur"
+                 src="campaign/public/images/campaigns/glioblastoma-grace/1.jpg"
+                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';"
+                 alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl brightness-[0.55] saturate-150 pointer-events-none z-0">
+
+<img id="main-gallery-image" 
                  src="campaign/public/images/campaigns/glioblastoma-grace/1.jpg" 
                  onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" 
                  alt="Grace Clarke" 
                  onload="this.classList.remove('opacity-0'); document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');"
-                 class="w-full h-full object-cover transition-opacity duration-300 opacity-0 relative z-10">
+                 class="w-full h-full object-contain transition-opacity duration-300 opacity-0 relative z-10">
 
             <!-- Clean Top-Right Counter Pill -->
             <div class="absolute top-3.5 right-3.5 z-20">
@@ -1665,11 +1672,15 @@
       temp.src = item.src;
       temp.onload = () => {
         img.src = item.src;
+        const blur = document.getElementById('main-gallery-blur');
+        if (blur) blur.src = item.src;
         img.classList.remove('opacity-0');
         if (skeleton) skeleton.classList.add('opacity-0');
       };
       temp.onerror = () => {
         img.src = item.fallback;
+        const blur2 = document.getElementById('main-gallery-blur');
+        if (blur2) blur2.src = item.fallback;
         img.classList.remove('opacity-0');
         if (skeleton) skeleton.classList.add('opacity-0');
       };
