@@ -225,6 +225,29 @@ function showError(errorEl, message) {
   errorEl.classList.remove('hidden');
 }
 
+// The email field sits above the payment form, so on mobile it is off-screen when Pay is tapped.
+// Bring it back into view and mark it, instead of only showing an error next to the button.
+function flagEmailField(emailInput, message) {
+  if (!emailInput) return;
+  let hint = document.getElementById('billing-email-error');
+  if (!hint) {
+    hint = document.createElement('p');
+    hint.id = 'billing-email-error';
+    hint.style.cssText = 'color:#dc2626;font-size:12px;font-weight:600;margin-top:4px';
+    emailInput.insertAdjacentElement('afterend', hint);
+    emailInput.addEventListener('input', () => {
+      if (!emailInput.value.trim().includes('@')) return;
+      emailInput.style.removeProperty('border-color');
+      hint.style.display = 'none';
+    });
+  }
+  hint.textContent = message;
+  hint.style.display = '';
+  emailInput.style.setProperty('border-color', '#ef4444', 'important'); // beats the template's input:focus !important
+  emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => emailInput.focus({ preventScroll: true }), 300);
+}
+
 function resetSubmitUI(submitBtn, spinnerEl, btnText) {
   if (submitBtn) submitBtn.disabled = Date.now() < lockedUntilEpochMs; // keep a retry hold in place
   if (spinnerEl) spinnerEl.classList.add('hidden');
@@ -375,6 +398,7 @@ async function initCheckout() {
           errorEl.textContent = localizedEmailError;
           errorEl.classList.remove('hidden');
         }
+        flagEmailField(emailInput, localizedEmailError);
         return;
       }
 
