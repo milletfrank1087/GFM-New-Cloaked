@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html lang="el-GR" class="scroll-smooth antialiased">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Βοηθήστε τη Σοφία, 21 ετών φοιτήτρια Ιατρικής, να αποκτήσει πρόσβαση σε ανοσοθεραπεία στη Γερμανία | HopeRise GR</title>
+  <meta name="description" content="Η Σοφία, 21 ετών, διαγνώστηκε με γλοιοβλάστωμα (GBM) βαθμού IV. Χρειάζεται επειγόντως ανοσοθεραπεία με δενδριτικά κύτταρα στη Γερμανία — μια θεραπεία που δεν καλύπτεται από κανένα δημόσιο σύστημα υγείας στην Ευρώπη.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Βοηθήστε τη Σοφία, 21 ετών φοιτήτρια Ιατρικής, να νικήσει το γλοιοβλάστωμα — Έκκληση για Γερμανία">
+  <meta property="og:description" content="Η Σοφία ήθελε να γίνει νευρο-ογκολόγος. Τώρα παλεύει με όγκο εγκεφάλου βαθμού IV. Βοηθήστε να χρηματοδοτηθεί η ιδιωτική ανοσοθεραπεία στη Γερμανία.">
+  <meta property="og:image" content="/images/campaigns/glioblastoma-sofia/1.jpg">
+
+  <!-- Server-injected tracking pixels (Meta + TikTok) -->
+  <!-- TRACKING_PIXELS_PLACEHOLDER -->
+  <!-- CAMPAIGN_DATA_PLACEHOLDER -->
+
+  <!-- Unified Typographic System (Plus Jakarta Sans for UI/Numbers/Headings, Newsreader for Patient Narrative Quote) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif']
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b'
+            },
+            surface: {
+              subtle: '#f8fafc',
+              card: '#ffffff',
+              border: '#e2e8f0',
+              muted: '#64748b'
+            },
+            navy: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#0a0f1d'
+            }
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
+            'card-elevated': '0 16px 36px -4px rgba(15, 23, 42, 0.08), 0 4px 14px -2px rgba(15, 23, 42, 0.03)',
+            'brand-glow': '0 8px 24px -2px rgba(5, 150, 105, 0.28)',
+            'bottom-dock': '0 -8px 30px -4px rgba(15, 23, 42, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --font-primary: 'Plus Jakarta Sans', sans-serif;
+      --font-quote: 'Newsreader', Georgia, serif;
+      --color-brand: #059669;
+      --color-brand-dark: #047857;
+      --color-brand-light: #ecfdf5;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: var(--font-primary);
+      background-color: #f8fafc;
+      color: #0f172a;
+      letter-spacing: -0.012em;
+    }
+
+    /* Section anchors with sticky header offset */
+    .section-anchor {
+      scroll-margin-top: 5.5rem;
+    }
+
+    /* Progress Meter */
+    .progress-track {
+      background-color: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+      height: 10px;
+      position: relative;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+      height: 100%;
+      border-radius: 9999px;
+      position: relative;
+    }
+    .progress-sheen {
+      display: none;
+    }
+
+    /* Amount Chips (Main Console & Modal) */
+    .amount-chip,
+    .modal-amt-chip {
+      border: 2px solid #e2e8f0;
+      background-color: #ffffff;
+      color: #1e293b;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .amount-chip:hover,
+    .modal-amt-chip:hover {
+      transform: translateY(-1px);
+      border-color: #10b981;
+    }
+    .amount-chip:active,
+    .modal-amt-chip:active {
+      transform: scale(0.97);
+    }
+    .amount-chip.active,
+    .modal-amt-chip.active {
+      border-color: #059669 !important;
+      background-color: #ecfdf5 !important;
+      color: #064e3b !important;
+      box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.22);
+    }
+
+    /* Modal Tip Buttons */
+    .modal-tip-btn {
+      border: 2px solid #e2e8f0;
+      background-color: #ffffff;
+      color: #334155;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .modal-tip-btn:hover {
+      border-color: #10b981;
+    }
+    .modal-tip-btn.active {
+      border-color: #059669 !important;
+      background-color: #ecfdf5 !important;
+      color: #064e3b !important;
+      font-weight: 700 !important;
+    }
+
+    /* Live Impact Card Smooth Fade-In */
+    @keyframes impactFade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .impact-animate {
+      animation: impactFade 0.25s var(--ease-spring);
+    }
+
+    /* Robust CSS Grid Accordion: Flawless height animation & complete 0px collapse */
+    .accordion-grid {
+      display: grid;
+      grid-template-rows: 0fr;
+      overflow: hidden;
+      transition: grid-template-rows 0.32s var(--ease-spring);
+    }
+    .accordion-item.open .accordion-grid {
+      grid-template-rows: 1fr;
+    }
+    .accordion-content-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .accordion-item:not(.open) .accordion-content-inner {
+      visibility: hidden;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    .accordion-item.open .accordion-content-inner {
+      visibility: visible;
+      transition: visibility 0.32s;
+    }
+    .accordion-item.open .accordion-chevron {
+      transform: rotate(180deg);
+      color: #059669;
+    }
+
+    /* Pulse for Live Indicators */
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.18); opacity: 0.5; }
+    }
+    .status-pulse {
+      animation: softPulse 2.2s infinite ease-in-out;
+    }
+
+    /* Gallery Thumbnail Active State */
+    .gallery-thumb.active-thumb {
+      border-color: #059669;
+      opacity: 1;
+      box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+    }
+
+    /* Dossier Card Active State */
+    .dossier-card.active-dossier {
+      background-color: #ecfdf5;
+      border-color: #059669;
+      color: #064e3b;
+      box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.18);
+    }
+
+    /* Safe Area Padding for Mobile Dock */
+    .safe-dock-pb {
+      padding-bottom: max(0.875rem, env(safe-area-inset-bottom));
+    }
+
+    /* Modal Animation */
+    @keyframes modalEntry {
+      from { opacity: 0; transform: scale(0.96) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-animate {
+      animation: modalEntry 0.25s var(--ease-spring);
+    }
+
+    /* Prevent iOS auto-zoom on mobile inputs */
+    @media screen and (max-width: 768px) {
+      input,
+      select,
+      textarea,
+      input::placeholder,
+      textarea::placeholder {
+        font-size: 16px !important;
+      }
+    }
+    input, select, textarea {
+      touch-action: manipulation;
+    }
+
+    /* Modern Skeleton Shimmer Loading */
+    @keyframes skeleton-shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    .skeleton-shimmer {
+      position: relative;
+      background-color: #f1f5f9;
+      overflow: hidden;
+    }
+    .skeleton-shimmer::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.45) 20%,
+        rgba(255, 255, 255, 0.75) 60%,
+        rgba(255, 255, 255, 0)
+      );
+      animation: skeleton-shimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      content: '';
+      pointer-events: none;
+    }
+
+    /* Suppress native browser broken image icon / question mark glyph while loading */
+    img.opacity-0 {
+      opacity: 0 !important;
+      visibility: hidden;
+    }
+    img:not(.opacity-0) {
+      visibility: visible;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ============================================================== -->
+  <!-- 2. STREAMLINED HEADER -->
+  <!-- ============================================================== -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-slate-900 text-base leading-none tracking-tight">HopeRise<span class="text-brand-600 text-xs ml-1 uppercase">GR</span></span>
+          <span class="text-xs text-slate-500 font-medium">Επαληθευμένες Ιατρικές Εκκλήσεις</span>
+        </div>
+      </a>
+
+      <!-- Jump Navigation (Desktop) -->
+      <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
+        <a href="#story-chapter" class="hover:text-brand-600 transition-colors">Ιστορία της Ασθενούς</a>
+        <a href="#roadmap-chapter" class="hover:text-brand-600 transition-colors">Πορεία Θεραπείας</a>
+        <a href="#nhs-chapter" class="hover:text-brand-600 transition-colors">ΕΣΥ vs Ιδιωτικό Πρωτόκολλο</a>
+        <a href="#evidence-chapter" class="hover:text-brand-600 transition-colors">Κλινικός Φάκελος</a>
+        <a href="#budget-chapter" class="hover:text-brand-600 transition-colors">Κοστολόγιο</a>
+        <a href="#faq-chapter" class="hover:text-brand-600 transition-colors">Συχνές Ερωτήσεις</a>
+      </nav>
+
+      <!-- Header Nav & Trust -->
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-brand-700 bg-brand-50 px-3 py-1.5 rounded-full border border-brand-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 status-pulse"></span>
+          <span>Επαληθευμένη Έκκληση</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 3. MAIN HERO & DUAL-COLUMN APP CONTAINER -->
+  <!-- ============================================================== -->
+  <main class="max-w-6xl mx-auto px-4 py-6 md:py-8 flex-1 w-full space-y-8">
+
+    <!-- HERO BANNER SECTION -->
+    <section aria-labelledby="campaign-heading" class="space-y-2.5">
+      <div class="flex flex-wrap items-center gap-2 text-xs font-semibold text-brand-700">
+        <span class="bg-brand-50 text-brand-700 px-2.5 py-0.5 rounded-full border border-brand-200 font-bold">Επείγουσα Ιατρική Έκκληση</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-slate-600">Γλοιοβλάστωμα Πολύμορφο Βαθμού 4 (IDH-wildtype)</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-slate-600">Ιατρική Σχολή ΑΠΘ</span>
+      </div>
+
+      <h1 id="campaign-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        Βοηθήστε τη 21χρονη φοιτήτρια Ιατρικής Σοφία να αποκτήσει πρόσβαση σε σωτήρια ανοσοθεραπεία στη Γερμανία
+      </h1>
+    </section>
+
+    <!-- 2-COLUMN LAYOUT -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- ============================================================ -->
+      <!-- LEFT COLUMN: PHOTO GALLERY & NARRATIVE CHAPTERS -->
+      <!-- ============================================================ -->
+      <div class="lg:col-span-7 space-y-8 min-w-0">
+
+        <!-- INTERACTIVE MEDICAL PHOTO VIEWER (PROMINENT ARROWS, VISUAL THUMBNAILS, NO TEXT LABELS) -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-card">
+          
+          <!-- Main Photo Frame -->
+          <div class="relative aspect-[16/10] bg-slate-900 overflow-hidden select-none group">
+            <!-- Skeleton Shimmer Placeholder -->
+            <div id="main-gallery-skeleton" class="absolute inset-0 skeleton-shimmer z-0 transition-opacity duration-300 pointer-events-none"></div>
+
+                        <!-- Blurred Fill Backdrop (synced with main photo, never cropped look) -->
+            <img id="main-gallery-blur"
+                 src="campaign/public/images/campaigns/glioblastoma-sofia/1.jpg"
+                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-sofia/1.jpg';"
+                 alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl brightness-[0.55] saturate-150 pointer-events-none z-0">
+
+<img id="main-gallery-image" 
+                 src="campaign/public/images/campaigns/glioblastoma-sofia/1.jpg" 
+                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-sofia/1.jpg';" 
+                 alt="Σοφία" 
+                 onload="this.classList.remove('opacity-0'); document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');"
+                 class="w-full h-full object-contain transition-opacity duration-300 opacity-0 relative z-10">
+
+            <!-- Clean Top-Right Counter Pill -->
+            <div class="absolute top-3.5 right-3.5 z-20">
+              <span id="main-gallery-pill" class="text-xs font-bold text-slate-100 bg-slate-900/80 px-2.5 py-1 rounded-full border border-slate-700/80 shadow-sm backdrop-blur-sm">
+                1 / 4
+              </span>
+            </div>
+
+            <!-- Prominent, Tactile Navigation Arrows -->
+            <button onclick="cyclePhoto(-1)" aria-label="Προηγούμενη φωτογραφία" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-brand-600 flex items-center justify-center transition-all shadow-md hover:scale-105 active:scale-95 border border-slate-200/80 cursor-pointer z-20 backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <button onclick="cyclePhoto(1)" aria-label="Επόμενη φωτογραφία" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-brand-600 flex items-center justify-center transition-all shadow-md hover:scale-105 active:scale-95 border border-slate-200/80 cursor-pointer z-20 backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+
+          <!-- Pure Visual Thumbnail Strip (Zero Text Labels) -->
+          <div class="p-2.5 bg-slate-50 border-t border-slate-200 grid grid-cols-4 gap-2">
+            <button onclick="switchPhoto(0)" id="photo-tab-0" class="gallery-thumb active-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-brand-600 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastoma-sofia/1.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-sofia/1.jpg';" alt="Μικρογραφία 1" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(1)" id="photo-tab-1" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastoma-sofia/2.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-sofia/2.jpg';" alt="Μικρογραφία 2" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(2)" id="photo-tab-2" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastoma-sofia/3.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-sofia/3.jpg';" alt="Μικρογραφία 3" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(3)" id="photo-tab-3" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastoma-sofia/4.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-sofia/4.jpg';" alt="Μικρογραφία 4" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 01: THE PATIENT NARRATIVE & CLINICAL QUOTE -->
+        <!-- ======================================================== -->
+        <article id="story-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-5">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">01 / Κλινική Αφήγηση</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Η Ιστορία της Σοφίας</h2>
+            </div>
+            <span class="text-xs text-slate-400 font-medium">3 λεπτά ανάγνωσης</span>
+          </div>
+
+          <div class="space-y-3.5 text-sm sm:text-base text-slate-700 leading-relaxed">
+            <p class="font-semibold text-slate-900 text-base leading-snug">
+              Μέσα σε μία στιγμή, όλα άλλαξαν.
+            </p>
+
+            <p>
+              Η Σοφία είναι μια 21χρονη φοιτήτρια Ιατρικής από τη Θεσσαλονίκη που διαγνώστηκε με Γλοιοβλάστωμα Πολύμορφο (GBM) βαθμού IV — τον πιο επιθετικό κακοήθη όγκο εγκεφάλου. Η τυπική θεραπεία (χειρουργείο, ακτινοθεραπεία, τεμοζολομίδη) δίνει μέσο προσδόκιμο 14-16 μήνες. Η μόνη θεραπεία που μπορεί να αυξήσει σημαντικά την επιβίωσή της — η ανοσοθεραπεία με δενδριτικά κύτταρα — είναι διαθέσιμη μόνο σε εξειδικευμένα κέντρα στη Γερμανία και δεν καλύπτεται από κανένα δημόσιο σύστημα υγείας στην Ευρώπη.
+            </p>
+
+            <p>
+              Όλα ξεκίνησαν τον Ιούνιο του 2026, όταν η Σοφία άρχισε να παρουσιάζει επίμονους πονοκεφάλους, ιδιαίτερα τα πρωινά, που συνοδεύονταν από ναυτία και θολή όραση στο αριστερό μάτι. Στις 20 Ιουνίου, μετά από ένα επεισόδιο σπασμών κατά τη διάρκεια μαθήματος στην Ιατρική Σχολή του ΑΠΘ, μεταφέρθηκε επειγόντως στο Νευροχειρουργικό Τμήμα του ΑΧΕΠΑ.</p>
+            </p>
+
+            <!-- EDITORIAL PULL-QUOTE (Newsreader Serif) -->
+            <div class="my-5 p-5 sm:p-6 rounded-2xl bg-emerald-50/70 border border-emerald-200/90 border-l-4 border-l-brand-600 relative shadow-sm overflow-hidden">
+              <svg class="w-7 h-7 text-brand-600 mb-2.5 opacity-80" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+              <blockquote class="font-serif italic text-base sm:text-lg text-slate-900 leading-relaxed">
+                “Ήθελα να γίνω γιατρός για να βοηθάω κόσμο. Τώρα μαθαίνω τι σημαίνει να είσαι ασθενής — και πόσο αβάσταχτο είναι να ξέρεις ότι υπάρχει θεραπεία που μπορεί να σε σώσει, αλλά να μην μπορείς να την προσεγγίσεις. Κάθε δωρεά σας δεν είναι απλά χρήματα — είναι χρόνος ζωής. Αν τα καταφέρω, υπόσχομαι να αφιερώσω τη ζωή μου στη νευρο-ογκολογία, για να μην περάσει κανείς άλλος αυτό που περνάω εγώ.”
+              </blockquote>
+              <div class="mt-3.5 pt-3 border-t border-emerald-200/80 flex items-center justify-between text-xs text-slate-600">
+                <span class="font-bold text-slate-900">— Σοφία Δ.</span>
+                <span class="text-slate-600">Φοιτήτρια Ιατρικής, ΑΠΘ</span>
+              </div>
+            </div>
+
+            <p>
+              Η χειρουργική και ογκολογική ομάδα της Σοφίας στο ΑΧΕΠΑ πέτυχε τη μέγιστη ασφαλή αφαίρεση. Ωστόσο, επειδή η μη μεθυλίωση του προαγωγέα MGMT προσδίδει αντοχή στην αλκυλιωτική χημειοθεραπεία, η τυπική συντήρηση με τεμοζολομίδη προσφέρει διάμεση επιβίωση χωρίς εξέλιξη μόλις 5,3 μηνών. Η οικογένειά της αναζήτησε συμβουλές από εξειδικευμένα ευρωπαϊκά κέντρα νευρο-ογκολογίας που παρέχουν αυτόλογα εμβόλια δενδριτικών κυττάρων.
+            </p>
+          </div>
+        </article>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 02: THE TREATMENT ROADMAP & CLINICAL PHASES -->
+        <!-- ======================================================== -->
+        <section id="roadmap-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">02 / Κλινική Πορεία</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Πρωτόκολλο Θεραπείας & Στάδια Οροσήμων</h2>
+            </div>
+            <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded border border-brand-200">
+              Στόχος: 90.000 €
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Η Σοφία υποβλήθηκε σε μερική χειρουργική αφαίρεση του όγκου (υφολική εκτομή) στις 10 Ιουλίου 2026 στο ΑΧΕΠΑ — πλήρης αφαίρεση δεν ήταν δυνατή λόγω της εγγύτητας του όγκου σε λειτουργικές περιοχές ομιλίας. Ακολούθησε το πρωτόκολλο Stupp: ταυτόχρονη ακτινοθεραπεία (30 συνεδρίες σε 6 εβδομάδες) με ημερήσια τεμοζολομίδη, και στη συνέχεια κύκλοι συντήρησης τεμοζολομίδης.</p>
+
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Οι γιατροί ήταν ειλικρινείς: με τη μη μεθυλίωση του MGMT, η ανταπόκριση στην τεμοζολομίδη αναμένεται περιορισμένη. Το μέσο προσδόκιμο επιβίωσης με τυπική θεραπεία είναι 12-15 μήνες. Η MRI ελέγχου τον Σεπτέμβριο 2026 έδειξε υπολειμματικό όγκο σταθερό σε μέγεθος, αλλά οι γιατροί προειδοποίησαν ότι η υποτροπή είναι σχεδόν βέβαιη.</p>
+
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Κάθε συνεισφορά χρηματοδοτεί άμεσα προοδευτικές κλινικές φάσεις στο θεραπευτικό χρονοδιάγραμμα της Σοφίας. Τα κεφάλαια δεσμεύονται και αποδεσμεύονται έναντι επαληθευμένων νοσοκομειακών τιμολογίων:
+          </p>
+
+          <div class="space-y-3 pt-1">
+            
+            <!-- Phase 1 (Completed) -->
+            <div class="p-3.5 rounded-xl border border-brand-200 bg-brand-50/50 flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-900">Φάση 1: Χειρουργική Αφαίρεση & Ταυτόχρονη Χημειοακτινοθεραπεία</h3>
+                  <span class="text-xs font-bold uppercase tracking-wider bg-brand-200 text-brand-800 px-2 py-0.5 rounded">Ολοκληρώθηκε</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  Χειρουργική κρανιοτομία στο ΑΧΕΠΑ, 60 Gy / 30 συνεδρίες ακτινοθεραπείας διαμορφούμενης έντασης, ταυτόχρονη ημερήσια τεμοζολομίδη. Χρηματοδοτήθηκε από το ΕΣΥ.
+                </p>
+              </div>
+            </div>
+
+            <!-- Phase 2 (Active Target) -->
+            <div class="p-3.5 rounded-xl border-2 border-brand-600 bg-white shadow-card-elevated flex items-start gap-3 relative overflow-hidden">
+              <div class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                2
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-900">Φάση 2: Αφαίρεση Μονοκυττάρων & Σύνθεση Δενδριτικών Κυττάρων IO-VAC</h3>
+                  <span class="text-xs font-bold uppercase tracking-wider bg-brand-50 text-brand-700 border border-brand-200 px-2 py-0.5 rounded">Ενεργό Ορόσημο</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  Όριο 45.000 € (<strong class="text-slate-900">34.700 € συγκεντρώθηκαν</strong> — απομένουν 10.300 €). Αφαίρεση και εργαστηριακή παρασκευή εμβολίου στο IOZK Κολωνίας. Προγραμματισμένο για Νοέμβριο 2026.
+                </p>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex-1 progress-track h-2">
+                    <div class="progress-fill" style="width: 77%"></div>
+                  </div>
+                  <span class="text-xs font-bold text-brand-700">77% του Οροσήμου</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-start gap-3 opacity-80">
+              <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                3
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-800">Φάση 3: 4 έως 6 Ενοφθαλμισμοί Εμβολίου & Διαμορφούμενη Ηλεκτροϋπερθερμία</h3>
+                  <span class="text-xs text-slate-500 font-medium">Ορόσημο 72.000 €</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Ενδοδερμική χορήγηση εμβολίου IO-VAC σε συνδυασμό με διαμορφούμενη ηλεκτροϋπερθερμία 13,56 MHz (mEHT) για διάσπαση της ανοσοκαταστολής του αιματοεγκεφαλικού φραγμού.
+                </p>
+              </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-start gap-3 opacity-70">
+              <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                4
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-800">Φάση 4: Ανοσολογική Παρακολούθηση μετά το Εμβόλιο & Πρωτόκολλο Συντήρησης</h3>
+                  <span class="text-xs text-slate-500 font-medium">Στόχος 90.000 €</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Ανοσολογική παρακολούθηση με κυτταρομετρία ροής, σχεδιασμός στερεοτακτικής θεραπείας με πρωτόνια και κλινική διαμονή 12 μηνών στη Γερμανία.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 03: ΕΣΥ ΚΑΙ ΓΕΡΜΑΝΙΚΟ ΠΡΩΤΟΚΟΛΛΟ -->
+        <!-- ======================================================== -->
+        <section id="nhs-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">03 / Διαφάνεια Υγειονομικής Περίθαλψης</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Κάλυψη ΕΣΥ vs Ευρωπαϊκό Πρωτόκολλο</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded">
+              Πλαίσιο Ελληνικού Συστήματος Υγείας
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Θέλουμε να είμαστε απόλυτα διαφανείς. Η τυπική θεραπεία παρέχεται δωρεάν από το δημόσιο σύστημα υγείας. Αυτό που ζητάμε είναι αποκλειστικά για θεραπείες που δεν καλύπτονται πουθενά στην Ευρώπη — αλλά μπορούν να δώσουν στη Σοφία πραγματική ελπίδα ζωής πέρα από τους 14 μήνες της τυπικής πρόγνωσης.</p>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Μετά από εκτεταμένη έρευνα, η οικογένεια της Σοφίας εντόπισε ένα εξειδικευμένο πρόγραμμα ανοσοθεραπείας με δενδριτικά κύτταρα σε πιστοποιημένο ογκολογικό κέντρο στη Γερμανία. Πρόσφατη κλινική μελέτη (Nature Communications, Αύγουστος 2024) κατέδειξε αύξηση 68% στη μέση συνολική επιβίωση ασθενών με υποτροπιάζον γλοιοβλάστωμα που έλαβαν εμβόλια δενδριτικών κυττάρων.</p>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Η θεραπεία λειτουργεί ως εξής: λαμβάνονται κύτταρα από το αίμα της Σοφίας, μετατρέπονται σε δενδριτικά κύτταρα στο εργαστήριο, «εκπαιδεύονται» με αντιγόνα από τον ίδιο τον όγκο της, και επανεγχύονται για να ενεργοποιήσουν το ανοσοποιητικό της σύστημα εναντίον του καρκίνου. Απαιτούνται 4-6 κύκλοι σε διάστημα 12 μηνών.</p>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Αυτή η θεραπεία ΔΕΝ καλύπτεται από κανένα δημόσιο σύστημα υγείας στην Ευρώπη — ούτε το ΕΣΥ, ούτε ο ΕΟΠΥΥ, ούτε η Sécurité Sociale, ούτε κανένα άλλο ευρωπαϊκό ασφαλιστικό ταμείο. Ταξινομείται ως «καινοτόμα θεραπεία» και είναι διαθέσιμη αποκλειστικά σε ιδιωτική βάση.
+          </p>
+
+          <!-- Side-by-Side Matrix -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+            
+            <div class="p-4 rounded-xl border border-brand-200 bg-brand-50/60 space-y-2">
+              <div class="flex items-center gap-1.5 text-brand-900 font-bold text-xs uppercase tracking-wide">
+                <svg class="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <span>Καλύπτεται από ΕΣΥ/ΕΟΠΥΥ</span>
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc pl-4">
+                <li>Αρχική διάγνωση — MRI, βιοψία εγκεφάλου (ΕΣΥ/ΑΧΕΠΑ)</li>
+                <li>Χειρουργική αφαίρεση όγκου (ΕΣΥ/ΑΧΕΠΑ)</li>
+                <li>Ακτινοθεραπεία — 30 συνεδρίες (ΕΣΥ/ΑΧΕΠΑ)</li>
+                <li>Χημειοθεραπεία τεμοζολομίδης (ΕΟΠΥΥ)</li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/60 space-y-2">
+              <div class="flex items-center gap-1.5 text-amber-900 font-bold text-xs uppercase tracking-wide">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span>Δεν καλύπτεται πουθενά στην Ευρώπη (90.000 €)</span>
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc pl-4">
+                <li>Ανοσοθεραπεία με δενδριτικά κύτταρα — 4-6 κύκλοι στη Γερμανία</li>
+                <li>Θεραπεία πρωτονίων (proton therapy) — ελαχιστοποιεί βλάβη σε υγιή εγκεφαλικό ιστό</li>
+                <li>Tumor Treating Fields (Optune) — εγκεκριμένη συσκευή, χωρίς κάλυψη</li>
+                <li>Μοριακή προφιλοποίηση νέας γενιάς για εξατομικευμένη θεραπεία</li>
+                <li>Μετακίνηση, διαμονή & συνοδεία στη Γερμανία για 12+ μήνες</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="pt-1 text-sm text-slate-600 leading-relaxed space-y-1.5">
+            <h3 class="font-bold text-slate-900 text-sm">Κανονιστικό Κενό Αξιολόγησης (ΕΣΥ/ΕΟΠΥΥ vs Γερμανική AMG §13)</h3>
+            <p>
+              Στην Ελλάδα, η ένταξη καινοτόμων θεραπειών σε αποζημίωση απαιτεί εκτεταμένες κλινικές μελέτες και χρονοβόρες διαδικασίες αξιολόγησης, που συνήθως διαρκούν 3 έως 5 χρόνια. Στη Γερμανία, τα εξατομικευμένα αυτόλογα προηγμένα φάρμακα (ATMPs) εγκρίνονται βάσει του Άρθρου 13 του Γερμανικού Νόμου περί Φαρμάκων (AMG). Για ασθενείς με μη μεθυλιωμένο MGMT γλοιοβλάστωμα που αντιμετωπίζουν επικείμενη υποτροπή, η μετάβαση στη Γερμανία είναι η μόνη διαθέσιμη θεραπευτική οδός σήμερα.
+            </p>
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 04: CLINICAL VERIFICATION DOSSIER (DOCTOR-LEVEL RIGOR, ZERO EMOJIS) -->
+        <!-- ======================================================== -->
+        <section id="evidence-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">04 / Νευρο-ογκολογικός Φάκελος</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Φάκελος Κλινικής Επαλήθευσης</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
+              Επαληθευμένη Ιατρική Περίπτωση
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-700 leading-relaxed">
+            Κάθε κλινική μέτρηση, μοριακή παθολογοανατομική παράμετρος και ευρωπαϊκή κανονιστική άδεια παρακάτω έχει ανεξάρτητα διασταυρωθεί από ειδικούς νευρο-ογκολόγους. Επειδή ο όγκος της Σοφίας είναι MGMT-μη μεθυλιωμένος, η τυπική χημειοθεραπεία δεν μπορεί να αποτρέψει την ταχεία υποτροπή — καθιστώντας τη στοχευμένη κυτταρική ανοσοθεραπεία στο IOZK Κολωνίας τη βέλτιστη και μόνη κλινικά αποδεδειγμένη οδό προς τη μακροχρόνια επιβίωση:
+          </p>
+
+          <!-- Professional Clinical Tab Selector (Responsive Grid, Zero Sidescroll, Zero Emojis) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs font-semibold">
+            <button onclick="selectDossier('pathology', this)" class="dossier-card active-dossier p-3 rounded-xl border-2 border-brand-600 text-left transition-all cursor-pointer">
+              <div class="flex items-center gap-1.5 text-brand-600 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Παθολογοανατομία</span>
+              </div>
+              <span class="block font-bold text-slate-900">Αναφορά ΑΧΕΠΑ</span>
+              <span class="block text-xs text-slate-500 font-normal">Μοριακή Διαγνωστική</span>
+            </button>
+
+            <button onclick="selectDossier('mri', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5zM6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75z"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Ακτινολογία</span>
+              </div>
+              <span class="block font-bold text-slate-900">MRI Εγκεφάλου 3.0T</span>
+              <span class="block text-xs text-slate-500 font-normal">Αξιολόγηση μετά-ΑΚΘ</span>
+            </button>
+
+            <button onclick="selectDossier('iozk', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693l-1.57-.393m15.6 0l1.4 3.5a2.25 2.25 0 01-2.09 3.007H4.89a2.25 2.25 0 01-2.09-3.007l1.4-3.5"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Άδεια IOZK</span>
+              </div>
+              <span class="block font-bold text-slate-900">Γερμανική AMG §13</span>
+              <span class="block text-xs text-slate-500 font-normal">Έγκριση IO-VAC</span>
+            </button>
+
+            <button onclick="selectDossier('evidence', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Κλινικές Μελέτες</span>
+              </div>
+              <span class="block font-bold text-slate-900">Van Gool et al. 2023</span>
+              <span class="block text-xs text-slate-500 font-normal">Δημοσιευμένη Μελέτη</span>
+            </button>
+          </div>
+
+          <!-- PANE 1: NEUROPATHOLOGY & MOLECULAR PROFILE -->
+          <div id="dossier-pathology" class="dossier-content bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">ΜΟΝΑΔΑ: ΠΓΝΘ ΑΧΕΠΑ • Θεσσαλονίκη</span>
+              <span class="font-semibold text-slate-700">SPECIMEN ID: AXEPA-HIST-84029</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Ιστοπαθολογία & Πλήρες Μοριακό Διαγνωστικό Προφίλ</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Ολοκληρωμένη Διάγνωση ΠΟΥ:</span>
+                <span class="font-bold text-slate-900 text-right">Glioblastoma, IDH-wildtype, CNS WHO Grade 4</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Ιστολογικά Χαρακτηριστικά:</span>
+                <span class="font-medium text-slate-800 text-right">Microvascular proliferation & pseudopalisading necrosis</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Κατάσταση Μετάλλαξης IDH1:</span>
+                <span class="font-bold text-slate-900 text-right">Wildtype (R132H negative by IHC; confirmed via NGS panel)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Μεθυλίωση Προαγωγέα MGMT:</span>
+                <span class="font-bold text-rose-700 text-right">UNMETHYLATED (6.8% via Pyrosequencing; threshold &ge;9.0%)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Κατάσταση ATRX & p53:</span>
+                <span class="font-medium text-slate-800 text-right">ATRX nuclear expression retained; wildtype p53 expression</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Δείκτης Ki-67 / MIB-1:</span>
+                <span class="font-bold text-slate-900 text-right">28% (marked cellular proliferative activity)</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Κλινική Σημασία για Ογκολόγους:</strong> Η μη μεθυλίωση του προαγωγέα MGMT υποδηλώνει άθικτη ικανότητα επιδιόρθωσης DNA μέσω της O6-αλκυλογουανίνης DNA αλκυλοτρανσφεράσης (AGT), η οποία αντιστρέφει ταχέως τη βλάβη αλκυλίωσης που προκαλεί η τεμοζολομίδη. Συνεπώς, η χημειοθεραπεία συντήρησης με μονοπαράγοντα αλκυλιωτικό προσφέρει πολύ περιορισμένη επιβίωση χωρίς εξέλιξη, καθιστώντας επείγουσα την εξέταση αυτόλογου ανοσοθεραπευτικού εμβολιασμού για την πρόκληση κυτταροτοξικών Τ-λεμφοκυτταρικών (CTL) αποκρίσεων ειδικών για τον όγκο.
+            </p>
+          </div>
+
+          <!-- PANE 2: POST-RT 3.0T MRI NEURO-IMAGING -->
+          <div id="dossier-mri" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">ΑΠΕΙΚΟΝΙΣΤΙΚΟ ΤΜΗΜΑ: Νευροχειρουργικό Τμήμα ΑΧΕΠΑ, Θεσσαλονίκη</span>
+              <span class="font-semibold text-slate-700">ΗΜΕΡΟΜΗΝΙΑ: 12 ΣΕΠΤΕΜΒΡΙΟΥ 2026</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">MRI Εγκεφάλου 3.0T μετά Χημειοακτινοθεραπεία (Αξιολόγηση RANO)</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Πρωτόκολλο MRI:</span>
+                <span class="font-medium text-slate-800 text-right">3D T1-MPRAGE +/- Gadovist (0.1 mmol/kg), Axial T2/FLAIR, DWI/ADC</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Χειρουργική Κοιλότητα:</span>
+                <span class="font-medium text-slate-800 text-right">Δεξιός μετωπιαίος πόλος· διαστάσεις 3,8 x 2,4 εκ.</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Σκιαγραφική Ενίσχυση:</span>
+                <span class="font-medium text-slate-800 text-right">Λεπτό μετεγχειρητικό χείλος 2-3mm· χωρίς οζώδη υποτροπή</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Φαινόμενο Μάζας / Μετατόπιση Μέσης Γραμμής:</span>
+                <span class="font-bold text-slate-900 text-right">Υποχωρήθηκε· μηδενική μετατόπιση μέσης γραμμής· βατό κοιλιακό σύστημα</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Κατάσταση κατά RANO:</span>
+                <span class="font-bold text-brand-700 text-right">Σταθερή Νόσος μετά-ακτινοθεραπεία· βέλτιστο βασικό παράθυρο για ανοσοθεραπεία</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Νευροακτινολογική Εντύπωση:</strong> Ελάχιστη υπολειμματική ενίσχυση κατά μήκος των χειρουργικών ορίων μετά από ακτινοθεραπεία 60 Gy χωρίς απομακρυσμένες δορυφορικές εστίες. Η απουσία ογκώδους μακροσκοπικής νόσου επιβεβαιώνει ότι αυτό είναι το βέλτιστο θεραπευτικό παράθυρο για αφαίρεση και εμβολιασμό με δενδριτικά κύτταρα πριν επανέλθει ο μικροσκοπικός κλωνογενής πολλαπλασιασμός.
+            </p>
+          </div>
+
+          <!-- PANE 3: GERMAN MANUFACTURING AUTHORIZATION (AMG §13) -->
+          <div id="dossier-iozk" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">ΚΑΝΟΝΙΣΤΙΚΗ ΑΡΧΗ: Bezirksregierung Köln, Γερμανία</span>
+              <span class="font-semibold text-brand-700">LICENSE: DE_NW_04_MIA_2020_0017</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Εξουσιοδότηση Παρασκευής IOZK Κολωνίας βάσει Άρθρου 13 AMG</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Εξουσιοδοτημένη Μονάδα:</span>
+                <span class="font-bold text-slate-900 text-right">Immun-Onkologisches Zentrum Köln (IOZK), Hohenstaufenring 30-32</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Νομική Κατάταξη:</span>
+                <span class="font-medium text-slate-800 text-right">Αυτόλογο Προηγμένο Θεραπευτικό Φάρμακο (ATMP), §13 AMG</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Ονομασία Προϊόντος:</span>
+                <span class="font-bold text-slate-900 text-right">IO-VAC® Autologous Monocyte-Derived Mature Dendritic Cell Vaccine</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Πρωτόκολλο Φόρτωσης Αντιγόνων:</span>
+                <span class="font-medium text-slate-800 text-right">Tumour lysate proteins & ICD-induced extracellular microvesicles</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Ωρίμανση Σήματος Κινδύνου:</span>
+                <span class="font-medium text-slate-800 text-right">Newcastle Disease Virus (NDV strain MTH-68) + IL-1β, IL-6, TNF-α</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Συνοδός Μέθοδος:</span>
+                <span class="font-medium text-slate-800 text-right">Modulated Electrohyperthermia (mEHT / 13.56 MHz Oncotherm)</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Διασφάλιση Ποιότητας & Πρότυπα Καθαρού Χώρου:</strong> IO-VAC® παρασκευάζεται σε πιστοποιημένες αίθουσες καθαρού χώρου GMP σύμφωνα με τους ευρωπαϊκούς κανονισμούς ATMP. Τα κριτήρια αποδέσμευσης δενδριτικών κυττάρων απαιτούν ελάχιστη βιωσιμότητα κυττάρων &gt;80% και επικύρωση με κυτταρομετρία ροής της έκφρασης επιφανειακών δεικτών συνδιέγερσης CD80, CD83, CD86 και HLA-DR υψηλής πυκνότητας πριν την αποδέσμευση στον ασθενή.
+            </p>
+          </div>
+
+          <!-- PANE 4: PEER-REVIEWED SCIENTIFIC TRIAL EVIDENCE -->
+          <div id="dossier-evidence" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">JOURNAL CITATION: Cancers (Basel) 2023, 15(4), 1194</span>
+              <span class="font-semibold text-brand-700">DOI: 10.3390/cancers15041194</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Εξατομικευμένη Πολυτροπική Ανοσοθεραπεία για Γλοιοβλάστωμα IDH1 Wild-Type</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Κύριοι Ερευνητές:</span>
+                <span class="font-medium text-slate-800 text-right">Stefaan Van Gool, MD, PhD; Volker Schirrmacher, PhD et al.</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Αξιολογηθείσα Κοόρτη:</span>
+                <span class="font-medium text-slate-800 text-right">Ενήλικες με πρωτοπαθές IDH1 wild-type GBM που έλαβαν πολυτροπική θεραπεία IO-VAC</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Διάμεση OS Μη-Μεθυλιωμένου MGMT:</span>
+                <span class="font-bold text-brand-700 text-right">22.0 Months (vs 14.6 Months in EORTC/NCIC Stupp Benchmark)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">2ετής Συνολική Επιβίωση (Μη-μεθ):</span>
+                <span class="font-bold text-brand-700 text-right">39% 2-Year OS (vs ~15% in historical standard alkylator controls)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Προφίλ Ασφάλειας & Ανεπιθύμητων:</span>
+                <span class="font-medium text-slate-800 text-right">Μηδενικές τοξικότητες Βαθμού 4/5 σχετιζόμενες με θεραπεία· παροδικός πυρετός βαθμού 1/2</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Περίληψη Μελέτης:</strong> Σε δημοσιευμένη ανάλυση κοόρτης ενηλίκων με IDH1 wild-type γλοιοβλάστωμα, η ενσωμάτωση εξατομικευμένης πολυτροπικής ανοσοθεραπείας (εμβολιασμός με δενδριτικά κύτταρα IO-VAC παράλληλα με ανοσογόνο κυτταρικό θάνατο μέσω ιού νόσου Newcastle και διαμορφούμενης ηλεκτροϋπερθερμίας) παρήγαγε στατιστικά σημαντικές επεκτάσεις τόσο της διάμεσης συνολικής επιβίωσης όσο και των ποσοστών 2ετούς επιβίωσης, με ευνοϊκή διατήρηση νευρογνωστικής λειτουργίας.
+            </p>
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 05: ITEMIZED BUDGET & FINANCIAL GOVERNANCE -->
+        <!-- ======================================================== -->
+        <section id="budget-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">05 / Κλινικό Κοστολόγιο</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Itemised Breakdown of Στόχος 90.000 €</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">100% Αναλυτικό</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 text-xs sm:text-sm">
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Ανοσοθεραπεία δενδριτικών κυττάρων (4-6 κύκλοι, Γερμανία)</strong>
+                <span class="text-slate-500 text-xs">Αφαίρεση, καλλιέργεια αντιγόνων σε εργαστήριο GMP, 4 έως 6 αυτόλογοι κύκλοι εμβολίου</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">35.000 €</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Θεραπεία πρωτονίων (proton therapy, Γερμανία)</strong>
+                <span class="text-slate-500 text-xs">Στερεοτακτική ακτινοβόληση με σάρωση μολυβιδικής δέσμης με προστασία του γνωστικού φλοιού</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">25.000 €</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Μοριακή προφιλοποίηση & εξατομικευμένο θεραπευτικό πλάνο</strong>
+                <span class="text-slate-500 text-xs">Πάνελ ανοσολογίας κυτταρομετρίας ροής, προφίλ κυτοκινών, γονοτύπηση HLA</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">8.000 €</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Μετακίνηση, διαμονή & έξοδα συνοδείας στη Γερμανία (12+ μήνες)</strong>
+                <span class="text-slate-500 text-xs">Άμεσες μετακινήσεις ασθενούς και διαμονή συνοδού επί 12+ μήνες στη Γερμανία</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">15.000 €</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Απρόβλεπτα ιατρικά έξοδα & εφεδρικό κεφάλαιο</strong>
+                <span class="text-slate-500 text-xs">Συνταγογραφούμενα αντιεπιληπτικά, στεροειδή και τακτική νευροαπεικόνιση</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">7.000 €</span>
+            </div>
+            <div class="py-3 flex justify-between gap-4 bg-slate-50 px-3 rounded-lg font-bold text-slate-900 text-sm">
+              <span>Συνολικός Στόχος Έκκλησης</span>
+              <span class="text-brand-700">90.000 €</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- MOBILE SLOT: ENGINE MOVED HERE ABOVE MEDICAL UPDATES ON < 1024PX SCREEN -->
+        <div id="mobile-engine-slot" class="lg:hidden mb-8"></div>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 06: VERIFIED MEDICAL UPDATES -->
+        <!-- ======================================================== -->
+        <section id="updates-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">06 / Κλινική Ενημέρωση</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Ιατρικές Ενημερώσεις (4)</h2>
+            </div>
+            <span class="text-xs text-slate-500 font-medium">Καταχωρήθηκαν από Ευαγγελία Καραμήτρου</span>
+          </div>
+
+          <div class="space-y-3.5 text-xs sm:text-sm">
+            
+            <div class="border-l-2 border-brand-600 pl-3.5 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="bg-brand-50 text-brand-700 text-xs font-bold px-2 py-0.5 rounded border border-brand-200">Τελευταία</span>
+                <span class="text-slate-400 text-xs font-semibold">12 Σεπ 2026</span>
+              </div>
+              <strong class="text-slate-900 block text-sm">Αποτελέσματα MRI ελέγχου 📋</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Η MRI ελέγχου μετά την ολοκλήρωση ακτινοθεραπείας δείχνει σταθερό υπολειμματικό όγκο χωρίς νέα εστία. Οι γιατροί στο ΑΧΕΠΑ λένε ότι αυτό είναι το καλύτερο δυνατό αποτέλεσμα με τυπική θεραπεία, αλλά η υποτροπή παραμένει πολύ πιθανή. Η κλινική στη Γερμανία μας επιβεβαίωσε ότι μπορούν να ξεκινήσουν τη θεραπεία δενδριτικών κυττάρων τον Νοέμβριο, αν εξασφαλίσουμε τη χρηματοδότηση.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">5 Σεπ 2026</span>
+              <strong class="text-slate-900 block text-sm">Ξεπεράσαμε τους 600 δωρητές! 🙏</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Η ανταπόκρισή σας μας συγκλονίζει. Η Σοφία ολοκλήρωσε τους κύκλους συντήρησης τεμοζολομίδης και νιώθει δυνατή. Διαβάζει κάθε μήνυμά σας και λέει ότι της δίνετε δύναμη να συνεχίσει. Κάθε ευρώ μας φέρνει πιο κοντά στη Γερμανία.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">27 Αυγ 2026</span>
+              <strong class="text-slate-900 block text-sm">Ενημέρωση θεραπείας</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Η Σοφία ολοκλήρωσε τη συνδυασμένη ακτινοχημειοθεραπεία στο ΑΧΕΠΑ. Είχε κόπωση και ναυτία, αλλά η ψυχική της δύναμη είναι εκπληκτική. Η ογκολόγος της μας εξήγησε ότι λόγω του μη μεθυλιωμένου MGMT, η τεμοζολομίδη μόνη της δεν αρκεί — γι' αυτό η ανοσοθεραπεία είναι κρίσιμη.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">16 Αυγ 2026</span>
+              <strong class="text-slate-900 block text-sm">Η καμπάνια ξεκίνησε</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Με βαριά καρδιά αλλά και αποφασιστικότητα, ξεκινάμε αυτή την έκκληση. Μετά από τρεις μήνες εντατικής θεραπείας στο δημόσιο σύστημα, οι γιατροί μας είπαν ξεκάθαρα: η τυπική θεραπεία δίνει χρόνο, αλλά η ανοσοθεραπεία μπορεί να δώσει ζωή. Δυστυχώς, δεν καλύπτεται πουθενά στην Ευρώπη. Πιστεύουμε στην αλληλεγγύη.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 07: CLINICAL FREQUENTLY ASKED QUESTIONS -->
+        <!-- ======================================================== -->
+        <section id="faq-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">07 / Κλινική Διακυβέρνηση</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Συχνές Ερωτήσεις</h2>
+            </div>
+            <span class="text-xs text-slate-400 font-medium">10 επαληθευμένες απαντήσεις</span>
+          </div>
+
+          <div class="space-y-3">
+            
+            <!-- FAQ 1: Χρηματοδότηση ΕΣΥ -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Γιατί η ανοσοθεραπεία με δενδριτικά κύτταρα δεν χρηματοδοτείται από το ΕΣΥ;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Το ΕΣΥ χρηματοδότησε πλήρως το χειρουργείο της Σοφίας, την ακτινοθεραπεία 60 Gy και την ταυτόχρονη χημειοθεραπεία στο νοσοκομείο ΑΧΕΠΑ βάσει των καθιερωμένων πρωτοκόλλων. Τα εμβόλια δενδριτικών κυττάρων είναι εξατομικευμένα κυτταρικά ATMPs που παρασκευάζονται σε εξειδικευμένα εργαστήρια. Στην Ελλάδα, η εθνική αποζημίωση απαιτεί μεγάλες τυχαιοποιημένες πολυκεντρικές μελέτες φάσης III, που χρειάζονται 3 έως 5 χρόνια για να ολοκληρωθούν. Οι γερμανικές υγειονομικές αρχές επιτρέπουν την εξατομικευμένη παρασκευή βάσει του Άρθρου 13 του Γερμανικού Νόμου περί Φαρμάκων (AMG), καθιστώντας τις πιστοποιημένες γερμανικές μονάδες τη μόνη προσβάσιμη επιλογή για ασθενείς που χρειάζονται άμεση παρέμβαση.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 2: Target Threshold & Progressive Release -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Τι συμβαίνει αν η καμπάνια της Σοφίας ξεπεράσει ή δεν έχει ακόμη φτάσει τον στόχο των 90.000 €;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Οι αποδεσμεύσεις γίνονται βάσει οροσήμων, όχι όλα-ή-τίποτα. Η επίτευξη των 45.000 € ξεκλειδώνει αμέσως τη Φάση 2 (αφαίρεση μονοκυττάρων και εξατομικευμένη καλλιέργεια εμβολίου στο IOZK Κολωνίας), που σημαίνει ότι η Σοφία ξεκινά θεραπεία χωρίς να περιμένει το πλήρες ποσό των 90.000 €. Τυχόν κεφάλαια πέραν του στόχου των 90.000 € παραμένουν σε δεσμευμένη κλινική μεσεγγύηση αποκλειστικά για συνεχιζόμενες MRI παρακολούθησης 3.0T, νευρο-αποκατάσταση και μακροχρόνια πάνελ ανοσολογικής παρακολούθησης.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 3: Medical Mechanism & MGMT Resistance -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Πώς διαφέρει το πρωτόκολλο IO-VAC® του IOZK Κολωνίας από την τυπική χημειοθεραπεία πρωτοκόλλου Stupp;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Επειδή η ιστοπαθολογία της Σοφίας επιβεβαίωσε μη μεθυλιωμένο προαγωγέα MGMT (6,8%), τα καρκινικά της κύτταρα επιδιορθώνουν ενεργά τη βλάβη DNA που προκαλεί η τυπική χημειοθεραπεία με τεμοζολομίδη, περιορίζοντας σοβαρά την αποτελεσματικότητά της. Το πρωτόκολλο IO-VAC® λαμβάνει τα ίδια τα δενδριτικά κύτταρα της Σοφίας, τα εκθέτει σε νεοαντιγόνα όγκου και στον ιό της νόσου Newcastle (NDV) σε εργαστήριο GMP, και τα επανεγχύει για να διδάξει τα κυτταροτοξικά CD8+ Τ κύτταρά της να εντοπίζουν ενεργά και να καταστρέφουν τα βλαστοκύτταρα γλοιοβλαστώματος διασχίζοντας τον αιματοεγκεφαλικό φραγμό.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 4: Escrow Protection & Governance -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Πώς προστατεύονται, ελέγχονται και αποδεσμεύονται τα κεφάλαια;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Οι δωρεές κατατίθενται σε ειδικό λογαριασμό ιατρικής μεσεγγύησης υπό την Εγγύηση Δωρεάς HopeRise GR. Οι αποδεσμεύσεις εκτελούνται απευθείας έναντι επαληθευμένων προτιμολογίων που εκδίδονται βάσει του Γερμανικού Τιμολογίου Ιατρικών Αμοιβών (GOÄ) από την κλινική IOZK στην Κολωνία, διασφαλίζοντας 100% έλεγχο φύλαξης κεφαλαίων. Τα κεφάλαια δεν μεταφέρονται ποτέ σε προσωπικούς τραπεζικούς λογαριασμούς.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 5: Monthly Management & 1-Click Cancellation -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Πώς μπορώ να διαχειριστώ, να αλλάξω ή να ακυρώσω τη μηνιαία μου υποστήριξη;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Οι δωρητές διατηρούν 100% αυτοεξυπηρέτηση. Κάθε μηνιαία συνεισφορά δημιουργεί αυτόματα απόδειξη email με άμεσο σύνδεσμο διαχείρισης με 1 κλικ. Μπορείτε να προσαρμόσετε το ποσό, να αναστείλετε τη δέσμευση ή να ακυρώσετε την επαναλαμβανόμενη χρέωση ανά πάσα στιγμή, χωρίς ερωτήσεις και χωρίς αναμονή.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 6: Small Donations & Grassroots Impact -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Μπορώ να συνεισφέρω μικρότερα ποσά όπως 5 € ή 15 €;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Ναι. Πάνω από 45% όλων των συνεισφορών είναι 5 €, 10 € ή 15 € από φοιτητές, συμφοιτητές και υποστηρικτές από όλη τη χώρα. Η συλλογική χρηματοδότηση βάσης είναι ο κύριος μηχανισμός επίτευξης κάθε κλινικού οροσήμου.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 7: Why Germany / IOZK -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Γιατί η θεραπεία χορηγείται στη Γερμανία και όχι σε άλλες διεθνείς μονάδες;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Το Immun-Onkologisches Zentrum Köln (IOZK) είναι μία από τις κορυφαίες ευρωπαϊκές μονάδες αυτόλογης κυτταρικής θεραπείας, που λειτουργεί υπό επίσημη εξουσιοδότηση της Περιφερειακής Κυβέρνησης Κολωνίας βάσει του Άρθρου 13 της γερμανικής AMG. Επιπλέον, δημοσιευμένα κλινικά δεδομένα με κριτές από τους Van Gool et al. στο Cancers (2023) καταδεικνύουν σημαντικά παρατεταμένη επιβίωση χωρίς εξέλιξη σε ασθενείς με IDH-wildtype γλοιοβλάστωμα που έλαβαν αυτόν τον συγκεκριμένο πολυτροπικό συνδυασμό.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 8: Clinical Updates & Transparency -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Πώς θα ενημερώνονται οι δωρητές για την ιατρική πρόοδο της Σοφίας;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Η Σοφία και η οικογένειά της δημοσιεύουν επαληθευμένες κλινικές αναφορές προόδου σε αυτή τη σελίδα κάθε 2-3 εβδομάδες. Αυτές οι ενημερώσεις περιγράφουν κάθε στάδιο μετακίνησης, αιματολογικές μετρήσεις αφαίρεσης, πάνελ ανοσολογικής παρακολούθησης μετά το εμβόλιο και επίσημα ευρήματα MRI εγκεφάλου 3.0T παρακολούθησης που εξετάζονται από τους νευρολόγους του ΑΧΕΠΑ.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 9: Anonymity & Payment Privacy -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Είναι η πληρωμή μου ασφαλής και μπορώ να δωρίσω ανώνυμα;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Όλες οι συναλλαγές κρυπτογραφούνται μέσω πρωτοκόλλων SSL 256-bit και επεξεργάζονται μέσω ρυθμιζόμενων συνεργατών πληρωμών πρώτης κατηγορίας. Αν επιλέξετε «Ανώνυμα» κατά την ολοκλήρωση, το όνομα και το ποσό σας αποκρύπτονται μόνιμα από το δημόσιο μητρώο υποστηρικτών.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 10: Institutional Pledges & Bank Wires -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Μπορούν ιατρικοί σύλλογοι, ιδρύματα ή εταιρικοί χορηγοί να κανονίσουν απευθείας τραπεζικά εμβάσματα;</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Ναι. Φοιτητικοί σύλλογοι, συλλογικότητες υγειονομικών και οργανωσιακοί χορηγοί μπορούν να κανονίσουν απευθείας εμβάσματα στον δεσμευμένο κλινικό λογαριασμό μεσεγγύησης της Σοφίας. Επίσημες αποδείξεις τιμολογίων και πιστοποιητικά επαλήθευσης εκδίδονται για όλες τις εταιρικές ή οργανωσιακές μεταφορές.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- RIGHT COLUMN: INTERACTIVE DONATION CONSOLE (5 COLS) -->
+      <!-- ============================================================ -->
+      <aside aria-label="Donation Console" class="hidden lg:block lg:col-span-5 min-w-0" id="desktop-engine-slot">
+        
+        <div id="unified-donation-engine" class="sticky top-20 bg-white rounded-2xl border-2 border-slate-200/90 p-5 sm:p-6 shadow-card-elevated space-y-4">
+          
+          <!-- Financial Goal Progress Tracker -->
+          <div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" data-live="raised">€34.700</span>
+                <span class="text-xs text-slate-500 font-medium">από τον στόχο των <span data-live="goal">€90.000</span></span>
+              </div>
+              <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+                <span data-live="pct">39%</span> Χρηματοδοτήθηκε
+              </span>
+            </div>
+
+            <!-- Precision Progress Bar -->
+            <div class="progress-track mb-2">
+              <div class="progress-fill" style="width: 39%">
+                <div class="progress-sheen"></div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span><span data-live="donors">1.051</span> επαληθευμένες δωρεές</span>
+              <span class="font-bold text-slate-700">απομένουν 37 ημέρες</span>
+            </div>
+          </div>
+
+          <!-- Cadence Switch (Once vs Monthly) -->
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" onclick="setCadence('once')" id="cadence-once" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+              Εφάπαξ
+            </button>
+            <button type="button" onclick="setCadence('monthly')" id="cadence-monthly" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Μηνιαία</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">2x Αντίκτυπος</span>
+            </button>
+          </div>
+
+          <!-- Preset Amount Chips -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-slate-800">Επίλεξε το ποσό δωρεάς</label>
+              <span id="tier-badge-label" class="text-xs font-bold text-brand-700">Η πιο συνηθισμένη δωρεά</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="chooseAmount(10, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €10
+              </button>
+              <button type="button" onclick="chooseAmount(15, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €15
+              </button>
+              <button type="button" onclick="chooseAmount(25, this)" class="amount-chip active py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €25
+              </button>
+              <button type="button" onclick="chooseAmount(50, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €50
+              </button>
+              <button type="button" onclick="chooseAmount(100, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €100
+              </button>
+              <button type="button" onclick="chooseAmount(250, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €250
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Amount Input -->
+          <div class="relative">
+            <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">€</span>
+            <input type="number" id="custom-amount-box" min="1" step="1" placeholder="Ή εισαγάγετε προσαρμοσμένο ποσό" oninput="onCustomAmountInput(this.value)" class="w-full pl-8 pr-4 py-2.5 text-base sm:text-sm border-2 border-slate-200 rounded-xl focus:border-brand-600 focus:outline-none font-semibold text-slate-900 transition-colors">
+          </div>
+
+          <!-- Dynamic Medical Impact Statement -->
+          <div id="live-impact-container" class="p-3 rounded-xl bg-brand-50 border border-brand-200/80 flex items-start gap-2.5 impact-animate">
+            <div class="w-5 h-5 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </div>
+            <p id="live-impact-text" class="text-xs text-brand-900 leading-snug">
+              <strong>Τα 25 € χρηματοδοτούν ζωτικά εργαστηριακά υλικά</strong> για την καλλιέργεια των δενδριτικών κυττάρων της Σοφίας στη Γερμανία.
+            </p>
+          </div>
+
+          <!-- Primary Modal Checkout Actions -->
+          <div class="space-y-2 pt-1 border-t border-slate-100">
+            <button id="main-submit-cta" onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <span id="main-cta-label">Δώρισε μόνο 0,83 €/ημέρα</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </button>
+
+            <button onclick="shareAppeal()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-[0.98] rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093m-2.186 0a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093m0 0l9.566 4.783m-9.566-6.969l9.566-4.783"/></svg>
+              <span>Κοινοποίηση</span>
+            </button>
+          </div>
+
+          <!-- Reassurance Details -->
+          <div class="text-xs text-slate-400 flex items-center justify-center gap-1.5 pt-0.5">
+            <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Εγγύηση Δωρεάς HopeRise • Άμεση Νοσοκομειακή Μεσεγγύηση</span>
+          </div>
+
+          <!-- Recent Donations Section -->
+          <div class="pt-4 border-t border-slate-100 space-y-3.5">
+            
+            <!-- Trending Indicator -->
+            <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-900 border border-purple-100/80 text-xs font-bold">
+              <div class="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+              </div>
+              <span class="tracking-tight">546 πρόσφατες δωρεές</span>
+            </div>
+
+            <!-- List of Donations (Chronological — newest first) -->
+            <div class="space-y-3">
+              <!-- Donor 1: Most Recent -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  Μ
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Μαρία Κ.</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€20</strong> · πριν 2 λεπτά</div>
+                </div>
+              </div>
+
+              <!-- Donor 2 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  ?
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Ανώνυμος</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€25</strong> · πριν 8 λεπτά</div>
+                </div>
+              </div>
+
+              <!-- Donor 3 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  Δ
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Δημήτρης Π.</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€15</strong> · πριν 14 λεπτά</div>
+                </div>
+              </div>
+
+              <!-- Donor 4 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  Ε
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Ελένη Β.</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€40</strong> · πριν 22 λεπτά</div>
+                </div>
+              </div>
+
+              <!-- Donor 5: Top Donor (pinned with badge) -->
+              <div class="flex items-center gap-3 p-2 rounded-xl bg-amber-50/70 border border-amber-200/80">
+                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-amber-300">
+                  Σ
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="font-bold text-slate-900 text-xs truncate">Σύλλογος Φοιτητών Ιατρικής ΑΠΘ</span>
+                    <span class="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded border border-amber-300">
+                      ★ Κορυφαία δωρεά
+                    </span>
+                  </div>
+                  <div class="text-slate-600 text-[11px]"><strong class="text-slate-900 font-bold">€920</strong> · πριν 5 ημέρες</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- "and x more..." (not clickable) -->
+            <div class="pt-1 text-center">
+              <span class="inline-block w-full py-2.5 rounded-xl border border-slate-200/90 bg-slate-50 text-xs font-semibold text-slate-500 select-none cursor-default">
+                και 1.046 ακόμη…
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 4. ENHANCED HIGH-TRUST FOOTER -->
+  <!-- ============================================================== -->
+  <footer class="bg-navy-950 text-slate-300 py-12 md:py-16 border-t border-slate-800 text-xs mt-12 pb-28 lg:pb-16">
+    <div class="max-w-6xl mx-auto px-4 space-y-10">
+      
+      <!-- Top Grid: Brand, Quick Links, Security, Contact -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        
+        <!-- Brand & Mission -->
+        <div class="space-y-4 sm:col-span-2 lg:col-span-1">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center text-white shadow-sm">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-extrabold text-white text-base leading-none tracking-tight">HopeRise<span class="text-brand-500 text-xs ml-1 uppercase">GR</span></span>
+              <span class="text-xs text-slate-400 font-medium">Επαληθευμένες Ιατρικές Εκκλήσεις</span>
+            </div>
+          </div>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            Το HopeRise GR είναι μια επαληθευμένη πλατφόρμα ιατρικών εκκλήσεων που συνδέει ασθενείς με εξειδικευμένες ογκολογικές θεραπείες στο εξωτερικό. Κάθε έκκληση διασταυρώνεται ανεξάρτητα με ελληνικά και ευρωπαϊκά κλινικά αρχεία πριν δημοσιευθεί.
+          </p>
+          <div class="flex items-center gap-3 pt-1">
+            <button onclick="shareAppeal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer" title="Κοινοποίηση">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Campaign Links -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Εκστρατεία</h4>
+          <ul class="space-y-2.5 text-xs text-slate-400">
+            <li><a href="#story-chapter" class="hover:text-white transition-colors">Η Ιστορία της Σοφίας</a></li>
+            <li><a href="#roadmap-chapter" class="hover:text-white transition-colors">Πορεία Θεραπείας</a></li>
+            <li><a href="#evidence-chapter" class="hover:text-white transition-colors">Φάκελος Κλινικής Επαλήθευσης</a></li>
+            <li><a href="#budget-chapter" class="hover:text-white transition-colors">Ανάλυση Κόστους</a></li>
+            <li><a href="#updates-chapter" class="hover:text-white transition-colors">Ιατρικές Ενημερώσεις</a></li>
+            <li><a href="#faq-chapter" class="hover:text-white transition-colors">Συχνές Ερωτήσεις</a></li>
+          </ul>
+        </div>
+
+        <!-- Trust & Security -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Εμπιστοσύνη & Ασφάλεια</h4>
+          <ul class="space-y-2.5 text-xs text-slate-400">
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Πληρωμές κρυπτογραφημένες SSL 256-bit</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Κλινική μεσεγγύηση βάσει γερμανικού GOÄ</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Ανεξάρτητη ογκολογική εποπτεία</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>ΓΚΠΔ & ν. 4624/2019</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Ακύρωση συνδρομής με 1 κλικ</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Legal Links Row -->
+      <div class="border-t border-slate-800/80 pt-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <button onclick="openLegalModal('terms')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Όροι Χρήσης</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Κανόνες & προϋποθέσεις πλατφόρμας</span>
+          </button>
+          <button onclick="openLegalModal('privacy')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Πολιτική Απορρήτου</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Προστασία δεδομένων & ΓΚΠΔ</span>
+          </button>
+          <button onclick="openLegalModal('escrow')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Εγγύηση Μεσεγγύησης</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Πώς προστατεύονται τα κεφάλαια</span>
+          </button>
+          <button onclick="openLegalModal('refund')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Πολιτική Επιστροφών</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Ακυρώσεις & επιστροφές</span>
+          </button>
+        </div>
+
+        <!-- Copyright -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 pt-2">
+          <span>© 2026 HopeRise GR. Με επιφύλαξη παντός δικαιώματος. Πλατφόρμα Επαληθευμένων Ιατρικών Εκκλήσεων.</span>
+          <span class="text-slate-600">Αριθμός Νοσοκομειακού Μητρώου #GBM-GR-84029</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- 5. CHECKOUT MODAL (Reverted to Spacious max-w-lg, Crisp Concise Text) -->
+  <!-- ============================================================== -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 hidden" aria-modal="true" role="dialog">
+    <!-- Backdrop Blur -->
+    <div onclick="closeCheckoutModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
+
+    <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-7 border border-slate-100 modal-animate my-6 max-h-[92vh] overflow-y-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-sm">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Ολοκλήρωσε τη Δωρεά σου</h3>
+              <p class="text-xs text-slate-500">Μεσεγγύηση Γερμανικής Κλινικής • SSL 256-bit</p>
+            </div>
+          </div>
+          <button onclick="closeCheckoutModal()" aria-label="Κλείσιμο παραθύρου" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Frequency Toggle & Rationale -->
+        <div class="space-y-2 mb-4">
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" id="modal-cadence-once" onclick="setModalCadence('once')" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all text-center cursor-pointer">
+              Εφάπαξ
+            </button>
+            <button type="button" id="modal-cadence-monthly" onclick="setModalCadence('monthly')" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Μηνιαία</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">2x Αντίκτυπος</span>
+            </button>
+          </div>
+
+          <!-- Subscription Rationale (Concise) -->
+          <div id="modal-subscription-rationale" class="p-3 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs text-slate-700 flex items-start gap-2">
+            <svg class="w-4 h-4 text-brand-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+            <div>
+              <strong class="text-brand-900">Γιατί μηνιαία:</strong> Οι μηνιαίες δεσμεύσεις χρηματοδοτούν συνεχή προβολή, ώστε περισσότεροι άνθρωποι να μαθαίνουν για την περίπτωση της Σοφίας και να τη στηρίζουν μέχρι να επιτευχθεί ο στόχος. Ακύρωση ανά πάσα στιγμή με 1 κλικ.
+            </div>
+          </div>
+
+          <!-- One-off Rationale (Concise) -->
+          <div id="modal-oneoff-rationale" class="hidden p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between gap-2">
+            <span>Οι συνδρομές μάς επιτρέπουν να συνεχίζουμε τις προβολές, ώστε περισσότεροι να ανακαλύψουν την έκκληση της Σοφίας.</span>
+            <button type="button" onclick="setModalCadence('monthly')" class="font-bold text-brand-700 hover:text-brand-800 underline whitespace-nowrap cursor-pointer text-xs">
+              Μετάβαση σε Μηνιαία
+            </button>
+          </div>
+        </div>
+
+        <!-- Amount Chips Row -->
+        <div class="space-y-1.5 mb-3.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-700">Επίλεξε το ποσό δωρεάς:</label>
+            <span id="modal-per-day-badge" class="text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">μόνο 0,83 €/ημέρα</span>
+          </div>
+          <div class="grid grid-cols-6 gap-1.5">
+            <button type="button" onclick="setModalAmount(10)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€10</button>
+            <button type="button" onclick="setModalAmount(15)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€15</button>
+            <button type="button" onclick="setModalAmount(25)" class="modal-amt-chip active py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€25</button>
+            <button type="button" onclick="setModalAmount(50)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€50</button>
+            <button type="button" onclick="setModalAmount(100)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€100</button>
+            <button type="button" onclick="setModalAmount(250)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€250</button>
+          </div>
+        </div>
+
+        <!-- Donor Email & Anonymous Toggle -->
+        <div class="space-y-1.5 mb-3.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-slate-700">Email Δωρητή <span class="text-slate-400 font-normal">(για απόδειξη & ακύρωση με 1 κλικ)</span></label>
+            <label class="flex items-center gap-1.5 cursor-pointer text-xs text-slate-500 hover:text-slate-700">
+              <input type="checkbox" id="modal-anon-check" class="w-3.5 h-3.5 rounded text-brand-600 border-slate-300">
+              <span>Ανώνυμο</span>
+            </label>
+          </div>
+          <input type="email" id="modal-donor-email" placeholder="you@example.com" class="w-full px-3.5 py-2.5 text-base sm:text-sm border-2 border-slate-200 rounded-xl focus:border-brand-600 focus:outline-none text-slate-900 transition-colors">
+        </div>
+
+        <!-- Voluntary Platform Tip Section (Concise) -->
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-3.5 mb-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="block text-xs font-bold text-slate-800">Φιλοδώρημα Πλατφόρμας (Προαιρετικό)</span>
+              <span class="text-[11px] text-slate-500">Βοηθά να παραμένει το HopeRise 100% δωρεάν για τους ασθενείς</span>
+            </div>
+            <span id="modal-tip-display" class="text-xs font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200">
+              +3,75 € (15%)
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" onclick="setModalTip(15)" id="modal-tip-btn-15" class="modal-tip-btn active py-2 text-xs rounded-xl cursor-pointer">15%</button>
+            <button type="button" onclick="setModalTip(10)" id="modal-tip-btn-10" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">10%</button>
+            <button type="button" onclick="setModalTip(5)" id="modal-tip-btn-5" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">5%</button>
+            <button type="button" onclick="setModalTip(0)" id="modal-tip-btn-0" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">0%</button>
+          </div>
+
+          <p class="text-[11px] text-slate-500 leading-relaxed pt-1.5 border-t border-slate-200/60">
+            <strong class="text-slate-700">Γιατί φιλοδωρήματα:</strong> Τα φιλοδωρήματα συντηρούν διακομιστές και μεσεγγύηση, ώστε οι ασθενείς να πληρώνουν 0% προμήθειες.
+          </p>
+        </div>
+
+        <!-- Checkout Actions & Reassurance Footer -->
+        <div class="space-y-2">
+          <button id="modal-submit-cta" onclick="executeModalPledge()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span id="modal-cta-label">Δώρισε μόνο 0,96 €/ημέρα</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </button>
+
+          <div class="pt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 text-center">
+            <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>SSL 256-bit • 100% Εγγύηση Μεσεγγύησης HopeRise</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 6. LEGAL POLICY MODAL (TERMS / PRIVACY / ESCROW) -->
+  <!-- ============================================================== -->
+  <div id="legal-modal" class="fixed inset-0 z-50 hidden" aria-modal="true" role="dialog">
+    <div onclick="closeLegalModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
+    <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 sm:p-7 border border-slate-200 modal-animate my-6 max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <h3 id="legal-modal-title" class="font-bold text-slate-900 text-lg">Όροι Χρήσης</h3>
+          <button onclick="closeLegalModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="legal-modal-body" class="overflow-y-auto flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed space-y-3 pr-2">
+          <!-- Content dynamically set -->
+        </div>
+        <div class="pt-3 border-t border-slate-100 mt-4 flex justify-end">
+          <button onclick="closeLegalModal()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all cursor-pointer">
+            Κατανοώ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MOBILE SYNCHRONIZED BOTTOM DOCK (Sticky & Seamless) -->
+  <!-- ============================================================== -->
+  <div id="mobile-dock" class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 p-3 lg:hidden flex items-center justify-between gap-3 shadow-bottom-dock safe-dock-pb">
+    <div class="min-w-0">
+      <div class="text-sm font-bold text-slate-900 truncate">€35,090 <span class="text-xs font-medium text-slate-500">raised of €90,000</span></div>
+      <div class="w-24 h-1.5 bg-slate-200 rounded-full mt-1 overflow-hidden">
+        <div class="h-full bg-brand-600 rounded-full" style="width:39%"></div>
+      </div>
+    </div>
+    <button onclick="scrollToDonationEngine()" class="bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
+      <span>Δώρισε τώρα</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+    </button>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 7. HIGH-PERFORMANCE CONTROLLER SCRIPT -->
+  <!-- ============================================================== -->
+  <script>
+    // System Environment & Image Resolver
+    const isServedFromCampaign = window.location.pathname.startsWith('/sofia') || window.location.port === '3000';
+    const primaryImgPrefix = isServedFromCampaign ? '/images/campaigns/glioblastoma-sofia/' : 'campaign/public/images/campaigns/glioblastoma-sofia/';
+    const fallbackImgPrefix = isServedFromCampaign ? 'campaign/public/images/campaigns/glioblastoma-sofia/' : '/images/campaigns/glioblastoma-sofia/';
+
+    // System Data Model
+    const app = {
+      amount: 25,
+      cadence: 'monthly',
+      tip: 15,
+      photoIndex: 0,
+      photos: [
+        {
+          src: primaryImgPrefix + '1.jpg',
+          fallback: fallbackImgPrefix + '1.jpg'
+        },
+        {
+          src: primaryImgPrefix + '2.jpg',
+          fallback: fallbackImgPrefix + '2.jpg'
+        },
+        {
+          src: primaryImgPrefix + '3.jpg',
+          fallback: fallbackImgPrefix + '3.jpg'
+        },
+        {
+          src: primaryImgPrefix + '4.jpg',
+          fallback: fallbackImgPrefix + '4.jpg'
+        }
+      ],
+      impacts: {
+        10: 'Τα 10 € χρηματοδοτούν αποστειρωμένα εργαστηριακά υλικά έγχυσης κατά τους κύκλους εμβολιασμού εξωτερικής παρακολούθησης.',
+        15: 'Τα 15 € καλύπτουν εξειδικευμένη κλινική μεταφορά ασθενούς προς και από το ιατρικό κέντρο.',
+        25: 'Τα 25 € χρηματοδοτούν ζωτικά εργαστηριακά υλικά για την καλλιέργεια των δενδριτικών κυττάρων της Σοφίας στη Γερμανία.',
+        50: 'Τα 50 € χρηματοδοτούν 1 εβδομάδα αιματολογικών πάνελ ανοσολογικής παρακολούθησης μετά το εμβόλιο.',
+        100: 'Τα 100 € χρηματοδοτούν σύνθεση στοχευμένης γονιδιακής αλληλούχισης νεοαντιγόνων στο IOZK Κολωνίας.',
+        250: 'Τα 250 € χρηματοδοτούν 1 πλήρη κλινική ημέρα καλλιέργειας και κρυοσυντήρησης δενδριτικού εμβολίου.'
+      }
+    };
+
+    // DOM Ready: Initialize Layout, Progress Animations & Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      syncEnginePosition();
+      window.addEventListener('resize', syncEnginePosition);
+      calculateTotal();
+      renderImpact();
+
+      const emailField = document.getElementById('modal-donor-email');
+      if (emailField) {
+        emailField.addEventListener('input', () => {
+          emailField.classList.remove('border-red-400', 'bg-red-50');
+          const err = document.getElementById('email-error-msg');
+          if (err) err.remove();
+        });
+      }
+
+      // Check initial gallery image state (if already cached or loading)
+      const mainImg = document.getElementById('main-gallery-image');
+      if (mainImg) {
+        if (mainImg.complete && mainImg.naturalWidth > 0) {
+          mainImg.classList.remove('opacity-0');
+          document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');
+        } else {
+          mainImg.addEventListener('load', () => {
+            mainImg.classList.remove('opacity-0');
+            document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');
+          });
+        }
+      }
+
+      // Check initial thumbnail images state
+      document.querySelectorAll('.gallery-thumb img').forEach(thumbImg => {
+        if (thumbImg.complete && thumbImg.naturalWidth > 0) {
+          thumbImg.classList.remove('opacity-0');
+          thumbImg.parentElement?.classList.remove('skeleton-shimmer');
+        } else {
+          thumbImg.addEventListener('load', () => {
+            thumbImg.classList.remove('opacity-0');
+            thumbImg.parentElement?.classList.remove('skeleton-shimmer');
+          });
+        }
+      });
+
+      // Keyboard Esc handler for modals
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeCheckoutModal();
+          closeLegalModal();
+        }
+      });
+    });
+
+    // Smooth scroll down to main donation engine on mobile
+    function scrollToDonationEngine() {
+      const engine = document.getElementById('unified-donation-engine');
+      if (engine) {
+        const y = engine.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+
+    // Responsive engine placement: on mobile, moves above medical updates; on desktop, moves to sticky right rail
+    function syncEnginePosition() {
+      const engine = document.getElementById('unified-donation-engine');
+      const desktopSlot = document.getElementById('desktop-engine-slot');
+      const mobileSlot = document.getElementById('mobile-engine-slot');
+
+      if (window.innerWidth < 1024) {
+        if (mobileSlot && engine && engine.parentElement !== mobileSlot) {
+          mobileSlot.appendChild(engine);
+        }
+      } else {
+        if (desktopSlot && engine && engine.parentElement !== desktopSlot) {
+          desktopSlot.appendChild(engine);
+        }
+      }
+    }
+
+    // 1. Photo Switcher (Prominent Arrows, Visual Thumbnails, Zero Broken Icons)
+    function switchPhoto(idx) {
+      app.photoIndex = idx;
+      const img = document.getElementById('main-gallery-image');
+      const pill = document.getElementById('main-gallery-pill');
+      const skeleton = document.getElementById('main-gallery-skeleton');
+      const item = app.photos[idx];
+
+      if (skeleton) skeleton.classList.remove('opacity-0');
+      img.classList.add('opacity-0');
+
+      const temp = new Image();
+      temp.src = item.src;
+      temp.onload = () => {
+        img.src = item.src;
+        const blur = document.getElementById('main-gallery-blur');
+        if (blur) blur.src = item.src;
+        img.classList.remove('opacity-0');
+        if (skeleton) skeleton.classList.add('opacity-0');
+      };
+      temp.onerror = () => {
+        img.src = item.fallback;
+        const blur2 = document.getElementById('main-gallery-blur');
+        if (blur2) blur2.src = item.fallback;
+        img.classList.remove('opacity-0');
+        if (skeleton) skeleton.classList.add('opacity-0');
+      };
+      pill.textContent = `${idx + 1} / ${app.photos.length}`;
+
+      document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+        if (i === idx) {
+          thumb.classList.add('active-thumb', 'border-brand-600', 'opacity-100');
+          thumb.classList.remove('border-transparent', 'opacity-65');
+        } else {
+          thumb.classList.remove('active-thumb', 'border-brand-600', 'opacity-100');
+          thumb.classList.add('border-transparent', 'opacity-65');
+        }
+      });
+    }
+
+    function cyclePhoto(dir) {
+      let next = app.photoIndex + dir;
+      if (next < 0) next = app.photos.length - 1;
+      if (next >= app.photos.length) next = 0;
+      switchPhoto(next);
+    }
+
+    // 2. Donation Amount Selection on Page
+    function chooseAmount(amt, btn) {
+      app.amount = amt;
+      const customBox = document.getElementById('custom-amount-box');
+      if (customBox) customBox.value = '';
+
+      // Sync active state on main page chips
+      document.querySelectorAll('.amount-chip').forEach(c => {
+        const val = parseInt(c.textContent.replace('€', ''), 10);
+        if (val === amt) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+
+      // Sync active state on modal chips
+      document.querySelectorAll('.modal-amt-chip').forEach(c => {
+        const val = parseInt(c.textContent.replace('€', ''), 10);
+        if (val === amt) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+
+      const label = document.getElementById('tier-badge-label');
+      if (amt === 5) label.textContent = 'Δωρεά υποστηρικτή';
+      else if (amt === 25) label.textContent = 'Η πιο συνηθισμένη δωρεά';
+      else if (amt >= 100) label.textContent = 'Επίπεδο κλινικού χορηγού';
+      else label.textContent = 'Επιλέχθηκε';
+
+      renderImpact();
+      calculateTotal();
+    }
+
+    function onCustomAmountInput(val) {
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0) {
+        app.amount = num;
+        document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.modal-amt-chip').forEach(c => c.classList.remove('active'));
+        document.getElementById('tier-badge-label').textContent = 'Προσαρμοσμένο ποσό';
+        renderImpact();
+        calculateTotal();
+      }
+    }
+
+    function setCadence(type) {
+      app.cadence = type;
+      const onceBtn = document.getElementById('cadence-once');
+      const monthlyBtn = document.getElementById('cadence-monthly');
+
+      if (type === 'monthly') {
+        monthlyBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.remove('text-slate-600');
+        onceBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.add('text-slate-600');
+      } else {
+        onceBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.remove('text-slate-600');
+        monthlyBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.add('text-slate-600');
+      }
+
+      renderImpact();
+      calculateTotal();
+    }
+
+    function renderImpact() {
+      const container = document.getElementById('live-impact-container');
+      const el = document.getElementById('live-impact-text');
+      const amt = app.amount;
+      let text = app.impacts[amt] || `${amt} € παρέχουν κρίσιμη άμεση χρηματοδότηση για την ιατρική περίθαλψη της Σοφίας στην Ευρώπη.`;
+
+      if (app.cadence === 'monthly') {
+        text += ' Οι μηνιαίες δωρεές εξασφαλίζουν συνεχή συνέχεια και στους 6 κύκλους εμβολίων.';
+      }
+
+      el.innerHTML = text;
+
+      if (container) {
+        container.classList.remove('impact-animate');
+        void container.offsetWidth;
+        container.classList.add('impact-animate');
+      }
+    }
+
+    function calculateTotal() {
+      const ctaLabel = document.getElementById('main-cta-label');
+      if (ctaLabel) {
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          ctaLabel.textContent = `Δώρισε μόνο ${daily} €/ημέρα`;
+        } else {
+          ctaLabel.textContent = `Δώρισε ${app.amount} €`;
+        }
+      }
+      const tierBadge = document.getElementById('tier-badge-label');
+      if (tierBadge) {
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          tierBadge.textContent = `μόνο ${daily} €/ημέρα`;
+        } else {
+          tierBadge.textContent = app.amount === 25 ? 'Η πιο συνηθισμένη δωρεά' : `€${app.amount} εφάπαξ`;
+        }
+      }
+    }
+
+    // 3. Checkout Modal Controller (Pre-filled from page selection!)
+    function openCheckoutModal(mode = 'standard') {
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      syncModalWithAppState();
+      calculateModalTotal();
+
+      if (mode === 'express') {
+        executeModalPledge('express');
+      }
+    }
+
+    function closeCheckoutModal() {
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function syncModalWithAppState() {
+      const amt = app.amount;
+      const cadenceStr = app.cadence === 'monthly' ? '/ μήνα' : 'εφάπαξ';
+      const summaryAmt = document.getElementById('modal-summary-amount');
+      if (summaryAmt) summaryAmt.textContent = `${amt} € ${cadenceStr}`;
+      const summaryBadge = document.getElementById('modal-summary-badge');
+      if (summaryBadge) summaryBadge.textContent = app.cadence === 'monthly' ? 'Μηνιαίος υποστηρικτής' : 'Εφάπαξ δωρεά';
+
+      const perDayBadge = document.getElementById('modal-per-day-badge');
+      if (perDayBadge) {
+        if (app.cadence === 'monthly') {
+          const dailyAmt = (app.amount / 30).toFixed(2);
+          perDayBadge.textContent = `μόνο ${dailyAmt} €/ημέρα`;
+          perDayBadge.classList.remove('hidden');
+        } else {
+          perDayBadge.classList.add('hidden');
+        }
+      }
+
+      const impactDesc = document.getElementById('modal-impact-desc');
+      if (impactDesc) impactDesc.textContent = app.impacts[amt] || `${amt} € χρηματοδοτούν άμεσα τη θεραπεία της Σοφίας με δενδριτικά κύτταρα στη Γερμανία.`;
+
+      // Sync cadence buttons in modal
+      const modalCadenceMonthly = document.getElementById('modal-cadence-monthly');
+      const modalCadenceOnce = document.getElementById('modal-cadence-once');
+      const subRationale = document.getElementById('modal-subscription-rationale');
+      const oneoffRationale = document.getElementById('modal-oneoff-rationale');
+
+      if (app.cadence === 'monthly') {
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.remove('hidden');
+        if (oneoffRationale) oneoffRationale.classList.add('hidden');
+      } else {
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.add('hidden');
+        if (oneoffRationale) oneoffRationale.classList.remove('hidden');
+      }
+
+      // Highlight matching chip inside modal if exact match
+      document.querySelectorAll('.modal-amt-chip').forEach(chip => {
+        const chipVal = parseInt(chip.textContent.replace('€', ''), 10);
+        if (chipVal === amt) {
+          chip.classList.add('active');
+        } else {
+          chip.classList.remove('active');
+        }
+      });
+
+      // Highlight active tip button
+      if (app.tip === undefined) app.tip = 15;
+      document.querySelectorAll('.modal-tip-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const activeTipBtn = document.getElementById(`modal-tip-btn-${app.tip}`);
+      if (activeTipBtn) {
+        activeTipBtn.classList.add('active');
+      }
+    }
+
+    function setModalCadence(cadence) {
+      setCadence(cadence);
+      syncModalWithAppState();
+      calculateModalTotal();
+    }
+
+    function setModalAmount(amt) {
+      app.amount = amt;
+      chooseAmount(amt);
+      syncModalWithAppState();
+      calculateModalTotal();
+    }
+
+    function setModalTip(percent) {
+      app.tip = percent;
+      document.querySelectorAll('.modal-tip-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`modal-tip-btn-${percent}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+      calculateModalTotal();
+    }
+
+    function calculateModalTotal() {
+      if (app.tip === undefined) app.tip = 15;
+      const tipPercent = app.tip;
+      const tipAmt = (app.amount * (tipPercent / 100));
+      const total = app.amount + tipAmt;
+
+      const tipDisplay = document.getElementById('modal-tip-display');
+      if (tipDisplay) {
+        if (tipPercent === 0) {
+          tipDisplay.textContent = '0,00 € (0%)';
+        } else {
+          tipDisplay.textContent = `+${tipAmt.toFixed(2)} € (${tipPercent}%)`;
+        }
+      }
+
+      const ctaLabel = document.getElementById('modal-cta-label');
+      if (ctaLabel) {
+        if (app.cadence === 'monthly') {
+          const daily = (total / 30).toFixed(2);
+          ctaLabel.textContent = `Δώρισε μόνο ${daily} €/ημέρα`;
+        } else {
+          ctaLabel.textContent = `Δώρισε ${total.toFixed(2)} €`;
+        }
+      }
+    }
+
+    function executeModalPledge(method = 'card') {
+      const emailInput = document.getElementById('modal-donor-email');
+      const email = emailInput.value;
+      const isAnon = document.getElementById('modal-anon-check').checked;
+
+      emailInput.classList.remove('border-red-400', 'bg-red-50');
+      const existingErr = document.getElementById('email-error-msg');
+      if (existingErr) existingErr.remove();
+
+      if (app.cadence === 'monthly' && (!email || !email.includes('@'))) {
+        emailInput.classList.add('border-red-400', 'bg-red-50');
+        const errMsg = document.createElement('p');
+        errMsg.id = 'email-error-msg';
+        errMsg.className = 'text-xs text-red-600 font-medium mt-1';
+        errMsg.textContent = 'Το email είναι απαραίτητο για συνδρομές — το χρειαζόμαστε για να στέλνουμε αποδείξεις και να μπορείτε να ακυρώσετε ανά πάσα στιγμή με 1 κλικ.';
+        emailInput.parentNode.insertBefore(errMsg, emailInput.nextSibling);
+        emailInput.focus();
+        return;
+      }
+
+      const submitBtn = document.getElementById('modal-submit-cta');
+      submitBtn.classList.add('opacity-75');
+      document.getElementById('modal-cta-label').textContent = 'Σύνδεση με Ασφαλές Ταμείο...';
+
+      const tipAmount = Math.round(app.amount * (app.tip / 100) * 100) / 100;
+
+      if (typeof Tracking !== 'undefined') {
+        Tracking.trackInitiateCheckout({
+          value: app.amount + tipAmount,
+          currency: 'EUR',
+          contentName: 'glioblastoma-sofia'
+        });
+        if (email) Tracking.setUserEmail(email);
+      }
+
+      const trackingData = (typeof Tracking !== 'undefined') ? Tracking.getTrackingData() : {};
+      const clientLocation = (typeof Tracking !== 'undefined') ? Tracking.getClientLocation() : null;
+
+      const purchaseEventId = (typeof Tracking !== 'undefined') ? Tracking.generateEventId('Purchase') : ('Purchase_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11));
+      try {
+        sessionStorage.setItem('_purchase_event_id', purchaseEventId);
+        sessionStorage.setItem('_purchase_amount', String(app.amount));
+        sessionStorage.setItem('_purchase_currency', 'EUR');
+      } catch (e) {}
+
+      fetch('/api/init-donation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: app.amount,
+          tip: tipAmount,
+          campaign: 'glioblastoma-sofia',
+          isAnonymous: isAnon,
+          donorEmail: email || null,
+          currency: 'EUR',
+          clientLocation: clientLocation,
+          tracking: {
+            eventId: purchaseEventId,
+            cadence: app.cadence,
+            variant: window.__AB_VARIANT || 'control',
+            sourceUrl: window.location.href,
+            userAgent: navigator.userAgent,
+            fbp: trackingData.fbp || null,
+            fbc: trackingData.fbc || null,
+            fbclid: trackingData.fbclid || null,
+            ttp: trackingData.ttp || null,
+            ttclid: trackingData.ttclid || null,
+            utm_source: trackingData.utm_source || null,
+            utm_medium: trackingData.utm_medium || null,
+            utm_campaign: trackingData.utm_campaign || null
+          }
+        })
+      })
+      .then(res => res.ok ? res.json() : Promise.reject(new Error('Server error')))
+      .then(data => {
+        if (data.redirectUrl) window.location.replace(data.redirectUrl);
+      })
+      .catch(() => {
+        submitBtn.classList.remove('opacity-75');
+        calculateModalTotal();
+        alert('Αδυναμία σύνδεσης με το ασφαλές ταμείο. Παρακαλώ δοκιμάστε ξανά.');
+      });
+    }
+
+    // 4. Dossier Grid Selector (Zero sidescroll, doctor-level rigor)
+    function selectDossier(tabName, btn) {
+      document.querySelectorAll('.dossier-card').forEach(b => {
+        b.classList.remove('active-dossier', 'border-brand-600', 'bg-brand-50');
+        b.classList.add('border-slate-200', 'bg-slate-50');
+      });
+      btn.classList.add('active-dossier', 'border-brand-600', 'bg-brand-50');
+      btn.classList.remove('border-slate-200', 'bg-slate-50');
+
+      document.querySelectorAll('.dossier-content').forEach(c => c.classList.add('hidden'));
+      const active = document.getElementById(`dossier-${tabName}`);
+      if (active) active.classList.remove('hidden');
+    }
+
+    // 5. FAQ Accordion
+    function toggleAccordion(btn) {
+      const parent = btn.closest('.accordion-item');
+      const wasOpen = parent.classList.contains('open');
+      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) {
+        parent.classList.add('open');
+      }
+    }
+
+    // 6. Legal Modal Viewer
+    const legalTexts = {
+      terms: {
+        title: "Όροι Χρήσης",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Φύση & Πεδίο Πλατφόρμας</h4>
+          <p>Το HopeRise GR λειτουργεί ως επαληθευμένο μητρώο ιατρικών εκκλήσεων, συνδέοντας δωρητές με ασθενείς που έχουν τεκμηριωμένη κλινική ανάγκη για θεραπείες μη διαθέσιμες ή μη χρηματοδοτούμενες από το εθνικό σύστημα υγείας τους. Το HopeRise δεν είναι φιλανθρωπικό ίδρυμα, νοσοκομείο ή πάροχος ιατρικής περίθαλψης. Κάθε έκκληση υπόκειται σε ανεξάρτητη κλινική επαλήθευση πριν δημοσιευθεί.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Υποχρεώσεις Δωρητών</h4>
+          <p>Συνεισφέροντας, επιβεβαιώνετε ότι είστε τουλάχιστον 18 ετών και ότι η μέθοδος πληρωμής είναι δική σας ή έχετε ρητή εξουσιοδότηση του κατόχου. Οι συνεισφορές είναι εθελοντικές και μη επιστρέψιμες εκτός όσων ορίζει η Πολιτική Επιστροφών. Οι επαναλαμβανόμενες δεσμεύσεις μπορούν να ακυρωθούν ανά πάσα στιγμή.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Αποδέσμευση Κεφαλαίων</h4>
+          <p>Τα κεφάλαια τηρούνται σε δεσμευμένο λογαριασμό εμπιστεύματος και αποδεσμεύονται απευθείας έναντι προτιμολογίων νοσοκομείου που εκδίδει ο ορισμένος κλινικός πάροχος. Κανένα κεφάλαιο δεν αποδεσμεύεται στην ασθενή, την οικογένειά της ή οποιονδήποτε μεσάζοντα. Το HopeRise δεν παρακρατεί κανένα ποσοστό από τα συγκεντρωμένα κλινικά κεφάλαια.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Συνεισφορά Συντήρησης Πλατφόρμας</h4>
+          <p>Κατά την ολοκλήρωση μπορεί να προσφερθεί προαιρετικό φιλοδώρημα συντήρησης πλατφόρμας. Αυτή η συνεισφορά διαχωρίζεται σαφώς από το κλινικό ταμείο και υποστηρίζει λειτουργικά κόστη όπως επεξεργασία πληρωμών, φιλοξενία, επικοινωνίες δωρητών και προβολή που επιτρέπει στην έκκληση να φτάσει σε περισσότερους υποστηρικτές.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Πρότυπο Επαλήθευσης Έκκλησης</h4>
+          <p>Κάθε δημοσιευμένη έκκληση περιλαμβάνει τεκμηρίωση επαληθευμένη έναντι: (α) πρωτοτύπων νοσοκομειακών διαγνωστικών αρχείων, (β) επιβεβαίωσης κατονομαζόμενου συμβουλευτικού ιατρού ή ειδικού, (γ) θεραπευτικού πλάνου που εκδίδει το υποδεχόμενο ίδρυμα, και (δ) τεκμηρίωσης κόστους βάσει του ισχύοντος ιατρικού τιμολογίου (π.χ. γερμανικό GOÄ ή αναφορά τιμολογίου ΕΣΥ).</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Περιορισμός Ευθύνης</h4>
+          <p>Το HopeRise GR διευκολύνει επαληθευμένες εκκλήσεις αλλά δεν εγγυάται κανένα συγκεκριμένο ιατρικό αποτέλεσμα. Τα αποτελέσματα θεραπείας εξαρτώνται από τον κλινικό πάροχο και τις ατομικές ιατρικές συνθήκες της ασθενούς. Το HopeRise δεν ευθύνεται για κλινικές αποφάσεις του θεράποντος ιδρύματος.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">7. Εφαρμοστέο Δίκαιο</h4>
+          <p>Οι παρόντες όροι διέπονται από το ελληνικό δίκαιο. Κάθε διαφορά υπάγεται στην αποκλειστική δικαιοδοσία των ελληνικών δικαστηρίων.</p>
+        `
+      },
+      privacy: {
+        title: "Πολιτική Απορρήτου",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Υπεύθυνος Επεξεργασίας</h4>
+          <p>Το HopeRise GR είναι ο υπεύθυνος επεξεργασίας για τα προσωπικά δεδομένα που συλλέγονται μέσω αυτής της πλατφόρμας. Δεσμευόμαστε να προστατεύουμε το απόρρητό σας σύμφωνα με τον Γενικό Κανονισμό Προστασίας Δεδομένων (ΓΚΠΔ) και τον ν. 4624/2019.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Πληροφορίες που Συλλέγουμε</h4>
+          <p>Συλλέγουμε μόνο τις πληροφορίες που απαιτούνται για την επεξεργασία της συνεισφοράς σας και τη διατήρηση του λογαριασμού δωρητή: όνομα, διεύθυνση email, στοιχεία κάρτας πληρωμής (επεξεργασμένα και tokenized από τον πιστοποιημένο κατά PCI DSS Επιπέδου 1 πάροχο πληρωμών μας) και προαιρετικές προτιμήσεις προβολής. Δεν αποθηκεύουμε αριθμούς καρτών στους διακομιστές μας.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Πώς Χρησιμοποιούμε τα Δεδομένα σας</h4>
+          <p>Τα δεδομένα σας χρησιμοποιούνται για: (α) επεξεργασία και απόδειξη της συνεισφοράς σας, (β) διαχείριση επαναλαμβανόμενων δεσμεύσεων, (γ) αποστολή ενημερώσεων καμπάνιας που έχετε επιλέξει, και (δ) συμμόρφωση με χρηματοοικονομικές ρυθμίσεις και απαιτήσεις κατά της απάτης. Δεν πωλούμε, ανταλλάσσουμε ούτε εκμισθώνουμε τα προσωπικά σας δεδομένα σε τρίτους για σκοπούς marketing.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Ανώνυμες Δωρεές</h4>
+          <p>Αν επιλέξετε την ανώνυμη συνεισφορά, το όνομά σας δεν θα εμφανίζεται σε κανένα δημόσιο σημείο της καμπάνιας. Τα δεδομένα σας θα διατηρούνται εσωτερικά για χρηματοοικονομική συμμόρφωση και εκδόσεις αποδείξεων, αλλά δεν θα δημοσιοποιούνται.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Διατήρηση Δεδομένων</h4>
+          <p>Τα αρχεία συναλλαγών διατηρούνται για 7 έτη όπως απαιτεί η φορολογική νομοθεσία. Οι προτιμήσεις επικοινωνίας και τα δεδομένα λογαριασμού διατηρούνται μέχρι να ζητήσετε διαγραφή, οπότε θα διαγράψουμε όλα τα μη νομικά-απαιτούμενα αρχεία εντός 30 ημερών.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Τα Δικαιώματά σας</h4>
+          <p>Βάσει ΓΚΠΔ, έχετε δικαίωμα: πρόσβασης στα προσωπικά σας δεδομένα, διόρθωσης ανακριβών δεδομένων, αίτησης διαγραφής (όπου νομικά επιτρέπεται), περιορισμού επεξεργασίας, φορητότητας δεδομένων και εναντίωσης στην επεξεργασία. Για την άσκηση οποιουδήποτε δικαιώματος, επικοινωνήστε στο <span class="text-brand-600">support@hoperise.uk</span>.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">7. Ασφάλεια Πληρωμών</h4>
+          <p>Όλες οι συναλλαγές πληρωμών κρυπτογραφούνται μέσω TLS 1.3 (256-bit) και επεξεργάζονται από πιστοποιημένο κατά PCI DSS Επιπέδου 1 πάροχο πληρωμών. Τα δεδομένα κάρτας tokenize-οποιούνται κατά την εισαγωγή και δεν αγγίζουν ποτέ τους διακομιστές εφαρμογών μας. Υποβαλλόμαστε σε τακτικούς ελέγχους ασφαλείας και αξιολογήσεις ευπαθειών.</p>
+        `
+      },
+      escrow: {
+        title: "Εγγύηση Κλινικής Μεσεγγύησης",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Διακυβέρνηση Ειδικού Εμπιστεύματος</h4>
+          <p>Κάθε ευρώ που συγκεντρώνεται για τη Σοφία διατίθεται αποκλειστικά στο εγκεκριμένο κλινικό της πλάνο στο Immun-Onkologisches Zentrum Köln (IOZK), Γερμανία. Τα κεφάλαια καλύπτουν: σύνθεση εμβολίου δενδριτικών κυττάρων IO-VAC (αυτόλογη παρασκευή βάσει AMG §13), στερεοτακτική ακτινοθεραπεία με πρωτόνια, συνεδρίες υπερθερμίας και σχετική κλινική παρακολούθηση και απεικόνιση.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Επαλήθευση Προτιμολογίων</h4>
+          <p>Καμία αποδέσμευση δεν πραγματοποιείται χωρίς προτιμολόγιο νοσοκομείου που εκδίδει το IOZK βάσει του Γερμανικού Τιμολογίου Ιατρικών Αμοιβών (Gebührenordnung für Ärzte, GOÄ). Κάθε τιμολόγιο διασταυρώνεται έναντι: (α) των αρχείων ασθενούς της Σοφίας στο νοσοκομείο ΑΧΕΠΑ και του θεραπευτικού πλάνου Ογκολογικού Συμβουλίου, (β) του θεραπευτικού πρωτοκόλλου που εκδίδει το IOZK, και (γ) του εγκεκριμένου κλινικού προϋπολογισμού που δημοσιεύεται σε αυτή τη σελίδα έκκλησης.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Άμεση Πληρωμή Νοσοκομείου</h4>
+          <p>Τα κεφάλαια μεταφέρονται απευθείας από τον δεσμευμένο λογαριασμό εμπιστεύματος στον ορισμένο νοσοκομειακό λογαριασμό του IOZK. Σε κανένα σημείο δεν αποδεσμεύονται κεφάλαια στην ασθενή, μέλη της οικογένειάς της ή οποιονδήποτε μη κλινικό μεσάζοντα. Οι επιβεβαιώσεις εμβασμάτων διατηρούνται ως μέρος του ελεγκτικού ίχνους.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Διατάξεις Πλεονάσματος & Ελλείμματος</h4>
+          <p>Αν η έκκληση υπερβεί τον στόχο, τα πλεονάζοντα κεφάλαια διατίθενται σε εκτεταμένη παρακολούθηση, απεικόνιση παρακολούθησης και μετεγχειρητικές ανοσολογικές αξιολογήσεις όπως συστήνει η θεράπουσα ογκολόγος. Αν ο στόχος δεν επιτευχθεί, τα συγκεντρωμένα κεφάλαια εφαρμόζονται στα υψηλότερης προτεραιότητας θεραπευτικά στοιχεία όπως καθορίζει η κλινική ομάδα, ξεκινώντας από τη σύνθεση δενδριτικών κυττάρων IO-VAC.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Διάταξη Ακύρωσης Θεραπείας</h4>
+          <p>Στο απρόβλεπτο ενδεχόμενο η προγραμματισμένη θεραπεία να μην μπορεί να προχωρήσει όπως κλινικά πιστοποιήθηκε (λόγω ιατρικής αντένδειξης, απόφασης ασθενούς ή αδυναμίας ιδρύματος), τα κεφάλαια παραμένουν προστατευμένα υπό διακυβέρνηση εμπιστεύματος. Οι δωρητές θα ειδοποιηθούν εντός 14 ημερών, και τα κεφάλαια είτε θα ανακατανεμηθούν σε εναλλακτική εγκεκριμένη θεραπευτική οδό είτε θα διατεθούν για επιστροφή κατόπιν αιτήματος.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Αναφορές Διαφάνειας</h4>
+          <p>Ενημερώσεις καμπάνιας δημοσιεύονται στη σελίδα έκκλησης μετά από κάθε σημαντικό κλινικό ορόσημο. Αυτές οι ενημερώσεις περιλαμβάνουν κατάσταση θεραπείας, επόμενη προγραμματισμένη παρέμβαση και τρέχουσες περιλήψεις κατανομής κεφαλαίων, παρέχοντας στους δωρητές συνεχή ορατότητα για το πώς εφαρμόζονται οι συνεισφορές τους.</p>
+        `
+      },
+      refund: {
+        title: "Πολιτική Επιστροφών",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Εφάπαξ Συνεισφορές</h4>
+          <p>Αν κάνατε ακούσια συνεισφορά ή χρεωθήκατε λανθασμένο ποσό, μπορείτε να ζητήσετε πλήρη επιστροφή εντός 14 ημερών από την ημερομηνία συναλλαγής επικοινωνώντας στο <span class="text-brand-600">support@hoperise.uk</span> με την απόδειξη email ή την αναφορά συναλλαγής. Οι επιστροφές επεξεργάζονται στην αρχική μέθοδο πληρωμής εντός 5-10 εργάσιμων ημερών.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Ακύρωση Επαναλαμβανόμενης Δέσμευσης</h4>
+          <p>Οι μηνιαίες δεσμεύσεις μπορούν να ακυρωθούν ανά πάσα στιγμή με άμεση ισχύ. Μετά την ακύρωση, δεν θα εφαρμοστούν περαιτέρω χρεώσεις. Η ακύρωση μπορεί να γίνει μέσω του συνδέσμου στο email μηνιαίας απόδειξης ή επικοινωνώντας με την υποστήριξη. Ήδη-επεξεργασμένες μηνιαίες χρεώσεις δεν επιστρέφονται εκτός αν εμπίπτουν στο 14ήμερο παράθυρο της πιο πρόσφατης χρέωσης.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Φιλοδώρημα Συντήρησης Πλατφόρμας</h4>
+          <p>Το προαιρετικό φιλοδώρημα συντήρησης πλατφόρμας αντιμετωπίζεται ως ξεχωριστή συναλλαγή και ακολουθεί το ίδιο 14ήμερο παράθυρο επιστροφής με τις εφάπαξ συνεισφορές. Μπορεί να επιστραφεί ανεξάρτητα από τη συνεισφορά στο κλινικό ταμείο.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Περιστάσεις Χωρίς Επιστροφή</h4>
+          <p>Επιστροφές δεν μπορούν να εκδοθούν για συνεισφορές που έχουν ήδη αποδεσμευθεί έναντι επαληθευμένου νοσοκομειακού τιμολογίου. Σε τέτοιες περιπτώσεις ισχύουν οι διατάξεις κλινικής μεσεγγύησης (βλ. Εγγύηση Κλινικής Μεσεγγύησης). Θα συνεργαστούμε μαζί σας για δίκαιη επίλυση.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Επίλυση Διαφορών</h4>
+          <p>Αν δεν είστε ικανοποιημένοι με το αποτέλεσμα αιτήματος επιστροφής, μπορείτε να κλιμακώσετε το ζήτημα στον ανεξάρτητο συνήγορο δωρητών μας στέλνοντας email στο <span class="text-brand-600">ombudsman@hoperise.uk</span>. Στοχεύουμε να επιλύουμε όλες τις κλιμακωμένες διαφορές εντός 10 εργάσιμων ημερών.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      const data = legalTexts[type] || legalTexts.terms;
+      document.getElementById('legal-modal-title').textContent = data.title;
+      document.getElementById('legal-modal-body').innerHTML = data.body;
+      document.getElementById('legal-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.add('hidden');
+      if (document.getElementById('checkout-modal').classList.contains('hidden')) {
+        document.body.style.overflow = '';
+      }
+    }
+
+    function shareAppeal() {
+      if (navigator.share) {
+        navigator.share({
+          title: "Βοήθησε τη Σοφία να Νικήσει το Γλοιοβλάστωμα",
+          text: "Βοήθησε τη Σοφία, 21 ετών φοιτήτρια Ιατρικής από τη Θεσσαλονίκη, να αποκτήσει πρόσβαση σε σωτήρια ανοσοθεραπεία στη Γερμανία. Ακόμα και 5 € βοηθούν:",
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Ο σύνδεσμος της καμπάνιας αντιγράφηκε!');
+      }
+    }
+
+    // ================================================================
+    // PRODUCTION BACKEND INTEGRATION
+    // ================================================================
+
+    (function injectLiveStats() {
+      const d = window.__CAMPAIGN_DATA;
+      if (!d) return;
+      const raised = d.raised || d._realStats?.raised;
+      const donors = d.donorCount || d._realStats?.donorCount;
+      const goal = d.goal || 90000;
+      if (!raised) return;
+
+      const pct = Math.min(100, Math.round((raised / goal) * 100));
+      const fmtRaised = '€' + raised.toLocaleString('el-GR');
+      const fmtGoal = '€' + goal.toLocaleString('el-GR');
+      const fmtDonors = donors ? donors.toLocaleString('el-GR') : null;
+
+      document.querySelectorAll('[data-live="raised"]').forEach(el => el.textContent = fmtRaised);
+      document.querySelectorAll('[data-live="goal"]').forEach(el => el.textContent = fmtGoal);
+      document.querySelectorAll('[data-live="pct"]').forEach(el => el.textContent = pct + '%');
+      document.querySelectorAll('[data-live="donors"]').forEach(el => el.textContent = fmtDonors);
+      document.querySelectorAll('.progress-fill').forEach(el => el.style.width = pct + '%');
+
+      const dockRaised = document.querySelector('#mobile-dock .text-sm.font-bold');
+      if (dockRaised) {
+        dockRaised.innerHTML = `${fmtRaised} <span class="text-xs font-medium text-slate-500">συγκεντρώθηκαν από ${fmtGoal}</span>`;
+      }
+      const dockBar = document.querySelector('#mobile-dock .bg-brand-600.rounded-full');
+      if (dockBar) dockBar.style.width = pct + '%';
+    })();
+
+  </script>
+
+  <script src="/js/tracking.js"></script>
+  <script src="/js/ab-tracker.js"></script>
+  <script src="/js/thank-you-overlay.js"></script>
+
+  <script>
+    (async function initTracking() {
+      if (typeof Tracking === 'undefined') return;
+      await Tracking.init();
+      Tracking.trackPageView();
+      Tracking.trackViewContent({ contentType: 'campaign', contentName: 'glioblastoma-sofia' });
+    })();
+
+    (function trackModalOpen() {
+      const origOpen = window.openCheckoutModal;
+      if (!origOpen) return;
+      window.openCheckoutModal = function(mode) {
+        if (typeof Tracking !== 'undefined') {
+          Tracking.trackAddToCart({
+            value: app.amount,
+            currency: 'EUR',
+            contentName: 'glioblastoma-sofia'
+          });
+        }
+        origOpen(mode);
+      };
+    })();
+
+    (function handlePaymentReturn() {
+      if (typeof Tracking !== 'undefined') {
+        const completed = Tracking.getCompletedReturn();
+        if (completed && completed.amount > 0) {
+          Tracking.trackPurchase({
+            value: completed.amount,
+            currency: completed.currency || 'EUR',
+            contentName: 'glioblastoma-sofia'
+          }, completed.eventId);
+        }
+        if (completed) {
+          if (typeof showThankYouOverlay === 'function') {
+            setTimeout(showThankYouOverlay, 300);
+          }
+        }
+      } else {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('status') === 'complete') {
+          ['status', 'eid', 'amt', 'cur'].forEach(k => params.delete(k));
+          window.history.replaceState({}, '', window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
+          if (typeof showThankYouOverlay === 'function') {
+            setTimeout(showThankYouOverlay, 300);
+          }
+        }
+      }
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="fr-FR" class="scroll-smooth antialiased">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Aidez Chloé, 21 ans, à accéder à l’immunothérapie en Allemagne | HopeRise FR</title>
+  <meta name="description" content="Chloé D., 21 ans, étudiante en médecine à Lyon, affronte un glioblastome de grade IV. Soutenez son appel urgent pour une immunothérapie privée par cellules dendritiques en Allemagne.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aidez Chloé, étudiante en médecine de 21 ans, à vaincre son glioblastome — Appel pour l’Allemagne">
+  <meta property="og:description" content="Chloé voulait devenir neuro-oncologue. Aujourd’hui, elle affronte une tumeur cérébrale de grade IV. Aidez à financer l’immunothérapie privée en Allemagne.">
+  <meta property="og:image" content="/images/campaigns/glioblastome-chloe/1.jpg">
+
+  <!-- Server-injected tracking pixels (Meta + TikTok) -->
+  <!-- TRACKING_PIXELS_PLACEHOLDER -->
+  <!-- CAMPAIGN_DATA_PLACEHOLDER -->
+
+  <!-- Unified Typographic System (Plus Jakarta Sans for UI/Numbers/Headings, Newsreader for Patient Narrative Quote) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif']
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b'
+            },
+            surface: {
+              subtle: '#f8fafc',
+              card: '#ffffff',
+              border: '#e2e8f0',
+              muted: '#64748b'
+            },
+            navy: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#0a0f1d'
+            }
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
+            'card-elevated': '0 16px 36px -4px rgba(15, 23, 42, 0.08), 0 4px 14px -2px rgba(15, 23, 42, 0.03)',
+            'brand-glow': '0 8px 24px -2px rgba(5, 150, 105, 0.28)',
+            'bottom-dock': '0 -8px 30px -4px rgba(15, 23, 42, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --font-primary: 'Plus Jakarta Sans', sans-serif;
+      --font-quote: 'Newsreader', Georgia, serif;
+      --color-brand: #059669;
+      --color-brand-dark: #047857;
+      --color-brand-light: #ecfdf5;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: var(--font-primary);
+      background-color: #f8fafc;
+      color: #0f172a;
+      letter-spacing: -0.012em;
+    }
+
+    /* Section anchors with sticky header offset */
+    .section-anchor {
+      scroll-margin-top: 5.5rem;
+    }
+
+    /* Progress Meter */
+    .progress-track {
+      background-color: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+      height: 10px;
+      position: relative;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+      height: 100%;
+      border-radius: 9999px;
+      position: relative;
+    }
+    .progress-sheen {
+      display: none;
+    }
+
+    /* Amount Chips (Main Console & Modal) */
+    .amount-chip,
+    .modal-amt-chip {
+      border: 2px solid #e2e8f0;
+      background-color: #ffffff;
+      color: #1e293b;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .amount-chip:hover,
+    .modal-amt-chip:hover {
+      transform: translateY(-1px);
+      border-color: #10b981;
+    }
+    .amount-chip:active,
+    .modal-amt-chip:active {
+      transform: scale(0.97);
+    }
+    .amount-chip.active,
+    .modal-amt-chip.active {
+      border-color: #059669 !important;
+      background-color: #ecfdf5 !important;
+      color: #064e3b !important;
+      box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.22);
+    }
+
+    /* Modal Tip Buttons */
+    .modal-tip-btn {
+      border: 2px solid #e2e8f0;
+      background-color: #ffffff;
+      color: #334155;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .modal-tip-btn:hover {
+      border-color: #10b981;
+    }
+    .modal-tip-btn.active {
+      border-color: #059669 !important;
+      background-color: #ecfdf5 !important;
+      color: #064e3b !important;
+      font-weight: 700 !important;
+    }
+
+    /* Live Impact Card Smooth Fade-In */
+    @keyframes impactFade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .impact-animate {
+      animation: impactFade 0.25s var(--ease-spring);
+    }
+
+    /* Robust CSS Grid Accordion: Flawless height animation & complete 0px collapse */
+    .accordion-grid {
+      display: grid;
+      grid-template-rows: 0fr;
+      overflow: hidden;
+      transition: grid-template-rows 0.32s var(--ease-spring);
+    }
+    .accordion-item.open .accordion-grid {
+      grid-template-rows: 1fr;
+    }
+    .accordion-content-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .accordion-item:not(.open) .accordion-content-inner {
+      visibility: hidden;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    .accordion-item.open .accordion-content-inner {
+      visibility: visible;
+      transition: visibility 0.32s;
+    }
+    .accordion-item.open .accordion-chevron {
+      transform: rotate(180deg);
+      color: #059669;
+    }
+
+    /* Pulse for Live Indicators */
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.18); opacity: 0.5; }
+    }
+    .status-pulse {
+      animation: softPulse 2.2s infinite ease-in-out;
+    }
+
+    /* Gallery Thumbnail Active State */
+    .gallery-thumb.active-thumb {
+      border-color: #059669;
+      opacity: 1;
+      box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+    }
+
+    /* Dossier Card Active State */
+    .dossier-card.active-dossier {
+      background-color: #ecfdf5;
+      border-color: #059669;
+      color: #064e3b;
+      box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.18);
+    }
+
+    /* Safe Area Padding for Mobile Dock */
+    .safe-dock-pb {
+      padding-bottom: max(0.875rem, env(safe-area-inset-bottom));
+    }
+
+    /* Modal Animation */
+    @keyframes modalEntry {
+      from { opacity: 0; transform: scale(0.96) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-animate {
+      animation: modalEntry 0.25s var(--ease-spring);
+    }
+
+    /* Prevent iOS auto-zoom on mobile inputs */
+    @media screen and (max-width: 768px) {
+      input,
+      select,
+      textarea,
+      input::placeholder,
+      textarea::placeholder {
+        font-size: 16px !important;
+      }
+    }
+    input, select, textarea {
+      touch-action: manipulation;
+    }
+
+    /* Modern Skeleton Shimmer Loading */
+    @keyframes skeleton-shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    .skeleton-shimmer {
+      position: relative;
+      background-color: #f1f5f9;
+      overflow: hidden;
+    }
+    .skeleton-shimmer::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.45) 20%,
+        rgba(255, 255, 255, 0.75) 60%,
+        rgba(255, 255, 255, 0)
+      );
+      animation: skeleton-shimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      content: '';
+      pointer-events: none;
+    }
+
+    /* Suppress native browser broken image icon / question mark glyph while loading */
+    img.opacity-0 {
+      opacity: 0 !important;
+      visibility: hidden;
+    }
+    img:not(.opacity-0) {
+      visibility: visible;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ============================================================== -->
+  <!-- 2. STREAMLINED HEADER -->
+  <!-- ============================================================== -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-slate-900 text-base leading-none tracking-tight">HopeRise<span class="text-brand-600 text-xs ml-1 uppercase">FR</span></span>
+          <span class="text-xs text-slate-500 font-medium">Appels Médicaux Vérifiés</span>
+        </div>
+      </a>
+
+      <!-- Jump Navigation (Desktop) -->
+      <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
+        <a href="#story-chapter" class="hover:text-brand-600 transition-colors">Histoire de la Patiente</a>
+        <a href="#roadmap-chapter" class="hover:text-brand-600 transition-colors">Protocole</a>
+        <a href="#nhs-chapter" class="hover:text-brand-600 transition-colors">Assurance Maladie vs Protocole Privé</a>
+        <a href="#evidence-chapter" class="hover:text-brand-600 transition-colors">Dossier Clinique</a>
+        <a href="#budget-chapter" class="hover:text-brand-600 transition-colors">Détail des Coûts</a>
+        <a href="#faq-chapter" class="hover:text-brand-600 transition-colors">FAQ Clinique</a>
+      </nav>
+
+      <!-- Header Nav & Trust -->
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-brand-700 bg-brand-50 px-3 py-1.5 rounded-full border border-brand-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 status-pulse"></span>
+          <span>Appel Vérifié</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 3. MAIN HERO & DUAL-COLUMN APP CONTAINER -->
+  <!-- ============================================================== -->
+  <main class="max-w-6xl mx-auto px-4 py-6 md:py-8 flex-1 w-full space-y-8">
+
+    <!-- HERO BANNER SECTION -->
+    <section aria-labelledby="campaign-heading" class="space-y-2.5">
+      <div class="flex flex-wrap items-center gap-2 text-xs font-semibold text-brand-700">
+        <span class="bg-brand-50 text-brand-700 px-2.5 py-0.5 rounded-full border border-brand-200 font-bold">Appel Médical Urgent</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-slate-600">Glioblastome Multiforme de Grade 4 (IDH-wildtype)</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-slate-600">Faculté de Médecine, Université Lyon 1</span>
+      </div>
+
+      <h1 id="campaign-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        Aidez Chloé, 21 ans, étudiante en médecine, à accéder à l’immunothérapie qui peut la sauver en Allemagne
+      </h1>
+    </section>
+
+    <!-- 2-COLUMN LAYOUT -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- ============================================================ -->
+      <!-- LEFT COLUMN: PHOTO GALLERY & NARRATIVE CHAPTERS -->
+      <!-- ============================================================ -->
+      <div class="lg:col-span-7 space-y-8 min-w-0">
+
+        <!-- INTERACTIVE MEDICAL PHOTO VIEWER (PROMINENT ARROWS, VISUAL THUMBNAILS, NO TEXT LABELS) -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-card">
+          
+          <!-- Main Photo Frame -->
+          <div class="relative aspect-[16/10] bg-slate-900 overflow-hidden select-none group">
+            <!-- Skeleton Shimmer Placeholder -->
+            <div id="main-gallery-skeleton" class="absolute inset-0 skeleton-shimmer z-0 transition-opacity duration-300 pointer-events-none"></div>
+
+                        <!-- Blurred Fill Backdrop (synced with main photo, never cropped look) -->
+            <img id="main-gallery-blur"
+                 src="campaign/public/images/campaigns/glioblastome-chloe/1.jpg"
+                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastome-chloe/1.jpg';"
+                 alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl brightness-[0.55] saturate-150 pointer-events-none z-0">
+
+<img id="main-gallery-image" 
+                 src="campaign/public/images/campaigns/glioblastome-chloe/1.jpg" 
+                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastome-chloe/1.jpg';" 
+                 alt="Chloé D." 
+                 onload="this.classList.remove('opacity-0'); document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');"
+                 class="w-full h-full object-contain transition-opacity duration-300 opacity-0 relative z-10">
+
+            <!-- Clean Top-Right Counter Pill -->
+            <div class="absolute top-3.5 right-3.5 z-20">
+              <span id="main-gallery-pill" class="text-xs font-bold text-slate-100 bg-slate-900/80 px-2.5 py-1 rounded-full border border-slate-700/80 shadow-sm backdrop-blur-sm">
+                1 / 4
+              </span>
+            </div>
+
+            <!-- Prominent, Tactile Navigation Arrows -->
+            <button onclick="cyclePhoto(-1)" aria-label="Photo précédente" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-brand-600 flex items-center justify-center transition-all shadow-md hover:scale-105 active:scale-95 border border-slate-200/80 cursor-pointer z-20 backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <button onclick="cyclePhoto(1)" aria-label="Photo suivante" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-brand-600 flex items-center justify-center transition-all shadow-md hover:scale-105 active:scale-95 border border-slate-200/80 cursor-pointer z-20 backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+
+          <!-- Pure Visual Thumbnail Strip (Zero Text Labels) -->
+          <div class="p-2.5 bg-slate-50 border-t border-slate-200 grid grid-cols-4 gap-2">
+            <button onclick="switchPhoto(0)" id="photo-tab-0" class="gallery-thumb active-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-brand-600 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastome-chloe/1.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastome-chloe/1.jpg';" alt="Miniature 1" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(1)" id="photo-tab-1" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastome-chloe/2.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastome-chloe/2.jpg';" alt="Miniature 2" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(2)" id="photo-tab-2" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastome-chloe/3.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastome-chloe/3.jpg';" alt="Miniature 3" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+            <button onclick="switchPhoto(3)" id="photo-tab-3" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
+              <img src="campaign/public/images/campaigns/glioblastome-chloe/4.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastome-chloe/4.jpg';" alt="Miniature 4" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 01: THE PATIENT NARRATIVE & CLINICAL QUOTE -->
+        <!-- ======================================================== -->
+        <article id="story-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-5">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">01 / Récit Clinique</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">L’histoire de Chloé</h2>
+            </div>
+            <span class="text-xs text-slate-400 font-medium">3 min de lecture</span>
+          </div>
+
+          <div class="space-y-3.5 text-sm sm:text-base text-slate-700 leading-relaxed">
+            <p class="font-semibold text-slate-900 text-base leading-snug">
+              En un instant, tout a basculé.
+            </p>
+
+            <p>
+              Chloé est une étudiante en Médecine de 21 ans originaire de Lyon, à qui l’on a diagnostiqué un glioblastome multiforme (GBM) de grade IV — la tumeur cérébrale maligne la plus agressive. Le traitement standard (chirurgie, radiothérapie, témozolomide) offre une survie médiane de 14 à 16 mois. Le seul traitement pouvant prolonger significativement sa survie — l’immunothérapie par cellules dendritiques — n’est disponible que dans des centres spécialisés en Allemagne et n’est couvert par aucun système de santé publique en Europe.
+            </p>
+
+            <p>
+              Tout a commencé en juin 2026, lorsque Chloé a commencé à souffrir de céphalées persistantes, surtout matinales, accompagnées de nausées et d’une vision trouble de l’œil gauche. Le 20 juin, après un épisode de convulsions pendant un cours à la faculté de médecine de l’<strong>Université Lyon 1</strong>, elle a été transférée en urgence au service de neurochirurgie des <strong>Hospices Civils de Lyon (HCL)</strong>.</p>
+
+            <p>L’IRM a révélé une <strong>masse de 4,2 cm dans le lobe frontal droit</strong>, avec une prise de contraste en anneau caractéristique et un œdème périlésionnel. La biopsie stéréotaxique et l’analyse moléculaire ont confirmé le diagnostic : <strong>glioblastome multiforme, IDH-wildtype, grade IV selon l’OMS</strong>, avec un <strong>promoteur MGMT non méthylé</strong> — le sous-type moléculaire le plus défavorable, synonyme de réponse réduite à la chimiothérapie.</p>
+
+            <p>Chloé a subi une résection chirurgicale partielle le 10 juillet 2026 aux HCL — une résection complète était impossible en raison de la proximité de la tumeur avec les zones du langage. Elle a ensuite suivi le protocole Stupp : radiothérapie concomitante (30 séances sur 6 semaines) avec témozolomide quotidien. Les médecins ont été honnêtes : avec un MGMT non méthylé, la survie médiane sous traitement standard est de 12 à 15 mois.
+            </p>
+
+            <!-- EDITORIAL PULL-QUOTE (Newsreader Serif) -->
+            <div class="my-5 p-5 sm:p-6 rounded-2xl bg-emerald-50/70 border border-emerald-200/90 border-l-4 border-l-brand-600 relative shadow-sm overflow-hidden">
+              <svg class="w-7 h-7 text-brand-600 mb-2.5 opacity-80" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+              <blockquote class="font-serif italic text-base sm:text-lg text-slate-900 leading-relaxed">
+                “Je voulais devenir médecin pour aider les gens. Aujourd’hui, j’apprends ce que ça signifie d’être patiente — et combien c’est insoutenable de savoir qu’un traitement existe qui pourrait vous sauver, mais de ne pas pouvoir y accéder. Chacun de vos dons n’est pas simplement de l’argent — c’est du temps de vie. Si je m’en sors, je vous promets de consacrer ma vie à la neuro-oncologie, pour que personne d’autre ne vive ce que je vis.”
+              </blockquote>
+              <div class="mt-3.5 pt-3 border-t border-emerald-200/80 flex items-center justify-between text-xs text-slate-600">
+                <span class="font-bold text-slate-900">— Chloé D.</span>
+                <span class="text-slate-600">Étudiante en médecine, Université Lyon 1</span>
+              </div>
+            </div>
+
+            <p>
+              Après des recherches approfondies, la famille de Chloé a identifié un programme spécialisé d’immunothérapie par cellules dendritiques dans un centre oncologique certifié en Allemagne. Une étude clinique récente (<em>Nature Communications</em>, août 2024) a démontré une augmentation de 68 % de la survie globale médiane chez les patients atteints de glioblastome ayant reçu des vaccins à cellules dendritiques. Des cellules sont prélevées dans le sang de Chloé, transformées en laboratoire puis réinjectées pour activer son système immunitaire contre le cancer : 4 à 6 cycles sur 12 mois sont nécessaires.
+            </p>
+          </div>
+        </article>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 02: THE TREATMENT ROADMAP & CLINICAL PHASES -->
+        <!-- ======================================================== -->
+        <section id="roadmap-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">02 / Parcours Clinique</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Protocole de Traitement et Étapes Clés</h2>
+            </div>
+            <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded border border-brand-200">
+              Objectif : €90 000
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Chaque contribution finance directement les étapes cliniques du parcours thérapeutique de Chloé. Les fonds sont cantonnés et débloqués sur présentation des factures hospitalières validées :
+          </p>
+
+          <div class="space-y-3 pt-1">
+            
+            <!-- Phase 1 (Completed) -->
+            <div class="p-3.5 rounded-xl border border-brand-200 bg-brand-50/50 flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-900">Phase 1 : Résection chirurgicale et chimioradiothérapie concomitante</h3>
+                  <span class="text-xs font-bold uppercase tracking-wider bg-brand-200 text-brand-800 px-2 py-0.5 rounded">Terminée</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  Craniotomie aux HCL, 60 Gy / 30 séances de radiothérapie avec modulation d’intensité, témozolomide concomitant quotidien. Pris en charge par la Sécurité Sociale (ALD 30).
+                </p>
+              </div>
+            </div>
+
+            <!-- Phase 2 (Active Target) -->
+            <div class="p-3.5 rounded-xl border-2 border-brand-600 bg-white shadow-card-elevated flex items-start gap-3 relative overflow-hidden">
+              <div class="w-6 h-6 rounded-full bg-brand-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                2
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-900">Phase 2 : Aphérèse des monocytes et synthèse du vaccin dendritique IO-VAC</h3>
+                  <span class="text-xs font-bold uppercase tracking-wider bg-brand-50 text-brand-700 border border-brand-200 px-2 py-0.5 rounded">Étape en cours</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-0.5">
+                  Seuil de €45 000 (<strong class="text-slate-900">€35 720 récoltés</strong> — €9 280 manquants). Aphérèse et préparation du vaccin en laboratoire à l’IOZK de Cologne. Prévu pour novembre 2026.
+                </p>
+                <div class="mt-2 flex items-center gap-2">
+                  <div class="flex-1 progress-track h-2">
+                    <div class="progress-fill" style="width: 79%"></div>
+                  </div>
+                  <span class="text-xs font-bold text-brand-700">79 % de l’étape</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-start gap-3 opacity-80">
+              <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                3
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-800">Phase 3 : 4 à 6 injections du vaccin et électrohyperthermie modulée</h3>
+                  <span class="text-xs text-slate-500 font-medium">Étape €72 000</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Administration intradermique du vaccin IO-VAC combinée à l’électrohyperthermie modulée à 13,56 MHz (mEHT) pour lever l’immunosuppression tumorale derrière la barrière hémato-encéphalique.
+                </p>
+              </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-start gap-3 opacity-70">
+              <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                4
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-bold text-slate-800">Phase 4 : Suivi immunitaire post-vaccinal et protocole d’entretien</h3>
+                  <span class="text-xs text-slate-500 font-medium">Objectif €90 000</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Suivi immunitaire par cytométrie en flux, planification de protonthérapie stéréotaxique et accompagnement clinique pendant 12 mois en Allemagne.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 03: ASSURANCE MALADIE VS GERMANY REGULATORY TRANSPARENCY -->
+        <!-- ======================================================== -->
+        <section id="nhs-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">03 / Transparence des Soins</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Prise en charge par l’Assurance Maladie vs Protocole Européen</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded">
+              Contexte du système de santé français
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Nous maintenons une transparence clinique totale avec tous les donateurs. La résection neurochirurgicale initiale de Chloé, sa radiothérapie de 60 Gy et sa chimiothérapie concomitante ont été réalisées aux HCL de Lyon. <strong>Ces soins standards sont intégralement pris en charge.</strong>
+          </p>
+
+          <!-- Side-by-Side Matrix -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+            
+            <div class="p-4 rounded-xl border border-brand-200 bg-brand-50/60 space-y-2">
+              <div class="flex items-center gap-1.5 text-brand-900 font-bold text-xs uppercase tracking-wide">
+                <svg class="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <span>Pris en charge par la Sécurité Sociale (ALD 30)</span>
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc pl-4">
+                <li>Diagnostic initial — IRM, biopsie cérébrale (HCL Lyon)</li>
+                <li>Résection chirurgicale de la tumeur (HCL Lyon)</li>
+                <li>Radiothérapie — 30 séances (HCL Lyon)</li>
+                <li>Chimiothérapie témozolomide (Sécurité Sociale)</li>
+                <li>Tumor Treating Fields / Optune — couvert depuis mars 2023 (LPPR)</li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/60 space-y-2">
+              <div class="flex items-center gap-1.5 text-amber-900 font-bold text-xs uppercase tracking-wide">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span>Financement privé en Allemagne requis (€90 000)</span>
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc pl-4">
+                <li>Immunothérapie par cellules dendritiques — 4-6 cycles en Allemagne</li>
+                <li>Profilage moléculaire nouvelle génération (NGS) pour thérapie personnalisée</li>
+                <li>Thérapie par protons (proton therapy) — minimise les dommages au tissu cérébral sain</li>
+                <li>Déménagement, hébergement et accompagnement en Allemagne pendant 12+ mois</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="pt-1 text-sm text-slate-600 leading-relaxed space-y-1.5">
+            <h3 class="font-bold text-slate-900 text-sm">Décalage d’évaluation réglementaire (HAS vs AMG §13 allemand)</h3>
+            <p>
+              En France, les évaluations de la HAS exigent des essais contrôlés randomisés de phase III avant toute prise en charge, ce qui prend généralement 3 à 5 ans. En Allemagne, les médicaments de thérapie innovante autologues et personnalisés (ATMP) sont autorisés dans le cadre de l’article 13 de la loi allemande sur les médicaments (AMG). Pour les patientes atteintes d’un glioblastome MGMT non méthylé face à une récidive imminente, se rendre en Allemagne est aujourd’hui la seule voie thérapeutique disponible.
+            </p>
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 04: CLINICAL VERIFICATION DOSSIER (DOCTOR-LEVEL RIGOR, ZERO EMOJIS) -->
+        <!-- ======================================================== -->
+        <section id="evidence-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">04 / Dossiers de Neuro-Oncologie</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Dossier de Vérification Clinique</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
+              Cas Médical Vérifié
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-700 leading-relaxed">
+            Chaque paramètre clinique, moléculaire et réglementaire européen ci-dessous a été vérifié de manière indépendante par des spécialistes en neuro-oncologie. La tumeur de Chloé étant MGMT non méthylée, la chimiothérapie standard ne peut empêcher une récidive rapide — faisant de l’immunothérapie cellulaire ciblée à l’IOZK de Cologne sa meilleure et seule voie cliniquement prouvée vers la survie à long terme :
+          </p>
+
+          <!-- Professional Clinical Tab Selector (Responsive Grid, Zero Sidescroll, Zero Emojis) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs font-semibold">
+            <button onclick="selectDossier('pathology', this)" class="dossier-card active-dossier p-3 rounded-xl border-2 border-brand-600 text-left transition-all cursor-pointer">
+              <div class="flex items-center gap-1.5 text-brand-600 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Pathologie</span>
+              </div>
+              <span class="block font-bold text-slate-900">Rapport HCL</span>
+              <span class="block text-xs text-slate-500 font-normal">Diagnostics Moléculaires</span>
+            </button>
+
+            <button onclick="selectDossier('mri', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5zM6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75z"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Radiologie</span>
+              </div>
+              <span class="block font-bold text-slate-900">IRM Cérébrale 3.0T</span>
+              <span class="block text-xs text-slate-500 font-normal">Évaluation Post-RT</span>
+            </button>
+
+            <button onclick="selectDossier('iozk', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693l-1.57-.393m15.6 0l1.4 3.5a2.25 2.25 0 01-2.09 3.007H4.89a2.25 2.25 0 01-2.09-3.007l1.4-3.5"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Licence IOZK</span>
+              </div>
+              <span class="block font-bold text-slate-900">AMG §13 Allemand</span>
+              <span class="block text-xs text-slate-500 font-normal">Autorisation IO-VAC</span>
+            </button>
+
+            <button onclick="selectDossier('evidence', this)" class="dossier-card p-3 rounded-xl border-2 border-slate-200 bg-slate-50 text-left transition-all cursor-pointer hover:border-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-500 mb-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+                <span class="text-xs font-bold uppercase tracking-wide">Essais Cliniques</span>
+              </div>
+              <span class="block font-bold text-slate-900">Van Gool et al. 2023</span>
+              <span class="block text-xs text-slate-500 font-normal">Étude Relue par les Pairs</span>
+            </button>
+          </div>
+
+          <!-- PANE 1: NEUROPATHOLOGY & MOLECULAR PROFILE -->
+          <div id="dossier-pathology" class="dossier-content bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">ÉTABLISSEMENT : Hospices Civils de Lyon (HCL) • Neurochirurgie</span>
+              <span class="font-semibold text-slate-700">N° D’ÉCHANTILLON : HCL-HIST-84029</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Profil Histopathologique et Moléculaire Complet</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Diagnostic OMS intégré :</span>
+                <span class="font-bold text-slate-900 text-right">Glioblastome, IDH-wildtype, Grade 4 OMS (SNC)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Caractéristiques histologiques :</span>
+                <span class="font-medium text-slate-800 text-right">Prolifération microvasculaire et nécrose en pseudopalisades</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Statut mutation IDH1 :</span>
+                <span class="font-bold text-slate-900 text-right">Wildtype (R132H négatif en IHC ; confirmé par panel NGS)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Méthylation du promoteur MGMT :</span>
+                <span class="font-bold text-rose-700 text-right">NON MÉTHYLÉ (6,8 % par pyroséquençage ; seuil &ge; 9,0 %)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Statut ATRX et p53 :</span>
+                <span class="font-medium text-slate-800 text-right">Expression nucléaire ATRX conservée ; expression p53 wildtype</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Index de marquage Ki-67 / MIB-1 :</span>
+                <span class="font-bold text-slate-900 text-right">28 % (activité proliférative cellulaire marquée)</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Signification clinique pour les oncologues :</strong> La non-méthylation du promoteur MGMT indique une capacité de réparation de l’ADN intacte via l’O⁶-alkylguanine-ADN-alkyltransférase (AGT), qui inverse rapidement les dommages d’alkylation induits par le témozolomide. Par conséquent, la chimiothérapie d’entretien par agent alkylant seul offre une survie sans progression très limitée, justifiant la considération urgente d’une vaccination immunothérapeutique autologue pour induire des réponses des lymphocytes T cytotoxiques (CTL) spécifiques de la tumeur.
+            </p>
+          </div>
+
+          <!-- PANE 2: POST-RT 3.0T MRI NEURO-IMAGING -->
+          <div id="dossier-mri" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">SERVICE D’IMAGERIE : HCL Lyon • Neuroradiologie</span>
+              <span class="font-semibold text-slate-700">DATE : 12 SEPTEMBRE 2026</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">IRM Cérébrale 3.0T Post-Chimioradiothérapie (Évaluation RANO)</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Protocole IRM :</span>
+                <span class="font-medium text-slate-800 text-right">3D T1-MPRAGE +/- Gadovist (0,1 mmol/kg), Axial T2/FLAIR, DWI/ADC</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Cavité chirurgicale :</span>
+                <span class="font-medium text-slate-800 text-right">Pôle frontal droit ; dimensions 3,8 x 2,4 cm</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Rehaussement de contraste :</span>
+                <span class="font-medium text-slate-800 text-right">Fine marge postopératoire périphérique de 2-3 mm ; pas de récidive nodulaire distincte</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Effet de masse / Ligne médiane :</span>
+                <span class="font-bold text-slate-900 text-right">Résolu ; aucun déplacement de la ligne médiane ; système ventriculaire perméable</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Statut critères RANO :</span>
+                <span class="font-bold text-brand-700 text-right">Maladie stable post-radiothérapie ; fenêtre de référence optimale pour l’immunothérapie</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Impression neuroradiologique :</strong> Minime rehaussement résiduel le long des marges chirurgicales après 60 Gy de radiothérapie, sans foyer satellite à distance. L’absence de maladie macroscopique évidente confirme qu’il s’agit de la fenêtre thérapeutique optimale pour l’aphérèse et la vaccination par cellules dendritiques avant la reprise de la prolifération clonogénique microscopique.
+            </p>
+          </div>
+
+          <!-- PANE 3: GERMAN MANUFACTURING AUTHORIZATION (AMG §13) -->
+          <div id="dossier-iozk" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">ORGANISME DE RÉGLEMENTATION : Bezirksregierung Köln, Allemagne</span>
+              <span class="font-semibold text-brand-700">LICENCE : DE_NW_04_MIA_2020_0017</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Autorisation de Fabrication IOZK Cologne selon l’article 13 AMG</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Établissement autorisé :</span>
+                <span class="font-bold text-slate-900 text-right">Immun-Onkologisches Zentrum Köln (IOZK), Hohenstaufenring 30-32</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Classification juridique :</span>
+                <span class="font-medium text-slate-800 text-right">Médicament de thérapie innovante autologue (ATMP), §13 AMG</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Désignation du produit :</span>
+                <span class="font-bold text-slate-900 text-right">IO-VAC® Autologous Monocyte-Derived Mature Dendritic Cell Vaccine</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Protocole de chargement antigénique :</span>
+                <span class="font-medium text-slate-800 text-right">Protéines de lysat tumoral et microvésicules extracellulaires induites par ICD</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Maturation du signal de danger :</span>
+                <span class="font-medium text-slate-800 text-right">Newcastle Disease Virus (NDV strain MTH-68) + IL-1β, IL-6, TNF-α</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Modalité concomitante :</span>
+                <span class="font-medium text-slate-800 text-right">Modulated Electrohyperthermia (mEHT / 13.56 MHz Oncotherm)</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Assurance qualité et normes des salles blanches :</strong> IO-VAC® est fabriqué dans des salles blanches certifiées GMP conformément à la réglementation européenne sur les ATMP. Les critères de libération des cellules dendritiques exigent une viabilité cellulaire minimale &gt; 80 % et une validation par cytométrie en flux de l’expression élevée des marqueurs de surface costimulateurs CD80, CD83, CD86 et HLA-DR avant administration à la patiente.
+            </p>
+          </div>
+
+          <!-- PANE 4: PEER-REVIEWED SCIENTIFIC TRIAL EVIDENCE -->
+          <div id="dossier-evidence" class="dossier-content hidden bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 text-xs text-slate-500">
+              <span class="font-bold text-slate-700">JOURNAL CITATION: Cancers (Basel) 2023, 15(4), 1194</span>
+              <span class="font-semibold text-brand-700">DOI: 10.3390/cancers15041194</span>
+            </div>
+            
+            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-700">Immunothérapie Multimodale Individualisée pour le Glioblastome IDH1 Wildtype</h4>
+            
+            <div class="bg-white rounded-lg border border-slate-200 p-3 text-xs divide-y divide-slate-100">
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Investigateurs principaux :</span>
+                <span class="font-medium text-slate-800 text-right">Stefaan Van Gool, MD, PhD ; Volker Schirrmacher, PhD et coll.</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Cohorte évaluée :</span>
+                <span class="font-medium text-slate-800 text-right">Adultes atteints de GBM primitif IDH1 wildtype traités par thérapie multimodale IO-VAC</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">SG médiane MGMT non méthylé :</span>
+                <span class="font-bold text-brand-700 text-right">22,0 mois (vs 14,6 mois dans la référence Stupp EORTC/NCIC)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Survie globale à 2 ans (non méthylé) :</span>
+                <span class="font-bold text-brand-700 text-right">39 % de SG à 2 ans (vs ~15 % dans les contrôles historiques par alkylants standards)</span>
+              </div>
+              <div class="py-1.5 flex justify-between gap-3">
+                <span class="text-slate-500">Profil de sécurité et d’effets indésirables :</span>
+                <span class="font-medium text-slate-800 text-right">Zéro toxicité de grade 4/5 liée au traitement ; fièvre transitoire de grade 1/2</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>Résumé de l’essai :</strong> Dans une analyse de cohorte relue par les pairs chez des adultes atteints de glioblastome IDH1 wildtype, l’intégration d’une immunothérapie multimodale individualisée (vaccination par cellules dendritiques IO-VAC avec mort cellulaire immunogène via le virus de la maladie de Newcastle et électrohyperthermie modulée) a produit des extensions statistiquement significatives de la survie globale médiane et des taux de survie à 2 ans, avec une préservation neurocognitive favorable.
+            </p>
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 05: ITEMIZED BUDGET & FINANCIAL GOVERNANCE -->
+        <!-- ======================================================== -->
+        <section id="budget-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">05 / Calendrier des Coûts Cliniques</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Détail de l’Objectif de €90 000</h2>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">100 % détaillé</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 text-xs sm:text-sm">
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Immunothérapie par cellules dendritiques (4-6 cycles, Allemagne)</strong>
+                <span class="text-slate-500 text-xs">Aphérèse, culture antigénique en salle blanche GMP, 4 à 6 cycles de vaccin autologue</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">€35 000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Thérapie par protons (protonthérapie, Allemagne)</strong>
+                <span class="text-slate-500 text-xs">Protonthérapie stéréotaxique limitant les dommages au tissu cérébral sain</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">€25 000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Profilage moléculaire et plan thérapeutique personnalisé</strong>
+                <span class="text-slate-500 text-xs">Séquençage NGS nouvelle génération et panels immunitaires par cytométrie en flux</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">€8 000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Déménagement, hébergement et frais d’accompagnement en Allemagne (12+ mois)</strong>
+                <span class="text-slate-500 text-xs">Transferts cliniques directs et hébergement de la patiente pendant 12 mois en Allemagne</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">€15 000</span>
+            </div>
+            <div class="py-2.5 flex justify-between gap-4">
+              <div>
+                <strong class="text-slate-900 block font-bold text-sm">Frais médicaux imprévus et fonds de réserve</strong>
+                <span class="text-slate-500 text-xs">Médicaments antiépileptiques, corticoïdes et neuro-imagerie de routine</span>
+              </div>
+              <span class="font-bold text-slate-900 text-sm">€7 000</span>
+            </div>
+            <div class="py-3 flex justify-between gap-4 bg-slate-50 px-3 rounded-lg font-bold text-slate-900 text-sm">
+              <span>Objectif total de l’appel</span>
+              <span class="text-brand-700">€90 000</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- MOBILE SLOT: ENGINE MOVED HERE ABOVE MEDICAL UPDATES ON < 1024PX SCREEN -->
+        <div id="mobile-engine-slot" class="lg:hidden mb-8"></div>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 06: VERIFIED MEDICAL UPDATES -->
+        <!-- ======================================================== -->
+        <section id="updates-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">06 / Fil d’Actualité Clinique</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Actualités Médicales (4)</h2>
+            </div>
+            <span class="text-xs text-slate-500 font-medium">Publié par Isabelle Morel</span>
+          </div>
+
+          <div class="space-y-3.5 text-xs sm:text-sm">
+            
+            <div class="border-l-2 border-brand-600 pl-3.5 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="bg-brand-50 text-brand-700 text-xs font-bold px-2 py-0.5 rounded border border-brand-200">Dernier</span>
+                <span class="text-slate-400 text-xs font-semibold">12 sept. 2026</span>
+              </div>
+              <strong class="text-slate-900 block text-sm">Résultats de l’IRM de contrôle 📋</strong>
+              <p class="text-slate-600 leading-relaxed">
+                L’IRM de contrôle après la fin de la radiothérapie montre une tumeur résiduelle stable sans nouvelle lésion. Les médecins aux HCL disent que c’est le meilleur résultat possible avec le traitement standard, mais la récidive reste très probable. La clinique en Allemagne nous a confirmé qu’ils peuvent commencer l’immunothérapie par cellules dendritiques en novembre, si nous obtenons le financement.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">5 sept. 2026</span>
+              <strong class="text-slate-900 block text-sm">Nous avons dépassé les 600 donateurs ! 🙏</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Votre soutien nous bouleverse. Chloé a terminé les cycles d’entretien de témozolomide et se sent forte. Elle lit chacun de vos messages et dit que vous lui donnez la force de continuer. Chaque euro nous rapproche de l’Allemagne.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">27 août 2026</span>
+              <strong class="text-slate-900 block text-sm">Nouvelles de l’hôpital</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Chloé a terminé la radiochimiothérapie concomitante aux HCL. Elle a ressenti de la fatigue et des nausées, mais sa force mentale est incroyable. Son oncologue nous a expliqué qu’avec le MGMT non méthylé, le témozolomide seul ne suffit pas — c’est pourquoi l’immunothérapie est cruciale.
+              </p>
+            </div>
+
+            <div class="border-l-2 border-slate-200 pl-3.5 space-y-1">
+              <span class="text-slate-400 text-xs font-semibold">16 août 2026</span>
+              <strong class="text-slate-900 block text-sm">La campagne est lancée</strong>
+              <p class="text-slate-600 leading-relaxed">
+                Le cœur lourd mais avec détermination, nous lançons cet appel. Après trois mois de traitement intensif dans le système public, les médecins nous ont dit clairement : le traitement standard donne du temps, mais l’immunothérapie peut donner la vie. Malheureusement, elle n’est couverte nulle part en Europe. Nous croyons en la solidarité.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- CHAPTER 07: CLINICAL FREQUENTLY ASKED QUESTIONS -->
+        <!-- ======================================================== -->
+        <section id="faq-chapter" class="section-anchor bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 block">07 / Gouvernance Clinique</span>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Questions Fréquentes</h2>
+            </div>
+            <span class="text-xs text-slate-400 font-medium">10 réponses vérifiées</span>
+          </div>
+
+          <div class="space-y-3">
+            
+            <!-- FAQ 1: Contexte Prise en Charge Sécu -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Pourquoi l’immunothérapie par cellules dendritiques n’est-elle pas prise en charge par la Sécurité Sociale ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  La Sécurité Sociale a intégralement pris en charge la chirurgie de Chloé, sa radiothérapie de 60 Gy et sa chimiothérapie concomitante aux HCL de Lyon au titre de l’ALD 30. Les vaccins à cellules dendritiques sont des ATMP cellulaires personnalisés fabriqués en salles blanches spécialisées. En France, la prise en charge par la HAS exige de vastes essais randomisés multicentriques de phase III, qui prennent 3 à 5 ans. Les autorités sanitaires allemandes autorisent la fabrication individualisée dans le cadre de l’article 13 de la loi allemande sur les médicaments (AMG), faisant des établissements allemands certifiés la seule option accessible pour les patientes nécessitant une intervention immédiate.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 2: Target Threshold & Progressive Release -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Que se passe-t-il si la campagne de Chloé dépasse ou n’a pas encore atteint l’objectif de €90 000 ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Les versements sont effectués par étapes, sans logique de tout-ou-rien. Atteindre €45 000 débloque immédiatement la Phase 2 (aphérèse des monocytes et culture du vaccin personnalisé à l’IOZK de Cologne), permettant à Chloé de commencer le traitement sans attendre la somme totale de €90 000. Les fonds promis au-delà de l’objectif de €90 000 restent cantonnés dans le séquestre clinique, exclusivement dédiés aux IRM de contrôle 3.0T, à la neurorééducation et aux panels sanguins de suivi immunitaire à long terme.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 3: Medical Mechanism & MGMT Resistance -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>En quoi le protocole IO-VAC® de l’IOZK de Cologne diffère-t-il de la chimiothérapie standard du protocole Stupp ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  L’histopathologie de Chloé ayant confirmé un promoteur MGMT non méthylé (6,8 %), ses cellules tumorales réparent activement les dommages à l’ADN causés par la chimiothérapie standard au témozolomide, ce qui en limite fortement l’efficacité. Le protocole IO-VAC® prélève les propres cellules dendritiques de Chloé, les expose aux néoantigènes tumoraux et au virus de la maladie de Newcastle (NDV) en salle blanche GMP, puis les réinjecte pour apprendre à ses lymphocytes T CD8+ cytotoxiques à traquer et détruire activement les cellules souches du glioblastome à travers la barrière hémato-encéphalique.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 4: Escrow Protection & Governance -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Comment les fonds sont-ils protégés, audités et versés ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Les dons sont déposés sur un compte séquestre médical dédié régi par la Garantie HopeRise FR. Les versements sont exécutés directement sur présentation des factures pro forma vérifiées émises selon la nomenclature médicale allemande (GOÄ) par la clinique IOZK de Cologne, garantissant un contrôle financier à 100 %. Les fonds ne sont jamais transférés vers des comptes bancaires personnels.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 5: Monthly Management & 1-Click Cancellation -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Comment puis-je gérer, modifier ou annuler mon soutien mensuel récurrent ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Les donateurs conservent un contrôle total en autonomie. Chaque contribution mensuelle génère automatiquement un reçu e-mail contenant un lien direct de gestion en 1 clic. Vous pouvez ajuster le montant de votre don, suspendre votre promesse ou annuler le prélèvement mensuel à tout moment, sans question et sans attente.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 6: Small Donations & Grassroots Impact -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Puis-je contribuer avec de petits montants comme €5 ou €15 ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Oui. Plus de 45 % de toutes les contributions sont des dons de €5, €10 ou €15 versés par des étudiants, des camarades de promotion et des sympathisants dans toute la France. Le financement participatif collectif est le principal mécanisme qui permet d’atteindre chaque étape clinique.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 7: Why Germany / IOZK -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Pourquoi le traitement est-il administré en Allemagne plutôt que dans d’autres établissements internationaux ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Le Centre d’Immuno-Oncologie de Cologne (IOZK) est l’un des principaux établissements européens de thérapie cellulaire autologue, opérant sous autorisation formelle du gouvernement du district de Cologne selon l’article 13 de l’AMG allemand. De plus, les données cliniques relues par les pairs publiées par Van Gool et coll. dans Cancers (2023) démontrent une prolongation significative de la survie sans progression chez les patientes atteintes de glioblastome IDH-wildtype traitées par cette combinaison multimodale spécifique.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 8: Clinical Updates & Transparency -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Comment les donateurs seront-ils informés des progrès médicaux de Chloé ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Chloé et sa famille publient des rapports d’avancement clinique vérifiés sur cette page toutes les 2 à 3 semaines. Ces actualités détaillent chaque étape du déplacement, les numérations sanguines d’aphérèse, les panels de suivi immunitaire post-vaccinal et les résultats officiels des IRM cérébrales 3.0T de contrôle revus par les neurologues des HCL.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 9: Anonymity & Payment Privacy -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Mon paiement est-il sécurisé et puis-je donner anonymement ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Toutes les transactions sont cryptées via des protocoles SSL 256 bits et traitées par des partenaires de paiement réglementés de premier rang. Si vous cochez « Anonyme » lors du paiement, votre nom et le montant de votre don sont définitivement masqués du registre public des sympathisants.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 10: Institutional Pledges & Bank Wires -->
+            <div class="accordion-item border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 transition-colors">
+              <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between text-left font-bold text-sm text-slate-900 hover:text-brand-700 transition-colors cursor-pointer">
+                <span>Les associations étudiantes, fondations ou entreprises peuvent-elles organiser des virements bancaires directs ?</span>
+                <svg class="accordion-chevron w-4 h-4 text-slate-400 transform transition-transform duration-300 flex-shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+              </button>
+              <div class="accordion-grid">
+                <div class="accordion-content-inner px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 pt-3">
+                  Oui. Les associations étudiantes universitaires, les collectifs du personnel hospitalier et les financeurs organisationnels peuvent organiser des virements directs vers le compte séquestre clinique de Chloé. Des reçus de facture formels et des certificats de vérification sont émis pour tous les virements d’entreprises ou d’organisations.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- RIGHT COLUMN: INTERACTIVE DONATION CONSOLE (5 COLS) -->
+      <!-- ============================================================ -->
+      <aside aria-label="Donation Console" class="hidden lg:block lg:col-span-5 min-w-0" id="desktop-engine-slot">
+        
+        <div id="unified-donation-engine" class="sticky top-20 bg-white rounded-2xl border-2 border-slate-200/90 p-5 sm:p-6 shadow-card-elevated space-y-4">
+          
+          <!-- Financial Goal Progress Tracker -->
+          <div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" data-live="raised">€35 720</span>
+                <span class="text-xs text-slate-500 font-medium">de <span data-live="goal">€90 000</span> d’objectif</span>
+              </div>
+              <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+                <span data-live="pct">40 %</span> financés
+              </span>
+            </div>
+
+            <!-- Precision Progress Bar -->
+            <div class="progress-track mb-2">
+              <div class="progress-fill" style="width: 40%">
+                <div class="progress-sheen"></div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span><span data-live="donors">1 323</span> dons vérifiés</span>
+              <span class="font-bold text-slate-700">26 jours restants</span>
+            </div>
+          </div>
+
+          <!-- Cadence Switch (Once vs Monthly) -->
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" onclick="setCadence('once')" id="cadence-once" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+              Donner une fois
+            </button>
+            <button type="button" onclick="setCadence('monthly')" id="cadence-monthly" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Donner chaque mois</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">Impact 2x</span>
+            </button>
+          </div>
+
+          <!-- Preset Amount Chips -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-slate-800">Sélectionnez le montant du don</label>
+              <span id="tier-badge-label" class="text-xs font-bold text-brand-700">Don le plus courant</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="chooseAmount(10, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €10
+              </button>
+              <button type="button" onclick="chooseAmount(15, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €15
+              </button>
+              <button type="button" onclick="chooseAmount(25, this)" class="amount-chip active py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €25
+              </button>
+              <button type="button" onclick="chooseAmount(50, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €50
+              </button>
+              <button type="button" onclick="chooseAmount(100, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €100
+              </button>
+              <button type="button" onclick="chooseAmount(250, this)" class="amount-chip py-2.5 rounded-xl text-sm font-bold cursor-pointer">
+                €250
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Amount Input -->
+          <div class="relative">
+            <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">€</span>
+            <input type="number" id="custom-amount-box" min="1" step="1" placeholder="Ou saisissez un montant personnalisé" oninput="onCustomAmountInput(this.value)" class="w-full pl-8 pr-4 py-2.5 text-base sm:text-sm border-2 border-slate-200 rounded-xl focus:border-brand-600 focus:outline-none font-semibold text-slate-900 transition-colors">
+          </div>
+
+          <!-- Dynamic Medical Impact Statement -->
+          <div id="live-impact-container" class="p-3 rounded-xl bg-brand-50 border border-brand-200/80 flex items-start gap-2.5 impact-animate">
+            <div class="w-5 h-5 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            </div>
+            <p id="live-impact-text" class="text-xs text-brand-900 leading-snug">
+              <strong>€25 financent les fournitures vitales de laboratoire</strong> pour cultiver les cellules dendritiques de Chloé en Allemagne.
+            </p>
+          </div>
+
+          <!-- Primary Modal Checkout Actions -->
+          <div class="space-y-2 pt-1 border-t border-slate-100">
+            <button id="main-submit-cta" onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <span id="main-cta-label">Faites un don de seulement 0,83 €/jour</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </button>
+
+            <button onclick="shareAppeal()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-[0.98] rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093m-2.186 0a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093m0 0l9.566 4.783m-9.566-6.969l9.566-4.783"/></svg>
+              <span>Partager</span>
+            </button>
+          </div>
+
+          <!-- Reassurance Details -->
+          <div class="text-xs text-slate-400 flex items-center justify-center gap-1.5 pt-0.5">
+            <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Garantie HopeRise • Séquestre Hospitalier Direct</span>
+          </div>
+
+          <!-- Recent Donations Section -->
+          <div class="pt-4 border-t border-slate-100 space-y-3.5">
+            
+            <!-- Trending Indicator -->
+            <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-900 border border-purple-100/80 text-xs font-bold">
+              <div class="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+              </div>
+              <span class="tracking-tight">1 323 dons récents</span>
+            </div>
+
+            <!-- List of Donations (Chronological — newest first) -->
+            <div class="space-y-3">
+              <!-- Donor 1: Most Recent -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  C
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Camille T.</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€20</strong> · il y a 2 min</div>
+                </div>
+              </div>
+
+              <!-- Donor 2 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  ?
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Anonyme</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€25</strong> · il y a 8 min</div>
+                </div>
+              </div>
+
+              <!-- Donor 3 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  A
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Antoine R.</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€15</strong> · il y a 14 min</div>
+                </div>
+              </div>
+
+              <!-- Donor 4 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200">
+                  L
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-xs truncate">Léa V.</div>
+                  <div class="text-slate-500 text-[11px]"><strong class="text-slate-800 font-bold">€40</strong> · il y a 22 min</div>
+                </div>
+              </div>
+
+              <!-- Donor 5: Top Donor (pinned with badge) -->
+              <div class="flex items-center gap-3 p-2 rounded-xl bg-amber-50/70 border border-amber-200/80">
+                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center flex-shrink-0 text-xs border border-amber-300">
+                  A
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="font-bold text-slate-900 text-xs truncate">Association Étudiants Médecine Lyon 1</span>
+                    <span class="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded border border-amber-300">
+                      ★ Don principal
+                    </span>
+                  </div>
+                  <div class="text-slate-600 text-[11px]"><strong class="text-slate-900 font-bold">€910</strong> · il y a 5 jours</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- "and x more..." (not clickable) -->
+            <div class="pt-1 text-center">
+              <span class="inline-block w-full py-2.5 rounded-xl border border-slate-200/90 bg-slate-50 text-xs font-semibold text-slate-500 select-none cursor-default">
+                et 1 318 autres...
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 4. ENHANCED HIGH-TRUST FOOTER -->
+  <!-- ============================================================== -->
+  <footer class="bg-navy-950 text-slate-300 py-12 md:py-16 border-t border-slate-800 text-xs mt-12 pb-28 lg:pb-16">
+    <div class="max-w-6xl mx-auto px-4 space-y-10">
+      
+      <!-- Top Grid: Brand, Quick Links, Security, Contact -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        
+        <!-- Brand & Mission -->
+        <div class="space-y-4 sm:col-span-2 lg:col-span-1">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center text-white shadow-sm">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-extrabold text-white text-base leading-none tracking-tight">HopeRise<span class="text-brand-500 text-xs ml-1 uppercase">FR</span></span>
+              <span class="text-xs text-slate-400 font-medium">Appels Médicaux Vérifiés</span>
+            </div>
+          </div>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            HopeRise FR est une plateforme vérifiée d’appels médicaux qui met en relation les patients avec des interventions oncologiques spécialisées à l’étranger. Chaque appel est vérifié de manière indépendante par recoupement avec les dossiers cliniques de la Sécurité Sociale et européens avant publication.
+          </p>
+          <div class="flex items-center gap-3 pt-1">
+            <button onclick="shareAppeal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer" title="Share">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Campaign Links -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Campagne</h4>
+          <ul class="space-y-2.5 text-xs text-slate-400">
+            <li><a href="#story-chapter" class="hover:text-white transition-colors">L’histoire de Chloé</a></li>
+            <li><a href="#roadmap-chapter" class="hover:text-white transition-colors">Protocole de Traitement</a></li>
+            <li><a href="#evidence-chapter" class="hover:text-white transition-colors">Dossier de Vérification Clinique</a></li>
+            <li><a href="#budget-chapter" class="hover:text-white transition-colors">Détail des Coûts</a></li>
+            <li><a href="#updates-chapter" class="hover:text-white transition-colors">Actualités Médicales</a></li>
+            <li><a href="#faq-chapter" class="hover:text-white transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- Trust & Security -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Confiance et Sécurité</h4>
+          <ul class="space-y-2.5 text-xs text-slate-400">
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Paiements cryptés SSL 256 bits</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Séquestre clinique selon la nomenclature GOÄ allemande</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Supervision d’un comité d’oncologie indépendant</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>RGPD & Loi Informatique et Libertés</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="w-3.5 h-3.5 text-brand-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Annulation de l’abonnement en 1 clic</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Legal Links Row -->
+      <div class="border-t border-slate-800/80 pt-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <button onclick="openLegalModal('terms')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Conditions d’Utilisation</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Règles et conditions de la plateforme</span>
+          </button>
+          <button onclick="openLegalModal('privacy')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Politique de Confidentialité</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Protection des données & RGPD</span>
+          </button>
+          <button onclick="openLegalModal('escrow')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Garantie Séquestre</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Comment les fonds sont protégés</span>
+          </button>
+          <button onclick="openLegalModal('refund')" class="group bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl px-4 py-3 text-left transition-all cursor-pointer">
+            <span class="block text-xs font-bold text-white mb-0.5">Politique de Remboursement</span>
+            <span class="block text-xs text-slate-500 group-hover:text-slate-400 transition-colors">Annulations et remboursements</span>
+          </button>
+        </div>
+
+        <!-- Copyright -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 pt-2">
+          <span>© 2026 HopeRise FR. Tous droits réservés. Plateforme Vérifiée d’Appels Médicaux.</span>
+          <span class="text-slate-600">Registre Hospitalier #GBM-FR-84029</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- 5. CHECKOUT MODAL (Reverted to Spacious max-w-lg, Crisp Concise Text) -->
+  <!-- ============================================================== -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 hidden" aria-modal="true" role="dialog">
+    <!-- Backdrop Blur -->
+    <div onclick="closeCheckoutModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
+
+    <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-7 border border-slate-100 modal-animate my-6 max-h-[92vh] overflow-y-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-sm">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Finalisez Votre Don</h3>
+              <p class="text-xs text-slate-500">Séquestre Clinique Allemande • SSL 256 bits</p>
+            </div>
+          </div>
+          <button onclick="closeCheckoutModal()" aria-label="Fermer la fenêtre" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Frequency Toggle & Rationale -->
+        <div class="space-y-2 mb-4">
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+            <button type="button" id="modal-cadence-once" onclick="setModalCadence('once')" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all text-center cursor-pointer">
+              Donner une fois
+            </button>
+            <button type="button" id="modal-cadence-monthly" onclick="setModalCadence('monthly')" class="py-2.5 rounded-lg bg-white text-brand-700 shadow-sm transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>Donner chaque mois</span>
+              <span class="bg-brand-50 text-brand-700 text-xs px-1.5 py-0.5 rounded border border-brand-200 font-bold">Impact 2x</span>
+            </button>
+          </div>
+
+          <!-- Subscription Rationale (Concise) -->
+          <div id="modal-subscription-rationale" class="p-3 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs text-slate-700 flex items-start gap-2">
+            <svg class="w-4 h-4 text-brand-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+            <div>
+              <strong class="text-brand-900">Pourquoi mensuel :</strong> Les dons mensuels financent des publicités de sensibilisation continues pour que davantage de personnes découvrent le cas de Chloé et la gardent visible jusqu’à ce que son objectif soit atteint. Annulez à tout moment en 1 clic.
+            </div>
+          </div>
+
+          <!-- One-off Rationale (Concise) -->
+          <div id="modal-oneoff-rationale" class="hidden p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between gap-2">
+            <span>Les abonnements nous permettent de continuer à diffuser des publicités pour que davantage de personnes découvrent l’appel de Chloé.</span>
+            <button type="button" onclick="setModalCadence('monthly')" class="font-bold text-brand-700 hover:text-brand-800 underline whitespace-nowrap cursor-pointer text-xs">
+              Passer au Mensuel
+            </button>
+          </div>
+        </div>
+
+        <!-- Amount Chips Row -->
+        <div class="space-y-1.5 mb-3.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-700">Sélectionnez le montant du don :</label>
+            <span id="modal-per-day-badge" class="text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">seulement 0,83 €/jour</span>
+          </div>
+          <div class="grid grid-cols-6 gap-1.5">
+            <button type="button" onclick="setModalAmount(10)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€10</button>
+            <button type="button" onclick="setModalAmount(15)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€15</button>
+            <button type="button" onclick="setModalAmount(25)" class="modal-amt-chip active py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€25</button>
+            <button type="button" onclick="setModalAmount(50)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€50</button>
+            <button type="button" onclick="setModalAmount(100)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€100</button>
+            <button type="button" onclick="setModalAmount(250)" class="modal-amt-chip py-2.5 text-xs sm:text-sm font-bold rounded-xl cursor-pointer">€250</button>
+          </div>
+        </div>
+
+        <!-- Donor Email & Anonymous Toggle -->
+        <div class="space-y-1.5 mb-3.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-slate-700">E-mail du Donateur <span class="text-slate-400 font-normal">(pour le reçu fiscal et l’annulation en 1 clic)</span></label>
+            <label class="flex items-center gap-1.5 cursor-pointer text-xs text-slate-500 hover:text-slate-700">
+              <input type="checkbox" id="modal-anon-check" class="w-3.5 h-3.5 rounded text-brand-600 border-slate-300">
+              <span>Anonyme</span>
+            </label>
+          </div>
+          <input type="email" id="modal-donor-email" placeholder="vous@exemple.fr" class="w-full px-3.5 py-2.5 text-base sm:text-sm border-2 border-slate-200 rounded-xl focus:border-brand-600 focus:outline-none text-slate-900 transition-colors">
+        </div>
+
+        <!-- Voluntary Platform Tip Section (Concise) -->
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-3.5 mb-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="block text-xs font-bold text-slate-800">Pourboire Plateforme (Facultatif)</span>
+              <span class="text-[11px] text-slate-500">Aide à garder HopeRise 100 % gratuit pour les patients</span>
+            </div>
+            <span id="modal-tip-display" class="text-xs font-bold text-brand-700 bg-white px-2 py-0.5 rounded border border-slate-200">
+              +3,75 € (15 %)
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" onclick="setModalTip(15)" id="modal-tip-btn-15" class="modal-tip-btn active py-2 text-xs rounded-xl cursor-pointer">15%</button>
+            <button type="button" onclick="setModalTip(10)" id="modal-tip-btn-10" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">10%</button>
+            <button type="button" onclick="setModalTip(5)" id="modal-tip-btn-5" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">5%</button>
+            <button type="button" onclick="setModalTip(0)" id="modal-tip-btn-0" class="modal-tip-btn py-2 text-xs rounded-xl cursor-pointer">0%</button>
+          </div>
+
+          <p class="text-[11px] text-slate-500 leading-relaxed pt-1.5 border-t border-slate-200/60">
+            <strong class="text-slate-700">Pourquoi les pourboires :</strong> Les pourboires financent les serveurs et le séquestre pour que les patients paient 0 % de frais.
+          </p>
+        </div>
+
+        <!-- Checkout Actions & Reassurance Footer -->
+        <div class="space-y-2">
+          <button id="modal-submit-cta" onclick="executeModalPledge()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span id="modal-cta-label">Faites un don de seulement 0,96 €/jour</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </button>
+
+          <div class="pt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 text-center">
+            <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>SSL 256 bits • 100 % Garantie Séquestre HopeRise</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 6. LEGAL POLICY MODAL (TERMS / PRIVACY / ESCROW) -->
+  <!-- ============================================================== -->
+  <div id="legal-modal" class="fixed inset-0 z-50 hidden" aria-modal="true" role="dialog">
+    <div onclick="closeLegalModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
+    <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 sm:p-7 border border-slate-200 modal-animate my-6 max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <h3 id="legal-modal-title" class="font-bold text-slate-900 text-lg">Conditions d’Utilisation</h3>
+          <button onclick="closeLegalModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="legal-modal-body" class="overflow-y-auto flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed space-y-3 pr-2">
+          <!-- Content dynamically set -->
+        </div>
+        <div class="pt-3 border-t border-slate-100 mt-4 flex justify-end">
+          <button onclick="closeLegalModal()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all cursor-pointer">
+            J’ai Compris
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MOBILE SYNCHRONIZED BOTTOM DOCK (Sticky & Seamless) -->
+  <!-- ============================================================== -->
+  <div id="mobile-dock" class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 p-3 lg:hidden flex items-center justify-between gap-3 shadow-bottom-dock safe-dock-pb">
+    <div class="min-w-0">
+      <div class="text-sm font-bold text-slate-900 truncate">€35 720 <span class="text-xs font-medium text-slate-500">récoltés sur €90 000</span></div>
+      <div class="w-24 h-1.5 bg-slate-200 rounded-full mt-1 overflow-hidden">
+        <div class="h-full bg-brand-600 rounded-full" style="width:40%"></div>
+      </div>
+    </div>
+    <button onclick="scrollToDonationEngine()" class="bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
+      <span>Faire un don</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+    </button>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 7. HIGH-PERFORMANCE CONTROLLER SCRIPT -->
+  <!-- ============================================================== -->
+  <script>
+    // System Environment & Image Resolver
+    const isServedFromCampaign = window.location.pathname.startsWith('/chloe') || window.location.port === '3000';
+    const primaryImgPrefix = isServedFromCampaign ? '/images/campaigns/glioblastome-chloe/' : 'campaign/public/images/campaigns/glioblastome-chloe/';
+    const fallbackImgPrefix = isServedFromCampaign ? 'campaign/public/images/campaigns/glioblastome-chloe/' : '/images/campaigns/glioblastome-chloe/';
+
+    // System Data Model
+    const app = {
+      amount: 25,
+      cadence: 'monthly',
+      tip: 15,
+      photoIndex: 0,
+      photos: [
+        {
+          src: primaryImgPrefix + '1.jpg',
+          fallback: fallbackImgPrefix + '1.jpg'
+        },
+        {
+          src: primaryImgPrefix + '2.jpg',
+          fallback: fallbackImgPrefix + '2.jpg'
+        },
+        {
+          src: primaryImgPrefix + '3.jpg',
+          fallback: fallbackImgPrefix + '3.jpg'
+        },
+        {
+          src: primaryImgPrefix + '4.jpg',
+          fallback: fallbackImgPrefix + '4.jpg'
+        }
+      ],
+      impacts: {
+        10: '€10 financent les fournitures stériles de laboratoire pour les perfusions pendant les cycles vaccinaux ambulatoires.',
+        15: '€15 couvrent le transport clinique spécialisé de la patiente vers et depuis le centre médical.',
+        25: '€25 financent les fournitures vitales de laboratoire pour cultiver les cellules dendritiques de Chloé en Allemagne.',
+        50: '€50 financent 1 semaine de panels sanguins de suivi immunitaire post-vaccinal.',
+        100: '€100 financent la synthèse du séquençage génique des néoantigènes ciblés à l’IOZK de Cologne.',
+        250: '€250 financent 1 journée clinique complète de culture et de cryoconservation du vaccin dendritique.'
+      }
+    };
+
+    // DOM Ready: Initialize Layout, Progress Animations & Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      syncEnginePosition();
+      window.addEventListener('resize', syncEnginePosition);
+      calculateTotal();
+      renderImpact();
+
+      const emailField = document.getElementById('modal-donor-email');
+      if (emailField) {
+        emailField.addEventListener('input', () => {
+          emailField.classList.remove('border-red-400', 'bg-red-50');
+          const err = document.getElementById('email-error-msg');
+          if (err) err.remove();
+        });
+      }
+
+      // Check initial gallery image state (if already cached or loading)
+      const mainImg = document.getElementById('main-gallery-image');
+      if (mainImg) {
+        if (mainImg.complete && mainImg.naturalWidth > 0) {
+          mainImg.classList.remove('opacity-0');
+          document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');
+        } else {
+          mainImg.addEventListener('load', () => {
+            mainImg.classList.remove('opacity-0');
+            document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');
+          });
+        }
+      }
+
+      // Check initial thumbnail images state
+      document.querySelectorAll('.gallery-thumb img').forEach(thumbImg => {
+        if (thumbImg.complete && thumbImg.naturalWidth > 0) {
+          thumbImg.classList.remove('opacity-0');
+          thumbImg.parentElement?.classList.remove('skeleton-shimmer');
+        } else {
+          thumbImg.addEventListener('load', () => {
+            thumbImg.classList.remove('opacity-0');
+            thumbImg.parentElement?.classList.remove('skeleton-shimmer');
+          });
+        }
+      });
+
+      // Keyboard Esc handler for modals
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeCheckoutModal();
+          closeLegalModal();
+        }
+      });
+    });
+
+    // Smooth scroll down to main donation engine on mobile
+    function scrollToDonationEngine() {
+      const engine = document.getElementById('unified-donation-engine');
+      if (engine) {
+        const y = engine.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+
+    // Responsive engine placement: on mobile, moves above medical updates; on desktop, moves to sticky right rail
+    function syncEnginePosition() {
+      const engine = document.getElementById('unified-donation-engine');
+      const desktopSlot = document.getElementById('desktop-engine-slot');
+      const mobileSlot = document.getElementById('mobile-engine-slot');
+
+      if (window.innerWidth < 1024) {
+        if (mobileSlot && engine && engine.parentElement !== mobileSlot) {
+          mobileSlot.appendChild(engine);
+        }
+      } else {
+        if (desktopSlot && engine && engine.parentElement !== desktopSlot) {
+          desktopSlot.appendChild(engine);
+        }
+      }
+    }
+
+    // 1. Photo Switcher (Prominent Arrows, Visual Thumbnails, Zero Broken Icons)
+    function switchPhoto(idx) {
+      app.photoIndex = idx;
+      const img = document.getElementById('main-gallery-image');
+      const pill = document.getElementById('main-gallery-pill');
+      const skeleton = document.getElementById('main-gallery-skeleton');
+      const item = app.photos[idx];
+
+      if (skeleton) skeleton.classList.remove('opacity-0');
+      img.classList.add('opacity-0');
+
+      const temp = new Image();
+      temp.src = item.src;
+      temp.onload = () => {
+        img.src = item.src;
+        const blur = document.getElementById('main-gallery-blur');
+        if (blur) blur.src = item.src;
+        img.classList.remove('opacity-0');
+        if (skeleton) skeleton.classList.add('opacity-0');
+      };
+      temp.onerror = () => {
+        img.src = item.fallback;
+        const blur2 = document.getElementById('main-gallery-blur');
+        if (blur2) blur2.src = item.fallback;
+        img.classList.remove('opacity-0');
+        if (skeleton) skeleton.classList.add('opacity-0');
+      };
+      pill.textContent = `${idx + 1} / ${app.photos.length}`;
+
+      document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+        if (i === idx) {
+          thumb.classList.add('active-thumb', 'border-brand-600', 'opacity-100');
+          thumb.classList.remove('border-transparent', 'opacity-65');
+        } else {
+          thumb.classList.remove('active-thumb', 'border-brand-600', 'opacity-100');
+          thumb.classList.add('border-transparent', 'opacity-65');
+        }
+      });
+    }
+
+    function cyclePhoto(dir) {
+      let next = app.photoIndex + dir;
+      if (next < 0) next = app.photos.length - 1;
+      if (next >= app.photos.length) next = 0;
+      switchPhoto(next);
+    }
+
+    // 2. Donation Amount Selection on Page
+    function chooseAmount(amt, btn) {
+      app.amount = amt;
+      const customBox = document.getElementById('custom-amount-box');
+      if (customBox) customBox.value = '';
+
+      // Sync active state on main page chips
+      document.querySelectorAll('.amount-chip').forEach(c => {
+        const val = parseInt(c.textContent.replace('€', ''), 10);
+        if (val === amt) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+
+      // Sync active state on modal chips
+      document.querySelectorAll('.modal-amt-chip').forEach(c => {
+        const val = parseInt(c.textContent.replace('€', ''), 10);
+        if (val === amt) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+
+      const label = document.getElementById('tier-badge-label');
+      if (amt === 5) label.textContent = 'Don de soutien';
+      else if (amt === 25) label.textContent = 'Don le plus courant';
+      else if (amt >= 100) label.textContent = 'Niveau sponsor clinique';
+      else label.textContent = 'Sélectionné';
+
+      renderImpact();
+      calculateTotal();
+    }
+
+    function onCustomAmountInput(val) {
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0) {
+        app.amount = num;
+        document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.modal-amt-chip').forEach(c => c.classList.remove('active'));
+        document.getElementById('tier-badge-label').textContent = 'Montant personnalisé';
+        renderImpact();
+        calculateTotal();
+      }
+    }
+
+    function setCadence(type) {
+      app.cadence = type;
+      const onceBtn = document.getElementById('cadence-once');
+      const monthlyBtn = document.getElementById('cadence-monthly');
+
+      if (type === 'monthly') {
+        monthlyBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.remove('text-slate-600');
+        onceBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.add('text-slate-600');
+      } else {
+        onceBtn.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+        onceBtn.classList.remove('text-slate-600');
+        monthlyBtn.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+        monthlyBtn.classList.add('text-slate-600');
+      }
+
+      renderImpact();
+      calculateTotal();
+    }
+
+    function renderImpact() {
+      const container = document.getElementById('live-impact-container');
+      const el = document.getElementById('live-impact-text');
+      const amt = app.amount;
+      let text = app.impacts[amt] || `€${amt} apportent un financement direct essentiel aux soins médicaux européens de Chloé.`;
+
+      if (app.cadence === 'monthly') {
+        text += ' Les dons mensuels garantissent la continuité sur l’ensemble des 6 cycles vaccinaux.';
+      }
+
+      el.innerHTML = text;
+
+      if (container) {
+        container.classList.remove('impact-animate');
+        void container.offsetWidth;
+        container.classList.add('impact-animate');
+      }
+    }
+
+    function calculateTotal() {
+      const ctaLabel = document.getElementById('main-cta-label');
+      if (ctaLabel) {
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          ctaLabel.textContent = `Faites un don de seulement ${daily} €/jour`;
+        } else {
+          ctaLabel.textContent = `Faire un don de ${app.amount} €`;
+        }
+      }
+      const tierBadge = document.getElementById('tier-badge-label');
+      if (tierBadge) {
+        if (app.cadence === 'monthly') {
+          const daily = (app.amount / 30).toFixed(2);
+          tierBadge.textContent = `seulement ${daily} €/jour`;
+        } else {
+          tierBadge.textContent = app.amount === 25 ? 'Don le plus courant' : `${app.amount} € en une fois`;
+        }
+      }
+    }
+
+    // 3. Checkout Modal Controller (Pre-filled from page selection!)
+    function openCheckoutModal(mode = 'standard') {
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      syncModalWithAppState();
+      calculateModalTotal();
+
+      if (mode === 'express') {
+        executeModalPledge('express');
+      }
+    }
+
+    function closeCheckoutModal() {
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function syncModalWithAppState() {
+      const amt = app.amount;
+      const cadenceStr = app.cadence === 'monthly' ? '/ mois' : 'en une fois';
+      const summaryAmt = document.getElementById('modal-summary-amount');
+      if (summaryAmt) summaryAmt.textContent = `€${amt} ${cadenceStr}`;
+      const summaryBadge = document.getElementById('modal-summary-badge');
+      if (summaryBadge) summaryBadge.textContent = app.cadence === 'monthly' ? 'Don Mensuel' : 'Don Unique';
+
+      const perDayBadge = document.getElementById('modal-per-day-badge');
+      if (perDayBadge) {
+        if (app.cadence === 'monthly') {
+          const dailyAmt = (app.amount / 30).toFixed(2);
+          perDayBadge.textContent = `seulement ${dailyAmt} €/jour`;
+          perDayBadge.classList.remove('hidden');
+        } else {
+          perDayBadge.classList.add('hidden');
+        }
+      }
+
+      const impactDesc = document.getElementById('modal-impact-desc');
+      if (impactDesc) impactDesc.textContent = app.impacts[amt] || `€${amt} financent directement la thérapie par cellules dendritiques de Chloé en Allemagne.`;
+
+      // Sync cadence buttons in modal
+      const modalCadenceMonthly = document.getElementById('modal-cadence-monthly');
+      const modalCadenceOnce = document.getElementById('modal-cadence-once');
+      const subRationale = document.getElementById('modal-subscription-rationale');
+      const oneoffRationale = document.getElementById('modal-oneoff-rationale');
+
+      if (app.cadence === 'monthly') {
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.remove('hidden');
+        if (oneoffRationale) oneoffRationale.classList.add('hidden');
+      } else {
+        if (modalCadenceOnce) {
+          modalCadenceOnce.classList.add('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceOnce.classList.remove('text-slate-600', 'hover:text-slate-900');
+        }
+        if (modalCadenceMonthly) {
+          modalCadenceMonthly.classList.remove('bg-white', 'text-brand-700', 'shadow-sm', 'font-bold');
+          modalCadenceMonthly.classList.add('text-slate-600', 'hover:text-slate-900');
+        }
+        if (subRationale) subRationale.classList.add('hidden');
+        if (oneoffRationale) oneoffRationale.classList.remove('hidden');
+      }
+
+      // Highlight matching chip inside modal if exact match
+      document.querySelectorAll('.modal-amt-chip').forEach(chip => {
+        const chipVal = parseInt(chip.textContent.replace('€', ''), 10);
+        if (chipVal === amt) {
+          chip.classList.add('active');
+        } else {
+          chip.classList.remove('active');
+        }
+      });
+
+      // Highlight active tip button
+      if (app.tip === undefined) app.tip = 15;
+      document.querySelectorAll('.modal-tip-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const activeTipBtn = document.getElementById(`modal-tip-btn-${app.tip}`);
+      if (activeTipBtn) {
+        activeTipBtn.classList.add('active');
+      }
+    }
+
+    function setModalCadence(cadence) {
+      setCadence(cadence);
+      syncModalWithAppState();
+      calculateModalTotal();
+    }
+
+    function setModalAmount(amt) {
+      app.amount = amt;
+      chooseAmount(amt);
+      syncModalWithAppState();
+      calculateModalTotal();
+    }
+
+    function setModalTip(percent) {
+      app.tip = percent;
+      document.querySelectorAll('.modal-tip-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`modal-tip-btn-${percent}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+      calculateModalTotal();
+    }
+
+    function calculateModalTotal() {
+      if (app.tip === undefined) app.tip = 15;
+      const tipPercent = app.tip;
+      const tipAmt = (app.amount * (tipPercent / 100));
+      const total = app.amount + tipAmt;
+
+      const tipDisplay = document.getElementById('modal-tip-display');
+      if (tipDisplay) {
+        if (tipPercent === 0) {
+          tipDisplay.textContent = '0,00 € (0 %)';
+        } else {
+          tipDisplay.textContent = `+${tipAmt.toFixed(2)} € (${tipPercent} %)`;
+        }
+      }
+
+      const ctaLabel = document.getElementById('modal-cta-label');
+      if (ctaLabel) {
+        if (app.cadence === 'monthly') {
+          const daily = (total / 30).toFixed(2);
+          ctaLabel.textContent = `Faites un don de seulement ${daily} €/jour`;
+        } else {
+          ctaLabel.textContent = `Faire un don de ${total.toFixed(2)} €`;
+        }
+      }
+    }
+
+    function executeModalPledge(method = 'card') {
+      const emailInput = document.getElementById('modal-donor-email');
+      const email = emailInput.value;
+      const isAnon = document.getElementById('modal-anon-check').checked;
+
+      emailInput.classList.remove('border-red-400', 'bg-red-50');
+      const existingErr = document.getElementById('email-error-msg');
+      if (existingErr) existingErr.remove();
+
+      if (app.cadence === 'monthly' && (!email || !email.includes('@'))) {
+        emailInput.classList.add('border-red-400', 'bg-red-50');
+        const errMsg = document.createElement('p');
+        errMsg.id = 'email-error-msg';
+        errMsg.className = 'text-xs text-red-600 font-medium mt-1';
+        errMsg.textContent = 'L’e-mail est requis pour les abonnements — nous en avons besoin pour envoyer les reçus et vous permettre d’annuler à tout moment en 1 clic.';
+        emailInput.parentNode.insertBefore(errMsg, emailInput.nextSibling);
+        emailInput.focus();
+        return;
+      }
+
+      const submitBtn = document.getElementById('modal-submit-cta');
+      submitBtn.classList.add('opacity-75');
+      document.getElementById('modal-cta-label').textContent = 'Connexion au paiement sécurisé…';
+
+      const tipAmount = Math.round(app.amount * (app.tip / 100) * 100) / 100;
+
+      if (typeof Tracking !== 'undefined') {
+        Tracking.trackInitiateCheckout({
+          value: app.amount + tipAmount,
+          currency: 'EUR',
+          contentName: 'glioblastome-chloe'
+        });
+        if (email) Tracking.setUserEmail(email);
+      }
+
+      const trackingData = (typeof Tracking !== 'undefined') ? Tracking.getTrackingData() : {};
+      const clientLocation = (typeof Tracking !== 'undefined') ? Tracking.getClientLocation() : null;
+
+      const purchaseEventId = (typeof Tracking !== 'undefined') ? Tracking.generateEventId('Purchase') : ('Purchase_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11));
+      try {
+        sessionStorage.setItem('_purchase_event_id', purchaseEventId);
+        sessionStorage.setItem('_purchase_amount', String(app.amount));
+        sessionStorage.setItem('_purchase_currency', 'EUR');
+      } catch (e) {}
+
+      fetch('/api/init-donation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: app.amount,
+          tip: tipAmount,
+          campaign: 'glioblastome-chloe',
+          isAnonymous: isAnon,
+          donorEmail: email || null,
+          currency: 'EUR',
+          clientLocation: clientLocation,
+          tracking: {
+            eventId: purchaseEventId,
+            cadence: app.cadence,
+            variant: window.__AB_VARIANT || 'control',
+            sourceUrl: window.location.href,
+            userAgent: navigator.userAgent,
+            fbp: trackingData.fbp || null,
+            fbc: trackingData.fbc || null,
+            fbclid: trackingData.fbclid || null,
+            ttp: trackingData.ttp || null,
+            ttclid: trackingData.ttclid || null,
+            utm_source: trackingData.utm_source || null,
+            utm_medium: trackingData.utm_medium || null,
+            utm_campaign: trackingData.utm_campaign || null
+          }
+        })
+      })
+      .then(res => res.ok ? res.json() : Promise.reject(new Error('Server error')))
+      .then(data => {
+        if (data.redirectUrl) window.location.replace(data.redirectUrl);
+      })
+      .catch(() => {
+        submitBtn.classList.remove('opacity-75');
+        calculateModalTotal();
+        alert('Impossible de se connecter au paiement sécurisé. Veuillez réessayer.');
+      });
+    }
+
+    // 4. Dossier Grid Selector (Zero sidescroll, doctor-level rigor)
+    function selectDossier(tabName, btn) {
+      document.querySelectorAll('.dossier-card').forEach(b => {
+        b.classList.remove('active-dossier', 'border-brand-600', 'bg-brand-50');
+        b.classList.add('border-slate-200', 'bg-slate-50');
+      });
+      btn.classList.add('active-dossier', 'border-brand-600', 'bg-brand-50');
+      btn.classList.remove('border-slate-200', 'bg-slate-50');
+
+      document.querySelectorAll('.dossier-content').forEach(c => c.classList.add('hidden'));
+      const active = document.getElementById(`dossier-${tabName}`);
+      if (active) active.classList.remove('hidden');
+    }
+
+    // 5. FAQ Accordion
+    function toggleAccordion(btn) {
+      const parent = btn.closest('.accordion-item');
+      const wasOpen = parent.classList.contains('open');
+      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) {
+        parent.classList.add('open');
+      }
+    }
+
+    // 6. Legal Modal Viewer
+    const legalTexts = {
+      terms: {
+        title: "Conditions d’Utilisation",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Nature et portée de la plateforme</h4>
+          <p>HopeRise FR fonctionne comme un registre vérifié d’appels médicaux, mettant en relation les donateurs avec des patients ayant un besoin clinique documenté de traitements non disponibles ou non pris en charge par leur système de santé national. HopeRise n’est ni une association caritative, ni un hôpital, ni un prestataire médical. Chaque appel fait l’objet d’une vérification clinique indépendante avant publication.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Obligations des donateurs</h4>
+          <p>En contribuant, vous confirmez être âgé d’au moins 18 ans et que le moyen de paiement utilisé vous appartient ou que vous disposez de l’autorisation expresse de son titulaire. Les contributions sont volontaires et non remboursables, sauf dans les cas prévus par la Politique de Remboursement. Les dons mensuels peuvent être annulés à tout moment.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Versement des fonds</h4>
+          <p>Les fonds sont conservés sur un compte séquestre dédié et versés directement sur présentation des factures hospitalières pro forma émises par le prestataire clinique désigné. Aucun fonds n’est versé à la patiente, à sa famille ou à un intermédiaire. HopeRise ne retient aucun pourcentage des fonds cliniques récoltés.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Contribution d’entretien de la plateforme</h4>
+          <p>Un pourboire facultatif d’entretien de la plateforme peut être proposé au moment du paiement. Cette contribution est clairement séparée du fonds clinique et couvre les coûts opérationnels, notamment le traitement des paiements, l’hébergement, les communications avec les donateurs et la sensibilisation permettant à l’appel de toucher davantage de sympathisants.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Norme de vérification des appels</h4>
+          <p>Chaque appel publié comprend des documents vérifiés par recoupement avec : (a) les dossiers diagnostiques hospitaliers originaux, (b) la confirmation d’un médecin ou spécialiste désigné, (c) le plan de traitement émis par l’établissement d’accueil, et (d) les documents de coûts selon la nomenclature médicale applicable (par ex. GOÄ allemand, ou référence de tarification hospitalière française).</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Limitation de responsabilité</h4>
+          <p>HopeRise FR facilite des appels vérifiés mais ne garantit aucun résultat médical spécifique. Les résultats du traitement dépendent du prestataire clinique et de la situation médicale individuelle de la patiente. HopeRise ne saurait être tenu responsable des décisions cliniques prises par l’établissement traitant.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">7. Droit applicable</h4>
+          <p>Les présentes conditions sont régies par le droit français. Tout litige relèvera de la compétence exclusive des tribunaux français.</p>
+        `
+      },
+      privacy: {
+        title: "Politique de Confidentialité",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Responsable du traitement</h4>
+          <p>HopeRise FR est le responsable du traitement des informations personnelles collectées via cette plateforme. Nous nous engageons à protéger votre vie privée conformément au Règlement Général sur la Protection des Données (RGPD) de l’UE et à la Loi Informatique et Libertés.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Informations collectées</h4>
+          <p>Nous ne collectons que les informations nécessaires au traitement de votre contribution et à la gestion de votre compte donateur : nom, adresse e-mail, coordonnées de carte bancaire (traitées et tokenisées par notre prestataire de paiement certifié PCI DSS de niveau 1) et préférences d’affichage facultatives. Nous ne stockons pas les numéros de carte bruts sur nos serveurs.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Utilisation de vos données</h4>
+          <p>Vos données sont utilisées pour : (a) traiter votre contribution et émettre votre reçu, (b) gérer les échéanciers de dons mensuels, (c) envoyer les actualités de campagne auxquelles vous avez consenti, et (d) respecter les réglementations financières et les exigences antifraude. Nous ne vendons, n’échangeons ni ne louons vos données personnelles à des tiers à des fins commerciales.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Don anonyme</h4>
+          <p>Si vous choisissez l’option de contribution anonyme, votre nom n’apparaîtra sur aucune partie publique de la campagne. Vos données resteront néanmoins conservées en interne à des fins de conformité financière et d’émission de reçus, sans divulgation publique.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Conservation des données</h4>
+          <p>Les registres de transactions sont conservés pendant 10 ans conformément aux obligations fiscales et comptables françaises. Les préférences de communication et les données de compte sont conservées jusqu’à votre demande de suppression, après laquelle nous effacerons tous les registres non légalement requis sous 30 jours.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Vos droits</h4>
+          <p>En vertu du RGPD de l’UE, vous disposez des droits suivants : accéder à vos données personnelles, rectifier les données inexactes, demander l’effacement (lorsque légalement permis), limiter le traitement, la portabilité des données et vous opposer au traitement. Pour exercer ces droits, contactez-nous à <span class="text-brand-600">support@hoperise.uk</span>.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">7. Sécurité des paiements</h4>
+          <p>Toutes les transactions de paiement sont cryptées via TLS 1.3 (256 bits) et traitées par un prestataire de paiement certifié PCI DSS de niveau 1. Les données de carte sont tokenisées au point de saisie et ne transitent jamais par nos serveurs applicatifs. Nous effectuons régulièrement des audits de sécurité et des évaluations de vulnérabilité.</p>
+        `
+      },
+      escrow: {
+        title: "Garantie Séquestre Clinique",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Gouvernance séquestre dédiée</h4>
+          <p>Chaque euro récolté pour Chloé D. est exclusivement affecté à son parcours clinique approuvé au Centre d’Immuno-Oncologie de Cologne (IOZK), en Allemagne. Les fonds couvrent : la synthèse du vaccin à cellules dendritiques IO-VAC (fabrication autologue selon l’article 13 AMG), la radiothérapie par faisceau de protons stéréotaxique, les séances d’hyperthermie, ainsi que le suivi clinique et l’imagerie associés.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Vérification des factures pro forma</h4>
+          <p>Aucun versement n’a lieu sans facture hospitalière pro forma émise par l’IOZK selon la nomenclature médicale allemande (Gebührenordnung für Ärzte, GOÄ). Chaque facture est recoupée avec : (a) les dossiers patients de Chloé aux Hospices Civils de Lyon et le plan de traitement pluridisciplinaire, (b) le protocole de traitement émis par l’IOZK, et (c) le budget clinique approuvé publié sur cette page d’appel.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Paiement direct à l’hôpital</h4>
+          <p>Les fonds sont transférés directement du compte séquestre dédié vers le compte hospitalier désigné de l’IOZK. À aucun moment les fonds ne sont versés à la patiente, aux membres de sa famille ou à un intermédiaire non clinique. Les confirmations de virement sont conservées dans le cadre de la piste d’audit.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Dispositions en cas d’excédent ou d’insuffisance</h4>
+          <p>Si l’appel dépasse son objectif, les fonds excédentaires sont affectés au suivi prolongé, à l’imagerie de contrôle et aux évaluations immunologiques post-traitement recommandées par l’oncologue traitant. Si l’objectif n’est pas atteint, les fonds récoltés sont appliqués aux composantes de traitement les plus prioritaires déterminées par l’équipe clinique, en commençant par la synthèse du vaccin dendritique IO-VAC.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Disposition en cas d’annulation du traitement</h4>
+          <p>En cas d’imprévu empêchant le traitement programmé de se dérouler comme certifié cliniquement (contre-indication médicale, décision de la patiente ou incapacité de l’établissement), les fonds restent protégés sous gouvernance séquestre. Les donateurs seront informés sous 14 jours, et les fonds seront soit réaffectés à une voie de traitement alternative approuvée, soit rendus disponibles pour remboursement sur demande.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">6. Rapports de transparence</h4>
+          <p>Des actualités de campagne sont publiées sur la page d’appel après chaque étape clinique significative. Ces actualités incluent l’état du traitement, la prochaine intervention programmée et des résumés courants de l’affectation des fonds, offrant aux donateurs une visibilité continue sur l’utilisation de leurs contributions.</p>
+        `
+      },
+      refund: {
+        title: "Politique de Remboursement",
+        body: `
+          <h4 class="font-bold text-slate-900 text-sm mb-2">1. Contributions uniques</h4>
+          <p>Si vous avez effectué une contribution non intentionnelle ou si un montant incorrect vous a été facturé, vous pouvez demander un remboursement intégral sous 14 jours à compter de la date de transaction en contactant <span class="text-brand-600">support@hoperise.uk</span> avec votre reçu e-mail ou votre référence de transaction. Les remboursements sont traités vers le moyen de paiement d’origine sous 5 à 10 jours ouvrés.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">2. Annulation des dons mensuels</h4>
+          <p>Les dons mensuels peuvent être annulés à tout moment avec effet immédiat. Après annulation, aucun autre prélèvement ne sera appliqué. L’annulation peut se faire via le lien figurant dans votre e-mail de reçu mensuel, ou en contactant le support. Les mensualités déjà prélevées ne sont pas remboursables, sauf si elles entrent dans le délai de 14 jours du prélèvement le plus récent.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">3. Pourboire d’entretien de la plateforme</h4>
+          <p>Le pourboire facultatif d’entretien de la plateforme est traité comme une transaction distincte et suit le même délai de remboursement de 14 jours que les contributions uniques. Il peut être remboursé indépendamment de la contribution au fonds clinique.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">4. Circonstances excluant le remboursement</h4>
+          <p>Les remboursements ne peuvent être émis pour les contributions déjà versées sur présentation d’une facture hospitalière vérifiée. Dans ce cas, les dispositions du séquestre clinique (voir Garantie Séquestre Clinique) s’appliquent. Nous collaborerons avec vous pour trouver une résolution équitable.</p>
+          
+          <h4 class="font-bold text-slate-900 text-sm mb-2 mt-4">5. Résolution des litiges</h4>
+          <p>Si l’issue d’une demande de remboursement ne vous satisfait pas, vous pouvez escalader votre préoccupation auprès de notre médiateur indépendant des donateurs en écrivant à <span class="text-brand-600">ombudsman@hoperise.uk</span>. Nous nous engageons à résoudre tous les litiges escaladés sous 10 jours ouvrés.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      const data = legalTexts[type] || legalTexts.terms;
+      document.getElementById('legal-modal-title').textContent = data.title;
+      document.getElementById('legal-modal-body').innerHTML = data.body;
+      document.getElementById('legal-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.add('hidden');
+      if (document.getElementById('checkout-modal').classList.contains('hidden')) {
+        document.body.style.overflow = '';
+      }
+    }
+
+    function shareAppeal() {
+      if (navigator.share) {
+        navigator.share({
+          title: "Aidez Chloé à Vaincre son Glioblastome",
+          text: "Aidez Chloé D., étudiante en médecine de 21 ans à Lyon, à accéder à l’immunothérapie qui peut la sauver en Allemagne. Même €5 aident :",
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Lien de la campagne copié dans le presse-papiers !');
+      }
+    }
+
+    // ================================================================
+    // PRODUCTION BACKEND INTEGRATION
+    // ================================================================
+
+    (function injectLiveStats() {
+      const d = window.__CAMPAIGN_DATA;
+      if (!d) return;
+      const raised = d.raised || d._realStats?.raised;
+      const donors = d.donorCount || d._realStats?.donorCount;
+      const goal = d.goal || 90000;
+      if (!raised) return;
+
+      const pct = Math.min(100, Math.round((raised / goal) * 100));
+      const fmtRaised = '€' + raised.toLocaleString('fr-FR');
+      const fmtGoal = '€' + goal.toLocaleString('fr-FR');
+      const fmtDonors = donors ? donors.toLocaleString('fr-FR') : null;
+
+      document.querySelectorAll('[data-live="raised"]').forEach(el => el.textContent = fmtRaised);
+      document.querySelectorAll('[data-live="goal"]').forEach(el => el.textContent = fmtGoal);
+      document.querySelectorAll('[data-live="pct"]').forEach(el => el.textContent = pct + '%');
+      document.querySelectorAll('[data-live="donors"]').forEach(el => el.textContent = fmtDonors);
+      document.querySelectorAll('.progress-fill').forEach(el => el.style.width = pct + '%');
+
+      const dockRaised = document.querySelector('#mobile-dock .text-sm.font-bold');
+      if (dockRaised) {
+        dockRaised.innerHTML = `${fmtRaised} <span class="text-xs font-medium text-slate-500">récoltés sur ${fmtGoal}</span>`;
+      }
+      const dockBar = document.querySelector('#mobile-dock .bg-brand-600.rounded-full');
+      if (dockBar) dockBar.style.width = pct + '%';
+    })();
+
+  </script>
+
+  <script src="/js/tracking.js"></script>
+  <script src="/js/ab-tracker.js"></script>
+  <script src="/js/thank-you-overlay.js"></script>
+
+  <script>
+    (async function initTracking() {
+      if (typeof Tracking === 'undefined') return;
+      await Tracking.init();
+      Tracking.trackPageView();
+      Tracking.trackViewContent({ contentType: 'campaign', contentName: 'glioblastome-chloe' });
+    })();
+
+    (function trackModalOpen() {
+      const origOpen = window.openCheckoutModal;
+      if (!origOpen) return;
+      window.openCheckoutModal = function(mode) {
+        if (typeof Tracking !== 'undefined') {
+          Tracking.trackAddToCart({
+            value: app.amount,
+            currency: 'EUR',
+            contentName: 'glioblastome-chloe'
+          });
+        }
+        origOpen(mode);
+      };
+    })();
+
+    (function handlePaymentReturn() {
+      if (typeof Tracking !== 'undefined') {
+        const completed = Tracking.getCompletedReturn();
+        if (completed && completed.amount > 0) {
+          Tracking.trackPurchase({
+            value: completed.amount,
+            currency: completed.currency || 'EUR',
+            contentName: 'glioblastome-chloe'
+          }, completed.eventId);
+        }
+        if (completed) {
+          if (typeof showThankYouOverlay === 'function') {
+            setTimeout(showThankYouOverlay, 300);
+          }
+        }
+      } else {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('status') === 'complete') {
+          ['status', 'eid', 'amt', 'cur'].forEach(k => params.delete(k));
+          window.history.replaceState({}, '', window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
+          if (typeof showThankYouOverlay === 'function') {
+            setTimeout(showThankYouOverlay, 300);
+          }
+        }
+      }
+    })();
+  </script>
+
+</body>
+</html>
