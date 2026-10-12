@@ -1564,7 +1564,7 @@
     // System Data Model
     const app = {
       amount: 25,
-      cadence: 'monthly',
+      cadence: 'once',
       tip: 15,
       photoIndex: 0,
       photos: [
@@ -1601,6 +1601,7 @@
       window.addEventListener('resize', syncEnginePosition);
       calculateTotal();
       renderImpact();
+      setCadence(app.cadence);
 
       const emailField = document.getElementById('modal-donor-email');
       if (emailField) {
