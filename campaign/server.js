@@ -124,11 +124,16 @@ function loadCampaignFromFile(campaignSlug) {
 }
 
 let geoip = null;
-try { geoip = require('geoip-lite'); } catch (e) { console.warn('[geo] geoip-lite unavailable:', e.message); }
+if (process.env.ENABLE_GEOIP_LITE === 'true') {
+  try { geoip = require('geoip-lite'); } catch (e) { console.warn('[geo] geoip-lite unavailable:', e.message); }
+}
 
-// Offline GeoIP lookup on the connection IP. Replaces the browser's ipapi.co call,
-// whose free tier answers 429 to a large share of requests.
-function lookupLocation(ip) {
+// Edge header or optional offline GeoIP lookup on the connection IP.
+function lookupLocation(ip, req) {
+  const edgeCountry = (req?.headers?.['x-zeabur-ip-country'] || req?.headers?.['cf-ipcountry'] || '').trim().toUpperCase();
+  if (edgeCountry && edgeCountry !== 'XX') {
+    return { ip: ip || 'unknown', city: null, region: null, country: null, countryCode: edgeCountry };
+  }
   if (!geoip || !ip || ip === 'unknown') return null;
   const hit = geoip.lookup(ip);
   if (!hit || !hit.country) return null;
@@ -145,7 +150,7 @@ function getClientInfo(req) {
 
   const clientLocation = req.body?.clientLocation?.countryCode
     ? req.body.clientLocation
-    : lookupLocation(ip);
+    : lookupLocation(ip, req);
 
   return {
     ipAddress: ip,
