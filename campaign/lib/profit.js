@@ -19,6 +19,7 @@ const PRESET_BY_RANGE = {
   allTime: 'last_90d',
 };
 
+// Maps Meta campaign names (including clones and historical versions) to GFM campaign slugs.
 const GFM_CAMPAIGN_NAME_MATCHERS = [
   { slug: 'dipg-willow', pattern: /\bwillow\b/i },
   { slug: 'glioblastoma-mariana', pattern: /\bmariana\b/i },
