@@ -19,8 +19,8 @@ const PRESET_BY_RANGE = {
   allTime: 'last_90d',
 };
 
-// Maps Meta campaign names (including clones and historical versions) to GFM campaign slugs.
-const GFM_CAMPAIGN_NAME_MATCHERS = [
+// Maps Meta campaign names (including clones and historical versions) to patient campaign slugs.
+const PATIENT_CAMPAIGN_NAME_MATCHERS = [
   { slug: 'dipg-willow', pattern: /\bwillow\b/i },
   { slug: 'glioblastoma-mariana', pattern: /\bmariana\b/i },
   { slug: 'glioblastoma-serafina', pattern: /\bserafina\b/i },
@@ -36,12 +36,12 @@ const GFM_CAMPAIGN_NAME_MATCHERS = [
   { slug: 'sanctuary-defense-408', pattern: /\bfcr\s*clover\b/i },
 ];
 
-function resolveGfmSlugForAdCampaign(campaignId, campaignName, utmToSlugMap) {
+function resolvePatientSlugForAdCampaign(campaignId, campaignName, utmToSlugMap) {
   if (campaignId && utmToSlugMap && utmToSlugMap.has(String(campaignId))) {
     return utmToSlugMap.get(String(campaignId));
   }
   const name = String(campaignName || '');
-  for (const m of GFM_CAMPAIGN_NAME_MATCHERS) {
+  for (const m of PATIENT_CAMPAIGN_NAME_MATCHERS) {
     if (m.pattern.test(name)) return m.slug;
   }
   return null;
@@ -436,7 +436,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
 
     for (const [campaignId, spendInfo] of spendByCampaign) {
       const adName = nameById.get(campaignId) || campaignId;
-      const mappedSlug = resolveGfmSlugForAdCampaign(campaignId, adName, utmToSlugMap);
+      const mappedSlug = resolvePatientSlugForAdCampaign(campaignId, adName, utmToSlugMap);
       const targetKey = mappedSlug || campaignId;
       const isInSelectedScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === campaignId || campaignSlug === targetKey;
       if (!isInSelectedScope) continue;
