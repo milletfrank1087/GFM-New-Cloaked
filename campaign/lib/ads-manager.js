@@ -62,6 +62,10 @@ function normalizeCampaign(c) {
     stop_time: c.stop_time || null,
     created_time: c.created_time || null,
     updated_time: c.updated_time || null,
+    pixel_id: c.pixel_id ? String(c.pixel_id) : null,
+    destination_url: c.destination_url || null,
+    destination_host: c.destination_host || null,
+    link_utm_campaign: c.link_utm_campaign ? String(c.link_utm_campaign) : null,
   };
 }
 

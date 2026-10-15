@@ -19,30 +19,14 @@ const PRESET_BY_RANGE = {
   allTime: 'last_90d',
 };
 
-// Maps Meta ad campaign names to patient campaign slugs for attribution rollup.
-const PATIENT_CAMPAIGN_NAME_MATCHERS = [
-  { slug: 'dipg-willow', pattern: /\bwillow\b/i },
-  { slug: 'glioblastoma-mariana', pattern: /\bmariana\b/i },
-  { slug: 'glioblastoma-serafina', pattern: /\bserafina\b/i },
-  { slug: 'glioblastoma-lucia', pattern: /\blucia\b/i },
-  { slug: 'glejak-natalia', pattern: /\bnatalia\b/i },
-  { slug: 'glioblastoma-mia', pattern: /\bmia\b/i },
-  { slug: 'glioblastoma-olivia', pattern: /\bolivia\b/i },
-  { slug: 'glioblastoma-grace', pattern: /\b(grace|gbm\s*uk)\b/i },
-  { slug: 'glioblastoma-emily', pattern: /\bemily\b/i },
-  { slug: 'glioblastome-chloe', pattern: /\bchloe\b/i },
-  { slug: 'glioblastoma-sofia', pattern: /\b(sofia|gbm\s*greece)\b/i },
-  { slug: 'leucemia-carmen', pattern: /\bcarmen\b/i },
-  { slug: 'sanctuary-defense-408', pattern: /\bfcr\s*clover\b/i },
-];
-
-function resolvePatientSlugForAdCampaign(campaignId, campaignName, utmToSlugMap) {
-  if (campaignId && utmToSlugMap && utmToSlugMap.has(String(campaignId))) {
-    return utmToSlugMap.get(String(campaignId));
+function resolveCampaignSlugFromMeta(campaignId, campMeta, utmToSlugMap) {
+  const idStr = String(campaignId || '');
+  if (idStr && utmToSlugMap.has(idStr)) {
+    return utmToSlugMap.get(idStr);
   }
-  const name = String(campaignName || '');
-  for (const m of PATIENT_CAMPAIGN_NAME_MATCHERS) {
-    if (m.pattern.test(name)) return m.slug;
+  const linkedUtm = campMeta?.link_utm_campaign ? String(campMeta.link_utm_campaign).trim() : '';
+  if (linkedUtm && utmToSlugMap.has(linkedUtm)) {
+    return utmToSlugMap.get(linkedUtm);
   }
   return null;
 }
@@ -179,20 +163,37 @@ function failureTransaction(row, rates) {
 }
 
 async function fetchAdSpendData(preset) {
-  if (!supabase) return { spendRows: [], campaignRows: [] };
-  const [spendRes, campRes] = await Promise.all([
+  if (!supabase) return { spendRows: [], campaignRows: [], historicalUtmMap: new Map() };
+  const [spendRes, campRes, histPayRes] = await Promise.all([
     supabase
       .from('ad_spend')
       .select('campaign_id, date, spend, purchases_total, purchase_value_total, purchase_roas_total, cost_per_purchase, fetched_at')
       .eq('date_preset', preset),
     supabase
       .from('ad_campaigns')
-      .select('id, name, account_id')
+      .select('id, name, account_id, pixel_id, destination_host, link_utm_campaign'),
+    supabase
+      .from('payments')
+      .select('utm_campaign, source_ref')
+      .eq('status', 'completed')
+      .not('utm_campaign', 'is', null)
+      .not('source_ref', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(2000),
   ]);
   if (spendRes.error) throw new Error(spendRes.error.message);
+  const historicalUtmMap = new Map();
+  for (const row of histPayRes?.data || []) {
+    const u = String(row.utm_campaign || '').trim();
+    const s = String(row.source_ref || '').trim();
+    if (u && s && s !== 'direct' && !historicalUtmMap.has(u)) {
+      historicalUtmMap.set(u, s);
+    }
+  }
   return {
     spendRows: spendRes.data || [],
     campaignRows: campRes.data || [],
+    historicalUtmMap,
   };
 }
 
@@ -396,8 +397,9 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
       spendToBaseRate = convertToBase(1, AD_SPEND_CURRENCY, latestRatesResult);
     }
 
-    const { spendRows, campaignRows } = adDataResult;
-    const nameById = new Map((campaignRows || []).map(c => [c.id, c.name]));
+    const { spendRows, campaignRows, historicalUtmMap } = adDataResult;
+    const campById = new Map((campaignRows || []).map(c => [String(c.id), c]));
+    const nameById = new Map((campaignRows || []).map(c => [String(c.id), c.name]));
     const spendByCampaign = new Map();
     let latestFetchedAt = 0;
 
@@ -425,7 +427,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
       adRefreshScheduled = scheduleAdRefresh(preset);
     }
 
-    const utmToSlugMap = new Map();
+    const utmToSlugMap = new Map(historicalUtmMap || []);
     for (const [key, agg] of perCampaign) {
       if (agg.utmCampaignIds) {
         for (const uid of agg.utmCampaignIds) {
@@ -434,10 +436,27 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
       }
     }
 
+    // Dynamically determine this platform's Meta Pixel ID(s) from env + historical attributed campaigns
+    const ownedPixels = new Set();
+    if (process.env.FB_PIXEL_ID) ownedPixels.add(String(process.env.FB_PIXEL_ID).trim());
+    for (const uid of utmToSlugMap.keys()) {
+      const cMeta = campById.get(String(uid));
+      if (cMeta?.pixel_id) ownedPixels.add(String(cMeta.pixel_id).trim());
+    }
+
     for (const [campaignId, spendInfo] of spendByCampaign) {
-      const adName = nameById.get(campaignId) || campaignId;
-      const mappedSlug = resolvePatientSlugForAdCampaign(campaignId, adName, utmToSlugMap);
-      const targetKey = mappedSlug || campaignId;
+      const cid = String(campaignId);
+      const campMeta = campById.get(cid) || null;
+      const adName = nameById.get(cid) || cid;
+      const mappedSlug = resolveCampaignSlugFromMeta(cid, campMeta, utmToSlugMap);
+
+      // If this campaign is not directly attributed to a payment slug and has a pixel_id that does not belong to this platform, skip it
+      if (!mappedSlug && ownedPixels.size > 0) {
+        const campPixel = campMeta?.pixel_id ? String(campMeta.pixel_id).trim() : null;
+        if (!campPixel || !ownedPixels.has(campPixel)) continue;
+      }
+
+      const targetKey = mappedSlug || cid;
       const isInSelectedScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === campaignId || campaignSlug === targetKey;
       if (!isInSelectedScope) continue;
 
