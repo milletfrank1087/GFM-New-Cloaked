@@ -121,7 +121,8 @@
   }
 
   /* Data Fetcher */
-  async function loadProfit() {
+  async function loadProfit(opts) {
+    var forceAds = !!(opts && opts.forceAds);
     var requestId = ++loadProfit.requestId;
     if (loadProfit.controller) loadProfit.controller.abort();
     loadProfit.controller = new AbortController();
@@ -130,7 +131,8 @@
     if (errorBox) errorBox.classList.add('hidden');
 
     try {
-      var res = await fetch('/api/admin/profit?' + currentQuery(), { signal: loadProfit.controller.signal });
+      var qs = currentQuery() + (forceAds ? '&force_ads=1' : '');
+      var res = await fetch('/api/admin/profit?' + qs, { signal: loadProfit.controller.signal });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       var data = await res.json();
       if (requestId !== loadProfit.requestId) return;
@@ -173,7 +175,7 @@
   function scheduleRefreshPoll(data) {
     if (refreshPoll) clearTimeout(refreshPoll);
     if (!data.adSync?.refreshing) return;
-    refreshPoll = setTimeout(loadProfit, 2500);
+    refreshPoll = setTimeout(loadProfit, 1200);
   }
 
   var __refreshDepth = 0;
@@ -195,7 +197,7 @@
     __refreshDepth++;
     setRefreshLoading(true);
     try {
-      await loadProfit();
+      await loadProfit({ forceAds: true });
     } finally {
       __refreshDepth--;
       if (__refreshDepth <= 0) {

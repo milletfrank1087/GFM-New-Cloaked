@@ -137,32 +137,26 @@ async function postToManager(path, body = {}) {
 /* Serialized Refresh Mutex Queue to prevent proxy concurrency rejections */
 let refreshChain = Promise.resolve();
 
-async function refreshPreset(preset) {
-  const runRefreshForAccount = async (accountId) => {
+async function refreshPreset(preset, { force = false } = {}) {
+  const runRefresh = async () => {
     try {
-      const body = { date_preset: preset, level: 'campaign', only_had_delivery: false };
-      if (accountId) body.account_id = accountId;
+      const body = { date_preset: preset, level: 'campaign', only_had_delivery: false, force: !!force };
       const result = await postToManager('/api/refresh', body);
       if (!result.ok) {
-        console.warn(`[ads-sync] upstream refresh note for ${preset} (${accountId || 'primary'}):`, result.error || result.message || 'unknown');
+        console.warn(`[ads-sync] upstream refresh note for ${preset}:`, result.error || result.message || 'unknown');
       }
       return result;
     } catch (err) {
-      console.warn(`[ads-sync] upstream refresh note for ${preset} (${accountId || 'primary'}):`, err.message);
+      console.warn(`[ads-sync] upstream refresh note for ${preset}:`, err.message);
       return { ok: false, error: err.message };
     }
   };
 
-  const nextTask = refreshChain.then(async () => {
-    await new Promise(r => setTimeout(r, 1500));
-    const primary = await runRefreshForAccount(null);
-    for (const acct of ADDITIONAL_AD_ACCOUNTS) {
-      await new Promise(r => setTimeout(r, 1500));
-      await runRefreshForAccount(acct);
-    }
-    return primary;
-  });
+  if (force) {
+    return runRefresh();
+  }
 
+  const nextTask = refreshChain.then(() => runRefresh());
   refreshChain = nextTask.catch(() => {});
   return nextTask;
 }
@@ -231,7 +225,7 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
 
       if (refresh) {
         try {
-          await refreshPreset(preset);
+          await refreshPreset(preset, { force });
         } catch (err) {
           console.warn(`[ads-sync] refreshPreset ${preset} note:`, err.message);
         }
@@ -239,19 +233,23 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
 
       const allAccountIds = [null, ...ADDITIONAL_AD_ACCOUNTS];
       const allDataRows = [];
-      for (const acctId of allAccountIds) {
+      const dashResults = await Promise.all(allAccountIds.map(async (acctId) => {
         try {
           const params = { date_preset: preset, level: 'campaign' };
           if (acctId) params.account_id = acctId;
           const data = await fetchFromManager('/api/dashboard', params);
-          if (data?.rows && Array.isArray(data.rows)) {
-            for (const r of data.rows) {
-              r._source_account_id = acctId || data.account?.id || data.account_id || null;
-            }
-            allDataRows.push(...data.rows);
-          }
+          return { acctId, data };
         } catch (err) {
           console.warn(`[ads-sync] dashboard fetch for ${acctId || 'primary'} preset ${preset}:`, err.message);
+          return null;
+        }
+      }));
+      for (const item of dashResults) {
+        if (item?.data?.rows && Array.isArray(item.data.rows)) {
+          for (const r of item.data.rows) {
+            r._source_account_id = item.acctId || item.data.account?.id || item.data.account_id || null;
+          }
+          allDataRows.push(...item.data.rows);
         }
       }
       if (!allDataRows.length) throw new Error(`no rows for preset ${preset}`);
@@ -327,7 +325,7 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
 
 async function syncSpend() {
   const out = { campaigns: 0, spendRows: 0, presets: [] };
-  for (const preset of ['today', 'last_7d']) {
+  for (const preset of ['today', 'yesterday', 'last_7d', 'last_30d', 'this_month', 'last_month', 'last_90d']) {
     try {
       const res = await syncPreset(preset, { force: true });
       if (res.rows) out.spendRows += res.rows;
@@ -349,9 +347,9 @@ function shouldRunAdsSyncWorker() {
   const flag = String(process.env.ADS_SYNC_ENABLED || '').toLowerCase();
   if (flag === '0' || flag === 'false' || flag === 'off') return false;
   if (flag === '1' || flag === 'true' || flag === 'on') return true;
-  const service = String(process.env.RAILWAY_SERVICE_NAME || '').toLowerCase();
-  if (!service) return false;
-  return /uk\s*campaign/.test(service);
+  const service = String(process.env.RAILWAY_SERVICE_NAME || process.env.ZEABUR_SERVICE_NAME || '').toLowerCase();
+  if (service) return /uk[-_\s]*campaign/.test(service);
+  return process.env.ACTIVE_CAMPAIGN === 'dipg-willow' && process.env.CURRENCY === 'GBP';
 }
 
 /* Background Synchronizer Daemon */

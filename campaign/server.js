@@ -51,6 +51,7 @@ const createAdminRouter = require('./routes/admin');
 const createPagesRouter = require('./routes/pages');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'hoperise-admin-secret-key';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';

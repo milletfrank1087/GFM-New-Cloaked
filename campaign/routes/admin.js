@@ -232,9 +232,10 @@ module.exports = function createAdminRouter(ctx) {
     try {
       const { campaignSlug, dateRange } = parseDashboardFilters(req);
       const includeAd = req.query.include_ads !== '0';
+      const forceAdRefresh = req.query.force_ads === '1';
       const rangeKey = req.query.range || 'last30days';
       const tzOffset = req.query.tzOffset || 0;
-      const overview = await getProfitOverview(campaignSlug, dateRange, { withAdSpend: includeAd, rangeKey, tzOffset });
+      const overview = await getProfitOverview(campaignSlug, dateRange, { withAdSpend: includeAd, forceAdRefresh, rangeKey, tzOffset });
       res.json(overview);
     } catch (error) {
       console.error('[admin/profit] error:', error);

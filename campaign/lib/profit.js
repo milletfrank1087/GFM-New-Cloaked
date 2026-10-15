@@ -214,10 +214,18 @@ function getLocalHourAndDate(isoString, tzOffsetMinutes = 0) {
   return { dateKey, hourKey };
 }
 
-async function getProfitOverview(campaignSlug = null, dateRange = null, { withAdSpend = true, rangeKey = 'last30days', tzOffset = 0 } = {}) {
+async function getProfitOverview(campaignSlug = null, dateRange = null, { withAdSpend = true, forceAdRefresh = false, rangeKey = 'last30days', tzOffset = 0 } = {}) {
   const preset = process.env.ADS_DEFAULT_PRESET || presetForRange(rangeKey);
   const AD_SPEND_CURRENCY = 'USD';
   const tzOffsetMinutes = Number(tzOffset) || 0;
+
+  if (withAdSpend && forceAdRefresh) {
+    try {
+      await syncPreset(preset, { force: true, refresh: true });
+    } catch (err) {
+      console.warn(`[profit] forced ${preset} sync note:`, err.message);
+    }
+  }
 
   const [paymentResult, adDataResult, latestRatesResult, failureRows] = await Promise.all([
     fetchPayments(campaignSlug, dateRange),
