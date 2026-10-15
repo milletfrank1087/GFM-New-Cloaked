@@ -19,6 +19,33 @@ const PRESET_BY_RANGE = {
   allTime: 'last_90d',
 };
 
+const GFM_CAMPAIGN_NAME_MATCHERS = [
+  { slug: 'dipg-willow', pattern: /\bwillow\b/i },
+  { slug: 'glioblastoma-mariana', pattern: /\bmariana\b/i },
+  { slug: 'glioblastoma-serafina', pattern: /\bserafina\b/i },
+  { slug: 'glioblastoma-lucia', pattern: /\blucia\b/i },
+  { slug: 'glejak-natalia', pattern: /\bnatalia\b/i },
+  { slug: 'glioblastoma-mia', pattern: /\bmia\b/i },
+  { slug: 'glioblastoma-olivia', pattern: /\bolivia\b/i },
+  { slug: 'glioblastoma-grace', pattern: /\b(grace|gbm\s*uk)\b/i },
+  { slug: 'glioblastoma-emily', pattern: /\bemily\b/i },
+  { slug: 'glioblastome-chloe', pattern: /\bchloe\b/i },
+  { slug: 'glioblastoma-sofia', pattern: /\b(sofia|gbm\s*greece)\b/i },
+  { slug: 'leucemia-carmen', pattern: /\bcarmen\b/i },
+  { slug: 'sanctuary-defense-408', pattern: /\bfcr\s*clover\b/i },
+];
+
+function resolveGfmSlugForAdCampaign(campaignId, campaignName, utmToSlugMap) {
+  if (campaignId && utmToSlugMap && utmToSlugMap.has(String(campaignId))) {
+    return utmToSlugMap.get(String(campaignId));
+  }
+  const name = String(campaignName || '');
+  for (const m of GFM_CAMPAIGN_NAME_MATCHERS) {
+    if (m.pattern.test(name)) return m.slug;
+  }
+  return null;
+}
+
 function presetForRange(rangeKey) {
   return PRESET_BY_RANGE[rangeKey] || 'last_30d';
 }
@@ -270,12 +297,17 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     if (!perCampaign.has(campaignKey)) {
       perCampaign.set(campaignKey, {
         key: campaignKey, name: null, count: 0, gross: 0, tips: 0, fees: 0, net: 0,
-        spend: 0, spendNative: 0, profit: 0, purchases: 0, roas: null, cpa: null, isAdCampaign: false,
+        spend: 0, spendNative: 0, profit: 0, purchases: 0, purchaseValue: 0, roas: null, cpa: null, isAdCampaign: false,
         utmCampaignId: raw.utm_campaign || null,
+        utmCampaignIds: new Set(),
         byCurrency: {},
       });
     }
     const c = perCampaign.get(campaignKey);
+    if (raw.utm_campaign) {
+      c.utmCampaignIds.add(String(raw.utm_campaign));
+      if (!c.utmCampaignId) c.utmCampaignId = String(raw.utm_campaign);
+    }
     c.count += 1;
     c.gross += p.grossBase;
     c.tips += p.tipBase;
@@ -392,41 +424,93 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
       adRefreshScheduled = scheduleAdRefresh(preset);
     }
 
+    const utmToSlugMap = new Map();
     for (const [key, agg] of perCampaign) {
-      const spendInfo = spendByCampaign.get(agg.utmCampaignId || key);
-      if (spendInfo) {
-        agg.spend = spendInfo.spend;
-        agg.spendNative = spendInfo.spendNative;
-        agg.purchases = spendInfo.purchases;
-        agg.purchaseValue = spendInfo.value;
-        agg.roas = spendInfo.roas;
-        agg.cpa = spendInfo.cpa;
-        agg.name = nameById.get(agg.utmCampaignId || key) || null;
-        agg.isAdCampaign = true;
+      if (agg.utmCampaignIds) {
+        for (const uid of agg.utmCampaignIds) {
+          utmToSlugMap.set(String(uid), key);
+        }
       }
     }
 
     for (const [campaignId, spendInfo] of spendByCampaign) {
-      const isInSelectedScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === campaignId;
-      const alreadyMerged = [...perCampaign.values()].some(a => a.utmCampaignId === campaignId);
-      if (!isInSelectedScope || perCampaign.has(campaignId) || alreadyMerged) continue;
-      perCampaign.set(campaignId, {
-        key: campaignId,
-        name: nameById.get(campaignId) || campaignId,
-        count: 0,
-        gross: 0,
-        tips: 0,
-        fees: 0,
-        net: 0,
-        spend: spendInfo.spend,
-        spendNative: spendInfo.spendNative,
-        profit: -spendInfo.spend,
-        purchases: spendInfo.purchases,
-        purchaseValue: spendInfo.value,
-        roas: spendInfo.roas,
-        cpa: spendInfo.cpa,
-        isAdCampaign: true,
-      });
+      const adName = nameById.get(campaignId) || campaignId;
+      const mappedSlug = resolveGfmSlugForAdCampaign(campaignId, adName, utmToSlugMap);
+      const targetKey = mappedSlug || campaignId;
+      const isInSelectedScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === campaignId || campaignSlug === targetKey;
+      if (!isInSelectedScope) continue;
+
+      if (!perCampaign.has(targetKey)) {
+        perCampaign.set(targetKey, {
+          key: targetKey,
+          name: adName,
+          count: 0,
+          gross: 0,
+          tips: 0,
+          fees: 0,
+          net: 0,
+          spend: 0,
+          spendNative: 0,
+          profit: 0,
+          purchases: 0,
+          purchaseValue: 0,
+          roas: null,
+          cpa: null,
+          isAdCampaign: true,
+          utmCampaignId: campaignId,
+          utmCampaignIds: new Set([String(campaignId)]),
+          byCurrency: {},
+        });
+      }
+
+      const agg = perCampaign.get(targetKey);
+      agg.spend += spendInfo.spend;
+      agg.spendNative += spendInfo.spendNative;
+      agg.purchases += spendInfo.purchases;
+      agg.purchaseValue = (agg.purchaseValue || 0) + spendInfo.value;
+      agg.isAdCampaign = true;
+      if (!agg.utmCampaignId) agg.utmCampaignId = campaignId;
+      if (!agg._allAdNames) agg._allAdNames = [];
+      if (!agg._activeAdNames) agg._activeAdNames = [];
+      if (!agg._allAdNames.includes(adName)) agg._allAdNames.push(adName);
+      if ((spendInfo.spend > 0 || spendInfo.purchases > 0) && !agg._activeAdNames.includes(adName)) {
+        agg._activeAdNames.push(adName);
+        agg._lastActiveRoas = spendInfo.roas;
+        agg._lastActiveCpa = spendInfo.cpa;
+      } else if (agg._allAdNames.length === 1) {
+        agg._lastActiveRoas = spendInfo.roas;
+        agg._lastActiveCpa = spendInfo.cpa;
+      }
+    }
+
+    for (const agg of perCampaign.values()) {
+      if (agg.isAdCampaign) {
+        if (agg._activeAdNames && agg._activeAdNames.length > 0) {
+          agg.name = agg._activeAdNames.join(' + ');
+        } else if (agg._allAdNames && agg._allAdNames.length > 0) {
+          agg.name = agg._allAdNames[0];
+        }
+        const activeCount = agg._activeAdNames ? agg._activeAdNames.length : 0;
+        if (activeCount <= 1 && agg._lastActiveRoas != null) {
+          agg.roas = agg._lastActiveRoas;
+        } else if (agg.purchaseValue > 0 && agg.spend > 0) {
+          agg.roas = agg.purchaseValue / agg.spend;
+        } else if (agg.gross > 0 && agg.spend > 0) {
+          agg.roas = agg.gross / agg.spend;
+        }
+        if (activeCount <= 1 && agg._lastActiveCpa != null) {
+          agg.cpa = agg._lastActiveCpa;
+        } else if (agg.purchases > 0 && agg.spend > 0) {
+          agg.cpa = agg.spend / agg.purchases;
+        } else if (agg.count > 0 && agg.spend > 0) {
+          agg.cpa = agg.spend / agg.count;
+        }
+      }
+      delete agg.utmCampaignIds;
+      delete agg._allAdNames;
+      delete agg._activeAdNames;
+      delete agg._lastActiveRoas;
+      delete agg._lastActiveCpa;
     }
   }
 
