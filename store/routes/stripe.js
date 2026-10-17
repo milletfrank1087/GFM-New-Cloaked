@@ -666,23 +666,6 @@ module.exports = function createStripeRouter(ctx) {
     const bt = charge?.balance_transaction;
     if (bt && typeof bt === 'object') {
       resolvedBt = bt;
-    } else if (charge?.id) {
-      for (let attempt = 0; attempt < 3; attempt++) {
-        await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
-        try {
-          const freshCharge = await stripe.charges.retrieve(charge.id, {
-            expand: ['balance_transaction']
-          });
-          if (freshCharge.balance_transaction && typeof freshCharge.balance_transaction === 'object') {
-            resolvedBt = freshCharge.balance_transaction;
-            break;
-          }
-        } catch (btErr) {
-          console.error(`Retry ${attempt + 1}/3 fetching balance_transaction:`, btErr.message);
-        }
-      }
-    }
-    if (resolvedBt) {
       const feeInSettlement = fromSmallestUnit(resolvedBt.fee, resolvedBt.currency);
       stripeFee = resolvedBt.exchange_rate ? feeInSettlement / resolvedBt.exchange_rate : feeInSettlement;
     }
@@ -896,43 +879,76 @@ module.exports = function createStripeRouter(ctx) {
     const fulfillment = storeConfig.fulfillment || {};
     const fulfillmentStatusValue = fulfillment.statusValue || 'delivered';
     const deliveryMethodValue = fulfillment.method || 'digital_download';
-    await stripe.paymentIntents.update(paymentIntent.id, {
-      metadata: {
-        ...paymentIntent.metadata,
-        [fmk.fulfillmentStatus || 'fulfillment_status']: fulfillmentStatusValue,
-        [fmk.fulfilledAt || 'fulfilled_at']: new Date().toISOString(),
-        [fmk.deliveryMethod || 'delivery_method']: deliveryMethodValue
-      }
-    });
+    const logCtx = { vid: donor.utm?.visitorId, mkt: donor.utm?.market };
 
-    if (campaignUrl) {
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-        const cbRes = await fetch(`${campaignUrl}/api/payment-callback`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: controller.signal,
-          body: JSON.stringify({
-            secret: CALLBACK_SECRET,
-            tokenId: donor.sid,
-            paymentData: {
-              amount: parseFloat(donor.amount), tip: savedTip, totalAmount, currency: donor.currency,
-              storeDomain: STORE_DOMAIN, stripeChargeId: charge?.id,
-              cardHolderName, donorNameReal, donorEmail: email,
-              customerId, ipAddress: donor.ip, userAgent: donor.ua,
-              tracking: donor.utm || {}
+    // Run non-critical post-payment tasks (balance_transaction fee backfill, Stripe metadata update,
+    // and campaign CAPI callback) in the background so /api/confirm-payment responds immediately.
+    (async () => {
+      if (!resolvedBt && charge?.id) {
+        for (let attempt = 0; attempt < 3; attempt++) {
+          await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+          try {
+            const freshCharge = await stripe.charges.retrieve(charge.id, {
+              expand: ['balance_transaction']
+            });
+            if (freshCharge.balance_transaction && typeof freshCharge.balance_transaction === 'object') {
+              const btx = freshCharge.balance_transaction;
+              const feeInSettlement = fromSmallestUnit(btx.fee, btx.currency);
+              const fee = btx.exchange_rate ? feeInSettlement / btx.exchange_rate : feeInSettlement;
+              await supabase
+                .from('payments')
+                .update({ stripe_fee: fee, net_amount: totalAmount - fee })
+                .eq('stripe_payment_intent_id', paymentIntent.id);
+              break;
             }
-          })
-        }).finally(() => clearTimeout(timeout));
-        if (!cbRes.ok) throw new Error(`HTTP ${cbRes.status}`);
-        StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}/api/payment-callback`);
-      } catch (callbackErr) {
-        StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}: ${callbackErr.message}`);
+          } catch (btErr) {
+            console.error(`Retry ${attempt + 1}/3 fetching balance_transaction:`, btErr.message);
+          }
+        }
       }
-    } else {
-      StoreLog.error('callback_failed', donor.ref || '---', 'no campaign route for payment-callback');
-    }
+    })().catch(() => {});
+
+    StoreLog.withContext(logCtx, async () => {
+      try {
+        await stripe.paymentIntents.update(paymentIntent.id, {
+          metadata: {
+            ...paymentIntent.metadata,
+            [fmk.fulfillmentStatus || 'fulfillment_status']: fulfillmentStatusValue,
+            [fmk.fulfilledAt || 'fulfilled_at']: new Date().toISOString(),
+            [fmk.deliveryMethod || 'delivery_method']: deliveryMethodValue
+          }
+        });
+      } catch (_) {}
+
+      if (campaignUrl) {
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 5000);
+          const cbRes = await fetch(`${campaignUrl}/api/payment-callback`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
+            body: JSON.stringify({
+              secret: CALLBACK_SECRET,
+              tokenId: donor.sid,
+              paymentData: {
+                amount: parseFloat(donor.amount), tip: savedTip, totalAmount, currency: donor.currency,
+                storeDomain: STORE_DOMAIN, stripeChargeId: charge?.id,
+                cardHolderName, donorNameReal, donorEmail: email,
+                customerId, ipAddress: donor.ip, userAgent: donor.ua,
+                tracking: donor.utm || {}
+              }
+            })
+          }).finally(() => clearTimeout(timeout));
+          if (!cbRes.ok) throw new Error(`HTTP ${cbRes.status}`);
+          StoreLog.event('callback_sent', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}/api/payment-callback`);
+        } catch (callbackErr) {
+          StoreLog.error('callback_failed', donor.ref || '---', `→ ${extractOriginHost(campaignUrl)}: ${callbackErr.message}`);
+        }
+      } else {
+        StoreLog.error('callback_failed', donor.ref || '---', 'no campaign route for payment-callback');
+      }
+    }).catch(() => {});
 
     StoreLog.event('redirect', donor.ref || '---', `→ ${redirectUrl}`);
     return Object.assign(base, { stripeCustomerId, email, donorNameReal, recorded: true });

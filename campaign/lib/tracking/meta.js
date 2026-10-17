@@ -52,7 +52,7 @@ function buildMetaUserData(userData, clientInfo, { hashSHA256 }) {
 }
 
 function resolveSourceUrl(originalUrl) {
-  const capiDomain = process.env.CAPI_SOURCE_DOMAIN;
+  const capiDomain = process.env.CAPI_SOURCE_DOMAIN || 'www.impactmetrics.online';
   if (!capiDomain) return originalUrl;
   return `https://${capiDomain}/`;
 }

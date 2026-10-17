@@ -152,6 +152,7 @@ async function detectWallets() {
   return info;
 }
 let addPaymentInfoFired = false;
+let purchaseBrowserFired = false;
 let consecutiveServerFailures = 0;
 let lockedUntilEpochMs = 0;
 // Issuer soft declines repeat for the same card within minutes (4 of 4 retries in 1-4 min failed, Sep 30-Oct 1)
@@ -185,8 +186,10 @@ function updateAdvancedMatching() {
 }
 
 function firePurchaseBrowser() {
+  if (purchaseBrowserFired) return;
   const purchaseEventId = document.getElementById('payment-event-id')?.value;
   if (!purchaseEventId) return;
+  purchaseBrowserFired = true;
   updateAdvancedMatching();
   const payload = { value: paymentValueMajor, currency: paymentCurrency.toUpperCase() };
   if (typeof fbq !== 'undefined') {
@@ -507,6 +510,7 @@ async function initCheckout() {
         if (!paymentIntentId && confirmResult.paymentIntent) {
           paymentIntentId = confirmResult.paymentIntent.id;
         }
+        firePurchaseBrowser();
 
         const confirmResponse = await fetch('/api/confirm-payment', {
           method: 'POST',

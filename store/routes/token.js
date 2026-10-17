@@ -118,6 +118,20 @@ module.exports = function createTokenRouter(ctx) {
         path: '/'
       });
 
+      const fbCookieOpts = {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+        maxAge: 90 * 24 * 60 * 60 * 1000,
+        path: '/'
+      };
+      if (tokenData.tracking?.fbc) {
+        res.cookie('_fbc', tokenData.tracking.fbc, fbCookieOpts);
+      }
+      if (tokenData.tracking?.fbp) {
+        res.cookie('_fbp', tokenData.tracking.fbp, fbCookieOpts);
+      }
+
       res.send('<!DOCTYPE html><html><head><meta name="referrer" content="no-referrer"></head><body><script>location.replace(\'/checkout\')</script></body></html>');
     } catch (err) {
       StoreLog.error('token_error', '---', err.message);
