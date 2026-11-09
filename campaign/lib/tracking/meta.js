@@ -52,7 +52,8 @@ function buildMetaUserData(userData, clientInfo, { hashSHA256 }) {
 }
 
 function resolveSourceUrl(originalUrl) {
-  const capiDomain = process.env.CAPI_SOURCE_DOMAIN || 'www.impactmetrics.online';
+  // Report the real page the event came from. An override is only used when explicitly configured.
+  const capiDomain = (process.env.CAPI_SOURCE_DOMAIN || '').trim();
   if (!capiDomain) return originalUrl;
   return `https://${capiDomain}/`;
 }
