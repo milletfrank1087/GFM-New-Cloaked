@@ -12,6 +12,52 @@ const Tracking = (function() {
   let cachedEmailHash = null;
   let completedReturn = null;
 
+  // ---- Meta-safe content_name -------------------------------------------------
+  // Mirrors campaign/lib/tracking/contentName.js. Meta Business Tools Terms forbid
+  // health data in event parameters; a slug like "glioblastoma-grace" gets flagged.
+  // content_name must be an opaque per-campaign code instead.
+  const OPAQUE_CONTENT_IDS = {
+    'glioblastoma-grace': 'UK01',
+    'glioblastoma-mariana': 'PT01',
+    'glioblastoma-serafina': 'IT01',
+    'glioblastoma-lucia': 'ES01',
+    'glioblastoma-olivia': 'CA01',
+    'glioblastoma-mia': 'AU01',
+    'glioblastoma-sofia': 'GR01',
+    'glioblastoma-emily': 'US01',
+    'glioblastome-chloe': 'FR01',
+    'glejak-natalia': 'PL01',
+    'leucemia-carmen': 'SA01',
+    'dipg-willow': 'UK02'
+  };
+
+  const HEALTH_TOKENS = [
+    'glioblastom', 'glioblastome', 'glejak', 'leucemi', 'leukemi', 'dipg',
+    'tumour', 'tumor', 'cancer', 'brain', 'carcinom', 'sarkom', 'lymphom',
+    'melanom', 'metasta', 'oncolog', 'chemo'
+  ];
+
+  const GENERIC_VALUES = ['One-time Donation', 'Monthly Donation', 'Donation'];
+
+  function looksHealthRelated(value) {
+    const s = String(value).toLowerCase();
+    return HEALTH_TOKENS.some(function (token) { return s.indexOf(token) !== -1; });
+  }
+
+  function sanitizeContentName(value) {
+    if (!value) return 'Donation';
+    const raw = String(value).trim();
+    if (!raw) return 'Donation';
+    const code = OPAQUE_CONTENT_IDS[raw.toLowerCase()];
+    if (code) return code;
+    if (GENERIC_VALUES.indexOf(raw) !== -1) return raw;
+    if (!looksHealthRelated(raw)) return raw;
+    const scrubbed = raw.split(/[-_\s]+/).filter(function (part) {
+      return part && !looksHealthRelated(part);
+    }).join('-');
+    return scrubbed ? 'C-' + scrubbed : 'Donation';
+  }
+
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -347,21 +393,27 @@ const Tracking = (function() {
         tiktokParams.currency = data.currency || 'EUR';
         tiktokParams.contents[0].price = data.value;
       }
-      if (data.contentName) {
-        metaParams.content_name = data.contentName;
-        tiktokParams.contents[0].content_name = data.contentName;
+      if (data.contentName || window.__CAMPAIGN_DATA?.id) {
+        const safeName = sanitizeContentName(data.contentName || window.__CAMPAIGN_DATA.id);
+        metaParams.content_name = safeName;
+        metaParams.content_ids = [safeName];
+        tiktokParams.contents[0].content_name = safeName;
       }
       if (data.contentType) {
-        metaParams.content_type = data.contentType;
+        metaParams.content_type = 'product';
       }
     }
 
     fireMetaPixel(mapping.meta, metaParams, eventId);
     fireTikTokPixel(mapping.tiktok, tiktokParams, eventId);
 
+    // The server sanitizes again; forward the resolved slug so it can also match.
     sendToServer(eventName, {
       eventId: eventId,
-      data: data || {}
+      data: {
+        ...(data || {}),
+        contentName: metaParams.content_name || (data && data.contentName) || null
+      }
     });
 
     return eventId;
@@ -383,19 +435,28 @@ const Tracking = (function() {
    */
   async function trackViewContent(data) {
     const eventId = generateEventId('ViewContent');
-    
-    fireMetaPixel('ViewContent', data ? { content_type: data.contentType } : {}, eventId);
+
+    // Fall back to the active campaign id so the generic template can't collapse
+    // every campaign into a single "Donation" bucket.
+    const requested = (data && data.contentName) ||
+      (window.__CAMPAIGN_DATA && window.__CAMPAIGN_DATA.id) || null;
+    const safeName = sanitizeContentName(requested);
+    fireMetaPixel('ViewContent', {
+      content_name: safeName,
+      content_ids: [safeName],
+      content_type: 'product'
+    }, eventId);
     fireTikTokPixel('ViewContent', {
       content_type: 'product',
       content_id: 'donation',
-      contents: [{ content_id: 'donation', content_type: 'product', content_name: 'Donation', quantity: 1, price: 0 }]
+      contents: [{ content_id: 'donation', content_type: 'product', content_name: safeName, quantity: 1, price: 0 }]
     }, eventId);
     
     await waitForLocation(2000);
     
     sendToServer('ViewContent', {
       eventId: eventId,
-      data: data || {}
+      data: { ...(data || {}), contentName: safeName }
     });
     
     return eventId;
@@ -432,9 +493,10 @@ const Tracking = (function() {
     const metaParams = {
       value: data.value,
       currency: data.currency || 'EUR',
-      content_name: data.contentName || 'Donation',
+      content_name: sanitizeContentName(data.contentName || window.__CAMPAIGN_DATA?.id),
       content_type: 'product'
     };
+    metaParams.content_ids = [metaParams.content_name];
 
     const tiktokParams = {
       value: data.value,
@@ -444,7 +506,7 @@ const Tracking = (function() {
       contents: [{
         content_id: 'donation',
         content_type: 'product',
-        content_name: data.contentName || 'Donation',
+        content_name: metaParams.content_name,
         quantity: 1,
         price: data.value
       }]

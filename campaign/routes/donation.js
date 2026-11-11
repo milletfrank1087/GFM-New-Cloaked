@@ -235,6 +235,7 @@ module.exports = function createDonationRouter(ctx) {
             amount: paymentData.totalAmount ?? paymentData.amount, // donation + tip
             currency: paymentData.currency,
             donationType: tracking.cadence === 'monthly' ? 'monthly' : 'one-time',
+            campaignSlug: tracking.campaignSlug || ACTIVE_CAMPAIGN,
             captureId: paymentData.stripeChargeId,
             cardHolderName: paymentData.cardHolderName,
             donorNameReal: paymentData.donorNameReal,

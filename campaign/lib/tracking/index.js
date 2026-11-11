@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const { sendMetaEvent } = require('./meta');
 const { sendTikTokEvent } = require('./tiktok');
+const { sanitizeContentName, sanitizeContentType } = require('./contentName');
 
 function getConfig() {
   return {
@@ -60,12 +61,16 @@ async function trackEvent(eventName, eventData, userData, clientInfo) {
     tiktokProperties.currency = eventData.currency || 'EUR';
   }
 
+  // Meta Business Tools Terms: content_name must not carry health information.
+  // Sanitize at the single choke point so browser, server and CAPI all agree.
   if (eventData.contentName) {
-    metaCustomData.content_name = eventData.contentName;
+    const safeName = sanitizeContentName(eventData.contentName);
+    metaCustomData.content_name = safeName;
+    metaCustomData.content_ids = [safeName];
   }
 
   if (eventData.contentType) {
-    metaCustomData.content_type = eventData.contentType;
+    metaCustomData.content_type = sanitizeContentType(eventData.contentType);
   }
 
   tiktokProperties.content_type = 'product';
@@ -73,7 +78,7 @@ async function trackEvent(eventName, eventData, userData, clientInfo) {
   tiktokProperties.contents = [{
     content_id: eventData.contentId || 'donation',
     content_type: 'product',
-    content_name: eventData.contentName || 'Donation',
+    content_name: sanitizeContentName(eventData.contentName) || 'Donation',
     quantity: 1,
     price: eventData.value || 0
   }];
@@ -137,7 +142,9 @@ async function trackPurchase(paymentData, trackingData, clientInfo) {
     sourceUrl: trackingData.sourceUrl,
     value: paymentData.amount,
     currency: paymentData.currency || 'EUR',
-    contentName: `${paymentData.donationType === 'monthly' ? 'Monthly' : 'One-time'} Donation`,
+    contentName: paymentData.campaignSlug
+      ? sanitizeContentName(paymentData.campaignSlug)
+      : `${paymentData.donationType === 'monthly' ? 'Monthly' : 'One-time'} Donation`,
     contentType: 'product',
     orderId: paymentData.captureId
   };
@@ -164,7 +171,9 @@ async function trackSubscribe(sub, donor, trackingData, clientInfo) {
     sourceUrl: trackingData.sourceUrl,
     value: sub.monthly,
     currency: sub.currency || 'EUR',
-    contentName: 'Monthly Donation',
+    contentName: sub.campaign
+      ? sanitizeContentName(sub.campaign)
+      : 'Monthly Donation',
     contentType: 'product',
     orderId: sub.id
   };

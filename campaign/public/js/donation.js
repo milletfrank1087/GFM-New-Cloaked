@@ -167,7 +167,7 @@ function handleDonatedReturn() {
           Tracking.trackPurchase({
             value: amount,
             currency: currencyCode,
-            contentName: 'One-time Donation',
+            contentName: window.__CAMPAIGN_DATA?.id || 'One-time Donation',
             contentType: 'product'
           }, eventId);
         } else {
@@ -468,8 +468,8 @@ function initPhaseNavigation() {
       if (typeof Tracking !== 'undefined') {
       Tracking.trackInitiateCheckout({
         value: selectedAmount,
-        contentType: 'donation',
-        contentName: isMonthlyDonation() ? 'Monthly Donation' : 'One-time Donation'
+        contentType: 'product',
+        contentName: window.__CAMPAIGN_DATA?.id || (isMonthlyDonation() ? 'Monthly Donation' : 'One-time Donation')
       });
       }
 
