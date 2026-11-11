@@ -34,3 +34,6 @@ start-campaign.bat
 
 # Generated ad image tests (not campaign assets)
 test gens/
+
+# Scoped API keys (zeabur deploy/log helpers)
+secrets/zeabur.env

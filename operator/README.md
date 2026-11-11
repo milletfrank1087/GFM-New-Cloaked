@@ -5,9 +5,37 @@ Local tooling for provisioning store infrastructure. Not part of the runtime ser
 | Script | Purpose |
 |--------|---------|
 | `railway-tool.js` | Railway management CLI — deployment status, build/runtime logs, single-service redeploy, sequential healing |
+| `zeabur-deploy-status.ps1` | Zeabur GraphQL — latest deployment status + age for every service in the project |
 | `godaddy-dns.ps1` | GoDaddy REST API — list/set/delete DNS records |
 | `railway-api.ps1` | Railway GraphQL helpers (dot-source) |
 | `connect-store-dns.ps1` | One-shot: Railway custom domain + GoDaddy CNAME + `STORE_DOMAIN` |
+
+## Deployment model — pushing to `main` deploys everything
+
+The campaign services run on **Zeabur**, not Railway. All 14 services in project
+`6acfe8b2c25afca66dfe5f87` are wired to a GitHub trigger on
+`milletfrank1087/GFM-New-Cloaked` branch `main`, so **any push to `main` rebuilds and
+restarts all 14 in parallel**, whether or not the commit touches them.
+
+Practical consequences:
+
+- A docs-only commit still restarts 14 production containers. Nothing breaks (the
+  `prestart` sterility gate runs on every boot), but each service is briefly cold and
+  the edge serves a redeploy during that window.
+- Never push while a live campaign is mid-flight unless the change is meant to ship.
+- The `prestart` sterility check gates every deploy — a server-tree file containing the
+  operator-identifying token fails the build and takes that service down. See
+  `campaign/scripts/sterility-check.js`.
+- Railway is still used by the `store/` side and by archived projects; check `railway-tool.js`
+  for those before assuming a service is on Zeabur.
+
+Verify a rollout finished (and catch any service that stayed `REMOVED`/`FAILED`):
+
+```powershell
+.\operator\zeabur-deploy-status.ps1
+```
+
+All-`RUNNING` with an age under ~10 minutes means the push landed everywhere.
 
 ## Railway Tool Commands
 
@@ -20,6 +48,7 @@ node operator/railway-tool.js heal                        # Sequentially redeplo
 
 ## Prerequisites
 
+- `secrets/zeabur.env` — `ZEABUR_API_KEY` (gitignored)
 - `secrets/godaddy.env` — GoDaddy API key/secret (gitignored)
 - `~/.railway/config.json` — Railway CLI login token
 
