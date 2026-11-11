@@ -35,3 +35,25 @@ Never "fix" this by hand-editing beacons — `campaign/public/js/meta-unlock.js`
 - **Check a host** with `GET https://connect.facebook.net/signals/config/<pixelId>?domain=<host>` — ~605 KB and no `lockWebpage` means clean.
 - **Do not remove the module** or move it before `fbq('init')`; it needs the pixel registered and the config loaded.
 - `CAPI_SOURCE_DOMAIN` overrides `event_source_url` for CAPI only (`lib/tracking/meta.js`). `www.impactmetrics.online` is the clean fallback domain service.
+
+## Zeabur: `updateEnvironmentVariable` REPLACES the whole set
+
+The GraphQL mutation `updateEnvironmentVariable(serviceID, environmentID, data: Map!)` does not merge — it overwrites the service's entire variable set with whatever map you pass. Sending `{CAPI_SOURCE_DOMAIN: "..."}` alone **deletes every other variable** on that service.
+
+That is not theoretical. On 2026-11-11 it stripped `uk-campaign`, `pl-campaign` and `au-campaign` to a single variable. The containers rebuilt and booted with `PORT` unset, `TRACKING_ENABLED` off, no Supabase and `CURRENCY=USD` — public 502s, then a storefront that would have recorded nothing.
+
+**Always read first, then merge, then write:**
+
+1. `service(_id){ variables(environmentID){ key value } }` — capture the full set.
+2. Build the new map as `{...existing, ...changes}`.
+3. Send the complete map.
+
+For a single key prefer `updateSingleEnvironmentVariable(serviceID, environmentID, oldKey, newKey, value)` or `createEnvironmentVariable`, which do not touch the rest. Env edits alone do **not** restart a running container — follow with `restartService(serviceID, environmentID)`.
+
+`PORT` must stay `3000` on campaign services; the platform health check targets it, so a lost `PORT` yields 502 even though the container is "running".
+
+## Deploy config is fail-fast
+
+`campaign/server.js` calls `assertDeployConfig()`, which exits non-zero in production when `ACTIVE_CAMPAIGN`, `MARKET_CODE`, `CURRENCY`, `MERCHANT_COUNTRY`, `PORT`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CALLBACK_SECRET`, `TRACKING_ENABLED=true` or `FB_PIXEL_ID` are missing. A deploy that lost its variables now dies at boot instead of serving a storefront that silently drops every event. `SKIP_CONFIG_CHECK=1` overrides it for local runs.
+
+`GET /health` returns 200 with `{checks:{database,tracking,campaign}}` when the service can actually record events, and **503** when it cannot — point the platform health check at it.

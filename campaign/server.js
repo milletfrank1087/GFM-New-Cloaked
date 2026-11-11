@@ -62,6 +62,46 @@ const MERCHANT_COUNTRY = process.env.MERCHANT_COUNTRY || 'GR';
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'en';
 
 const CURRENCY = process.env.CURRENCY || 'USD';
+
+// A deploy whose variables were lost boots perfectly happily with tracking off,
+// no database, USD and a US market — the worst outcome, because traffic keeps
+// arriving on a storefront that silently records nothing. Refuse to start in
+// production unless the essentials look like a real market config.
+// SKIP_CONFIG_CHECK=1 is the escape hatch for one-off local runs.
+function assertDeployConfig() {
+  if (process.env.NODE_ENV !== 'production') return;
+  if (process.env.SKIP_CONFIG_CHECK === '1') return;
+
+  const problems = [];
+  const missing = (key) => !String(process.env[key] || '').trim();
+
+  for (const key of ['ACTIVE_CAMPAIGN', 'MARKET_CODE', 'CURRENCY', 'MERCHANT_COUNTRY', 'PORT']) {
+    if (missing(key)) problems.push(`${key} is unset`);
+  }
+  for (const key of ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'CALLBACK_SECRET']) {
+    if (missing(key)) problems.push(`${key} is unset`);
+  }
+  if (!CURRENCY_CONFIG[CURRENCY]) problems.push(`CURRENCY=${CURRENCY} is not a known currency`);
+
+  // Tracking off in production means every funnel event is dropped; only allow it
+  // when it was turned off on purpose rather than lost with the environment.
+  if (missing('TRACKING_ENABLED')) {
+    problems.push('TRACKING_ENABLED is unset');
+  } else if (process.env.TRACKING_ENABLED !== 'true') {
+    problems.push('TRACKING_ENABLED is not "true"');
+  } else if (missing('FB_PIXEL_ID')) {
+    problems.push('FB_PIXEL_ID is unset');
+  }
+
+  if (!problems.length) return;
+
+  console.error('');
+  console.error('  ✖ Refusing to start: this looks like a deploy that lost its variables.');
+  console.error(`    ${problems.join('\n    ')}`);
+  console.error('    Restore the service variables, then redeploy.');
+  console.error('');
+  process.exit(1);
+}
 const CURRENCY_CONFIG = {
   USD: { code: 'USD', symbol: '$',  position: 'before', locale: 'en-US', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
   EUR: { code: 'EUR', symbol: '€',  position: 'before', locale: 'it-IT', decimals: 2, stripeMin: 0.50, presetAmounts: [10, 25, 50, 100, 250, 500], defaultAmount: 50 },
@@ -82,6 +122,8 @@ const CURRENCY_CONFIG = {
   JPY: { code: 'JPY', symbol: '¥',  position: 'before', locale: 'ja-JP', decimals: 0, stripeMin: 50, presetAmounts: [1000, 3000, 5000, 10000, 25000, 50000], defaultAmount: 5000 },
 };
 const ACTIVE_CURRENCY = CURRENCY_CONFIG[CURRENCY] || CURRENCY_CONFIG.USD;
+
+assertDeployConfig();
 
 function fmtCurrency(amount) {
   const s = ACTIVE_CURRENCY.symbol;
@@ -213,6 +255,7 @@ const ctx = {
   ACTIVE_CAMPAIGN,
   ACTIVE_CURRENCY,
   MERCHANT_COUNTRY,
+  MARKET_CODE,
   DEFAULT_LANGUAGE,
   JWT_SECRET,
   ADMIN_PASSWORD,

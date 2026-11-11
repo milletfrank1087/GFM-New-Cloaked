@@ -6,6 +6,7 @@ module.exports = function createPublicRouter(ctx) {
     DEFAULT_LANGUAGE,
     ACTIVE_CURRENCY,
     MERCHANT_COUNTRY,
+    MARKET_CODE,
     ACTIVE_CAMPAIGN,
     getTrackingConfig,
     loadCampaignFromFile,
@@ -33,6 +34,27 @@ module.exports = function createPublicRouter(ctx) {
     const config = getTrackingConfig();
     const fbp = req.cookies._fbp || null;
     res.json({ ...config, fbp });
+  });
+
+  // Readiness probe. A container that booted with missing variables is *running*
+  // but useless: no database, tracking off, wrong currency. Report that as 503 so
+  // the platform keeps the previous healthy deployment instead of routing traffic
+  // to a storefront that silently records nothing.
+  router.get('/health', (req, res) => {
+    const tracking = getTrackingConfig();
+    const checks = {
+      database: !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
+      tracking: !!tracking.enabled,
+      campaign: !!ACTIVE_CAMPAIGN,
+    };
+    const ok = checks.database && checks.tracking && checks.campaign;
+    res.status(ok ? 200 : 503).json({
+      ok,
+      checks,
+      market: MARKET_CODE,
+      currency: ACTIVE_CURRENCY.code,
+      campaign: ACTIVE_CAMPAIGN,
+    });
   });
 
   router.post('/api/ab/event', (req, res) => {
