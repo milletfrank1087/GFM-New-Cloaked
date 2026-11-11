@@ -38,6 +38,9 @@ Same routine as the Spain relaunch (2026-09-28). Never call live Stripe (see CLA
 - [x] **[C]** GoDaddy DNS (cag re-attached 2026-09-28, CNAME → l4ppwax7.up.railway.app; all 3 serve HTTPS 200): add `CNAME <sub> → <x>.up.railway.app` and `TXT _railway-verify.<sub>` for each; wait for Railway certificate.
 - [ ] **[C]** Larkwell `CAMPAIGN_CALLBACK_URLS`: add the new origins (Larkwell redeploys).
 - [x] **[C]** Meta pixel: confirm no `prohibitedPixels` on each new subdomain (risehope.online + subdomains is already allow-listed).
+
+  Check with `GET https://connect.facebook.net/signals/config/<pixelId>?domain=<sub>`: a clean host returns ~605 KB, a restricted one ~205 KB containing `"lockWebpage":true`. `www.impactmetrics.online` is the clean fallback for `CAPI_SOURCE_DOMAIN`. Restricted hosts still deliver through the `meta-unlock.js` bypass (see `campaign/public/js/meta-unlock.js`), but they lose Events Manager diagnostics and browser-side optimisation quality, so prefer a clean subdomain for new markets.
+
 - [ ] **[C]** Profit cockpit: CAD/AUD/PLN exchange rates available (ECB/Frankfurter ✓); new `source_ref`s show per campaign.
 - [ ] **[C]** Live smoke test (no payment): page loads, pixel fires, donate → Larkwell checkout shows CAD/AUD/PLN + right language.
 

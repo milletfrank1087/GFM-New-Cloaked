@@ -166,14 +166,25 @@ async function refreshPreset(preset, { force = false } = {}) {
 }
 
 async function syncCampaigns() {
-  const allRows = [];
+  // Keyed by campaign id so the same campaign reached through two routes (the service's own
+  // account plus ADDITIONAL_AD_ACCOUNT_IDS, or overlapping account ids) is only upserted once.
+  // Postgres aborts an upsert batch outright when one id appears twice:
+  // "ON CONFLICT DO UPDATE command cannot affect row a second time".
+  const rowsById = new Map();
+
+  const collect = (campaigns) => {
+    for (const c of campaigns) {
+      const row = normalizeCampaign(c);
+      if (row.id) rowsById.set(row.id, row);
+    }
+  };
 
   const fetchAccount = async (accountId) => {
     const params = { date_preset: PREFERRED_PRESET, level: 'campaign' };
     if (accountId) params.account_id = accountId;
     const data = await fetchFromManager('/api/dashboard', params);
     if (data?.campaigns && Array.isArray(data.campaigns)) {
-      allRows.push(...data.campaigns.map(normalizeCampaign));
+      collect(data.campaigns);
     }
   };
 
@@ -184,13 +195,14 @@ async function syncCampaigns() {
     }
   }
 
-  if (!allRows.length) return { ok: true, synced: 0 };
+  if (!rowsById.size) return { ok: true, synced: 0 };
 
+  const rows = [...rowsById.values()];
   const { error } = await supabase
     .from('ad_campaigns')
-    .upsert(allRows, { onConflict: 'id' });
+    .upsert(rows, { onConflict: 'id' });
   if (error) throw new Error(`campaign upsert failed: ${error.message}`);
-  return { ok: true, synced: allRows.length };
+  return { ok: true, synced: rows.length };
 }
 
 async function syncPreset(preset, { force = false, refresh = true } = {}) {

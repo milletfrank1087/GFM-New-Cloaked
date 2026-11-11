@@ -25,6 +25,8 @@ module.exports = function createPagesRouter(ctx) {
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '${trackingConfig.fbPixelId}');
   </script>
+  <script src="/js/meta-unlock.js"></script>
+  <script>window.MetaUnlock.start();</script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=${trackingConfig.fbPixelId}&ev=PageView&noscript=1"/></noscript>`;
       }

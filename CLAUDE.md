@@ -25,3 +25,13 @@ Unthrottled Graph API write bursts (`POST /campaigns`, `/adsets`, `/adcreatives`
 2. **Never create with `status: "ACTIVE"`:** All campaigns, ad sets, and ads must be created in **`PAUSED`** state (`status: "PAUSED"`). Never toggle a newly created campaign to `ACTIVE` via API — let the user activate it manually in Ads Manager (`Power Editor`) after review completes.
 3. **Cold (`$0`-spend) ad accounts:** Never create more than **1 warmup campaign (`$25–$50/day`, `PAUSED`)** on a `$0`-spend ad account, and enforce at least **15–30 seconds** of delay between individual write `POST` requests.
 4. **Check for security checkpoints first (`error_code: 3858385`):** Before any Meta write call, inspect `issues_info` / `activities`. If the user profile or any ad has `error_code: 3858385` (*"Please authenticate your account"*), **stop immediately and do not send any write requests** until the user completes authentication in Ads Manager. Prefer a Business System User token (`FB_SYSTEM_USER_ACCESS_TOKEN`) over a personal user token (`FB_USER_ACCESS_TOKEN`) for API mutations.
+
+## Meta pixel: restricted-host bypass
+
+Meta silently "prohibits" the pixel on some hostnames (`blockReason: "source_category"` — it classifies the landing page as sensitive health data). On such a host the config script it serves is a restricted variant: ~205 KB instead of ~605 KB, with `"lockWebpage":true`, `restrictedEventNames: ["AddPaymentInfo","AddToCart","InitiateCheckout","Purchase"]`, and `content_name` on the sensitive-key list. Result: every `fbq()` call is queued and never sent, Landing Page Views read 0, and the host looks dead while paid traffic keeps arriving.
+
+Never "fix" this by hand-editing beacons — `campaign/public/js/meta-unlock.js` is injected after `fbq('init')` in `routes/pages.js` and handles it: it opts the pixel out of the four gating plugins, releases the lock, and trims queued params. It is loaded on every campaign page and is a no-op on clean hosts.
+
+- **Check a host** with `GET https://connect.facebook.net/signals/config/<pixelId>?domain=<host>` — ~605 KB and no `lockWebpage` means clean.
+- **Do not remove the module** or move it before `fbq('init')`; it needs the pixel registered and the config loaded.
+- `CAPI_SOURCE_DOMAIN` overrides `event_source_url` for CAPI only (`lib/tracking/meta.js`). `www.impactmetrics.online` is the clean fallback domain service.
