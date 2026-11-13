@@ -41,13 +41,37 @@ Unthrottled Graph API write bursts (`POST /campaigns`, `/adsets`, `/adcreatives`
 
 ## Meta pixel: restricted-host bypass
 
-Meta silently "prohibits" the pixel on some hostnames (`blockReason: "source_category"` — it classifies the landing page as sensitive health data). On such a host the config script it serves is a restricted variant: ~205 KB instead of ~605 KB, with `"lockWebpage":true`, `restrictedEventNames: ["AddPaymentInfo","AddToCart","InitiateCheckout","Purchase"]`, and `content_name` on the sensitive-key list. Result: every `fbq()` call is queued and never sent, Landing Page Views read 0, and the host looks dead while paid traffic keeps arriving.
+Meta silently "prohibits" the pixel on some hostnames (`blockReason: "source_category"` — it classifies the landing page as sensitive health data). On such a host the config script it serves is a restricted variant: `"lockWebpage":true`, `restrictedEventNames: ["AddPaymentInfo","AddToCart","InitiateCheckout","Purchase"]`, and `content_name` on the sensitive-key list. Result: every `fbq()` call is queued and never sent, Landing Page Views read 0, and the host looks dead while paid traffic keeps arriving.
 
 Never "fix" this by hand-editing beacons — `campaign/public/js/meta-unlock.js` is injected after `fbq('init')` in `routes/pages.js` and handles it: it opts the pixel out of the four gating plugins, releases the lock, and trims queued params. It is loaded on every campaign page and is a no-op on clean hosts.
 
-- **Check a host** with `GET https://connect.facebook.net/signals/config/<pixelId>?domain=<host>` — ~605 KB and no `lockWebpage` means clean.
+- **Check a host** with `GET https://connect.facebook.net/signals/config/<pixelId>?domain=<host>`, then read the **`restrictedEventNames` array**: it must be **empty**. Ignore total bytes — they no longer discriminate (see next section). `"lockWebpage":true` means the pixel is still locked, and a `prohibitedpixels` module means full prohibition.
 - **Do not remove the module** or move it before `fbq('init')`; it needs the pixel registered and the config loaded.
-- `CAPI_SOURCE_DOMAIN` overrides `event_source_url` for CAPI only (`lib/tracking/meta.js`). `www.impactmetrics.online` is the clean fallback domain service.
+- `CAPI_SOURCE_DOMAIN` overrides `event_source_url` for CAPI only (`lib/tracking/meta.js`); unset means the real URL is reported. It is currently unset.
+
+**Byte size is a trap now.** Measured 2026-11-13: *every* host returns ~406–408 KB, including genuinely clean ones, because Meta now always ships the restricted-plugins bundle while leaving `restrictedEventNames` **empty**. The old "605 KB = clean" rule is dead — size only marks a restrictive landing page (the apex returns ~154 KB). What matters is whether the money events appear in the array:
+
+```bash
+curl -s "https://connect.facebook.net/signals/config/<pixelId>?domain=<host>" \
+  | grep -o '"restrictedEventNames":\[[^]]*\]'
+# [] = clean.  ["AddPaymentInfo","AddToCart","InitiateCheckout","Purchase"] = gated
+```
+
+Do it with `curl -o file` and read `file.Length`, not by piping into a PowerShell string.
+
+## Current host status (measured 2026-11-13)
+
+All campaign hosts are clean — `restrictedEventNames` is `[]` on every one, no `lockWebpage`, no `prohibitedpixels`. The `*g` hosts that were flagged on 2026-11-11 have since been cleared, so the 2026-11-11 table below is historical, not current.
+
+`CAPI_SOURCE_DOMAIN` was **removed** from `uk-campaign` and `pt-campaign` on 2026-11-13 (via `deleteSingleEnvironmentVariable`, not a map replace) so CAPI reports the real `ukw`/`ptw` URL and Events Manager diagnostics work again.
+
+**Store routing does not depend on it.** `utm.sourceUrl` is set in the browser from `window.location.href`, so `CAMPAIGN_CALLBACK_URLS` matching sees the real host regardless of `CAPI_SOURCE_DOMAIN`. Dropping the override cannot break Purchase.
+
+## Meta / Facebook Ads API details that cost time
+
+- **`GET /?id=<url>&scrape=true` and the batch `POST /?ids=…` scrape both return `code 100`, `error_subcode 33`** with the `meta-ads-new` token — it lacks `business_management`. Use [Sharing Debugger](https://developers.facebook.com/tools/debug/) instead of burning calls on it.
+- **`POST /{business-id}/owned_domains` is not the verify endpoint.** The real one is `POST /{domain-id}/verify` with `verification_method`, and the only accepted values are `{DNS_RECORD, HTML_UPLOAD, META_TAG}` — `DNS_TXT` is rejected. It also needs `business_management`, so in practice the dashboard button is the way.
+- **Zeabur mutations need subfield selections or explicit scalar form.** `deleteSingleEnvironmentVariable` returns `[EnvironmentVariable!]!` and fails with *"must have a selection of subfields"* without `{ key }`. `restartService` returns `Boolean` and fails with *"must not have a selection"* if given one. Both reject a bare trailing `}` typo with `Unexpected }` — cheap to waste a cycle on.
 
 ## Meta restriction is per-hostname, not per-domain
 
