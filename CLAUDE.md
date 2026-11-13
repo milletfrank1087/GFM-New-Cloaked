@@ -17,6 +17,19 @@ Allowed data sources for investigation:
 
 Local test runs write to the production Supabase: mark/clean up test rows afterwards.
 
+## The apex `risehope.online` is on Zeabur (moved 2026-11-13)
+
+**`risehope.online` and `www.risehope.online` are served by `impact-metrics`** (`6acfea0e7741ff5769fb9e09`) — the `clean-domain` static page — hosted on the Zeabur ingress `88.198.156.58`. `www` is a CNAME to `@`, so apex and `www` always move together.
+
+Before 2026-11-13 the apex was a **GoDaddy Website Builder 8** "Launching Soon" placeholder on AWS Global Accelerator (`76.223.105.230` / `13.248.243.5`), owned by the registrar's builder product. That is why adding a `<meta>` tag to the repo did nothing for `http://risehope.online/`: nothing in git could ever reach that host. It now resolves to Zeabur, so `git push` does affect it.
+
+- Meta **domain verification** for Bright Bastion (`2212915982914957`) is satisfied two independent ways: the `facebook-domain-verification=awgxiyxiysziplf4tr76b8ffc4mskv` **TXT record on `@`** (GoDaddy, TTL 600), and the **meta tag** in `<head>` of every `campaign/public/*.html` and `clean-domain/public/index.html`. Meta checks the apex URL, which is why the apex had to move at all.
+- `clean-domain/public/index.html` carries **two** verification tags (ours plus `bv38…` for `reddingtonv6`). Meta allows several; do not delete either without knowing which business still needs it.
+- The repo renders pages with `fs.readFileSync` + placeholder replacement, not a live template engine, so a tag inserted immediately after `<head>` survives — no code change needed to re-add one.
+- Do not re-point the apex at Website Builder. If you detach these domains from `impact-metrics`, `http://risehope.online/` regresses to the placeholder and site-wide domain verification breaks.
+
+The Graph API `/verify` shortcut is unavailable: it needs `business_management`, which the `meta-ads-new` token lacks, and it rejects the call with `(#10) Application does not have permission`. The valid `verification_method` enum is `{DNS_RECORD, HTML_UPLOAD, META_TAG}` — not `DNS_TXT`.
+
 ## Meta / Facebook Ads API: never bulk-create or auto-activate
 
 Unthrottled Graph API write bursts (`POST /campaigns`, `/adsets`, `/adcreatives`, `/ads`) and creating objects with `status: "ACTIVE"` on a cold (`$0`-spend) ad account will immediately trigger Meta's automated anti-hijack / integrity ban (`disable_reason: 1`).
