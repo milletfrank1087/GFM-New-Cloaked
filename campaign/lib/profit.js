@@ -40,6 +40,20 @@ function presetDaySpan(preset) {
   return map[preset] || 30;
 }
 
+const REPORT_TZ = 'Europe/Athens';
+
+function athensTodayYmd(now = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: REPORT_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+}
+
+function shiftYmd(ymd, days) {
+  return new Date(Date.parse(`${ymd}T00:00:00Z`) + days * 86400000).toISOString().slice(0, 10);
+}
+
+function datePart(value) {
+  return value ? String(value).slice(0, 10) : null;
+}
+
 const PROFIT_FIELDS =
   'id, amount, service_fee, total_amount, stripe_fee, net_amount, created_at, ' +
   'currency, store_id, store_domain, source_ref, utm_campaign, status, ' +
@@ -162,9 +176,32 @@ function failureTransaction(row, rates) {
   };
 }
 
-async function fetchAdSpendData(preset) {
-  if (!supabase) return { spendRows: [], campaignRows: [], historicalUtmMap: new Map() };
-  const [spendRes, campRes, histPayRes] = await Promise.all([
+async function fetchAdSpendData(preset, dateRange = null) {
+  if (!supabase) return { spendRows: [], campaignRows: [], historicalUtmMap: new Map(), syncMeta: null, dailySpendRows: [], metaDailyRows: [] };
+  const reconStart = shiftYmd(athensTodayYmd(), -6);
+  const rangeStart = datePart(dateRange?.startDate);
+  const rangeEnd = datePart(dateRange?.endDate);
+  // Daily rows must cover both the requested payments window and the last-7d reconciliation window.
+  const dailySince = rangeStart ? (rangeStart < reconStart ? rangeStart : reconStart) : null;
+
+  let dailyQuery = supabase
+    .from('ad_spend')
+    .select('campaign_id, date, date_preset, spend, purchases_total, purchase_value_total, fetched_at')
+    .like('date_preset', 'day:%')
+    .order('date', { ascending: true })
+    .limit(10000);
+  if (dailySince) dailyQuery = dailyQuery.gte('date', dailySince);
+  if (rangeEnd) dailyQuery = dailyQuery.lte('date', rangeEnd);
+
+  let metaDailyQuery = supabase
+    .from('ad_spend')
+    .select('campaign_id, date, date_preset, spend, purchases_total, purchase_value_total, fetched_at')
+    .like('date_preset', 'meta-day:%')
+    .gte('date', reconStart)
+    .order('date', { ascending: true })
+    .limit(5000);
+
+  const [spendRes, campRes, histPayRes, metaRes, dailyRes, metaDailyRes] = await Promise.all([
     supabase
       .from('ad_spend')
       .select('campaign_id, date, spend, purchases_total, purchase_value_total, purchase_roas_total, cost_per_purchase, fetched_at')
@@ -180,6 +217,9 @@ async function fetchAdSpendData(preset) {
       .not('source_ref', 'is', null)
       .order('created_at', { ascending: false })
       .limit(2000),
+    supabase.from('ad_sync_meta').select('*').eq('preset', preset).maybeSingle(),
+    dailyQuery,
+    metaDailyQuery,
   ]);
   if (spendRes.error) throw new Error(spendRes.error.message);
   const historicalUtmMap = new Map();
@@ -194,6 +234,9 @@ async function fetchAdSpendData(preset) {
     spendRows: spendRes.data || [],
     campaignRows: campRes.data || [],
     historicalUtmMap,
+    syncMeta: metaRes?.error ? null : (metaRes?.data || null),
+    dailySpendRows: dailyRes?.error ? [] : (dailyRes?.data || []),
+    metaDailyRows: metaDailyRes?.error ? [] : (metaDailyRes?.data || []),
   };
 }
 
@@ -258,7 +301,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
 
   const [paymentResult, adDataResult, latestRatesResult, failureRows] = await Promise.all([
     fetchPayments(campaignSlug, dateRange),
-    withAdSpend ? fetchAdSpendData(preset) : Promise.resolve({ spendRows: [], campaignRows: [] }),
+    withAdSpend ? fetchAdSpendData(preset, dateRange) : Promise.resolve({ spendRows: [], campaignRows: [], syncMeta: null, dailySpendRows: [], metaDailyRows: [] }),
     fetchLatestRates().catch(() => null),
     fetchFailures(campaignSlug, dateRange).catch((err) => {
       console.warn('[profit] failures not loaded:', err.message);
@@ -378,7 +421,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     cb.fxSource = p.fx?.source || cb.fxSource;
   }
 
-  const dailyRows = [...daily.map.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
+  let dailyRows = [...daily.map.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
   const hourlyRows = Array.from({ length: 24 }, (_, i) => {
     const hk = String(i).padStart(2, '0') + ':00';
     return hourly.map.get(hk) || { date: hk, count: 0, gross: 0, tips: 0, fees: 0, net: 0, spend: 0, profit: 0, byCurrency: {} };
@@ -391,19 +434,31 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
   let spendToBaseRate = 1;
   const ttl = getPresetTtl(preset);
   let isStale = false;
+  let syncMeta = null;
+  let spendSource = preset;
+  let reconciliation = [];
 
   if (withAdSpend) {
     if (latestRatesResult && latestRatesResult[AD_SPEND_CURRENCY]) {
       spendToBaseRate = convertToBase(1, AD_SPEND_CURRENCY, latestRatesResult);
     }
 
-    const { spendRows, campaignRows, historicalUtmMap } = adDataResult;
+    const { spendRows, campaignRows, historicalUtmMap, dailySpendRows, metaDailyRows } = adDataResult;
+    syncMeta = adDataResult.syncMeta || null;
     const campById = new Map((campaignRows || []).map(c => [String(c.id), c]));
     const nameById = new Map((campaignRows || []).map(c => [String(c.id), c.name]));
     const spendByCampaign = new Map();
     let latestFetchedAt = 0;
 
-    for (const row of spendRows || []) {
+    // Long ranges (This Year / All Time) have no matching Meta preset: presets cap at
+    // last_90d while payments cover Jan 1 -> now or everything. Sum the Athens daily
+    // rows over the payments window instead, when they exist.
+    const isLongRange = rangeKey === 'thisYear' || rangeKey === 'allTime';
+    const useDailySpend = isLongRange && (dailySpendRows || []).length > 0;
+    spendSource = useDailySpend ? 'daily-athens-rows' : preset;
+    const spendSourceRows = useDailySpend ? dailySpendRows : spendRows;
+
+    for (const row of spendSourceRows || []) {
       const fetchedAt = Date.parse(row.fetched_at || '');
       if (Number.isFinite(fetchedAt)) latestFetchedAt = Math.max(latestFetchedAt, fetchedAt);
       if (!spendByCampaign.has(row.campaign_id)) {
@@ -423,7 +478,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
 
     spendFreshAt = latestFetchedAt || null;
     isStale = !latestFetchedAt || (Date.now() - latestFetchedAt > ttl);
-    if ((spendRows || []).length === 0 || isStale) {
+    if ((spendSourceRows || []).length === 0 || isStale) {
       adRefreshScheduled = scheduleAdRefresh(preset);
     }
 
@@ -501,6 +556,61 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
         agg._lastActiveRoas = spendInfo.roas;
         agg._lastActiveCpa = spendInfo.cpa;
       }
+    }
+
+    // Daily Athens spend -> daily timeline + last-7d Athens-vs-Meta reconciliation.
+    const spendTargetKey = (campaignId) => {
+      const cid = String(campaignId);
+      const campMeta = campById.get(cid) || null;
+      const mappedSlug = resolveCampaignSlugFromMeta(cid, campMeta, utmToSlugMap);
+      if (!mappedSlug && ownedPixels.size > 0) {
+        const campPixel = campMeta?.pixel_id ? String(campMeta.pixel_id).trim() : null;
+        if (!campPixel || !ownedPixels.has(campPixel)) return null;
+      }
+      const targetKey = mappedSlug || cid;
+      const inScope = !campaignSlug || campaignSlug === 'all' || campaignSlug === cid || campaignSlug === targetKey;
+      return inScope ? targetKey : null;
+    };
+
+    const athensDailyByDate = new Map();
+    for (const row of dailySpendRows || []) {
+      if (!spendTargetKey(row.campaign_id)) continue;
+      const d = row.date || String(row.date_preset || '').replace('day:', '');
+      if (!d) continue;
+      athensDailyByDate.set(d, (athensDailyByDate.get(d) || 0) + Number(row.spend || 0) * spendToBaseRate);
+    }
+    const metaDailyByDate = new Map();
+    for (const row of metaDailyRows || []) {
+      if (!spendTargetKey(row.campaign_id)) continue;
+      const d = row.date || String(row.date_preset || '').replace('meta-day:', '');
+      if (!d) continue;
+      metaDailyByDate.set(d, (metaDailyByDate.get(d) || 0) + Number(row.spend || 0) * spendToBaseRate);
+    }
+
+    const rangeStartDate = datePart(dateRange?.startDate);
+    const rangeEndDate = datePart(dateRange?.endDate);
+    for (const [date, spendBase] of athensDailyByDate) {
+      if (rangeStartDate && date < rangeStartDate) continue;
+      if (rangeEndDate && date > rangeEndDate) continue;
+      let entry = daily.map.get(date);
+      if (!entry) {
+        entry = { date, count: 0, gross: 0, tips: 0, fees: 0, net: 0, spend: 0, profit: 0, byCurrency: {} };
+        daily.map.set(date, entry);
+      }
+      entry.spend += spendBase;
+    }
+    dailyRows = [...daily.map.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
+    for (const d of dailyRows) d.profit = d.net - d.spend;
+
+    const todayAthens = athensTodayYmd();
+    reconciliation = [];
+    for (let i = 6; i >= 0; i -= 1) {
+      const date = shiftYmd(todayAthens, -i);
+      reconciliation.push({
+        date,
+        athensSpend: Math.round((athensDailyByDate.get(date) || 0) * 100) / 100,
+        metaSpend: Math.round((metaDailyByDate.get(date) || 0) * 100) / 100,
+      });
     }
 
     for (const agg of perCampaign.values()) {
@@ -616,8 +726,13 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     totalTransactionsCount: paymentResult.count,
     failedCount: failedTransactions.length,
     failedAmount: failedTransactions.reduce((s, t) => s + t.amountBase, 0),
+    reconciliation,
     adSync: {
       preset,
+      spendSource,
+      timezone: syncMeta?.report_timezone || REPORT_TZ,
+      accountTimezones: syncMeta?.account_timezones || {},
+      range: syncMeta ? { since: syncMeta.range_since, until: syncMeta.range_until } : null,
       presetDays: presetDaySpan(preset),
       currency: AD_SPEND_CURRENCY,
       ttlMs: ttl,
@@ -710,4 +825,9 @@ module.exports = {
   MAX_PAYMENTS,
   presetForRange,
   presetDaySpan,
+  getLocalHourAndDate,
+  athensTodayYmd,
+  shiftYmd,
+  REPORT_TZ,
+  PRESET_BY_RANGE,
 };

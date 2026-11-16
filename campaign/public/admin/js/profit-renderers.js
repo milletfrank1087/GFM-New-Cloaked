@@ -19,6 +19,9 @@
       var intervalLabel = isHourly ? d.date : new Date(d.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', weekday: 'short' });
 
       var fxInfo = '';
+      if (!isHourly && d.spend > 0) {
+        fxInfo += ' · Spend −' + fmt(d.spend) + ' · Profit ' + fmt(d.profit);
+      }
       if (d.byCurrency && Object.keys(d.byCurrency).length > 0) {
         var nonEur = Object.keys(d.byCurrency).filter(function(k) { return k !== window.__profitBaseCurrency && d.byCurrency[k].nativeGross > 0; });
         if (nonEur.length > 0) {
@@ -127,7 +130,9 @@
     setHtml('signal-fee-drag', (t.gross > 0 ? ((t.fees / t.gross) * 100).toFixed(1) + '%' : '0.0%') + feesFxMarkup);
     setHtml('signal-fx', currencies.length + ' Currencies' + (nonBaseCurrencies.length > 0 ? fxMarkupAggregate('Multi-Currency Portfolio', grossBreakdown) : ''));
 
-    setText('timezone-note', 'Txns: ' + window.userTimeZone + ' · Ads: Meta tz');
+    var accountTzs = Object.values(data.adSync?.accountTimezones || {}).map(function(a) { return a.timezone_name; }).filter(Boolean);
+    var accountTzText = accountTzs.length ? ' (account ' + [...new Set(accountTzs)].join(', ') + ')' : '';
+    setText('timezone-note', 'Payments Europe/Athens · Ads re-bucketed to Europe/Athens' + accountTzText);
   }
 
   /* Campaign Matrix Renderer */
@@ -530,7 +535,38 @@
     link.click();
   }
 
+  /* Athens-day vs Meta account-day spend, last 7 days. The two columns cover the same
+     hours bucketed differently, so they differ per day but converge over the week. */
+  function renderReconciliation(data) {
+    var el = document.getElementById('reconciliation-container');
+    if (!el) return;
+    var rows = data.reconciliation || [];
+    if (!rows.length) {
+      el.innerHTML = '<p class="text-xs text-slate-400">No daily spend rows yet — run an ads sync.</p>';
+      return;
+    }
+    var totalAthens = rows.reduce(function(s, r) { return s + (r.athensSpend || 0); }, 0);
+    var totalMeta = rows.reduce(function(s, r) { return s + (r.metaSpend || 0); }, 0);
+    var body = rows.map(function(r) {
+      var diff = (r.athensSpend || 0) - (r.metaSpend || 0);
+      return '<tr class="border-b border-slate-50">'
+        + '<td class="py-1.5 pr-3 font-mono text-[11px] text-slate-600">' + esc(r.date) + '</td>'
+        + '<td class="py-1.5 pr-3 text-right tabular-numbers">' + fmt(r.athensSpend) + '</td>'
+        + '<td class="py-1.5 pr-3 text-right tabular-numbers">' + fmt(r.metaSpend) + '</td>'
+        + '<td class="py-1.5 text-right tabular-numbers ' + (Math.abs(diff) < 0.01 ? 'text-slate-400' : 'text-amber-600') + '">' + fmtSigned(diff) + '</td></tr>';
+    }).join('');
+    el.innerHTML = '<table class="w-full text-xs"><thead><tr class="text-left text-[10px] uppercase tracking-wider text-slate-400">'
+      + '<th class="pb-2 pr-3 font-semibold">Day</th><th class="pb-2 pr-3 font-semibold text-right">Athens day</th>'
+      + '<th class="pb-2 pr-3 font-semibold text-right">Meta day</th><th class="pb-2 font-semibold text-right">Shift</th></tr></thead>'
+      + '<tbody>' + body + '</tbody>'
+      + '<tfoot><tr class="font-bold text-slate-700"><td class="pt-2 pr-3">7d total</td>'
+      + '<td class="pt-2 pr-3 text-right tabular-numbers">' + fmt(totalAthens) + '</td>'
+      + '<td class="pt-2 pr-3 text-right tabular-numbers">' + fmt(totalMeta) + '</td>'
+      + '<td class="pt-2 text-right tabular-numbers">' + fmtSigned(totalAthens - totalMeta) + '</td></tr></tfoot></table>';
+  }
+
   window.renderTimelineChart = renderTimelineChart;
+  window.renderReconciliation = renderReconciliation;
   window.renderWaterfallAndHero = renderWaterfallAndHero;
   window.filterCampaignTable = filterCampaignTable;
   window.searchCampaigns = searchCampaigns;

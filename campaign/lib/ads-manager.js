@@ -5,6 +5,7 @@ const ADDITIONAL_AD_ACCOUNTS = (process.env.ADDITIONAL_AD_ACCOUNT_IDS || '').spl
 const SYNC_PRESETS = ['today', 'yesterday', 'last_7d', 'last_14d', 'last_28d', 'last_30d', 'last_90d'];
 const PREFERRED_PRESET = 'last_7d';
 const DEFAULT_FETCH_TIMEOUT = 25000;
+const REPORT_TZ = 'Europe/Athens';
 
 /* Tiered Volatility TTLs: Mutable intraday synced more frequently, historical less frequently */
 const PRESET_TTLS = {
@@ -44,6 +45,11 @@ function extractNumeric(val) {
     return extractNumeric(val.value || val.amount || val.count || val.spend);
   }
   return 0;
+}
+
+function sumActionValue(actions, types) {
+  if (!Array.isArray(actions)) return 0;
+  return actions.reduce((t, a) => (types.includes(a?.action_type) ? t + (Number(a.value) || 0) : t), 0);
 }
 
 function getPresetTtl(preset) {
@@ -318,6 +324,61 @@ async function syncPreset(preset, { force = false, refresh = true } = {}) {
           .from('ad_spend')
           .upsert(uniqueRows, { onConflict: 'campaign_id,date_preset' });
         if (error) throw new Error(`preset ${preset} upsert failed: ${error.message}`);
+      }
+
+      // Daily rows: Athens-day buckets power the daily profit chart; Meta account-day
+      // buckets power the Athens-vs-Meta reconciliation. Both arrive per dashboard call.
+      const dailyUpserts = [];
+      const accountTimezones = {};
+      let syncRange = null;
+      for (const item of dashResults) {
+        if (!item?.data) continue;
+        const data = item.data;
+        if (!syncRange && data.range) syncRange = data.range;
+        const acctId = String(item.acctId || data.account?.id || data.accountId || '');
+        if (acctId && data.account?.timezone_name) accountTimezones[acctId] = { timezone_name: data.account.timezone_name };
+        const collectDaily = (list, kind) => {
+          for (const row of list || []) {
+            const id = String(row.campaign_id || '');
+            const campaign = byId.get(id);
+            if (!campaign || !row.date) continue;
+            dailyUpserts.push(normalizeSpendRow(campaign.id, campaign.account_id || acctId, `${kind}:${row.date}`, {
+              spend: row.spend,
+              impressions: row.impressions,
+              link_clicks: row.inline_link_clicks,
+              purchases_total: sumActionValue(row.actions, ['omni_purchase']),
+              purchase_value_total: sumActionValue(row.action_values, ['omni_purchase']),
+              cpm: row.cpm,
+              cost_per_inline_link_click: row.cost_per_inline_link_click,
+              date: row.date,
+              insights_fetched_at: data.lastInsightsFetchedAt,
+            }));
+          }
+        };
+        collectDaily(data.dailyRows, 'day');
+        collectDaily(data.metaDailyRows, 'meta-day');
+      }
+      if (dailyUpserts.length > 0) {
+        const dedupedDaily = new Map();
+        for (const r of dailyUpserts) dedupedDaily.set(`${r.campaign_id}::${r.date_preset}`, r);
+        const { error } = await supabase
+          .from('ad_spend')
+          .upsert([...dedupedDaily.values()], { onConflict: 'campaign_id,date_preset' });
+        if (error) console.warn(`[ads-sync] daily upsert for ${preset}:`, error.message);
+      }
+      if (syncRange || Object.keys(accountTimezones).length) {
+        const { error } = await supabase
+          .from('ad_sync_meta')
+          .upsert({
+            preset,
+            range_since: syncRange?.since || null,
+            range_until: syncRange?.until || null,
+            report_timezone: syncRange?.timezone || REPORT_TZ,
+            account_timezones: accountTimezones,
+            fetched_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'preset' });
+        if (error) console.warn(`[ads-sync] ad_sync_meta upsert for ${preset}:`, error.message);
       }
 
       lastSyncCompleted.set(preset, Date.now());

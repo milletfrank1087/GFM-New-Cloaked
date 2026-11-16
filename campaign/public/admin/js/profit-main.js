@@ -5,7 +5,7 @@
   window.activeCampaignsData = [];
   window.allTransactionsData = [];
   window.campaignFilterMode = 'active';
-  window.userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local time';
+  window.userTimeZone = 'Europe/Athens';
   window.latestAdFx = null;
 
   function fmt(v) {
@@ -147,6 +147,7 @@
       renderCampaignTableRows();
       renderStoreBreakdown(data.perStore);
       renderCurrencyBreakdown(data.currencyBreakdown);
+      if (window.renderReconciliation) renderReconciliation(data);
       renderTransactionsFeed();
 
       var quality = document.getElementById('profit-quality');

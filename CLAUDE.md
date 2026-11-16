@@ -120,6 +120,23 @@ For a single key prefer `updateSingleEnvironmentVariable(serviceID, environmentI
 
 `PORT` must stay `3000` on campaign services; the platform health check targets it, so a lost `PORT` yields 502 even though the container is "running".
 
+## Ad account timezone is Los Angeles — the cockpit reports Athens by re-bucketing
+
+The live ad account (`act_1481591450730709`, Bright Bastion) is permanently in **`America/Los_Angeles`** (`timezone_id: 1`). Meta cannot change an existing account's timezone in place — the UI flow closes the account, stops its ads, and creates a new one. **Never "fix" the timezone from Ads Manager / Payment settings**; the ads would stop and the account history would be stranded.
+
+Instead, reporting is normalized to **Europe/Athens**:
+
+- `fb-ads-manager` (`server/lib/adInsights.js`) fetches `hourly_stats_aggregated_by_advertiser_time_zone` and re-buckets hours into Athens days. Its `/api/dashboard` returns `range.timezone: "Europe/Athens"`, plus `dailyRows` (Athens days) and `metaDailyRows` (Meta account days).
+- The campaign sync (`campaign/lib/ads-manager.js`) stores those as `ad_spend.date_preset = 'day:YYYY-MM-DD'` / `'meta-day:YYYY-MM-DD'` and records provenance in `ad_sync_meta` (Athens window, report timezone, per-account timezones).
+- The Profit Cockpit (`campaign/lib/profit.js`) joins Athens daily spend onto the daily timeline, and for This Year / All Time (no Meta preset is wide enough) sums the daily rows — see `adSync.spendSource` (`'daily-athens-rows'` vs the preset name). The cockpit UI shows a last-7d Athens-vs-Meta reconciliation; the daily shift should mostly cancel over the week.
+
+Two Meta publishing quirks the code already handles — do not rediscover them:
+
+1. **Multi-day hourly ranges only publish through accountToday−2**, and that last day can still be a few dollars short. The manager therefore fetches recent account days as **single-day queries** (which are current) and discards the settled range's tail.
+2. Around **midnight Athens ≈ 10h of spend sits in the next Meta day** (9h/11h in the mismatched DST weeks of March/October), so a single day's Athens vs Meta spend differing is expected — only the 7-day totals must converge.
+
+**Guardrail:** run `node tools/check-athens-reconciliation.js` weekly (read-only; exits non-zero if hourly re-bucketing diverges from Meta plain totals beyond rounding, or if the account timezone ever changes). `node tools/backfill-ad-spend-daily.js <days>` re-writes historical `day:` rows. Tests: `campaign/test/profit-timezone.test.js` and `FB ads manager/server/test/adInsights.test.js`.
+
 ## Deploy config is fail-fast
 
 `campaign/server.js` calls `assertDeployConfig()`, which exits non-zero in production when `ACTIVE_CAMPAIGN`, `MARKET_CODE`, `CURRENCY`, `MERCHANT_COUNTRY`, `PORT`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CALLBACK_SECRET`, `TRACKING_ENABLED=true` or `FB_PIXEL_ID` are missing. A deploy that lost its variables now dies at boot instead of serving a storefront that silently drops every event. `SKIP_CONFIG_CHECK=1` overrides it for local runs.
