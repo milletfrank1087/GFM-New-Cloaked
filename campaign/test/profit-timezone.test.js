@@ -5,7 +5,7 @@
 // cockpit frontend sends (profit-main.js: tzOffset = -athensOffsetMinutes()).
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { getLocalHourAndDate, athensTodayYmd, shiftYmd, presetForRange, PRESET_BY_RANGE } = require('../lib/profit');
+const { getLocalHourAndDate, athensTodayYmd, shiftYmd, presetForRange, PRESET_BY_RANGE, isFreshSpendRow } = require('../lib/profit');
 
 const WINTER = -120; // Europe/Athens EET (UTC+2)
 const SUMMER = -180; // Europe/Athens EEST (UTC+3)
@@ -37,6 +37,15 @@ test('shiftYmd crosses month and DST boundaries by calendar day', () => {
   assert.equal(shiftYmd('2026-10-25', 1), '2026-10-26');
   assert.equal(shiftYmd('2026-11-16', -6), '2026-11-10');
   assert.equal(shiftYmd('2026-01-01', -1), '2025-12-31');
+});
+
+test('isFreshSpendRow drops rows far older than the freshest row for the preset', () => {
+  const max = Date.parse('2026-11-16T09:00:00Z');
+  assert.equal(isFreshSpendRow('2026-11-16T08:00:00Z', max), true); // 1h old: served now
+  assert.equal(isFreshSpendRow('2026-11-14T10:00:00Z', max), true); // 47h old: within window
+  assert.equal(isFreshSpendRow('2026-10-19T13:52:54Z', max), false); // Italy account, ~28d stale
+  assert.equal(isFreshSpendRow(null, max), true); // unknown age: keep
+  assert.equal(isFreshSpendRow('2026-10-19T13:52:54Z', 0), true); // no fresh rows at all: keep
 });
 
 test('every cockpit range key resolves to a spend preset or daily-row source', () => {

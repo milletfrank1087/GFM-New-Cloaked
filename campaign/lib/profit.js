@@ -54,6 +54,20 @@ function datePart(value) {
   return value ? String(value).slice(0, 10) : null;
 }
 
+// Preset spend rows are upserted on every sync for every campaign the manager
+// currently serves, so a served campaign's row is never older than a few hours.
+// Rows far older than the freshest row for the same preset belong to accounts or
+// campaigns that stopped being synced (e.g. act_1388808955587972, last synced
+// 2026-10-19) and must not count toward totals. Relative to the freshest row so
+// an unused cockpit (all rows equally old) still reports its last known spend.
+const STALE_SPEND_WINDOW_MS = 48 * 3600 * 1000;
+
+function isFreshSpendRow(fetchedAt, maxFetchedAt) {
+  const t = Date.parse(fetchedAt || '');
+  if (!Number.isFinite(t) || !Number.isFinite(maxFetchedAt) || maxFetchedAt === 0) return true;
+  return maxFetchedAt - t <= STALE_SPEND_WINDOW_MS;
+}
+
 const PROFIT_FIELDS =
   'id, amount, service_fee, total_amount, stripe_fee, net_amount, created_at, ' +
   'currency, store_id, store_domain, source_ref, utm_campaign, status, ' +
@@ -437,6 +451,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
   let syncMeta = null;
   let spendSource = preset;
   let reconciliation = [];
+  let staleRowsDropped = 0;
 
   if (withAdSpend) {
     if (latestRatesResult && latestRatesResult[AD_SPEND_CURRENCY]) {
@@ -458,7 +473,18 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     spendSource = useDailySpend ? 'daily-athens-rows' : preset;
     const spendSourceRows = useDailySpend ? dailySpendRows : spendRows;
 
+    // Freshness gate for preset rows (daily rows are history and stay exempt).
+    let maxFetchedAt = 0;
     for (const row of spendSourceRows || []) {
+      const t = Date.parse(row.fetched_at || '');
+      if (Number.isFinite(t)) maxFetchedAt = Math.max(maxFetchedAt, t);
+    }
+
+    for (const row of spendSourceRows || []) {
+      if (!useDailySpend && !isFreshSpendRow(row.fetched_at, maxFetchedAt)) {
+        staleRowsDropped += 1;
+        continue;
+      }
       const fetchedAt = Date.parse(row.fetched_at || '');
       if (Number.isFinite(fetchedAt)) latestFetchedAt = Math.max(latestFetchedAt, fetchedAt);
       if (!spendByCampaign.has(row.campaign_id)) {
@@ -730,6 +756,7 @@ async function getProfitOverview(campaignSlug = null, dateRange = null, { withAd
     adSync: {
       preset,
       spendSource,
+      staleRowsDropped,
       timezone: syncMeta?.report_timezone || REPORT_TZ,
       accountTimezones: syncMeta?.account_timezones || {},
       range: syncMeta ? { since: syncMeta.range_since, until: syncMeta.range_until } : null,
@@ -830,4 +857,6 @@ module.exports = {
   shiftYmd,
   REPORT_TZ,
   PRESET_BY_RANGE,
+  isFreshSpendRow,
+  STALE_SPEND_WINDOW_MS,
 };

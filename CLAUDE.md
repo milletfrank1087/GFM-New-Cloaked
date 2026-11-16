@@ -137,6 +137,8 @@ Two Meta publishing quirks the code already handles — do not rediscover them:
 
 **Guardrail:** run `node tools/check-athens-reconciliation.js` weekly (read-only; exits non-zero if hourly re-bucketing diverges from Meta plain totals beyond rounding, or if the account timezone ever changes). `node tools/backfill-ad-spend-daily.js <days>` re-writes historical `day:` rows. Tests: `campaign/test/profit-timezone.test.js` and `FB ads manager/server/test/adInsights.test.js`.
 
+**Stale preset rows:** `ad_spend` preset rows are upserted per sync, never deleted — accounts that stop being synced (e.g. Italy `act_1388808955587972`, last synced 2026-10-19, 731 rows / ~$50k of phantom preset spend deleted 2026-11-16) would otherwise count toward profit totals forever. `campaign/lib/profit.js` therefore drops preset rows more than 48h older than the freshest row for that preset (`isFreshSpendRow`, counted in `adSync.staleRowsDropped`); `day:`/`meta-day:` rows are history and exempt. If totals ever look inflated again, check for stale rows before suspecting the sync: `select account_id, max(fetched_at) from ad_spend where date_preset not like '%day:%' group by 1`.
+
 ## Deploy config is fail-fast
 
 `campaign/server.js` calls `assertDeployConfig()`, which exits non-zero in production when `ACTIVE_CAMPAIGN`, `MARKET_CODE`, `CURRENCY`, `MERCHANT_COUNTRY`, `PORT`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CALLBACK_SECRET`, `TRACKING_ENABLED=true` or `FB_PIXEL_ID` are missing. A deploy that lost its variables now dies at boot instead of serving a storefront that silently drops every event. `SKIP_CONFIG_CHECK=1` overrides it for local runs.
