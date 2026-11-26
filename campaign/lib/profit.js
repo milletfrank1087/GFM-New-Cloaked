@@ -86,12 +86,20 @@ function scheduleAdRefresh(preset) {
 
 function toExclusiveEnd(endDate) {
   const s = String(endDate);
-  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(s);
-  if (!dateOnly) return s;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;   // a full timestamp is already an exclusive instant
   const d = new Date(`${s}T00:00:00.000Z`);
   if (Number.isNaN(d.getTime())) return s;
   d.setUTCDate(d.getUTCDate() + 1);
   return d.toISOString();
+}
+
+/* The range boundaries arrive in two shapes and BOTH must filter. The cockpit computes them properly
+ * (athensMidnight().toISOString(), a midnight in a UTC+2/3 offset is not midnight in UTC, hence the format), but
+ * this only ever applied a bound to a bare YYYY-MM-DD. An ISO string therefore skipped both bounds, leaving
+ * `.order(created_at desc).limit(1000)` alone: "Today" reported the newest 1000 payments ever, at identical
+ * totals for today, yesterday and last 7 days, while spend inside the same window could not be matched. */
+function isInstant(s) {
+  return /^\d{4}-\d{2}-\d{2}T/.test(String(s)) && !Number.isNaN(new Date(s).getTime());
 }
 
 async function fetchPayments(campaignSlug, dateRange) {
@@ -108,9 +116,8 @@ async function fetchPayments(campaignSlug, dateRange) {
   if (dateRange?.startDate) query = query.gte('created_at', dateRange.startDate);
   if (dateRange?.endDate) {
     const end = toExclusiveEnd(dateRange.endDate);
-    query = end === String(dateRange.endDate)
-      ? query.lte('created_at', dateRange.endDate)
-      : query.lt('created_at', end);
+    // A timestamp end is inclusive-to-the-millisecond; a date-only end became the next midnight, exclusive.
+    query = isInstant(end) ? query.lte('created_at', end) : query.lt('created_at', end);
   }
   const { data, error, count } = await query;
   if (error) throw new Error(error.message);
@@ -139,9 +146,8 @@ async function fetchFailures(campaignSlug, dateRange) {
   if (dateRange?.startDate) query = query.gte('created_at', dateRange.startDate);
   if (dateRange?.endDate) {
     const end = toExclusiveEnd(dateRange.endDate);
-    query = end === String(dateRange.endDate)
-      ? query.lte('created_at', dateRange.endDate)
-      : query.lt('created_at', end);
+    // A timestamp end is inclusive-to-the-millisecond; a date-only end became the next midnight, exclusive.
+    query = isInstant(end) ? query.lte('created_at', end) : query.lt('created_at', end);
   }
   const { data, error } = await query;
   if (error) throw new Error(error.message);

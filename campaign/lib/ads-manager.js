@@ -2,6 +2,8 @@ const { supabase } = require('./db/client');
 
 const ADS_MANAGER_URL = process.env.ADS_MANAGER_URL || 'https://fb-ads-manager.up.railway.app';
 const ADDITIONAL_AD_ACCOUNTS = (process.env.ADDITIONAL_AD_ACCOUNT_IDS || '').split(',').map(s => s.trim()).filter(Boolean);
+// Same primary the manager itself falls back to, so an unstamped row can be attributed to the account it came from.
+const PRIMARY_ACCOUNT_ID = String(process.env.FB_AD_ACCOUNT_ID || process.env.FB_PRIMARY_ACCOUNT_ID || '').trim();
 const SYNC_PRESETS = ['today', 'yesterday', 'last_7d', 'last_14d', 'last_28d', 'last_30d', 'last_90d'];
 const PREFERRED_PRESET = 'last_7d';
 const DEFAULT_FETCH_TIMEOUT = 25000;
@@ -185,12 +187,16 @@ async function syncCampaigns() {
     }
   };
 
+  // The manager only fills account_id when the row came back from a per-account call. The default (all-account)
+  // call returns the primary's campaigns unstamped, and a campaign with an empty account_id is skipped by the
+  // per-account spend sync, so its spend silently never lands. Stamp the caller's own account on them.
   const fetchAccount = async (accountId) => {
     const params = { date_preset: PREFERRED_PRESET, level: 'campaign' };
     if (accountId) params.account_id = accountId;
     const data = await fetchFromManager('/api/dashboard', params);
+    const owner = accountId || PRIMARY_ACCOUNT_ID;
     if (data?.campaigns && Array.isArray(data.campaigns)) {
-      collect(data.campaigns);
+      collect(data.campaigns.map(c => (owner && !c.account_id ? { ...c, account_id: owner } : c)));
     }
   };
 
