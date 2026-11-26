@@ -38,7 +38,7 @@
     }
   ],
   "story": {
-    "intro": "Grace is a 21-year-old medical student at the University of Manchester who was diagnosed with Glioblastoma Multiforme (GBM), WHO grade IV — the most aggressive malignant brain tumour. Standard treatment (surgery, radiotherapy, temozolomide) offers a median survival of just 14-16 months. The only therapy that could significantly extend her survival — dendritic cell immunotherapy — is available only at specialised centres in Germany and is not funded by the NHS.",
+    "intro": "Grace is a 21-year-old medical student at the University of Manchester who was diagnosed with Glioblastoma Multiforme (GBM), WHO grade IV — the most aggressive malignant brain tumour. Standard treatment (surgery, radiotherapy, temozolomide) offers a median survival of just 14 months. The only therapy that could significantly extend her survival — dendritic cell immunotherapy — is available only at specialised centres in Germany and is not funded by the NHS.",
     "sections": [
       {
         "title": "The Diagnosis",
@@ -118,7 +118,7 @@
     {
       "date": "5 Mar 2026",
       "title": "We've passed 1,250 donors! 🙏",
-      "content": "Your support has been overwhelming — more than 1,250 people have given. Grace has finished the six-week concurrent chemoradiation and started her first maintenance temozolomide cycle. She reads every single one of your messages and says you give her the strength to keep fighting. Every pound brings us closer to Germany.",
+      "content": "Your support has been overwhelming — more than 1,250 people have given on this page alone, and it keeps growing. Grace has finished the six-week concurrent chemoradiation and started her first maintenance temozolomide cycle. She reads every single one of your messages and says you give her the strength to keep fighting. Every pound brings us closer to Germany.",
       "isNew": false
     },
     {
@@ -130,7 +130,7 @@
     {
       "date": "16 Feb 2026",
       "title": "The campaign has launched",
-      "content": "With heavy hearts but determination, we're launching this appeal. After two months of intensive treatment on the NHS, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it isn't funded by the NHS. We believe in the power of community.",
+      "content": "With heavy hearts but determination, we're launching this appeal. After two months of intensive treatment since her diagnosis, her doctors told us clearly: standard treatment buys time, but immunotherapy can give her a life. Unfortunately, it isn't funded by the NHS. We believe in the power of community.",
       "isNew": false
     }
   ],

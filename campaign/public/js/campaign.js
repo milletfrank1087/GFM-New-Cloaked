@@ -47,7 +47,7 @@ function renderCampaign(data) {
   renderProgress(data.raised, data.goal, data.donorCount, data.daysLeft);
   renderStory(data.story);
   renderUpdates(data.updates);
-  renderMilestones(data.milestones);
+  renderMilestones(data.milestones, data.raised);
   renderTopDonors(data.topDonors);
   renderDonorsList(data.recentDonors, data.donorCount);
 }
@@ -271,21 +271,27 @@ function renderUpdates(updates) {
   `).join('');
 }
 
-function renderMilestones(milestones) {
+function renderMilestones(milestones, raised) {
   if (!milestones || milestones.length === 0) return;
   const container = document.getElementById('milestones-list');
   if (!container) return;
-  
-  container.innerHTML = milestones.map(milestone => `
-    <div class="flex items-center gap-3 ${milestone.reached ? '' : 'opacity-50'}">
-      <div class="w-8 h-8 rounded-full ${milestone.reached ? 'bg-gfm-green' : 'bg-gray-200'} flex items-center justify-center flex-shrink-0">
-        ${milestone.reached 
+
+  // Derive "reached" from the live total instead of trusting the stored flag: raised climbs with real
+  // donations while the flag in the campaign JSON stays at its authored value, so a passed milestone
+  // would otherwise still render greyed (and contradict a "50%" line above a 60% progress bar).
+  const raisedNow = parseFloat(raised);
+  const reachedCount = milestones.map(m => m.reached || (isFinite(raisedNow) && raisedNow >= m.amount));
+
+  container.innerHTML = milestones.map((milestone, i) => `
+    <div class="flex items-center gap-3 ${reachedCount[i] ? '' : 'opacity-50'}">
+      <div class="w-8 h-8 rounded-full ${reachedCount[i] ? 'bg-gfm-green' : 'bg-gray-200'} flex items-center justify-center flex-shrink-0">
+        ${reachedCount[i]
           ? '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
           : '<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>'
         }
       </div>
       <div class="flex-1 min-w-0">
-        <p class="font-semibold text-sm ${milestone.reached ? 'text-gfm-dark' : 'text-gfm-gray'}">${milestone.label}</p>
+        <p class="font-semibold text-sm ${reachedCount[i] ? 'text-gfm-dark' : 'text-gfm-gray'}">${milestone.label}</p>
         <p class="text-xs text-gfm-gray">${formatAmount(milestone.amount)}</p>
       </div>
     </div>
