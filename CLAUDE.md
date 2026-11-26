@@ -39,7 +39,7 @@ Two defects broke the Profit Cockpit here, both fixed in `66e5f9d`:
 
 **The new BM is `1578611613719194`, ad account `act_3936327343175633`, page `1363808276826222`, app `4594109177502279`.** The account's timezone is `Europe/Athens`; `FB_PRIMARY_ACCOUNT_TIMEZONE` must match it or every "today" boundary lands three hours off.
 
-**The old account `act_1388808955587972` is a *client* account and is not attached to the new business**, so the manager's token fails it with `(#200) ... has NOT grant ads_management or ads_read` even though the token holds both scopes. It is in `FB_ADDITIONAL_ACCOUNT_IDS` so the day it is claimed the backfill happens by itself. Claim it into the BM before expecting any spend before 2026-11-16.
+**The old account `act_1388808955587972` is a *client* account and is not attached to the new business**, so the manager's token fails it with `(#200) ... has NOT grant ads_management or ads_read` even though the token holds both scopes. Decision 2026-11-26: use only `act_3936327343175633` and start fresh, so both references were cleared - `FB_ADDITIONAL_ACCOUNT_IDS` on the manager and `ADDITIONAL_AD_ACCOUNT_IDS` on the campaign (that one was set to the primary and so duplicated it). Re-add the old id to `FB_ADDITIONAL_ACCOUNT_IDS` to backfill its spend, which stops at 2026-11-16.
 
 Facts about the current data, so an empty cockpit is not mistaken for a bug: payments and spend both stop at **2026-11-16**. The new ad account was created 2026-11-24 and has never spent, no campaign exists on it, and the old account cannot be read. "Today" legitimately reads zero.
 
