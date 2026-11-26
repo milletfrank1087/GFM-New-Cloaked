@@ -30,6 +30,19 @@ Before 2026-11-13 the apex was a **GoDaddy Website Builder 8** "Launching Soon" 
 
 The Graph API `/verify` shortcut is unavailable: it needs `business_management`, which the `meta-ads-new` token lacks, and it rejects the call with `(#10) Application does not have permission`. The valid `verification_method` enum is `{DNS_RECORD, HTML_UPLOAD, META_TAG}` — not `DNS_TXT`.
 
+## The cockpit's date bounds and the account stamp (2026-11-26)
+
+Two defects broke the Profit Cockpit here, both fixed in `66e5f9d`:
+
+- `profit.js` `fetchPayments`/`fetchFailures` applied a `created_at` bound only when the date arrived as a bare `YYYY-MM-DD`. The cockpit sends `athensMidnight().toISOString()` (a real timestamp, because Athens midnight is not UTC midnight), so **both bounds were skipped** and the query fell back to `.order(created_at desc).limit(1000)`. Every range then returned the newest 1000 payments: Today, Yesterday and 7D reported identical totals (€21,105 / count 1000) and window spend could not be matched to rows. `isInstant()` now accepts either shape: a timestamp end is `lte`, a date-only end becomes next midnight `lt`.
+- `ads-manager.js` filled `account_id` only on rows returned by a **per-account** call. The default all-account call left it empty, and the per-account spend sync skips empty ones, so spend silently never landed for the primary's campaigns. Unstamped rows are now attributed to `FB_AD_ACCOUNT_ID`/`FB_PRIMARY_ACCOUNT_ID`.
+
+**The new BM is `1578611613719194`, ad account `act_3936327343175633`, page `1363808276826222`, app `4594109177502279`.** The account's timezone is `Europe/Athens`; `FB_PRIMARY_ACCOUNT_TIMEZONE` must match it or every "today" boundary lands three hours off.
+
+**The old account `act_1388808955587972` is a *client* account and is not attached to the new business**, so the manager's token fails it with `(#200) ... has NOT grant ads_management or ads_read` even though the token holds both scopes. It is in `FB_ADDITIONAL_ACCOUNT_IDS` so the day it is claimed the backfill happens by itself. Claim it into the BM before expecting any spend before 2026-11-16.
+
+Facts about the current data, so an empty cockpit is not mistaken for a bug: payments and spend both stop at **2026-11-16**. The new ad account was created 2026-11-24 and has never spent, no campaign exists on it, and the old account cannot be read. "Today" legitimately reads zero.
+
 ## Meta / Facebook Ads API: never bulk-create or auto-activate
 
 Unthrottled Graph API write bursts (`POST /campaigns`, `/adsets`, `/adcreatives`, `/ads`) and creating objects with `status: "ACTIVE"` on a cold (`$0`-spend) ad account will immediately trigger Meta's automated anti-hijack / integrity ban (`disable_reason: 1`).
