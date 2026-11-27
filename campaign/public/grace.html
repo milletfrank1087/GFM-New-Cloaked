@@ -1413,7 +1413,7 @@
     <div onclick="closeCheckoutModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
 
     <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
-      <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-7 border border-slate-100 modal-animate my-6">
+      <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 pb-32 sm:p-7 sm:pb-7 border border-slate-100 modal-animate my-6">
         
         <!-- Modal Header -->
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
@@ -1514,10 +1514,11 @@
 
         <!-- Checkout Actions & Reassurance Footer -->
         <div class="space-y-2">
-          <!-- Sticky on mobile so the primary action stays reachable while the modal
-               content scrolls (verified at 400px: the card used to clip its own
-               content and the button measured 639px below a 400px viewport). -->
-          <div class="sticky bottom-0 bg-white pt-2 pb-1 -mx-6 px-6 sm:-mx-7 sm:px-7 border-t border-slate-100 mt-1">
+          <!-- Fixed action bar on mobile: the card is taller than a short phone viewport,
+               and `sticky bottom-0` did not engage (measured: button moved 427->311
+               instead of pinning). Reserve space in the card for it below. -->
+          <div class="fixed bottom-0 inset-x-0 z-20 bg-white border-t border-slate-100 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 sm:sticky sm:inset-x-auto sm:bottom-0 sm:border-0 sm:px-0 sm:pt-2 sm:pb-1">
+          <div class="max-w-lg mx-auto">          
           <button id="modal-submit-cta" onclick="executeModalPledge()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
             <span id="modal-cta-label">Donate just £0.96/day</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
@@ -1526,6 +1527,7 @@
           <div class="pt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 text-center">
             <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
             <span>256-bit SSL • 100% HopeRise Escrow Guarantee</span>
+          </div>
           </div>
           </div>
         </div>
