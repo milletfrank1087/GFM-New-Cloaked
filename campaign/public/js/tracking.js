@@ -421,8 +421,17 @@ const Tracking = (function() {
 
   /**
    * Track PageView event - fires browser pixels immediately, server call waits for location
+   *
+   * routes/pages.js already fires PageView inline at fbq('init') so the landing page view
+   * lands in ~0.4s instead of waiting for this file to load. Only fire on pages whose
+   * template has no inline PageView (e.g. index.html without the inline block).
    */
   function trackPageView() {
+    if (window.__hrPageViewSent) {
+      captureClickIds();
+      return window.__hrPageViewId || null;
+    }
+    window.__hrPageViewSent = true;
     const eventId = generateEventId('PageView');
     fireMetaPixel('PageView', {}, eventId);
     sendToServer('PageView', { eventId, data: {} });

@@ -26,6 +26,7 @@ function hostMatches(sourceUrl, req) {
 }
 
 const { logFunnelEvent } = require('../lib/db/funnel');
+const { parseUserAgent } = require('../lib/userAgentParser');
 
 module.exports = function createDonationRouter(ctx) {
   const router = express.Router();
@@ -355,8 +356,27 @@ module.exports = function createDonationRouter(ctx) {
 
     try {
       if (event === 'PageView') {
-        await trackEvent(event, eventData, userData, clientInfo);
-        return res.json({ success: true });
+        // TikTok skips PageView (see lib/tracking/index.js) and returns null there, so the
+        // status is never a real send. Only reconcile to CAPI where a pixel is configured,
+        // otherwise using it would just mark every view '✗'. A plain GET on a link-preview
+        // fetcher still gets intent forwarded as 2 PageView events; Meta dedups on event_id
+        // and reconciles only the attributed one, so this is cheap and accurate.
+        const hasPixel = Boolean((process.env.FB_PIXEL_ID || '').trim());
+        const capiStatus = hasPixel
+          ? await trackEvent(event, eventData, userData, clientInfo)
+          : { meta: null, tiktok: null };
+
+        logFunnelEvent({
+          campaignSlug: ACTIVE_CAMPAIGN,
+          eventType: 'PageView',
+          visitor,
+          eventId,
+          capiStatus,
+          sourceUrl: resolvedSourceUrl,
+          deviceType: parseUserAgent(clientInfo.userAgent).deviceType
+        });
+
+        return res.json({ success: true, capi: capiStatus });
       }
 
       const capiStatus = await trackEvent(event, eventData, userData, clientInfo);

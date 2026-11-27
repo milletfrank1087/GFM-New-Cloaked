@@ -134,9 +134,13 @@
 
   // Fire PageView + ViewContent on load (matches standard campaign flow)
   (function fireTopOfFunnel() {
-    const pvId = generateEventId('PageView');
-    try { if (typeof fbq === 'function') fbq('track', 'PageView', {}, { eventID: pvId }); } catch (_) {}
-    sendCAPI('PageView', pvId, {});
+    // routes/pages.js already fires PageView inline at fbq('init'); don't double-count it.
+    if (!window.__hrPageViewSent) {
+      window.__hrPageViewSent = true;
+      const pvId = generateEventId('PageView');
+      try { if (typeof fbq === 'function') fbq('track', 'PageView', {}, { eventID: pvId }); } catch (_) {}
+      sendCAPI('PageView', pvId, {});
+    }
 
     const vcId = generateEventId('ViewContent');
     try { if (typeof fbq === 'function') fbq('track', 'ViewContent', { content_type: 'petition' }, { eventID: vcId }); } catch (_) {}
