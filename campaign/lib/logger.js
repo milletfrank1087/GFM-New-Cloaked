@@ -54,15 +54,24 @@ function shortName(name) {
 function duration(ms) {
   if (!Number.isFinite(ms) || ms < 0) return '';
   const s = Math.round(ms / 1000);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+    return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+}
+
+// Icons may be several bytes, so never index them. `'✓'.length` is 1 while it is 3 bytes, and
+// `'✓'[0]` is half a character - that is what rendered every success as "⚠ Meta \uFFFD".
+function iconFor(value) {
+  const s = String(value || '');
+  if (s === '✓') return '✓';
+  if (s === '-') return '-';
+  return s;
 }
 
 // Only failures are shown: "⚠ Meta ✗" / "⚠ Meta SKIP(no-eid)".
 function trackingFlags(status) {
   if (!status) return '';
   const bad = [];
-  if (status.meta && status.meta !== '✓' && status.meta !== '-') bad.push(`Meta ${status.meta}`);
-  if (status.tiktok && status.tiktok !== '✓' && status.tiktok !== '-') bad.push(`TikTok ${status.tiktok}`);
+  if (status.meta && status.meta !== '✓' && status.meta !== '-') bad.push(`Meta ${iconFor(status.meta)}`);
+  if (status.tiktok && status.tiktok !== '✓' && status.tiktok !== '-') bad.push(`TikTok ${iconFor(status.tiktok)}`);
   return bad.length ? `⚠ ${bad.join(', ')}` : '';
 }
 
