@@ -339,6 +339,26 @@
       <h1 id="campaign-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
         Help 21-Year-Old Med Student Grace Access Lifesaving Immunotherapy in Germany
       </h1>
+
+      <!-- Hero CTA. The donation engine sits ~6,000px down this page and the whole
+           first screen was a photo gallery, so a visitor had nothing to tap. Opens the
+           checkout modal directly (pre-filled at the default amount) instead of only
+           scrolling. 99% of this traffic is mobile. -->
+      <div class="rounded-2xl border border-brand-200 bg-brand-50/70 p-4 space-y-3">
+        <div class="flex items-baseline justify-between gap-3">
+          <div>
+            <span class="text-2xl font-extrabold text-slate-900 tracking-tight" data-live="raised">£35,090</span>
+            <span class="text-xs text-slate-500 font-medium">raised of <span data-live="goal">£90,000</span> goal</span>
+          </div>
+          <span class="text-xs font-bold text-brand-700 bg-white px-2 py-1 rounded border border-brand-200"><span data-live="pct">39</span>% funded</span>
+        </div>
+        <div class="progress-track h-2"><div class="progress-fill" style="width:39%"></div></div>
+        <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span id="hero-cta-label">Donate £25</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </button>
+        <p class="text-[11px] text-slate-500 text-center">Secure Stripe checkout · clinic-paid escrow · cancel anytime</p>
+      </div>
     </section>
 
     <!-- 2-COLUMN LAYOUT -->
@@ -359,13 +379,16 @@
 
                         <!-- Blurred Fill Backdrop (synced with main photo, never cropped look) -->
             <img id="main-gallery-blur"
-                 src="campaign/public/images/campaigns/glioblastoma-grace/1.jpg"
-                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';"
+                 src="campaign/public/images/campaigns/glioblastoma-grace/v1-480.jpg"
+                 onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/v1-480.jpg';"
                  alt="" aria-hidden="true"
                  class="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl brightness-[0.55] saturate-150 pointer-events-none z-0">
 
 <img id="main-gallery-image" 
-                 src="campaign/public/images/campaigns/glioblastoma-grace/1.jpg" 
+                 src="campaign/public/images/campaigns/glioblastoma-grace/v1-960.jpg" 
+                 srcset="campaign/public/images/campaigns/glioblastoma-grace/v1-480.jpg 480w, campaign/public/images/campaigns/glioblastoma-grace/v1-960.jpg 960w, campaign/public/images/campaigns/glioblastoma-grace/1.jpg 1024w"
+                 sizes="(max-width: 640px) 92vw, (max-width: 1024px) 60vw, 620px"
+                 fetchpriority="high"
                  onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" 
                  alt="Grace Clarke" 
                  onload="this.classList.remove('opacity-0'); document.getElementById('main-gallery-skeleton')?.classList.add('opacity-0');"
@@ -390,16 +413,16 @@
           <!-- Pure Visual Thumbnail Strip (Zero Text Labels) -->
           <div class="p-2.5 bg-slate-50 border-t border-slate-200 grid grid-cols-4 gap-2">
             <button onclick="switchPhoto(0)" id="photo-tab-0" class="gallery-thumb active-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-brand-600 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="campaign/public/images/campaigns/glioblastoma-grace/1.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/1.jpg';" alt="Thumbnail 1" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/v1-480.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/v1-480.jpg';" alt="Thumbnail 1" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
             <button onclick="switchPhoto(1)" id="photo-tab-1" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="campaign/public/images/campaigns/glioblastoma-grace/2.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/2.jpg';" alt="Thumbnail 2" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/v2-480.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/v2-480.jpg';" alt="Thumbnail 2" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
             <button onclick="switchPhoto(2)" id="photo-tab-2" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="campaign/public/images/campaigns/glioblastoma-grace/3.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/3.jpg';" alt="Thumbnail 3" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/v3-480.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/v3-480.jpg';" alt="Thumbnail 3" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
             <button onclick="switchPhoto(3)" id="photo-tab-3" class="gallery-thumb aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent opacity-65 hover:opacity-100 transition-all cursor-pointer relative skeleton-shimmer">
-              <img src="campaign/public/images/campaigns/glioblastoma-grace/4.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/4.jpg';" alt="Thumbnail 4" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
+              <img src="campaign/public/images/campaigns/glioblastoma-grace/v4-480.jpg" onerror="this.onerror=null; this.src='/images/campaigns/glioblastoma-grace/v4-480.jpg';" alt="Thumbnail 4" onload="this.classList.remove('opacity-0'); this.parentElement.classList.remove('skeleton-shimmer');" class="w-full h-full object-cover relative z-10 opacity-0 transition-opacity duration-300">
             </button>
           </div>
 
@@ -1390,7 +1413,7 @@
     <div onclick="closeCheckoutModal()" class="fixed inset-0 bg-navy-950/75 backdrop-blur-sm transition-opacity"></div>
 
     <div class="fixed inset-0 overflow-y-auto z-10 flex items-center justify-center p-4">
-      <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-7 border border-slate-100 modal-animate my-6 max-h-[92vh] overflow-y-auto">
+      <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-7 border border-slate-100 modal-animate my-6">
         
         <!-- Modal Header -->
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
@@ -1491,6 +1514,10 @@
 
         <!-- Checkout Actions & Reassurance Footer -->
         <div class="space-y-2">
+          <!-- Sticky on mobile so the primary action stays reachable while the modal
+               content scrolls (verified at 400px: the card used to clip its own
+               content and the button measured 639px below a 400px viewport). -->
+          <div class="sticky bottom-0 bg-white pt-2 pb-1 -mx-6 px-6 sm:-mx-7 sm:px-7 border-t border-slate-100 mt-1">
           <button id="modal-submit-cta" onclick="executeModalPledge()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-brand-glow transition-all flex items-center justify-center gap-2 cursor-pointer">
             <span id="modal-cta-label">Donate just £0.96/day</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
@@ -1499,6 +1526,7 @@
           <div class="pt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 text-center">
             <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
             <span>256-bit SSL • 100% HopeRise Escrow Guarantee</span>
+          </div>
           </div>
         </div>
 
@@ -1541,9 +1569,9 @@
         <div class="h-full bg-brand-600 rounded-full" style="width:39%"></div>
       </div>
     </div>
-    <button onclick="scrollToDonationEngine()" class="bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
+    <button onclick="openCheckoutModal()" class="bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
       <span>Donate now</span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
     </button>
   </div>
 
@@ -1564,20 +1592,20 @@
       photoIndex: 0,
       photos: [
         {
-          src: primaryImgPrefix + '1.jpg',
-          fallback: fallbackImgPrefix + '1.jpg'
+          src: primaryImgPrefix + 'v1-960.jpg',
+          fallback: fallbackImgPrefix + 'v1-960.jpg'
         },
         {
-          src: primaryImgPrefix + '2.jpg',
-          fallback: fallbackImgPrefix + '2.jpg'
+          src: primaryImgPrefix + 'v2-960.jpg',
+          fallback: fallbackImgPrefix + 'v2-960.jpg'
         },
         {
-          src: primaryImgPrefix + '3.jpg',
-          fallback: fallbackImgPrefix + '3.jpg'
+          src: primaryImgPrefix + 'v3-960.jpg',
+          fallback: fallbackImgPrefix + 'v3-960.jpg'
         },
         {
-          src: primaryImgPrefix + '4.jpg',
-          fallback: fallbackImgPrefix + '4.jpg'
+          src: primaryImgPrefix + 'v4-960.jpg',
+          fallback: fallbackImgPrefix + 'v4-960.jpg'
         }
       ],
       impacts: {
@@ -1646,10 +1674,10 @@
     // Smooth scroll down to main donation engine on mobile
     function scrollToDonationEngine() {
       const engine = document.getElementById('unified-donation-engine');
-      if (engine) {
-        const y = engine.getBoundingClientRect().top + window.pageYOffset - 80;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+      if (!engine) return;
+      const y = engine.getBoundingClientRect().top + window.pageYOffset - 80;
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
     }
 
     // Responsive engine placement: on mobile, moves above medical updates; on desktop, moves to sticky right rail
@@ -1806,14 +1834,12 @@
 
     function calculateTotal() {
       const ctaLabel = document.getElementById('main-cta-label');
-      if (ctaLabel) {
-        if (app.cadence === 'monthly') {
-          const daily = (app.amount / 30).toFixed(2);
-          ctaLabel.textContent = `Donate just £${daily}/day`;
-        } else {
-          ctaLabel.textContent = `Donate £${app.amount}`;
-        }
-      }
+      const heroLabel = document.getElementById('hero-cta-label');
+      const label = app.cadence === 'monthly'
+        ? `Donate just £${(app.amount / 30).toFixed(2)}/day`
+        : `Donate £${app.amount}`;
+      if (ctaLabel) ctaLabel.textContent = label;
+      if (heroLabel) heroLabel.textContent = label;
       const tierBadge = document.getElementById('tier-badge-label');
       if (tierBadge) {
         if (app.cadence === 'monthly') {
