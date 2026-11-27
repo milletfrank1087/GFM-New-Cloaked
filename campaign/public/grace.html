@@ -495,13 +495,13 @@
                   <span class="text-xs font-bold uppercase tracking-wider bg-brand-50 text-brand-700 border border-brand-200 px-2 py-0.5 rounded">Active Milestone</span>
                 </div>
                 <p class="text-xs text-slate-600 mt-0.5">
-                  £45,000 threshold (<strong class="text-slate-900">£35,090 raised</strong> — £9,910 required). Apheresis and laboratory vaccine preparation at IOZK Cologne. Scheduled for November 2026.
+                  £45,000 threshold (<strong class="text-slate-900"><span data-live="raised">£35,090</span> raised</strong> — <span data-live="remaining">£9,910</span> required). Apheresis and laboratory vaccine preparation at IOZK Cologne. Scheduled for November 2026.
                 </p>
                 <div class="mt-2 flex items-center gap-2">
                   <div class="flex-1 progress-track h-2">
                     <div class="progress-fill" style="width: 78%"></div>
                   </div>
-                  <span class="text-xs font-bold text-brand-700">78% of Milestone</span>
+                  <span class="text-xs font-bold text-brand-700"><span data-live="milestonePct">78</span>% of Milestone</span>
                 </div>
               </div>
             </div>
@@ -2214,6 +2214,20 @@
       document.querySelectorAll('[data-live="pct"]').forEach(el => el.textContent = pct + '%');
       document.querySelectorAll('[data-live="donors"]').forEach(el => el.textContent = fmtDonors);
       document.querySelectorAll('.progress-fill').forEach(el => el.style.width = pct + '%');
+
+      // Phase 2 milestone block: the £45,000 threshold needs the same live treatment,
+      // otherwise it keeps saying "£35,090 raised" after the counter has moved on.
+      const MILESTONE = 45000;
+      const remaining = Math.max(0, MILESTONE - raised);
+      document.querySelectorAll('[data-live="remaining"]').forEach(el => {
+        el.textContent = '£' + remaining.toLocaleString('en-GB');
+      });
+      // Milestone bar is a percentage of the milestone, not of the goal.
+      const milestonePct = Math.min(100, Math.round((raised / MILESTONE) * 100));
+      document.querySelectorAll('[data-live="milestonePct"]').forEach(el => el.textContent = milestonePct);
+      document.querySelectorAll('#roadmap-chapter .progress-fill').forEach(el => {
+        el.style.width = milestonePct + '%';
+      });
 
       const dockRaised = document.querySelector('#mobile-dock .text-sm.font-bold');
       if (dockRaised) {

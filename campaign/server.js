@@ -334,9 +334,14 @@ async function refreshCampaignCache() {
       realStats = stats;
     } catch (_) {}
 
+    // `campaign.raised` in the JSON is already the campaign's lifetime total, so the
+    // real DB sum REPLACES it. Adding the two together double-counted: grace read
+    // £35,090 + £21,420 = £56,511 on the counter while the true total was £34,089.
+    // donorCount stays additive because the JSON figure is a historical baseline
+    // (pre-migration donors) and the real count is post-migration only.
     cachedCampaignJSON = JSON.stringify({
       ...campaign,
-      raised: Math.round((campaign.raised || 0) + realStats.realRaised),
+      raised: Math.round(realStats.realRaised || campaign.raised || 0),
       donorCount: (campaign.donorCount || 0) + realStats.realDonorCount,
       _realStats: { realRaised: realStats.realRaised, realDonorCount: realStats.realDonorCount }
     });

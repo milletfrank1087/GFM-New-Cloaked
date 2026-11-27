@@ -1,5 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
-const { fetchRates, convertToBase, BASE_CURRENCY } = require('../exchangeRate');
+const { fetchRates, convertToBase, convertCurrency, BASE_CURRENCY } = require('../exchangeRate');
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -14,4 +14,4 @@ const supabase = supabaseUrl && supabaseServiceKey
     })
   : null;
 
-module.exports = { supabase, fetchRates, convertToBase, BASE_CURRENCY };
+module.exports = { supabase, fetchRates, convertToBase, convertCurrency, BASE_CURRENCY };

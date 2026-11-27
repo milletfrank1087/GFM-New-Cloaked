@@ -89,9 +89,23 @@ function convertToBase(amount, fromCurrency, rates) {
   return amount / rate;
 }
 
+// Rates are quoted per 1 EUR, so any pair goes through EUR. convertToBase alone
+// always yields EUR, which is wrong for a campaign whose page prints its own
+// currency (grace.html prints £ while the sum was being returned in EUR, so
+// £34,089 displayed as £40,823).
+function convertCurrency(amount, fromCurrency, toCurrency, rates) {
+  const from = fromCurrency || BASE_CURRENCY;
+  const to = toCurrency || BASE_CURRENCY;
+  if (from === to) return amount;
+  const inBase = convertToBase(amount, from, rates);
+  const toRate = rates[to] || 1;
+  return inBase * toRate;
+}
+
 module.exports = {
   fetchRates,
   convertToBase,
+  convertCurrency,
   warmCache,
   BASE_CURRENCY,
 };

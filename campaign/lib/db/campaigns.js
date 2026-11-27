@@ -1,4 +1,4 @@
-const { supabase, fetchRates, convertToBase } = require('./client');
+const { supabase, fetchRates, convertCurrency, BASE_CURRENCY } = require('./client');
 const { formatTimeAgo, getInitials, getRandomGradient } = require('./helpers');
 
 async function getRecentRealDonations(campaignSlug, limit = 20) {
@@ -32,22 +32,38 @@ async function getRecentRealDonations(campaignSlug, limit = 20) {
   }
 }
 
+// PostgREST truncates a response at 1000 rows regardless of `.limit()` (max-rows),
+// so a bare `.limit(5000)` silently stops at 1000 and understates long-running
+// campaigns. Page explicitly instead. grace has ~1.9k rows and counting.
+const PAGE_SIZE = 1000;
+const MAX_ROWS = 50000;
+
 async function getCampaignRealStats(campaignSlug) {
   if (!supabase) return { realRaised: 0, realDonorCount: 0 };
 
   try {
-    const { data, error } = await supabase
-      .from('payments')
-      .select('amount, customer_id, currency')
-      .eq('source_ref', campaignSlug)
-      .eq('status', 'completed')
-      .limit(5000);
+    const data = [];
+    for (let offset = 0; offset < MAX_ROWS; offset += PAGE_SIZE) {
+      const { data: page, error } = await supabase
+        .from('payments')
+        .select('amount, customer_id, currency')
+        .eq('source_ref', campaignSlug)
+        .eq('status', 'completed')
+        .order('created_at', { ascending: true })
+        .range(offset, offset + PAGE_SIZE - 1);
 
-    if (error) return { realRaised: 0, realDonorCount: 0 };
+      if (error) return { realRaised: 0, realDonorCount: 0 };
+      if (!page || page.length === 0) break;
+      data.push(...page);
+      if (page.length < PAGE_SIZE) break;
+    }
+
+    if (data.length === 0) return { realRaised: 0, realDonorCount: 0 };
 
     const rates = await fetchRates();
+    const targetCurrency = process.env.CURRENCY || BASE_CURRENCY;
     const realRaised = data.reduce((sum, p) => {
-      return sum + convertToBase(parseFloat(p.amount), p.currency || 'EUR', rates);
+      return sum + convertCurrency(parseFloat(p.amount), p.currency || 'EUR', targetCurrency, rates);
     }, 0);
     const uniqueCustomers = new Set(data.map(p => p.customer_id).filter(Boolean)).size;
 
