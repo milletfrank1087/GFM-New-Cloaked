@@ -339,10 +339,13 @@ async function refreshCampaignCache() {
     // £35,090 + £21,420 = £56,511 on the counter while the true total was £34,089.
     // donorCount stays additive because the JSON figure is a historical baseline
     // (pre-migration donors) and the real count is post-migration only.
+    // Same replacement rule for donors. `campaign.donorCount` is another hardcoded
+    // baseline (1,253) and the payment table already spans the campaign's whole life
+    // from 2026-06-05, so adding gave 3,113 against 1,860 real unique donors.
     cachedCampaignJSON = JSON.stringify({
       ...campaign,
       raised: Math.round(realStats.realRaised || campaign.raised || 0),
-      donorCount: (campaign.donorCount || 0) + realStats.realDonorCount,
+      donorCount: realStats.realDonorCount || campaign.donorCount || 0,
       _realStats: { realRaised: realStats.realRaised, realDonorCount: realStats.realDonorCount }
     });
   } catch (e) {
