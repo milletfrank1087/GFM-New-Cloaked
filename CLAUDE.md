@@ -86,6 +86,21 @@ All campaign hosts are clean — `restrictedEventNames` is `[]` on every one, no
 - **`POST /{business-id}/owned_domains` is not the verify endpoint.** The real one is `POST /{domain-id}/verify` with `verification_method`, and the only accepted values are `{DNS_RECORD, HTML_UPLOAD, META_TAG}` — `DNS_TXT` is rejected. It also needs `business_management`, so in practice the dashboard button is the way.
 - **Zeabur mutations need subfield selections or explicit scalar form.** `deleteSingleEnvironmentVariable` returns `[EnvironmentVariable!]!` and fails with *"must have a selection of subfields"* without `{ key }`. `restartService` returns `Boolean` and fails with *"must not have a selection"* if given one. Both reject a bare trailing `}` typo with `Unexpected }` — cheap to waste a cycle on.
 
+## EU ad sets are rejected without DSA beneficiary/payer (2026-11-28)
+
+Creating an ad set targeted at an EU country (`PT`, `IT`, `ES`, `FR`, `GR`, …) fails with `code 100 / subcode 3858081`, `user_title: "No advertiser indicated"`. This reads exactly like a missing page, but the page is irrelevant — it is the EU Digital Services Act fields.
+
+- Send `dsa_beneficiary` **and** `dsa_payor`, both the page id (`1363808276826222`).
+- **Meta misspells the payer as `dsa_payor`** (not `dsa_payer`). `dsa_payer` is silently ignored and returns `subcode 3858079`, `"No payer indicated"`.
+- Non-EU countries (GB, US, CA, AU, ZA) need neither, so the same payload works there — which is why this only surfaces on EU markets.
+- Through `fbmcp` both go in `extra`; the tool has no dedicated parameter for them.
+
+Two related traps hit in the same build:
+
+1. **`promoted_object` is immutable on a campaign.** Setting it after creation returns `subcode 1885090`. If a campaign must carry one, pass it at create time in `extra`.
+2. **`ads_duplicate` on an ad set does not fix it either** — the copy still fails the DSA check on update. Copying the whole campaign and then retargeting is a working detour, but a clean create with the DSA fields is simpler.
+3. `page_list` is currently broken (`The ids query parameter is deprecated in v26.0+`); use `bm_list_assets(kind="owned_pages")` instead.
+
 ## Meta restriction is per-hostname, not per-domain
 
 Measured 2026-11-11 with `GET https://connect.facebook.net/signals/config/<pixelId>?domain=<host>`:
